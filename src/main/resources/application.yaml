@@ -3,6 +3,11 @@ spring:
     active: dev
   jpa:
     open-in-view: false
+    hibernate:
+      ddl-auto: none
+  sql:
+    init:
+      mode: never
 
 server.servlet:
   encoding:

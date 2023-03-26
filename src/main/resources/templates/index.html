@@ -5,7 +5,7 @@
 <th:block th:replace="~{layout/main::page(title='Archivist',appMain=~{::appMain})}">
   <appMain>
     <h1>Archivist Home page</h1>
-      <form sec:authorize="isAuthenticated()" action="/logout" method="post">
+      <form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post">
         <button class="btn btn-primary btn-lg mt-3" type="submit">Logout</button>
       </form>
   </appMain>

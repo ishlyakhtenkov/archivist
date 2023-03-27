@@ -11,8 +11,8 @@
             </div>
             <div class="col-md-8 mb-2">
                 <div class="btn-toolbar justify-content-start justify-content-md-end">
-                    <form class="d-flex" role="search">
-                        <input class="form-control" type="search" placeholder="Search users" aria-label="Search">
+                    <form class="d-flex" role="search" th:action="@{/users}" method="get">
+                        <input class="form-control" th:name="keyword" th:value="${param.keyword}" type="search" placeholder="Search users" aria-label="Search">
                     </form>
                     <button type="button" class="btn btn-secondary ms-2" title="Add new User">
                         <span><i class="fa-solid fa-user-plus"></i> Add User</span>
@@ -21,31 +21,35 @@
             </div>
         </div>
 
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead class="table-dark">
+                <tr>
+                    <th class="text-start">Email</th>
+                    <th>Name</th>
+                    <th>Enabled</th>
+                    <th>Registered</th>
+                    <th>Roles</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="user : ${usersPage}">
+                    <td class="text-start" th:text="${user.email}"></td>
+                    <td th:text="${user.firstName} + ' ' + ${user.lastName}"></td>
+                    <td>
+                        <div class="form-switch">
+                            <input th:if="${user.enabled}" type="checkbox" role="switch" checked disabled class="form-check-input" id="{{ user.id }}-checkbox" />
+                            <input th:if="${!user.enabled}" type="checkbox" role="switch" disabled class="form-check-input" id="{{ user.id }}-checkbox" />
+                            <label class="form-check-label" for="{{ user.id }}-checkbox"></label>
+                        </div>
+                    </td>
+                    <td th:text="${#dates.format(user.registered, 'dd-MM-yyyy HH:mm')}"></td>
+                    <td th:text="${#strings.substring(user.roles, 1, #strings.length(user.roles) - 1)}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
 
-        <table class="table table-bordered">
-            <thead>
-            <tr>
-                <th>ID</th>
-                <th>Email</th>
-                <th>First name</th>
-                <th>Last name</th>
-                <th>Enabled</th>
-                <th>Registered</th>
-                <th>Roles</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="user : ${usersPage}">
-                <td th:text="${user.id}"></td>
-                <td th:text="${user.email}"></td>
-                <td th:text="${user.firstName}"></td>
-                <td th:text="${user.lastName}"></td>
-                <td th:text="${user.enabled}"></td>
-                <td th:text="${user.registered}"></td>
-                <td th:text="${user.roles}"></td>
-            </tr>
-            </tbody>
-        </table>
 
         <!-- users pagination -->
         <div class="row">

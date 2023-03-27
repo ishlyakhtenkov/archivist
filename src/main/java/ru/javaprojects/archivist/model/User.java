@@ -1,6 +1,5 @@
 package ru.javaprojects.archivist.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
@@ -27,8 +26,6 @@ public class User extends BaseEntity {
     private String email;
 
     @Size(min = 5, max = 128)
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-//    @JsonInclude(JsonInclude.Include.NON_NULL)
     @Column(name = "password", nullable = false)
     private String password;
 
@@ -46,7 +43,6 @@ public class User extends BaseEntity {
     private boolean enabled = true;
 
     @NotNull
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Column(name = "registered", nullable = false, columnDefinition = "timestamp default now()")
     private Date registered = new Date();
 

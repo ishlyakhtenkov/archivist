@@ -15,4 +15,7 @@ public interface UserRepository extends BaseRepository<User> {
     Optional<User> findByEmailIgnoreCase(String email);
 
     Page<User> findAllByOrderByLastNameAscFirstName(Pageable pageable);
+
+    Page<User> findAllByFirstNameContainsIgnoreCaseOrLastNameContainsIgnoreCaseOrEmailContainsIgnoreCaseOrderByLastNameAscFirstName(
+            String firstNameKeyword, String lastNameKeyword, String emailKeyword, Pageable pageable);
 }

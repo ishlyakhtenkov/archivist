@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sd="http://www.thymeleaf.org/spring-data"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="ru">
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      th:with="activeMenuItem='Users'" lang="en">
 
 <th:block th:replace="~{layout/main::page(title='Archivist',appMain=~{::appMain})}">
     <appMain>

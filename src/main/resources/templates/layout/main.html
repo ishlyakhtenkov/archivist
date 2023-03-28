@@ -6,12 +6,15 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="title" th:content="${title}"/>
         <meta name="Description" th:content="${descr}"/>
+        <meta th:name="_csrf" th:content="${_csrf.token}"/>
+        <meta th:name="_csrf_header" th:content="${_csrf.headerName}"/>
 
         <title th:text="${title}"></title>
         <link rel="apple-touch-icon" sizes="180x180" href="/images/icon/apple-touch-icon.png">
         <link rel="icon" type="image/png" sizes="32x32" href="/images/icon/favicon-32x32.png">
         <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css"/>
         <link rel="stylesheet" href="/fontawesome/css/all.min.css"/>
+        <link rel="stylesheet" href="/toast/css/jquery.toast.min.css"/>
         <link rel="stylesheet" href="/css/color.css?v=1"/>
         <link rel="stylesheet" href="/css/main.css?v=1"/>
     </head>
@@ -32,6 +35,7 @@
     </body>
     <script src="/bootstrap/js/bootstrap.min.js"></script>
     <script src="/js/jquery.min.js"></script>
+    <script src="/toast/js/jquery.toast.min.js"></script>
     <script src="/js/main.js?v=1"></script>
 </th:block>
 </html>

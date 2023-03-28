@@ -37,7 +37,7 @@ public class UserController {
         return "users";
     }
 
-    @PostMapping("/{id}")
+    @PatchMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void enable(@PathVariable long id, @RequestParam boolean enabled) {
         log.info(enabled ? "enable {}" : "disable {}", id);

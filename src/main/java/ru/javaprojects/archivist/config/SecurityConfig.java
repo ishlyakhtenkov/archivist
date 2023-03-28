@@ -40,7 +40,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests()
-                .requestMatchers("/", "/css/**", "/bootstrap/**", "/fontawesome/**", "/images/**", "/js/**", "/users/**").permitAll()
+                .requestMatchers("/", "/css/**", "/bootstrap/**", "/fontawesome/**", "/toast/**", "/images/**", "/js/**", "/users/**").permitAll()
                 .anyRequest().authenticated()
                 .and().formLogin().permitAll()
                 .loginPage("/login")
@@ -50,8 +50,7 @@ public class SecurityConfig {
                 .logoutSuccessUrl("/")
                 .invalidateHttpSession(true)
                 .clearAuthentication(true)
-                .deleteCookies("JSESSIONID")
-                .and().csrf().disable(); //TODO
+                .deleteCookies("JSESSIONID");
         return http.build();
     }
 }

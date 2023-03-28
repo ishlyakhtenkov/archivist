@@ -38,8 +38,7 @@
                     <td th:text="${user.firstName} + ' ' + ${user.lastName}"></td>
                     <td>
                         <div class="form-switch">
-                            <input th:if="${user.enabled}" type="checkbox" role="switch" checked class="form-check-input" th:onclick="|enableUser('${user.id}', false)|" th:id="${user.id} + '-checkbox'" />
-                            <input th:if="${!user.enabled}" type="checkbox" role="switch" class="form-check-input" onclick="enableUser(true)" th:id="${user.id} + '-checkbox'" />
+                            <input type="checkbox" role="switch" checked class="form-check-input" th:checked="${user.enabled}" th:onclick="|enableUser(this, '${user.id}')|" />
                         </div>
                     </td>
                     <td th:text="${#dates.format(user.registered, 'dd-MM-yyyy HH:mm')}"></td>

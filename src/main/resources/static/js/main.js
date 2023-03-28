@@ -31,20 +31,51 @@ function chooseMenuItem() {
     }
 }
 
-function enableUser(id, enabled) {
-    console.log('enable user ' + id + ' : ' + enabled);
+function enableUser(checkbox, id) {
+    let enabled = checkbox.checked;
     $.ajax({
         url: "users/" + id,
-        type: "POST",
+        type: "PATCH",
         data: "enabled=" + enabled
     }).done(function () {
-        // chkbox.closest("tr").attr("data-userEnabled", enabled);
-        // successNoty(enabled ? "common.enabled" : "common.disabled");
+        successToast('User with id = ' + id + ' was ' + (enabled ? 'enabled' : 'disabled'));
     }).fail(function () {
-        // $(chkbox).prop("checked", !enabled);
+        $(checkbox).prop('checked', !enabled);
+        failToast('Failed to ' + (enabled ? 'enable' : 'disable') + ' user with id = ' + id);
     });
-    // let checkbox = $('#' + id + '-checkbox');
-    // checkbox.prop('checked', true);
 }
 
+function successToast(message) {
+    $.toast({
+        heading: 'Success',
+        text: message,
+        showHideTransition: 'slide',
+        position: 'bottom-right',
+        icon: 'success'
+    })
+}
 
+function failToast(message) {
+    $.toast({
+        heading: 'Error',
+        text: message,
+        showHideTransition: 'slide',
+        position: 'bottom-right',
+        icon: 'error'
+    })
+}
+
+$.ajaxSetup({
+    beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+            let token = $("meta[name='_csrf']").attr("content");
+            let header = $("meta[name='_csrf_header']").attr("content");
+            xhr.setRequestHeader(header, token);
+        }
+    }
+});
+
+function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}

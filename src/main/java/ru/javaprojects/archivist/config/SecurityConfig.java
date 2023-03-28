@@ -18,7 +18,6 @@ import ru.javaprojects.archivist.repository.UserRepository;
 @Configuration
 @EnableWebSecurity
 @AllArgsConstructor
-@Slf4j
 public class SecurityConfig {
     private final UserRepository repository;
 
@@ -30,7 +29,6 @@ public class SecurityConfig {
     @Bean
     public UserDetailsService userDetailsService() {
         return email -> {
-            log.debug("Authenticating '{}'", email);
             User user = repository.findByEmailIgnoreCase(email)
                     .orElseThrow(() -> new UsernameNotFoundException("User '" + email + "' was not found"));
             return new AuthUser(user);

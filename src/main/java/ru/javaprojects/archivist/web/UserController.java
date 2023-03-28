@@ -4,12 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import ru.javaprojects.archivist.repository.UserRepository;
+import ru.javaprojects.archivist.service.UserService;
 
 @Controller
 @RequestMapping("/users")
@@ -17,6 +17,7 @@ import ru.javaprojects.archivist.repository.UserRepository;
 @Slf4j
 public class UserController {
     private final UserRepository repository;
+    private final UserService service;
 
     @GetMapping
     public String getPage(@RequestParam(value = "keyword", required = false) String keyword,
@@ -34,5 +35,12 @@ public class UserController {
             model.addAttribute("usersPage", repository.findAllByOrderByLastNameAscFirstName(pageable));
         }
         return "users";
+    }
+
+    @PostMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void enable(@PathVariable long id, @RequestParam boolean enabled) {
+        log.info(enabled ? "enable {}" : "disable {}", id);
+        service.enable(id, enabled);
     }
 }

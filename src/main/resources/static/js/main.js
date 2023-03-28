@@ -30,3 +30,21 @@ function chooseMenuItem() {
         }
     }
 }
+
+function enableUser(id, enabled) {
+    console.log('enable user ' + id + ' : ' + enabled);
+    $.ajax({
+        url: "users/" + id,
+        type: "POST",
+        data: "enabled=" + enabled
+    }).done(function () {
+        // chkbox.closest("tr").attr("data-userEnabled", enabled);
+        // successNoty(enabled ? "common.enabled" : "common.disabled");
+    }).fail(function () {
+        // $(chkbox).prop("checked", !enabled);
+    });
+    // let checkbox = $('#' + id + '-checkbox');
+    // checkbox.prop('checked', true);
+}
+
+

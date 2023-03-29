@@ -27,4 +27,8 @@ public class UserService {
         User user = repository.getExisted(id);
         user.setEnabled(enabled);
     }
+
+    public void delete(long id) {
+        repository.deleteExisted(id);
+    }
 }

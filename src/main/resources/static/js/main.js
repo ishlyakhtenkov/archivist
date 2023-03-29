@@ -65,6 +65,62 @@ function failToast(message) {
     })
 }
 
+$('#userDeleteModal').on('show.bs.modal', function(e) {
+    let userName = $(e.relatedTarget).data('bs-name');
+    let userId = $(e.relatedTarget).data('bs-id');
+    $(e.currentTarget).find('#userDeleteModalLabel').text('Delete user ' + userName + ' ?');
+    $(e.currentTarget).find('#userDeleteModalUserId').val(userId);
+    $(e.currentTarget).find('#userDeleteModalUserName').val(userName);
+});
+
+function deleteUser() {
+    let userDeleteModal = $('#userDeleteModal');
+    let userId = userDeleteModal.find('#userDeleteModalUserId').val();
+    let userName = userDeleteModal.find('#userDeleteModalUserName').val();
+    userDeleteModal.modal('toggle');
+    $.ajax({
+        url: "users/" + userId,
+        type: "DELETE"
+    }).done(function () {
+        successToast('User ' + userName + ' was deleted');
+        $('#row-' + userId).remove();
+        let x = $('#pagination-info').text();
+        let words = x.split(' ');
+        let firstDigit = 0;
+        let secondDigit = 0;
+        let thirdDigit = 0;
+        for (let i = 0, j = 0; i < words.length; i++) {
+            if (isNumber(words[i])) {
+                j++;
+                if (j === 1) {
+                    firstDigit = words[i];
+                }
+                if (j > 1) {
+                    words[i] = words[i] - 1;
+                    if (j === 2) {
+                        secondDigit = words[i];
+                    } else {
+                        thirdDigit = words[i];
+                    }
+                }
+            }
+        }
+        if (thirdDigit < firstDigit) {
+            window.location.href = window.location.pathname;
+        } else if (secondDigit < firstDigit) {
+            window.location.reload();
+        }
+
+        $('#pagination-info').text(words.join(' '));
+        console.log();
+    }).fail(function () {
+        failToast('Failed to delete user ' + userName);
+    });
+}
+
+function isNumber(n) {
+    return /^-?[\d.]+(?:e-?\d+)?$/.test(n); }
+
 $.ajaxSetup({
     beforeSend: function(xhr, settings) {
         if (!csrfSafeMethod(settings.type) && !this.crossDomain) {

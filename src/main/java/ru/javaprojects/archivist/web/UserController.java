@@ -43,4 +43,11 @@ public class UserController {
         log.info(enabled ? "enable {}" : "disable {}", id);
         service.enable(id, enabled);
     }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable long id) {
+        log.info("delete {}", id);
+        service.delete(id);
+    }
 }

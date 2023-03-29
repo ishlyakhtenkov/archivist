@@ -31,10 +31,11 @@
                     <th>Enabled</th>
                     <th>Registered</th>
                     <th>Roles</th>
+                    <th>Actions</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="user : ${usersPage}">
+                <tr th:each="user : ${usersPage}" th:id="'row-' + ${user.id}">
                     <td class="text-start" th:text="${user.email}"></td>
                     <td th:text="${user.firstName} + ' ' + ${user.lastName}"></td>
                     <td>
@@ -44,16 +45,42 @@
                     </td>
                     <td th:text="${#dates.format(user.registered, 'dd-MM-yyyy HH:mm')}"></td>
                     <td th:text="${#strings.substring(user.roles, 1, #strings.length(user.roles) - 1)}"></td>
+                    <td>
+                        <button type="button" class="btn btn-outline-danger btn-sm"
+                                title="Delete User" data-bs-toggle="modal" data-bs-target="#userDeleteModal"
+                                th:data-bs-name="${user.firstName} + ' ' + ${user.lastName}"
+                                th:data-bs-id="${user.id}">
+                            <i class="fa-solid fa-user-xmark"></i>
+                        </button>
+                    </td>
                 </tr>
                 </tbody>
             </table>
         </div>
 
 
+        <!-- User delete modal -->
+        <div class="modal fade" id="userDeleteModal" tabindex="-1" aria-labelledby="userDeleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="userDeleteModalLabel">Are you sure want to delete user?</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                        <input type="hidden" name="userId" id="userDeleteModalUserId" value=""/>
+                        <input type="hidden" name="userName" id="userDeleteModalUserName" value=""/>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close">Close</button>
+                        <button type="button" class="btn btn-danger" onclick="deleteUser()">Delete user</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- users pagination -->
         <div class="row">
             <div class="col-12 col-md-6 text-center text-md-start">
-                <div sd:pagination-summary="">info</div>
+                <div sd:pagination-summary="" id="pagination-info">info</div>
             </div>
 
             <div class="col-12 col-md-6 mt-3 mt-md-0">

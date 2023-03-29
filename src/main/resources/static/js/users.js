@@ -91,7 +91,7 @@ function updatePageContent(id, name) {
         }
     }
     if (totalEntries < firstEntryNumber) {
-        if (totalEntries < 2) {
+        if (totalEntries === 0) {
             window.location.href = window.location.pathname + '?deleteSuccess=' + name;
         } else {
             let queryString = window.location.search;

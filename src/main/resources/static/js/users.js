@@ -1,3 +1,32 @@
+window.onload = function() {
+    checkUserSuccessDelete();
+};
+
+function checkUserSuccessDelete() {
+    let queryString = window.location.search;
+    let urlParams = new URLSearchParams(queryString);
+    if (urlParams.has('deleteSuccess')) {
+        successToast('User ' + urlParams.get('deleteSuccess') + ' was deleted');
+        urlParams.delete('deleteSuccess');
+        let url = (urlParams.toString().length > 0) ? (window.location.pathname + '?' + urlParams) : window.location.pathname;
+        window.history.replaceState(null, null, url);
+        setupPageLinks();
+    }
+}
+
+function setupPageLinks() {
+    let pageLinks = $("a.page-link");
+    for (let i = 0; i < pageLinks.length; i++) {
+        let pageLink = pageLinks[i];
+        let ref = pageLink.href.toString();
+        let urlParts = ref.split('?');
+        let urlParams = new URLSearchParams(urlParts[1]);
+        urlParams.delete('deleteSuccess');
+        ref = urlParts[0] + '?' + urlParams;
+        pageLink.href = ref;
+    }
+}
+
 function enableUser(checkbox, id) {
     let enabled = checkbox.checked;
     let name = checkbox.dataset.name;
@@ -61,22 +90,25 @@ function updatePageContent(id, name) {
             }
         }
     }
-    let afterHideToastFunc = null;
-    let duration = null;
     if (totalEntries < firstEntryNumber) {
-        afterHideToastFunc = function () {
-            window.location.href = window.location.pathname;
+        if (totalEntries < 2) {
+            window.location.href = window.location.pathname + '?deleteSuccess=' + name;
+        } else {
+            let queryString = window.location.search;
+            let urlParams = new URLSearchParams(queryString);
+            urlParams.set('page', (urlParams.get('page') - 1));
+            urlParams.append('deleteSuccess', name);
+            window.location.href = window.location.pathname + '?' + urlParams;
         }
-        duration = 700;
     } else if (lastEntryNumber < firstEntryNumber) {
-        afterHideToastFunc = function () {
-            window.location.reload();
-        };
-        duration = 700;
+        let queryString = window.location.search;
+        let urlParams = new URLSearchParams(queryString);
+        urlParams.append('deleteSuccess', name);
+        window.location.href = window.location.pathname + '?' + urlParams;
     } else {
         paginationSummary.text(words.join(' '));
+        successToast('User ' + name + ' was deleted');
     }
-    successToast('User ' + name + ' was deleted', duration, afterHideToastFunc);
 }
 
 function isNumber(n) {

@@ -13,15 +13,13 @@ function csrfSafeMethod(method) {
     return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
 }
 
-function successToast(message, duration, func) {
+function successToast(message) {
     $.toast({
         heading: 'Success',
         text: message,
         showHideTransition: 'slide',
         position: 'bottom-right',
-        icon: 'success',
-        hideAfter: (duration) ? duration : 2000,
-        afterHidden: (func) ? func : ''
+        icon: 'success'
     })
 }
 

@@ -30,15 +30,15 @@ function deleteUser() {
         url: "users/" + id,
         type: "DELETE"
     }).done(function () {
-        $('#user-row-' + id).remove();
-        updatePaginationSummary();
-        successToast('User ' + name + ' was deleted');
+        updatePageContent(id, name);
     }).fail(function () {
         failToast('Failed to delete user ' + name);
     });
 }
 
-function updatePaginationSummary() {
+function updatePageContent(id, name) {
+    $('#user-row-' + id).remove();
+
     let paginationSummary = $('#pagination-summary');
     let paginationSummaryText = paginationSummary.text();
     let words = paginationSummaryText.split(' ');
@@ -61,13 +61,22 @@ function updatePaginationSummary() {
             }
         }
     }
+    let afterHideToastFunc = null;
+    let duration = null;
     if (totalEntries < firstEntryNumber) {
-        window.location.href = window.location.pathname;
+        afterHideToastFunc = function () {
+            window.location.href = window.location.pathname;
+        }
+        duration = 700;
     } else if (lastEntryNumber < firstEntryNumber) {
-        window.location.reload();
+        afterHideToastFunc = function () {
+            window.location.reload();
+        };
+        duration = 700;
     } else {
         paginationSummary.text(words.join(' '));
     }
+    successToast('User ' + name + ' was deleted', duration, afterHideToastFunc);
 }
 
 function isNumber(n) {

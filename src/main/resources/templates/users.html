@@ -6,6 +6,7 @@
 
 <th:block th:replace="~{layout/main::page(title='Archivist',appMain=~{::appMain}, ownScript=~{::ownScript})}">
     <appMain>
+        <span th:if="${userCreated}" th:data-name="${userCreated}" th:id="userCreated-span"></span>
         <div class="row row-cols-1 row-cols-md-2">
             <div class="col-md-4 text-start">
                 <h2 class="text-secondary font-weight-bold"><i class="fas fa-users me-2"></i>Users</h2>
@@ -15,9 +16,9 @@
                     <form class="d-flex" role="search" th:action="@{/users}" method="get">
                         <input class="form-control" th:name="keyword" th:value="${param.keyword}" type="search" placeholder="Search users" aria-label="Search">
                     </form>
-                    <button type="button" class="btn btn-secondary ms-2" title="Add new User">
+                    <a th:href="@{/users/add}" type="button" class="btn btn-secondary ms-2" title="Add new User">
                         <span><i class="fa-solid fa-user-plus"></i> Add User</span>
-                    </button>
+                    </a>
                 </div>
             </div>
         </div>

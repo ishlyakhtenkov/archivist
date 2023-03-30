@@ -19,11 +19,13 @@ import ru.javaprojects.archivist.repository.UserRepository;
 @EnableWebSecurity
 @AllArgsConstructor
 public class SecurityConfig {
+    public static final PasswordEncoder PASSWORD_ENCODER = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+
     private final UserRepository repository;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+        return PASSWORD_ENCODER;
     }
 
     @Bean

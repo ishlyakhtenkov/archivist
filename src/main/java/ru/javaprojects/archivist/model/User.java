@@ -8,6 +8,7 @@ import lombok.Setter;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import ru.javaprojects.archivist.HasIdAndEmail;
 
 import java.util.Date;
 import java.util.Set;
@@ -17,7 +18,7 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
-public class User extends BaseEntity {
+public class User extends BaseEntity implements HasIdAndEmail {
 
     @Email
     @NotBlank

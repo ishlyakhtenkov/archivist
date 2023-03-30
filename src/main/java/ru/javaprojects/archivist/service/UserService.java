@@ -5,8 +5,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 import ru.javaprojects.archivist.model.User;
 import ru.javaprojects.archivist.repository.UserRepository;
+
+import static ru.javaprojects.archivist.util.UserUtil.prepareToSave;
 
 @Service
 @AllArgsConstructor
@@ -20,6 +23,11 @@ public class UserService {
     public Page<User> findAllByKeyword(Pageable pageable, String keyword) {
         return repository.findAllByFirstNameContainsIgnoreCaseOrLastNameContainsIgnoreCaseOrEmailContainsIgnoreCaseOrderByLastNameAscFirstName(
                 keyword, keyword, keyword, pageable);
+    }
+
+    public void create(User user) {
+        Assert.notNull(user, "user must not be null");
+        repository.save(prepareToSave(user));
     }
 
     @Transactional

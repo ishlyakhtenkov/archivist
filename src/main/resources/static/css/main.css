@@ -163,3 +163,7 @@
 .app-main {
     background-color: var(--main-background);
 }
+
+.bootstrap-select>.dropdown-toggle.bs-placeholder,.bootstrap-select>.dropdown-toggle.bs-placeholder:active,.bootstrap-select>.dropdown-toggle.bs-placeholder:focus,.bootstrap-select>.dropdown-toggle.bs-placeholder:hover {
+    color: #595C5F;
+}

@@ -1,5 +1,6 @@
 window.onload = function() {
     checkUserSuccessDelete();
+    checkUserWasCreated();
 };
 
 function checkUserSuccessDelete() {
@@ -11,6 +12,12 @@ function checkUserSuccessDelete() {
         let url = (urlParams.toString().length > 0) ? (window.location.pathname + '?' + urlParams) : window.location.pathname;
         window.history.replaceState(null, null, url);
         setupPageLinks();
+    }
+}
+
+function checkUserWasCreated() {
+    if ($("#userCreated-span").length) {
+        successToast('User ' + $("#userCreated-span").data('name') + ' was created');
     }
 }
 

@@ -6,7 +6,7 @@
 
 <th:block th:replace="~{layout/main::page(title='Archivist',appMain=~{::appMain}, ownScript=~{::ownScript})}">
     <appMain>
-        <span th:if="${userCreated}" th:data-name="${userCreated}" th:id="userCreated-span"></span>
+        <span th:if="${userCreated != null || userUpdated != null}" th:data-action="${userCreated} ? 'created' : 'updated'" th:data-name="${userCreated} ? ${userCreated} : ${userUpdated}" th:id="action-span"></span>
         <div class="row row-cols-1 row-cols-md-2">
             <div class="col-md-4 text-start">
                 <h2 class="text-secondary font-weight-bold"><i class="fas fa-users me-2"></i>Users</h2>
@@ -49,6 +49,9 @@
                     <td th:text="${#dates.format(user.registered, 'dd-MM-yyyy HH:mm')}"></td>
                     <td th:text="${#strings.substring(user.roles, 1, #strings.length(user.roles) - 1)}"></td>
                     <td>
+                        <a th:href="@{'/users/edit/' + ${user.id}}" type="button" class="btn btn-outline-success btn-sm me-2" title="Edit User">
+                            <i class="fa-solid fa-user-pen"></i>
+                        </a>
                         <button type="button" class="btn btn-outline-danger btn-sm"
                                 title="Delete User" data-bs-toggle="modal" data-bs-target="#deleteModal"
                                 th:data-bs-name="${user.firstName} + ' ' + ${user.lastName}"

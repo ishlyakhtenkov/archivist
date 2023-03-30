@@ -1,6 +1,6 @@
 window.onload = function() {
     checkUserSuccessDelete();
-    checkUserWasCreated();
+    checkUserActionHappened();
 };
 
 function checkUserSuccessDelete() {
@@ -15,9 +15,10 @@ function checkUserSuccessDelete() {
     }
 }
 
-function checkUserWasCreated() {
-    if ($("#userCreated-span").length) {
-        successToast('User ' + $("#userCreated-span").data('name') + ' was created');
+function checkUserActionHappened() {
+    let span = $("#action-span");
+    if (span.length) {
+        successToast('User ' + span.data('name') + ' was ' + span.data('action'));
     }
 }
 

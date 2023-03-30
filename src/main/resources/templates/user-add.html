@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:with="activeMenuItem='Users'" lang="en">
+
+<th:block th:replace="~{layout/main::page(title='Archivist',appMain=~{::appMain})}">
+    <appMain>
+        <div class="row d-flex justify-content-center align-items-center">
+            <div class="col-12 col-md-8 col-xl-5">
+                <div class="card shadow-2-strong" style="border-radius: 1rem;">
+                    <div class="text-end mt-3 me-3">
+                        <button type="button" class="btn-close" aria-label="Close" onclick="history.back()"></button>
+                    </div>
+                    <div class="card-body px-3 px-md-5 pb-3 pb-md-5 pt-0 text-center">
+                        <h3 class="mb-3">Create User</h3>
+                        <form th:action="@{/users/add}" method="post" th:object="${user}">
+                            <div class="form-outline mb-4">
+                                <input type="text" th:field="*{firstName}"
+                                       th:class="${#fields.hasErrors('firstName')} ? 'form-control is-invalid' : 'form-control'"
+                                       required placeholder="First name"/>
+                                <span class="help-block" th:if="${#fields.hasErrors('firstName')}">
+									<ul>
+										<li class="text-danger text-start"
+                                            th:each="err : ${#fields.errors('firstName')}" th:text="${err}"/>
+									</ul>
+								</span>
+                            </div>
+                            <div class="form-outline mb-4">
+                                <input type="text" th:field="*{lastName}"
+                                       th:class="${#fields.hasErrors('lastName')} ? 'form-control is-invalid' : 'form-control'"
+                                       placeholder="Last name"/>
+                                <span class="help-block" th:if="${#fields.hasErrors('lastName')}">
+									<ul>
+										<li class="text-danger text-start" th:each="err : ${#fields.errors('lastName')}"
+                                            th:text="${err}"/>
+									</ul>
+								</span>
+                            </div>
+                            <div class="form-outline mb-4">
+                                <input type="text" th:field="*{email}"
+                                       th:class="${#fields.hasErrors('email')} ? 'form-control is-invalid' : 'form-control'"
+                                       required placeholder="E-mail"/>
+                                <span class="help-block" th:if="${#fields.hasErrors('email')}">
+									<ul>
+										<li class="text-danger text-start" th:each="err : ${#fields.errors('email')}"
+                                            th:text="${err}"/>
+									</ul>
+								</span>
+                            </div>
+                            <div class="form-outline mb-4">
+                                <input type="password" th:field="*{password}"
+                                       th:class="${#fields.hasErrors('password')} ? 'form-control is-invalid' : 'form-control'"
+                                       required placeholder="Password"/>
+                                <span class="help-block" th:if="${#fields.hasErrors('password')}">
+									<ul>
+										<li class="text-danger text-start" th:each="err : ${#fields.errors('password')}"
+                                            th:text="${err}"/>
+									</ul>
+								</span>
+                            </div>
+                            <div class="form-outline mb-4">
+                                <select class="form-control selectpicker border" data-style="btn-white"
+                                        multiple th:field="*{roles}" title="Roles" required>
+                                    <option th:each="role : ${roles}"
+                                            th:value="${role}"
+                                            th:text="${role}">
+                                    </option>
+                                </select>
+                                <span class="help-block" th:if="${#fields.hasErrors('roles')}">
+									<ul>
+										<li class="text-danger text-start" th:each="err : ${#fields.errors('roles')}"
+                                            th:text="${err}"/>
+									</ul>
+								</span>
+                            </div>
+                            <div class="form-outline mb-4">
+                                <div class="form-check form-switch">
+                                    <div class="float-end">
+                                        <input type="checkbox" th:field="*{enabled}" class="form-check-input" checked id="flexSwitchCheckDefault">
+                                        <label class="form-check-label" for="flexSwitchCheckDefault">Enabled</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="d-grid gap-2">
+                                    <button class="btn btn-success btn-lg" type="submit">Create user</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </appMain>
+</th:block>

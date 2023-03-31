@@ -122,3 +122,30 @@ function updatePageContent(id, name) {
 function isNumber(n) {
     return /^-?[\d.]+(?:e-?\d+)?$/.test(n);
 }
+
+$('#changePasswordModal').on('show.bs.modal', function(e) {
+    let name = $(e.relatedTarget).data('bs-name');
+    let id = $(e.relatedTarget).data('bs-id');
+    $(e.currentTarget).find('#changePasswordModalLabel').text('Change password for ' + name + ' ?');
+    $(e.currentTarget).find('#changePasswordModalUserId').val(id);
+    $(e.currentTarget).find('#changePasswordModalUserName').val(name);
+    $(e.currentTarget).find('#new-password').val('');
+    $(e.currentTarget).find('#repeat-password').val('');
+});
+
+function changePassword() {
+    let changePasswordModal = $('#changePasswordModal');
+    let id = changePasswordModal.find('#changePasswordModalUserId').val();
+    let name = changePasswordModal.find('#changePasswordModalUserName').val();
+    let password = changePasswordModal.find('#new-password').val();
+    $.ajax({
+        url: "users/" + id + "/password",
+        type: "PATCH",
+        data: "password=" + password
+    }).done(function () {
+        changePasswordModal.modal('toggle');
+        successToast('Password for ' + name + ' was changed');
+    }).fail(function () {
+        failToast('Failed to change password for ' + name);
+    });
+}

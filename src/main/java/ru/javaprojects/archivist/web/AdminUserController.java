@@ -1,6 +1,6 @@
 package ru.javaprojects.archivist.web;
 
-import jakarta.validation.Valid;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -17,7 +18,6 @@ import ru.javaprojects.archivist.model.Role;
 import ru.javaprojects.archivist.model.User;
 import ru.javaprojects.archivist.service.UserService;
 import ru.javaprojects.archivist.to.UserTo;
-import ru.javaprojects.archivist.util.UserUtil;
 
 import static ru.javaprojects.archivist.util.UserUtil.asTo;
 import static ru.javaprojects.archivist.util.validation.ValidationUtil.checkNew;
@@ -26,6 +26,7 @@ import static ru.javaprojects.archivist.util.validation.ValidationUtil.checkNew;
 @RequestMapping("/users")
 @AllArgsConstructor
 @Slf4j
+@Validated
 public class AdminUserController {
     private final UserService service;
     private UniqueMailValidator emailValidator;
@@ -61,7 +62,7 @@ public class AdminUserController {
     }
 
     @PostMapping("/add")
-    public String create(@Valid User user, BindingResult result, Model model, RedirectAttributes redirectAttributes) {
+    public String create(@Validated User user, BindingResult result, Model model, RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
             model.addAttribute("roles", Role.values());
             return "user-add";
@@ -81,7 +82,7 @@ public class AdminUserController {
     }
 
     @PostMapping("/update")
-    public String update(@Valid UserTo userTo, BindingResult result, Model model, RedirectAttributes redirectAttributes) {
+    public String update(@Validated UserTo userTo, BindingResult result, Model model, RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
             model.addAttribute("roles", Role.values());
             return "user-edit";
@@ -104,5 +105,12 @@ public class AdminUserController {
     public void delete(@PathVariable long id) {
         log.info("delete {}", id);
         service.delete(id);
+    }
+
+    @PatchMapping("/{id}/password")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void changePassword(@PathVariable long id, @RequestParam @Size(min = 5, max = 32) String password) {
+        log.info("change password for {}", id);
+        service.changePassword(id, password);
     }
 }

@@ -6,6 +6,7 @@
 
 <th:block th:replace="~{layout/main::page(title='Archivist',appMain=~{::appMain}, ownScript=~{::ownScript})}">
     <appMain>
+        <!-- Search field, Add button -->
         <span th:if="${userCreated != null || userUpdated != null}" th:data-action="${userCreated} ? 'created' : 'updated'" th:data-name="${userCreated} ? ${userCreated} : ${userUpdated}" th:id="action-span"></span>
         <div class="row row-cols-1 row-cols-md-2">
             <div class="col-md-4 text-start">
@@ -23,6 +24,7 @@
             </div>
         </div>
 
+        <!-- Users table -->
         <div class="table-responsive">
             <table class="table table-bordered">
                 <thead class="table-dark">
@@ -49,11 +51,17 @@
                     <td th:text="${#dates.format(user.registered, 'dd-MM-yyyy HH:mm')}"></td>
                     <td th:text="${#strings.substring(user.roles, 1, #strings.length(user.roles) - 1)}"></td>
                     <td>
-                        <a th:href="@{'/users/edit/' + ${user.id}}" type="button" class="btn btn-outline-success btn-sm me-2" title="Edit User">
+                        <a th:href="@{'/users/edit/' + ${user.id}}" type="button" class="btn btn-outline-success btn-sm" title="Edit user">
                             <i class="fa-solid fa-user-pen"></i>
                         </a>
+                        <button type="button" class="btn btn-outline-warning btn-sm"
+                                title="Change password" data-bs-toggle="modal" data-bs-target="#changePasswordModal"
+                                th:data-bs-name="${user.firstName} + ' ' + ${user.lastName}"
+                                th:data-bs-id="${user.id}">
+                            <i class="fa-solid fa-key"></i>
+                        </button>
                         <button type="button" class="btn btn-outline-danger btn-sm"
-                                title="Delete User" data-bs-toggle="modal" data-bs-target="#deleteModal"
+                                title="Delete user" data-bs-toggle="modal" data-bs-target="#deleteModal"
                                 th:data-bs-name="${user.firstName} + ' ' + ${user.lastName}"
                                 th:data-bs-id="${user.id}">
                             <i class="fa-solid fa-user-xmark"></i>
@@ -64,26 +72,7 @@
             </table>
         </div>
 
-
-        <!-- User delete modal -->
-        <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="deleteModalLabel">Are you sure want to delete user?</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                        <input type="hidden" name="userId" id="deleteModalUserId" value=""/>
-                        <input type="hidden" name="userName" id="deleteModalUserName" value=""/>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close">Close</button>
-                        <button type="button" class="btn btn-danger" onclick="deleteUser()">Delete user</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- users pagination -->
+        <!-- Pagination -->
         <div class="row">
             <div class="col-12 col-md-6 text-center text-md-start">
                 <div sd:pagination-summary="" id="pagination-summary">info</div>
@@ -104,6 +93,55 @@
                 Show <span sd:page-size-selector="javascript"></span> entries
             </div>
         </div>
+
+        <!-- Delete modal -->
+        <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="deleteModalLabel">Are you sure want to delete user?</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <input type="hidden" name="userId" id="deleteModalUserId" value=""/>
+                    <input type="hidden" name="userName" id="deleteModalUserName" value=""/>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close">Close</button>
+                        <button type="button" class="btn btn-danger" onclick="deleteUser()">Delete user</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Change password modal -->
+        <div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="changePasswordModalLabel">Change password for user</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" name="userId" id="changePasswordModalUserId" value=""/>
+                        <input type="hidden" name="userName" id="changePasswordModalUserName" value=""/>
+                        <form>
+                            <div class="mb-3">
+                                <label for="new-password" class="col-form-label float-start">New password:</label>
+                                <input type="password" class="form-control" id="new-password" required placeholder="New password">
+                            </div>
+                            <div class="mb-3">
+                                <label for="repeat-password" class="col-form-label float-start">Repeat password:</label>
+                                <input type="password" class="form-control" id="repeat-password" required placeholder="Repeat password">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-warning" onclick="changePassword()">Change password</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </appMain>
 
     <ownScript>

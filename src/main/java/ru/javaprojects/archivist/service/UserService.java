@@ -9,8 +9,8 @@ import org.springframework.util.Assert;
 import ru.javaprojects.archivist.model.User;
 import ru.javaprojects.archivist.repository.UserRepository;
 import ru.javaprojects.archivist.to.UserTo;
-import ru.javaprojects.archivist.util.UserUtil;
 
+import static ru.javaprojects.archivist.config.SecurityConfig.PASSWORD_ENCODER;
 import static ru.javaprojects.archivist.util.UserUtil.prepareToSave;
 import static ru.javaprojects.archivist.util.UserUtil.updateFromTo;
 
@@ -52,5 +52,12 @@ public class UserService {
 
     public void delete(long id) {
         repository.deleteExisted(id);
+    }
+
+    @Transactional
+    public void changePassword(long id, String password) {
+        Assert.notNull(password, "password must not be null");
+        User user = get(id);
+        user.setPassword(PASSWORD_ENCODER.encode(password));
     }
 }

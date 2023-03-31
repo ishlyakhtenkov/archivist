@@ -9,6 +9,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import ru.javaprojects.archivist.HasIdAndEmail;
 import ru.javaprojects.archivist.model.Role;
+import ru.javaprojects.archivist.util.validation.NoHtml;
 
 import java.util.Set;
 
@@ -19,14 +20,17 @@ public class UserTo extends BaseTo implements HasIdAndEmail {
 
     @Email
     @NotBlank
+    @NoHtml
     @Size(max = 128)
     private String email;
 
     @NotBlank
+    @NoHtml
     @Size(min = 2, max = 32)
     private String firstName;
 
     @NotBlank
+    @NoHtml
     @Size(min = 2, max = 32)
     private String lastName;
 

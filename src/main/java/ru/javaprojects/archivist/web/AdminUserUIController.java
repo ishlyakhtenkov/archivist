@@ -1,16 +1,14 @@
 package ru.javaprojects.archivist.web;
 
-import jakarta.validation.constraints.Size;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -26,8 +24,7 @@ import static ru.javaprojects.archivist.util.validation.ValidationUtil.checkNew;
 @RequestMapping("/users")
 @AllArgsConstructor
 @Slf4j
-@Validated
-public class AdminUserController {
+public class AdminUserUIController {
     private final UserService service;
     private UniqueMailValidator emailValidator;
 
@@ -62,7 +59,7 @@ public class AdminUserController {
     }
 
     @PostMapping("/add")
-    public String create(@Validated User user, BindingResult result, Model model, RedirectAttributes redirectAttributes) {
+    public String create(@Valid User user, BindingResult result, Model model, RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
             model.addAttribute("roles", Role.values());
             return "user-add";
@@ -82,7 +79,7 @@ public class AdminUserController {
     }
 
     @PostMapping("/update")
-    public String update(@Validated UserTo userTo, BindingResult result, Model model, RedirectAttributes redirectAttributes) {
+    public String update(@Valid UserTo userTo, BindingResult result, Model model, RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
             model.addAttribute("roles", Role.values());
             return "user-edit";
@@ -91,26 +88,5 @@ public class AdminUserController {
         service.update(userTo);
         redirectAttributes.addFlashAttribute("userUpdated", userTo.getFirstName() + " " + userTo.getLastName());
         return "redirect:/users";
-    }
-
-    @PatchMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void enable(@PathVariable long id, @RequestParam boolean enabled) {
-        log.info(enabled ? "enable {}" : "disable {}", id);
-        service.enable(id, enabled);
-    }
-
-    @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable long id) {
-        log.info("delete {}", id);
-        service.delete(id);
-    }
-
-    @PatchMapping("/{id}/password")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void changePassword(@PathVariable long id, @RequestParam @Size(min = 5, max = 32) String password) {
-        log.info("change password for {}", id);
-        service.changePassword(id, password);
     }
 }

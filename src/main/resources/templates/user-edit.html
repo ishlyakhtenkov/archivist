@@ -8,10 +8,10 @@
             <div class="col-12 col-md-8 col-xl-5">
                 <div class="card shadow-2-strong" style="border-radius: 1rem;">
                     <div class="text-end mt-3 me-3">
-                        <button type="button" class="btn-close" aria-label="Close" onclick="history.back()"></button>
+                        <a th:href="@{/users}" type="button" class="btn-close" aria-label="Close"></a>
                     </div>
                     <div class="card-body px-3 px-md-5 pb-3 pb-md-5 pt-0 text-center">
-                        <h3 class="mb-3" th:text="'Edit user ' + ${userTo.firstName} + ' ' + ${userTo.lastName}">Edit User</h3>
+                        <h3 class="mb-3" th:text="'Edit user: ' + ${userTo.firstName} + ' ' + ${userTo.lastName}">Edit User</h3>
                         <form th:action="@{/users/update}" method="post" th:object="${userTo}">
                             <input type="hidden" th:field="*{id}">
                             <div class="form-outline mb-4">

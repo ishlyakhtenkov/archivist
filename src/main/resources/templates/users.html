@@ -25,22 +25,22 @@
         </div>
 
         <!-- Users table -->
-        <div class="table-responsive">
+        <div class="table-responsive text-nowrap">
             <table class="table table-bordered">
                 <thead class="table-dark">
                 <tr>
-                    <th class="text-start">Email</th>
                     <th>Name</th>
+                    <th>Email</th>
                     <th>Enabled</th>
                     <th>Registered</th>
                     <th>Roles</th>
-                    <th>Actions</th>
+                    <th colspan="3">Actions</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:each="user : ${usersPage}" th:id="'user-row-' + ${user.id}">
-                    <td class="text-start" th:text="${user.email}"></td>
-                    <td th:text="${user.firstName} + ' ' + ${user.lastName}"></td>
+                    <td  th:text="${user.firstName} + ' ' + ${user.lastName}"></td>
+                    <td th:text="${user.email}"></td>
                     <td>
                         <div class="form-switch">
                             <input type="checkbox" role="switch" checked class="form-check-input" th:checked="${user.enabled}"
@@ -50,16 +50,22 @@
                     </td>
                     <td th:text="${#dates.format(user.registered, 'dd-MM-yyyy HH:mm')}"></td>
                     <td th:text="${#strings.substring(user.roles, 1, #strings.length(user.roles) - 1)}"></td>
-                    <td>
+                    <td class="px-1 px-xxl-0">
                         <a th:href="@{'/users/edit/' + ${user.id}}" type="button" class="btn btn-outline-success btn-sm" title="Edit user">
                             <i class="fa-solid fa-user-pen"></i>
                         </a>
+
+
+                    </td>
+                    <td class="px-1 px-xxl-0">
                         <button type="button" class="btn btn-outline-warning btn-sm"
                                 title="Change password" data-bs-toggle="modal" data-bs-target="#changePasswordModal"
                                 th:data-bs-name="${user.firstName} + ' ' + ${user.lastName}"
                                 th:data-bs-id="${user.id}">
                             <i class="fa-solid fa-key"></i>
                         </button>
+                    </td>
+                    <td class="px-1 px-xxl-0">
                         <button type="button" class="btn btn-outline-danger btn-sm"
                                 title="Delete user" data-bs-toggle="modal" data-bs-target="#deleteModal"
                                 th:data-bs-name="${user.firstName} + ' ' + ${user.lastName}"
@@ -120,24 +126,27 @@
                         <h1 class="modal-title fs-5" id="changePasswordModalLabel">Change password for user</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="modal-body">
-                        <input type="hidden" name="userId" id="changePasswordModalUserId" value=""/>
-                        <input type="hidden" name="userName" id="changePasswordModalUserName" value=""/>
-                        <form>
-                            <div class="mb-3">
-                                <label for="new-password" class="col-form-label float-start">New password:</label>
-                                <input type="password" class="form-control" id="new-password" required placeholder="New password">
-                            </div>
-                            <div class="mb-3">
-                                <label for="repeat-password" class="col-form-label float-start">Repeat password:</label>
-                                <input type="password" class="form-control" id="repeat-password" required placeholder="Repeat password">
-                            </div>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-warning" onclick="changePassword()">Change password</button>
-                    </div>
+                    <form id="change-password-form" onsubmit="return false;">
+                        <div class="modal-body">
+                            <input type="hidden" name="userId" id="changePasswordModalUserId" value=""/>
+                            <input type="hidden" name="userName" id="changePasswordModalUserName" value=""/>
+
+                                <div class="mb-3">
+                                    <label for="new-password" class="col-form-label float-start">New password:</label>
+                                    <input type="password" class="form-control" id="new-password" required placeholder="New password">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="repeat-password" class="col-form-label float-start">Repeat password:</label>
+                                    <input type="password" class="form-control" id="repeat-password" required placeholder="Repeat password">
+                                    <span class="text-danger float-start" id="checkPasswordMatch"></span>
+                                </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-warning" onclick="changePassword()" id="change-password-button">Change password</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>

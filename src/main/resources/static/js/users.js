@@ -1,6 +1,7 @@
 window.onload = function() {
     checkUserSuccessDelete();
     checkUserActionHappened();
+
 };
 
 function checkUserSuccessDelete() {
@@ -53,7 +54,7 @@ function enableUser(checkbox, id) {
 $('#deleteModal').on('show.bs.modal', function(e) {
     let name = $(e.relatedTarget).data('bs-name');
     let id = $(e.relatedTarget).data('bs-id');
-    $(e.currentTarget).find('#deleteModalLabel').text('Delete user ' + name + ' ?');
+    $(e.currentTarget).find('#deleteModalLabel').text('Delete user: ' + name);
     $(e.currentTarget).find('#deleteModalUserId').val(id);
     $(e.currentTarget).find('#deleteModalUserName').val(name);
 });
@@ -126,11 +127,39 @@ function isNumber(n) {
 $('#changePasswordModal').on('show.bs.modal', function(e) {
     let name = $(e.relatedTarget).data('bs-name');
     let id = $(e.relatedTarget).data('bs-id');
-    $(e.currentTarget).find('#changePasswordModalLabel').text('Change password for ' + name + ' ?');
+    $(e.currentTarget).find('#changePasswordModalLabel').text('Change password: ' + name);
     $(e.currentTarget).find('#changePasswordModalUserId').val(id);
     $(e.currentTarget).find('#changePasswordModalUserName').val(name);
     $(e.currentTarget).find('#new-password').val('');
     $(e.currentTarget).find('#repeat-password').val('');
+    $(e.currentTarget).find('#checkPasswordMatch').text('');
+    $(e.currentTarget).find('#change-password-button').prop('disabled', false);
+
+    $("#repeat-password").on('keyup', function(){
+        let password = $("#new-password").val();
+        let repeatPassword = $("#repeat-password").val();
+        if (repeatPassword.length && password !== repeatPassword) {
+            $("#checkPasswordMatch").html('Passwords do not match!');
+            $('#change-password-button').prop('disabled', true);
+        }
+        else {
+            $("#checkPasswordMatch").html('');
+            $('#change-password-button').prop('disabled', false);
+        }
+    });
+
+    $("#new-password").on('keyup', function(){
+        let password = $("#new-password").val();
+        let repeatPassword = $("#repeat-password").val();
+        if (repeatPassword.length && password !== repeatPassword) {
+            $("#checkPasswordMatch").html('Passwords do not match!');
+            $('#change-password-button').prop('disabled', true);
+        }
+        else {
+            $("#checkPasswordMatch").html('');
+            $('#change-password-button').prop('disabled', false);
+        }
+    });
 });
 
 function changePassword() {
@@ -138,14 +167,19 @@ function changePassword() {
     let id = changePasswordModal.find('#changePasswordModalUserId').val();
     let name = changePasswordModal.find('#changePasswordModalUserName').val();
     let password = changePasswordModal.find('#new-password').val();
-    $.ajax({
-        url: "users/" + id + "/password",
-        type: "PATCH",
-        data: "password=" + password
-    }).done(function () {
-        changePasswordModal.modal('toggle');
-        successToast('Password for ' + name + ' was changed');
-    }).fail(function () {
-        failToast('Failed to change password for ' + name);
-    });
+    let repeatPassword = changePasswordModal.find('#repeat-password').val();
+    if (password.length && repeatPassword.length && password === repeatPassword) {
+        $.ajax({
+            url: "users/" + id + "/password",
+            type: "PATCH",
+            data: "password=" + password
+        }).done(function () {
+            changePasswordModal.modal('toggle');
+            successToast('Password for ' + name + ' was changed');
+        }).fail(function (data) {
+            let detail = data.responseJSON.detail;
+            detail = detail.replace('changePassword.', '');
+            failToast('Failed to change password for ' + name + ':<br>' + detail);
+        });
+    }
 }

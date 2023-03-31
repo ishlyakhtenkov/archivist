@@ -9,6 +9,7 @@ import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import ru.javaprojects.archivist.HasIdAndEmail;
+import ru.javaprojects.archivist.util.validation.NoHtml;
 
 import java.util.Date;
 import java.util.Set;
@@ -22,6 +23,7 @@ public class User extends BaseEntity implements HasIdAndEmail {
 
     @Email
     @NotBlank
+    @NoHtml
     @Size(max = 128)
     @Column(name = "email", nullable = false, unique = true)
     private String email;
@@ -31,11 +33,13 @@ public class User extends BaseEntity implements HasIdAndEmail {
     private String password;
 
     @NotBlank
+    @NoHtml
     @Size(min = 2, max = 32)
     @Column(name = "first_name", nullable = false)
     private String firstName;
 
     @NotBlank
+    @NoHtml
     @Size(min = 2, max = 32)
     @Column(name = "last_name", nullable = false)
     private String lastName;

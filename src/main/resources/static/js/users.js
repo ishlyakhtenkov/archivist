@@ -127,7 +127,7 @@ function isNumber(n) {
 $('#changePasswordModal').on('show.bs.modal', function(e) {
     let name = $(e.relatedTarget).data('bs-name');
     let id = $(e.relatedTarget).data('bs-id');
-    $(e.currentTarget).find('#changePasswordModalLabel').text('Change password: ' + name);
+    $(e.currentTarget).find('#changePasswordModalLabel').text('Change password for: ' + name);
     $(e.currentTarget).find('#changePasswordModalUserId').val(id);
     $(e.currentTarget).find('#changePasswordModalUserName').val(name);
     $(e.currentTarget).find('#new-password').val('');
@@ -135,31 +135,31 @@ $('#changePasswordModal').on('show.bs.modal', function(e) {
     $(e.currentTarget).find('#checkPasswordMatch').text('');
     $(e.currentTarget).find('#change-password-button').prop('disabled', false);
 
-    $("#repeat-password").on('keyup', function(){
-        let password = $("#new-password").val();
-        let repeatPassword = $("#repeat-password").val();
-        if (repeatPassword.length && password !== repeatPassword) {
-            $("#checkPasswordMatch").html('Passwords do not match!');
-            $('#change-password-button').prop('disabled', true);
-        }
-        else {
-            $("#checkPasswordMatch").html('');
-            $('#change-password-button').prop('disabled', false);
-        }
-    });
-
-    $("#new-password").on('keyup', function(){
-        let password = $("#new-password").val();
-        let repeatPassword = $("#repeat-password").val();
-        if (repeatPassword.length && password !== repeatPassword) {
-            $("#checkPasswordMatch").html('Passwords do not match!');
-            $('#change-password-button').prop('disabled', true);
-        }
-        else {
-            $("#checkPasswordMatch").html('');
-            $('#change-password-button').prop('disabled', false);
-        }
-    });
+    // $("#repeat-password").on('keyup', function(){
+    //     let password = $("#new-password").val();
+    //     let repeatPassword = $("#repeat-password").val();
+    //     if (repeatPassword.length && password !== repeatPassword) {
+    //         $("#checkPasswordMatch").html('Passwords do not match!');
+    //         $('#change-password-button').prop('disabled', true);
+    //     }
+    //     else {
+    //         $("#checkPasswordMatch").html('');
+    //         $('#change-password-button').prop('disabled', false);
+    //     }
+    // });
+    //
+    // $("#new-password").on('keyup', function(){
+    //     let password = $("#new-password").val();
+    //     let repeatPassword = $("#repeat-password").val();
+    //     if (repeatPassword.length && password !== repeatPassword) {
+    //         $("#checkPasswordMatch").html('Passwords do not match!');
+    //         $('#change-password-button').prop('disabled', true);
+    //     }
+    //     else {
+    //         $("#checkPasswordMatch").html('');
+    //         $('#change-password-button').prop('disabled', false);
+    //     }
+    // });
 });
 
 function changePassword() {
@@ -183,3 +183,35 @@ function changePassword() {
         });
     }
 }
+
+$("#repeat-password").on('keyup', function(){
+    let password = $("#new-password").val();
+    let repeatPassword = $("#repeat-password").val();
+    if (repeatPassword.length && password !== repeatPassword) {
+        $("#repeat-password").addClass('form-control is-invalid');
+        $("#checkPasswordMatch").html('<li>password does not match</li>');
+        $('#submit-with-pass-button').prop('disabled', true);
+    }
+    else {
+        $("#repeat-password").removeClass('form-control is-invalid');
+        $("#repeat-password").addClass('form-control');
+        $("#checkPasswordMatch").html('');
+        $('#submit-with-pass-button').prop('disabled', false);
+    }
+});
+
+$("#new-password").on('keyup', function(){
+    let password = $("#new-password").val();
+    let repeatPassword = $("#repeat-password").val();
+    if (repeatPassword.length && password !== repeatPassword) {
+        $("#repeat-password").addClass('form-control is-invalid');
+        $("#checkPasswordMatch").html('<li>password does not match</li>');
+        $('#submit-with-pass-button').prop('disabled', true);
+    }
+    else {
+        $("#repeat-password").removeClass('form-control is-invalid');
+        $("#repeat-password").addClass('form-control');
+        $("#checkPasswordMatch").html('');
+        $('#submit-with-pass-button').prop('disabled', false);
+    }
+});

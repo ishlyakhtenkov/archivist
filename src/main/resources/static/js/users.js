@@ -127,7 +127,7 @@ function isNumber(n) {
 $('#changePasswordModal').on('show.bs.modal', function(e) {
     let name = $(e.relatedTarget).data('bs-name');
     let id = $(e.relatedTarget).data('bs-id');
-    $(e.currentTarget).find('#changePasswordModalLabel').text('Change password for: ' + name);
+    $(e.currentTarget).find('#changePasswordModalLabel').text(name ? ('Change password for: ' + name) : 'Change password');
     $(e.currentTarget).find('#changePasswordModalUserId').val(id);
     $(e.currentTarget).find('#changePasswordModalUserName').val(name);
     $(e.currentTarget).find('#new-password').val('');
@@ -175,11 +175,11 @@ function changePassword() {
             data: "password=" + password
         }).done(function () {
             changePasswordModal.modal('toggle');
-            successToast('Password for ' + name + ' was changed');
+            successToast(name ? 'Password for ' + name + ' was changed' : 'Password was changed');
         }).fail(function (data) {
             let detail = data.responseJSON.detail;
             detail = detail.replace('changePassword.', '');
-            failToast('Failed to change password for ' + name + ':<br>' + detail);
+            failToast(name ? ('Failed to change password for ' + name + ':<br>' + detail) : 'Failed to change password' + ':<br>' + detail);
         });
     }
 }

@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
 
-<th:block th:replace="~{layout/main::page(title='Archivist',appMain=~{::appMain})}">
+<th:block th:replace="~{layout/main::page(title='Archivist',appMain=~{::appMain}, ownScript=~{::ownScript})}">
     <appMain>
         <h2 class="text-secondary font-weight-bold text-start"><i class="fa-solid fa-address-card me-2"></i>Profile</h2>
         <div class="row d-flex justify-content-center align-items-center">
@@ -70,7 +70,9 @@
                         <div class="card mb-4">
                             <div class="card-body">
                                 <div class="d-grid gap-2 col-10 mx-auto">
-                                    <button class="btn btn-block btn-warning">
+                                    <button type="button" class="btn btn-block btn-warning"
+                                            title="Change password" data-bs-toggle="modal" data-bs-target="#changePasswordModal"
+                                            th:data-bs-id="${user.id}">
                                         <span class="d-xl-none d-none d-md-block">Change pass <i class="fas fa-key ms-1"></i></span>
                                         <span class="d-md-none d-xl-block">Change password <i class="fas fa-key ms-1"></i></span>
                                     </button>
@@ -91,5 +93,53 @@
                 </div>
             </div>
         </div>
+
+        <!-- Change password modal -->
+        <div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="changePasswordModalLabel">Change password for user</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form id="change-password-form" onsubmit="return false;">
+                        <div class="modal-body">
+                            <input type="hidden" name="userId" id="changePasswordModalUserId" value=""/>
+                            <input type="hidden" name="userName" id="changePasswordModalUserName" value=""/>
+
+                            <div class="mb-4 mt-3">
+                                <div class="input-group">
+                                    <span class="input-group-text" id="password-addon" title="New password"><i class="fa-solid fa-key"></i></span>
+                                    <input type="password" class="form-control" id="new-password" required placeholder="New password" title="New password"
+                                           aria-label="Password" aria-describedby="password-addon" />
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <div class="input-group">
+                                    <span class="input-group-text" id="repeat-password-addon" title="Repeat password"><i class="fa-solid fa-key"></i></span>
+                                    <input type="password" class="form-control" id="repeat-password" required placeholder="Repeat password"
+                                           aria-label="Repeat password" title="Repeat password" aria-describedby="repeat-password-addon" />
+                                </div>
+                                <span class="text-danger float-start">
+                                    <ul id="checkPasswordMatch" class="mb-1">
+                                    </ul>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-warning" onclick="changePassword()" id="submit-with-pass-button">Change password</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
     </appMain>
+
+    <ownScript>
+        <script src="/toast/js/jquery.toast.min.js"></script>
+        <script src="/js/common.js?v=1"></script>
+        <script src="/js/users.js?v=1"></script>
+    </ownScript>
 </th:block>

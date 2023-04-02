@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.*;
 import org.springframework.lang.NonNull;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -50,11 +49,6 @@ public class ExceptionInfoHandler extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(ex, body, headers, HttpStatus.UNPROCESSABLE_ENTITY, request);
     }
 
-    @ExceptionHandler(AuthenticationException.class)
-    public ProblemDetail authException(Exception ex, WebRequest request) {
-        log.error("Exception: {}", ex.toString());
-        return createProblemDetail(ex, HttpStatus.UNAUTHORIZED, request);
-    }
 
     //   https://howtodoinjava.com/spring-mvc/spring-problemdetail-errorresponse/#5-adding-problemdetail-to-custom-exceptions
     @ExceptionHandler(Exception.class)

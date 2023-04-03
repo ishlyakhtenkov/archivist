@@ -21,10 +21,12 @@ import static ru.javaprojects.archivist.util.UserUtil.asTo;
 import static ru.javaprojects.archivist.util.validation.ValidationUtil.checkNew;
 
 @Controller
-@RequestMapping("/users")
+@RequestMapping(AdminUserUIController.USERS_URL)
 @AllArgsConstructor
 @Slf4j
 public class AdminUserUIController {
+    static final String USERS_URL = "/users";
+
     private final UserService service;
     private UniqueMailValidator emailValidator;
 

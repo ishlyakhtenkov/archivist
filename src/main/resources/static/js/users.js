@@ -45,7 +45,10 @@ function enableUser(checkbox, id) {
         data: "enabled=" + enabled
     }).done(function () {
         successToast('User ' + name + ' was ' + (enabled ? 'enabled' : 'disabled'));
-    }).fail(function () {
+    }).fail(function (data) {
+        if (data.status === 0) {
+            window.location.reload();
+        }
         $(checkbox).prop('checked', !enabled);
         failToast('Failed to ' + (enabled ? 'enable' : 'disable') + ' user ' + name);
     });
@@ -69,7 +72,10 @@ function deleteUser() {
         type: "DELETE"
     }).done(function () {
         updatePageContent(id, name);
-    }).fail(function () {
+    }).fail(function (data) {
+        if (data.status === 0) {
+            window.location.reload();
+        }
         failToast('Failed to delete user ' + name);
     });
 }
@@ -128,38 +134,16 @@ $('#changePasswordModal').on('show.bs.modal', function(e) {
     let name = $(e.relatedTarget).data('bs-name');
     let id = $(e.relatedTarget).data('bs-id');
     $(e.currentTarget).find('#changePasswordModalLabel').text(name ? ('Change password for: ' + name) : 'Change password');
-    $(e.currentTarget).find('#changePasswordModalUserId').val(id);
-    $(e.currentTarget).find('#changePasswordModalUserName').val(name);
+    if (name) {
+        $(e.currentTarget).find('#changePasswordModalUserName').val(name);
+    }
+    if (id) {
+        $(e.currentTarget).find('#changePasswordModalUserId').val(id);
+    }
     $(e.currentTarget).find('#new-password').val('');
     $(e.currentTarget).find('#repeat-password').val('');
     $(e.currentTarget).find('#checkPasswordMatch').text('');
     $(e.currentTarget).find('#change-password-button').prop('disabled', false);
-
-    // $("#repeat-password").on('keyup', function(){
-    //     let password = $("#new-password").val();
-    //     let repeatPassword = $("#repeat-password").val();
-    //     if (repeatPassword.length && password !== repeatPassword) {
-    //         $("#checkPasswordMatch").html('Passwords do not match!');
-    //         $('#change-password-button').prop('disabled', true);
-    //     }
-    //     else {
-    //         $("#checkPasswordMatch").html('');
-    //         $('#change-password-button').prop('disabled', false);
-    //     }
-    // });
-    //
-    // $("#new-password").on('keyup', function(){
-    //     let password = $("#new-password").val();
-    //     let repeatPassword = $("#repeat-password").val();
-    //     if (repeatPassword.length && password !== repeatPassword) {
-    //         $("#checkPasswordMatch").html('Passwords do not match!');
-    //         $('#change-password-button').prop('disabled', true);
-    //     }
-    //     else {
-    //         $("#checkPasswordMatch").html('');
-    //         $('#change-password-button').prop('disabled', false);
-    //     }
-    // });
 });
 
 function changePassword() {
@@ -177,9 +161,35 @@ function changePassword() {
             changePasswordModal.modal('toggle');
             successToast(name ? 'Password for ' + name + ' was changed' : 'Password was changed');
         }).fail(function (data) {
+            if (data.status === 0) {
+                window.location.reload();
+            }
             let detail = data.responseJSON.detail;
             detail = detail.replace('changePassword.', '');
             failToast(name ? ('Failed to change password for ' + name + ':<br>' + detail) : 'Failed to change password' + ':<br>' + detail);
+        });
+    }
+}
+
+function changePasswordProfile() {
+    let changePasswordModal = $('#changePasswordModal');
+    let password = changePasswordModal.find('#new-password').val();
+    let repeatPassword = changePasswordModal.find('#repeat-password').val();
+    if (password.length && repeatPassword.length && password === repeatPassword) {
+        $.ajax({
+            url: "profile/password",
+            type: "PATCH",
+            data: "password=" + password
+        }).done(function () {
+            changePasswordModal.modal('toggle');
+            successToast('Password was changed');
+        }).fail(function (data) {
+            if (data.status === 0) {
+                window.location.reload();
+            }
+            let detail = data.responseJSON.detail;
+            detail = detail.replace('changePassword.', '');
+            failToast('Failed to change password' + ':<br>' + detail);
         });
     }
 }

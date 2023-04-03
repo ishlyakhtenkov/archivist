@@ -12,6 +12,7 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import ru.javaprojects.archivist.AuthUser;
+import ru.javaprojects.archivist.model.Role;
 import ru.javaprojects.archivist.model.User;
 import ru.javaprojects.archivist.repository.UserRepository;
 
@@ -40,7 +41,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests()
-                .requestMatchers("/", "/css/**", "/bootstrap/**", "/fontawesome/**", "/toast/**", "/images/**", "/js/**", "/users/**").permitAll()
+                .requestMatchers("/users/**").hasRole(Role.ADMIN.name())
+                .requestMatchers("/", "/css/**", "/bootstrap/**", "/fontawesome/**", "/toast/**", "/images/**", "/js/**").permitAll()
                 .anyRequest().authenticated()
                 .and().formLogin().permitAll()
                 .loginPage("/login")

@@ -71,8 +71,7 @@
                             <div class="card-body">
                                 <div class="d-grid gap-2 col-10 mx-auto">
                                     <button type="button" class="btn btn-block btn-warning"
-                                            title="Change password" data-bs-toggle="modal" data-bs-target="#changePasswordModal"
-                                            th:data-bs-id="${user.id}">
+                                            title="Change password" data-bs-toggle="modal" data-bs-target="#changePasswordModal">
                                         <span class="d-xl-none d-none d-md-block">Change pass <i class="fas fa-key ms-1"></i></span>
                                         <span class="d-md-none d-xl-block">Change password <i class="fas fa-key ms-1"></i></span>
                                     </button>
@@ -104,9 +103,6 @@
                     </div>
                     <form id="change-password-form" onsubmit="return false;">
                         <div class="modal-body">
-                            <input type="hidden" name="userId" id="changePasswordModalUserId" value=""/>
-                            <input type="hidden" name="userName" id="changePasswordModalUserName" value=""/>
-
                             <div class="mb-4 mt-3">
                                 <div class="input-group">
                                     <span class="input-group-text" id="password-addon" title="New password"><i class="fa-solid fa-key"></i></span>
@@ -128,7 +124,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-warning" onclick="changePassword()" id="submit-with-pass-button">Change password</button>
+                            <button type="submit" class="btn btn-warning" onclick="changePasswordProfile()" id="submit-with-pass-button">Change password</button>
                         </div>
                     </form>
                 </div>

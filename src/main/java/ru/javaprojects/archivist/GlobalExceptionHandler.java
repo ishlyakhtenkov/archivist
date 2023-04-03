@@ -22,7 +22,7 @@ public class GlobalExceptionHandler {
         ModelAndView mav = new ModelAndView("exception",
                 Map.of("exception", rootCause, "message", rootCause.getMessage(),
                         "typeMessage", HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
-                        "status", HttpStatus.INTERNAL_SERVER_ERROR));
+                        "status", HttpStatus.INTERNAL_SERVER_ERROR.value()));
         mav.setStatus(HttpStatus.INTERNAL_SERVER_ERROR);
         return mav;
     }

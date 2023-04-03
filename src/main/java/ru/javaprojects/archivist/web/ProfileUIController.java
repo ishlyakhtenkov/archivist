@@ -11,11 +11,13 @@ import ru.javaprojects.archivist.AuthUser;
 import ru.javaprojects.archivist.service.UserService;
 
 @Controller
-@RequestMapping("/profile")
+@RequestMapping(value = ProfileUIController.PROFILE_URL)
 @AllArgsConstructor
 @Slf4j
 
-public class ProfileController {
+public class ProfileUIController {
+    static final String PROFILE_URL = "/profile";
+
     private final UserService service;
 
     @GetMapping
@@ -23,4 +25,6 @@ public class ProfileController {
         model.addAttribute("user", service.get(authUser.id()));
         return "profile";
     }
+
+
 }

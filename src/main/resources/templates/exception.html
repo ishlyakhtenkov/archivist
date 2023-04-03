@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<th:block th:replace="~{layout/main::page(title='Archivist',appMain=~{::appMain})}">
+    <appMain>
+        <div class="jumbotron">
+            <div class="container text-center">
+                <br>
+                <h4 class="my-3" th:text="${status}">Status</h4>
+                <h2 th:text="${typeMessage}">Type message</h2>
+                <h4 class="my-5" th:text="${message}">Message</h4>
+            </div>
+        </div>
+    </appMain>
+</th:block>

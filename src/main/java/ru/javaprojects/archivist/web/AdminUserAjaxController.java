@@ -31,7 +31,7 @@ public class AdminUserAjaxController {
         service.delete(id);
     }
 
-    @PatchMapping("/{id}/password")
+    @PatchMapping("/password/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void changePassword(@PathVariable long id, @RequestParam @Size(min = 5, max = 32) String password) {
         log.info("change password for {}", id);

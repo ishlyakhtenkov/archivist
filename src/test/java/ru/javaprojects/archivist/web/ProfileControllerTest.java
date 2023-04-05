@@ -16,10 +16,12 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static ru.javaprojects.archivist.config.SecurityConfig.PASSWORD_ENCODER;
+import static ru.javaprojects.archivist.web.LoginController.LOGIN_URL;
 import static ru.javaprojects.archivist.web.ProfileUIController.PROFILE_URL;
 import static ru.javaprojects.archivist.web.UserTestData.*;
 
 class ProfileControllerTest extends AbstractControllerTest {
+    private static final String PROFILE_CHANGE_PASSWORD_URL = PROFILE_URL + "/" + PASSWORD;
 
     @Autowired
     private UserService service;
@@ -30,7 +32,7 @@ class ProfileControllerTest extends AbstractControllerTest {
         perform(MockMvcRequestBuilders.get(PROFILE_URL))
                 .andExpect(status().isOk())
                 .andExpect(view().name("profile"))
-                .andExpect(model().attributeExists("user"))
+                .andExpect(model().attributeExists(USER_ATTRIBUTE))
                 .andExpect(result ->
                         USER_MATCHER.assertMatch((User)Objects.requireNonNull(result.getModelAndView()).getModel().get("user"), user));
     }
@@ -46,37 +48,37 @@ class ProfileControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(USER_MAIL)
     void changePassword() throws Exception {
-        perform(MockMvcRequestBuilders.patch(PROFILE_URL + "/password")
-                .param("password", "newPassword")
+        perform(MockMvcRequestBuilders.patch(PROFILE_CHANGE_PASSWORD_URL)
+                .param(PASSWORD, NEW_PASSWORD)
                 .with(csrf()))
                 .andExpect(status().isNoContent());
-        assertTrue(PASSWORD_ENCODER.matches("newPassword", service.get(USER_ID).getPassword()));
+        assertTrue(PASSWORD_ENCODER.matches(NEW_PASSWORD, service.get(USER_ID).getPassword()));
     }
 
     @Test
     @WithUserDetails(USER_MAIL)
     void changePasswordInvalid() throws Exception {
-        perform(MockMvcRequestBuilders.patch(PROFILE_URL + "/password")
-                .param("password", "pass")
+        perform(MockMvcRequestBuilders.patch(PROFILE_CHANGE_PASSWORD_URL)
+                .param(PASSWORD, INVALID_PASSWORD)
                 .with(csrf()))
                 .andExpect(status().isUnprocessableEntity())
                 .andExpect(result -> assertEquals(Objects.requireNonNull(result.getResolvedException()).getClass(),
                         ConstraintViolationException.class))
                 .andExpect(problemTitle(HttpStatus.UNPROCESSABLE_ENTITY.getReasonPhrase()))
                 .andExpect(problemStatus(HttpStatus.UNPROCESSABLE_ENTITY.value()))
-                .andExpect(problemDetail("changePassword.password: size must be between 5 and 32"))
-                .andExpect(problemInstance(PROFILE_URL + "/password"));
-        assertFalse(PASSWORD_ENCODER.matches("pass", service.get(USER_ID).getPassword()));
+                .andExpect(problemDetail(CHANGE_PASSWORD_LENGTH_ERROR))
+                .andExpect(problemInstance(PROFILE_CHANGE_PASSWORD_URL));
+        assertFalse(PASSWORD_ENCODER.matches(INVALID_PASSWORD, service.get(USER_ID).getPassword()));
     }
 
     @Test
     void changePasswordUnAuthorized() throws Exception {
-        perform(MockMvcRequestBuilders.patch(PROFILE_URL + "/password")
-                .param("password", "newPassword")
+        perform(MockMvcRequestBuilders.patch(PROFILE_CHANGE_PASSWORD_URL)
+                .param(PASSWORD, NEW_PASSWORD)
                 .with(csrf()))
                 .andExpect(status().isFound())
                 .andExpect(result ->
-                        assertTrue(Objects.requireNonNull(result.getResponse().getRedirectedUrl()).endsWith("/login")));
-        assertFalse(PASSWORD_ENCODER.matches("newPassword", service.get(USER_ID).getPassword()));
+                        assertTrue(Objects.requireNonNull(result.getResponse().getRedirectedUrl()).endsWith(LOGIN_URL)));
+        assertFalse(PASSWORD_ENCODER.matches(NEW_PASSWORD, service.get(USER_ID).getPassword()));
     }
 }

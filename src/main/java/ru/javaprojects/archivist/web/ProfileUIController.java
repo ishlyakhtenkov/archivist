@@ -11,7 +11,7 @@ import ru.javaprojects.archivist.AuthUser;
 import ru.javaprojects.archivist.service.UserService;
 
 @Controller
-@RequestMapping(value = ProfileUIController.PROFILE_URL)
+@RequestMapping(ProfileUIController.PROFILE_URL)
 @AllArgsConstructor
 @Slf4j
 

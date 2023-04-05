@@ -6,13 +6,14 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.javaprojects.archivist.AbstractControllerTest;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static ru.javaprojects.archivist.web.LoginController.LOGIN_URL;
 import static ru.javaprojects.archivist.web.UserTestData.USER_MAIL;
 
 class LoginControllerTest extends AbstractControllerTest {
 
     @Test
     void showLoginPageUnAuthorized() throws Exception {
-        perform(MockMvcRequestBuilders.get("/login"))
+        perform(MockMvcRequestBuilders.get(LOGIN_URL))
                 .andExpect(status().isOk())
                 .andExpect(view().name("login"));
     }
@@ -20,7 +21,7 @@ class LoginControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(USER_MAIL)
     void showLoginPageAuthorized() throws Exception {
-        perform(MockMvcRequestBuilders.get("/login"))
+        perform(MockMvcRequestBuilders.get(LOGIN_URL))
                 .andExpect(status().isFound())
                 .andExpect(redirectedUrl("/"));
     }

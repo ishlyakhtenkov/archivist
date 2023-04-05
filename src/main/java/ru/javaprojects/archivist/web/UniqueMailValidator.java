@@ -11,7 +11,8 @@ import ru.javaprojects.archivist.repository.UserRepository;
 @Component
 @AllArgsConstructor
 public class UniqueMailValidator implements org.springframework.validation.Validator {
-    public static final String EXCEPTION_DUPLICATE_EMAIL = "User with this email already exists";
+    public static final String DUPLICATE_EMAIL_ERROR_CODE = "Duplicate";
+    public static final String DUPLICATE_EMAIL_MESSAGE = "User with this email already exists";
 
     private final UserRepository repository;
 
@@ -27,7 +28,7 @@ public class UniqueMailValidator implements org.springframework.validation.Valid
             repository.findByEmailIgnoreCase(user.getEmail())
                     .ifPresent(dbUser -> {
                         if (user.isNew() || !user.getId().equals(dbUser.getId())) {
-                            errors.rejectValue("email", "Duplicate", EXCEPTION_DUPLICATE_EMAIL);
+                            errors.rejectValue("email", DUPLICATE_EMAIL_ERROR_CODE, DUPLICATE_EMAIL_MESSAGE);
                         }
                     });
         }

@@ -9,6 +9,7 @@ import org.springframework.util.Assert;
 import ru.javaprojects.archivist.model.User;
 import ru.javaprojects.archivist.repository.UserRepository;
 import ru.javaprojects.archivist.to.UserTo;
+import ru.javaprojects.archivist.util.exception.NotFoundException;
 
 import static ru.javaprojects.archivist.config.SecurityConfig.PASSWORD_ENCODER;
 import static ru.javaprojects.archivist.util.UserUtil.prepareToSave;
@@ -30,6 +31,11 @@ public class UserService {
 
     public User get(long id) {
         return repository.getExisted(id);
+    }
+
+    public User getByEmail(String email) {
+        return repository.findByEmailIgnoreCase(email).orElseThrow(() ->
+                new NotFoundException("Not found user with email=" + email));
     }
 
     public void create(User user) {

@@ -1,11 +1,9 @@
 package ru.javaprojects.archivist;
 
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.ResultMatcher;
 
 import java.io.UnsupportedEncodingException;
 import java.util.List;
-import java.util.Objects;
 import java.util.function.BiConsumer;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -75,17 +73,8 @@ public class MatcherFactory {
 //            return JsonUtil.readValue(getContent(action.andReturn()), clazz);
 //        }
 
-        public ResultMatcher modelContent(T expected, String modelAttribute) {
-            return result -> assertMatch(getModelContent(result, modelAttribute, clazz), expected);
-
-        }
-
         private static String getContent(MvcResult result) throws UnsupportedEncodingException {
             return result.getResponse().getContentAsString();
-        }
-
-        private static <T> T getModelContent(MvcResult result, String modelAttribute, Class<T> clazz) {
-            return clazz.cast(Objects.requireNonNull(result.getModelAndView()).getModel().get(modelAttribute));
         }
     }
 }

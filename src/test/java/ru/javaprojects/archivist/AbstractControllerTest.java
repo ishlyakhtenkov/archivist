@@ -23,11 +23,19 @@ public class AbstractControllerTest {
         return mockMvc.perform(builder);
     }
 
-    protected ResultMatcher problemDetailTitle(String title) {
+    protected ResultMatcher problemTitle(String title) {
         return jsonPath("$.title").value(title);
     }
 
-    protected ResultMatcher problemDetailMessage(String code) {
-        return jsonPath("$.detail").value(code);
+    protected ResultMatcher problemStatus(int status) {
+        return jsonPath("$.status").value(status);
+    }
+
+    protected ResultMatcher problemDetail(String detail) {
+        return jsonPath("$.detail").value(detail);
+    }
+
+    protected ResultMatcher problemInstance(String instance) {
+        return jsonPath("$.instance").value(instance);
     }
 }

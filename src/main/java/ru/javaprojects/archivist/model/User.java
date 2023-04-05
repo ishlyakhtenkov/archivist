@@ -72,6 +72,15 @@ public class User extends BaseEntity implements HasIdAndEmail {
         this.roles = roles;
     }
 
+    public User(Long id, String email, String password, String firstName, String lastName, boolean enabled, Set<Role> roles) {
+        this(id, email, firstName, lastName, enabled, roles);
+        this.password = password;
+    }
+
+    public String getFullName() {
+        return firstName + " " + lastName;
+    }
+
     @Override
     public String toString() {
         return "User:" + id + '[' + email + ']';

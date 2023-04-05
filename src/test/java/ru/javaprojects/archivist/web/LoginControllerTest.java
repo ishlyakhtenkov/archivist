@@ -11,7 +11,7 @@ import static ru.javaprojects.archivist.web.UserTestData.USER_MAIL;
 class LoginControllerTest extends AbstractControllerTest {
 
     @Test
-    void showLoginPageWhenUnAuthorized() throws Exception {
+    void showLoginPageUnAuthorized() throws Exception {
         perform(MockMvcRequestBuilders.get("/login"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("login"));
@@ -19,7 +19,7 @@ class LoginControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(USER_MAIL)
-    void showLoginPageWhenAuthorized() throws Exception {
+    void showLoginPageAuthorized() throws Exception {
         perform(MockMvcRequestBuilders.get("/login"))
                 .andExpect(status().isFound())
                 .andExpect(redirectedUrl("/"));

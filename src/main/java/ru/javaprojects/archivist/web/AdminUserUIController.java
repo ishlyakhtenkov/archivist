@@ -36,8 +36,8 @@ public class AdminUserUIController {
     }
 
     @GetMapping
-    public String getPage(@RequestParam(value = "keyword", required = false) String keyword,
-                          @PageableDefault Pageable pageable, Model model) {
+    public String getAll(@RequestParam(value = "keyword", required = false) String keyword,
+                            @PageableDefault Pageable pageable, Model model) {
         Page<User> usersPage;
         if (keyword != null) {
             if (keyword.isBlank()) {
@@ -60,7 +60,7 @@ public class AdminUserUIController {
         return "user-add";
     }
 
-    @PostMapping("/add")
+    @PostMapping("/create")
     public String create(@Valid User user, BindingResult result, Model model, RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
             model.addAttribute("roles", Role.values());

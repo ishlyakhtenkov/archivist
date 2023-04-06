@@ -42,7 +42,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests()
                 .requestMatchers("/users/**").hasRole(Role.ADMIN.name())
-                .requestMatchers("/", "/css/**", "/bootstrap/**", "/fontawesome/**", "/toast/**", "/images/**", "/js/**").permitAll()
+                .requestMatchers("/", "/webjars/**", "/css/**", "/bootstrap/**", "/fontawesome/**", "/toast/**", "/images/**", "/js/**").permitAll()
                 .anyRequest().authenticated()
                 .and().formLogin().permitAll()
                 .loginPage("/login")

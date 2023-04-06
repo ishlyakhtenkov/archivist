@@ -67,18 +67,18 @@
 }
 
 .sidebar-nav, .accordion-body, .accordion-button, .accordion-button:not(.collapsed) {
-    background-color: var(--nav);
+    background-color: var(--sidebar-color);
     color: darkgray;
 }
 
 .sidebar-nav ul li:not(.active):hover, .sidebar-nav ul li:not(.active) a:not(.active):hover,
 .sidebar-nav ul li:not(.active):focus, .sidebar-nav ul li:not(.active) a:not(.active):focus {
-    background-color: var(--nav-item-hover);
+    background-color: var(--menu-item-hover-color);
     color: white;
 }
 
 .sidebar-nav ul li.active, .sidebar-nav ul li.active a {
-    background-color: var(--nav-item-active);
+    background-color: var(--menu-item-active-color);
     color: white;
     font-weight: bold;
 }
@@ -102,7 +102,7 @@
 
 /*HEADER*/
 .header-nav {
-    background-color: var(--dark-nav);
+    background-color: var(--header-color);
     padding-left: 232px;
     color: darkgray;
 }
@@ -119,8 +119,8 @@
 }
 
 #header-search {
-    background-color: var(--nav);
-    border-color: var(--nav);
+    background-color: var(--sidebar-color);
+    border-color: var(--sidebar-color);
     color: white;
 }
 
@@ -135,14 +135,14 @@
 
 @media (min-width: 992px) {
     .btn-gray {
-        background-color: var(--nav);
+        background-color: var(--sidebar-color);
         color: darkgray;
     }
 }
 
 @media (max-width: 992px) {
     .btn-gray {
-        background-color: var(--dark-nav);
+        background-color: var(--header-color);
         color: darkgray;
     }
 }
@@ -155,13 +155,13 @@
 
 /*FOOTER*/
 .footer {
-    background-color: var(--dark-nav);
+    background-color: var(--header-color);
 }
 
 
 /*CONTENT*/
 .app-main {
-    background-color: var(--main-background);
+    background-color: var(--content-background-color);
 }
 
 .bootstrap-select>.dropdown-toggle.bs-placeholder,.bootstrap-select>.dropdown-toggle.bs-placeholder:active,.bootstrap-select>.dropdown-toggle.bs-placeholder:focus,.bootstrap-select>.dropdown-toggle.bs-placeholder:hover {

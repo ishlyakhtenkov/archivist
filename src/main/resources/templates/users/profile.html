@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
+
+<th:block th:replace="~{fragments/main::page(title='Archivist',appMain=~{::appMain}, ownScript=~{::ownScript})}">
+    <appMain>
+        <h2 class="text-secondary font-weight-bold text-start"><i class="fa-solid fa-address-card me-2"></i>Profile</h2>
+        <div class="row d-flex justify-content-center align-items-center">
+            <div class="col">
+                <div class="row">
+                    <div class="col col-md-8 mb-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="e-profile">
+                                    <div class="row">
+                                        <div class="col d-flex flex-column flex-sm-row justify-content-between mb-3">
+                                            <div class="mb-2 mb-sm-0">
+                                                <h4 class=" pb-1 mb-0 text-nowrap" th:text="${user.firstName} + ' ' + ${user.lastName}">Name</h4>
+                                            </div>
+                                            <div class="text-end">
+                                                <div class="text-muted"><small th:text="'Registered: ' + ${#dates.format(user.registered, 'dd-MM-yyyy HH:mm')}">Registered</small></div>
+                                                <div class="text-muted"><small th:text="'Roles: ' + ${#strings.substring(user.roles, 1, #strings.length(user.roles) - 1)}">Roles</small></div>
+                                                <div class="text-muted"><small>
+                                                    <input name="enabled" type="checkbox" th:checked="${user.enabled}"
+                                                           class="form-check-input mt-2" disabled>
+                                                    <label class="custom-control-label mt-1">Enabled</label></small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-content pt-2">
+                                        <div class="tab-pane active">
+                                            <div>
+                                                <div class="row row-cols-1 row-cols-md-2">
+                                                    <div class="col col-md-6 mb-2">
+                                                        <label>First name</label>
+                                                        <input type="text" th:value="${user.firstName}" disabled name="name" class="form-control" />
+                                                    </div>
+                                                    <div class="col col-md-6 mb-2">
+                                                        <label>Last name</label>
+                                                        <input type="text" th:value="${user.lastName}" disabled name="name" class="form-control" />
+                                                    </div>
+                                                </div>
+                                                <div class="row row-cols-1 row-cols-md-2">
+                                                    <div class="col col-md-6">
+                                                        <label>E-mail</label>
+                                                        <input type="text" th:value="${user.email}" disabled name="name" class="form-control" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-xl-3 col-md-4 mb-3">
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                    <form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post">
+                                        <div class="d-grid gap-2 col-10 mx-auto">
+                                            <button class="btn btn-secondary" type="submit">
+                                                <span>Logout</span>
+                                                <i class="fas fa-sign-out-alt ms-1"></i>
+                                            </button>
+                                        </div>
+                                    </form>
+                            </div>
+                        </div>
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <div class="d-grid gap-2 col-10 mx-auto">
+                                    <button type="button" class="btn btn-block btn-warning"
+                                            title="Change password" data-bs-toggle="modal" data-bs-target="#changePasswordModal">
+                                        <span class="d-xl-none d-none d-md-block">Change pass <i class="fas fa-key ms-1"></i></span>
+                                        <span class="d-md-none d-xl-block">Change password <i class="fas fa-key ms-1"></i></span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <div class="d-grid gap-2 col-10 mx-auto">
+                                    <button class="btn btn-block btn-light" onclick="history.back()">
+                                        <span>Close</span>
+                                        <i class="fas fa-times ms-1"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Change password modal -->
+        <div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="changePasswordModalLabel">Change password for user</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form id="change-password-form" onsubmit="return false;">
+                        <div class="modal-body">
+                            <div class="mb-4 mt-3">
+                                <div class="input-group">
+                                    <span class="input-group-text" id="password-addon" title="New password"><i class="fa-solid fa-key"></i></span>
+                                    <input type="password" class="form-control" id="new-password" required placeholder="New password" title="New password"
+                                           aria-label="Password" aria-describedby="password-addon" />
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <div class="input-group">
+                                    <span class="input-group-text" id="repeat-password-addon" title="Repeat password"><i class="fa-solid fa-key"></i></span>
+                                    <input type="password" class="form-control" id="repeat-password" required placeholder="Repeat password"
+                                           aria-label="Repeat password" title="Repeat password" aria-describedby="repeat-password-addon" />
+                                </div>
+                                <span class="text-danger float-start">
+                                    <ul id="checkPasswordMatch" class="mb-1">
+                                    </ul>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-warning" onclick="changePasswordProfile()" id="submit-with-pass-button">Change password</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </appMain>
+
+    <ownScript>
+        <script src="/js/common.js?v=1"></script>
+        <script src="/js/users.js?v=1"></script>
+    </ownScript>
+</th:block>

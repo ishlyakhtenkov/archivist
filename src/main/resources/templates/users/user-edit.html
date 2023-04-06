@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:with="activeMenuItem='Users'" lang="en">
+
+<th:block th:replace="~{fragments/main::page(title='Archivist',appMain=~{::appMain})}">
+    <appMain>
+        <div class="row d-flex justify-content-center align-items-center">
+            <div class="col-12 col-md-8 col-xl-5">
+                <div class="card shadow-2-strong" style="border-radius: 1rem;">
+                    <div class="text-end mt-3 me-3">
+                        <a th:href="@{/users}" type="button" class="btn-close" aria-label="Close"></a>
+                    </div>
+                    <div class="card-body px-3 px-md-5 pb-3 pb-md-5 pt-0 text-center">
+                        <h3 class="mb-3" th:text="'Edit User: ' + ${userTo.firstName} + ' ' + ${userTo.lastName}">Edit User</h3>
+                        <form th:action="@{/users/update}" method="post" th:object="${userTo}">
+                            <input type="hidden" th:field="*{id}">
+                            <div class="mb-4">
+                                <div class="input-group">
+                                    <span class="input-group-text" id="first-name-addon" title="First name"><i class="fa-solid fa-user"></i></span>
+                                    <input type="text" th:field="*{firstName}"
+                                           th:class="${#fields.hasErrors('firstName')} ? 'form-control is-invalid' : 'form-control'"
+                                           required placeholder="First name" title="First name" aria-label="Firstname" aria-describedby="first-name-addon"/>
+                                </div>
+                                <span class="help-block" th:if="${#fields.hasErrors('firstName')}">
+                                    <ul>
+                                        <li class="text-danger text-start"
+                                            th:each="err : ${#fields.errors('firstName')}" th:text="${err}"/>
+                                    </ul>
+                                </span>
+                            </div>
+                            <div class="mb-4">
+                                <div class="input-group">
+                                    <span class="input-group-text" id="last-name-addon" title="Last name"><i class="fa-solid fa-user"></i></span>
+                                    <input type="text" th:field="*{lastName}"
+                                           th:class="${#fields.hasErrors('lastName')} ? 'form-control is-invalid' : 'form-control'"
+                                           placeholder="Last name" title="Last name" aria-label="Lastname" aria-describedby="last-name-addon"/>
+                                </div>
+                                <span class="help-block" th:if="${#fields.hasErrors('lastName')}">
+                                    <ul>
+                                        <li class="text-danger text-start" th:each="err : ${#fields.errors('lastName')}"
+                                            th:text="${err}"/>
+                                    </ul>
+                                </span>
+                            </div>
+                            <div class="mb-4">
+                                <div class="input-group">
+                                    <span class="input-group-text" id="email-addon" title="E-mail"><i class="fa-solid fa-envelope"></i></span>
+                                    <input type="text" th:field="*{email}"
+                                           th:class="${#fields.hasErrors('email')} ? 'form-control is-invalid' : 'form-control'"
+                                           required placeholder="E-mail" title="E-mail" aria-label="Email" aria-describedby="email-addon"/>
+                                </div>
+                                <span class="help-block" th:if="${#fields.hasErrors('email')}">
+									<ul>
+										<li class="text-danger text-start" th:each="err : ${#fields.errors('email')}"
+                                            th:text="${err}"/>
+									</ul>
+								</span>
+                            </div>
+                            <div class="mb-4">
+                                <div class="input-group">
+                                    <span class="input-group-text" id="roles-addon" title="Roles"><i class="fa-solid fa-chess"></i></span>
+                                    <select class="form-control selectpicker border" data-style="btn-white"
+                                            multiple th:field="*{roles}" title="Roles" required aria-label="Roles" aria-describedby="roles-addon">
+                                        <option th:each="role : ${roles}"
+                                                th:value="${role}"
+                                                th:text="${role}">
+                                        </option>
+                                    </select>
+                                </div>
+                                <span class="help-block" th:if="${#fields.hasErrors('roles')}">
+									<ul>
+										<li class="text-danger text-start" th:each="err : ${#fields.errors('roles')}"
+                                            th:text="${err}"/>
+									</ul>
+								</span>
+                            </div>
+                            <div class="row">
+                                <div class="d-grid gap-2">
+                                    <button class="btn btn-success btn-lg" type="submit">Save</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </appMain>
+</th:block>

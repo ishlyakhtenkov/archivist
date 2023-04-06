@@ -6,8 +6,6 @@ spring:
     init:
       mode: always
       encoding: UTF-8
-#  datasource:
-#    url: jdbc:h2:mem:testdb
   jpa:
     show-sql: true
     properties:

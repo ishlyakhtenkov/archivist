@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sd="http://www.thymeleaf.org/spring-data"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      th:with="activeMenuItem='Users'" lang="en">
+
+<th:block th:replace="~{fragments/main::page(title='Archivist',appMain=~{::appMain}, ownScript=~{::ownScript})}">
+    <appMain>
+        <!-- Search field, Add button -->
+        <span th:if="${userCreated != null || userUpdated != null}" th:data-action="${userCreated} ? 'created' : 'updated'" th:data-name="${userCreated} ? ${userCreated} : ${userUpdated}" th:id="action-span"></span>
+        <div class="row row-cols-1 row-cols-md-2">
+            <div class="col-md-4 text-start">
+                <h2 class="text-secondary font-weight-bold"><i class="fas fa-users me-2"></i>Users</h2>
+            </div>
+            <div class="col-md-8 mb-2">
+                <div class="btn-toolbar justify-content-start justify-content-md-end">
+                    <form class="d-flex" role="search" th:action="@{/users}" method="get">
+                        <input class="form-control" th:name="keyword" th:value="${param.keyword}" type="search" placeholder="Search users" aria-label="Search">
+                    </form>
+                    <a th:href="@{/users/add}" type="button" class="btn btn-secondary ms-2" title="Add new User">
+                        <span><i class="fa-solid fa-user-plus"></i> Add User</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Users table -->
+        <div class="table-responsive text-nowrap text-center">
+            <table class="table table-bordered">
+                <thead class="table-dark">
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Enabled</th>
+                    <th>Registered</th>
+                    <th>Roles</th>
+                    <th colspan="3">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="user : ${usersPage}" th:id="'user-row-' + ${user.id}">
+                    <td  th:text="${user.firstName} + ' ' + ${user.lastName}"></td>
+                    <td th:text="${user.email}"></td>
+                    <td>
+                        <div class="form-switch">
+                            <input type="checkbox" role="switch" checked class="form-check-input" style="cursor: pointer;" th:checked="${user.enabled}"
+                                   th:data-name="${user.firstName} + ' ' + ${user.lastName}"
+                                   th:onclick="|enableUser(this, '${user.id}')|" />
+                        </div>
+                    </td>
+                    <td th:text="${#dates.format(user.registered, 'dd-MM-yyyy HH:mm')}"></td>
+                    <td th:text="${#strings.substring(user.roles, 1, #strings.length(user.roles) - 1)}"></td>
+                    <td class="px-1 px-xxl-0">
+                        <a th:href="@{'/users/edit/' + ${user.id}}" type="button" class="btn btn-outline-success btn-sm" title="Edit user">
+                            <i class="fa-solid fa-user-pen"></i>
+                        </a>
+
+
+                    </td>
+                    <td class="px-1 px-xxl-0">
+                        <button type="button" class="btn btn-outline-warning btn-sm"
+                                title="Change password" data-bs-toggle="modal" data-bs-target="#changePasswordModal"
+                                th:data-bs-name="${user.firstName} + ' ' + ${user.lastName}"
+                                th:data-bs-id="${user.id}">
+                            <i class="fa-solid fa-key"></i>
+                        </button>
+                    </td>
+                    <td class="px-1 px-xxl-0">
+                        <button type="button" class="btn btn-outline-danger btn-sm"
+                                title="Delete user" data-bs-toggle="modal" data-bs-target="#deleteModal"
+                                th:data-bs-name="${user.firstName} + ' ' + ${user.lastName}"
+                                th:data-bs-id="${user.id}">
+                            <i class="fa-solid fa-user-xmark"></i>
+                        </button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="row">
+            <div class="col-12 col-md-6 text-center text-md-start">
+                <div sd:pagination-summary="" id="pagination-summary">info</div>
+            </div>
+
+            <div class="col-12 col-md-6 mt-3 mt-md-0">
+                <nav>
+                    <ul class="pagination justify-content-center justify-content-md-end" sd:pagination-split="7" sd:pagination="full">
+                        <!-- Pagination created by SpringDataDialect, this content is just for mockup -->
+                        <li class="disabled"><a href="#" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
+                        <li class="active"><a href="#">1 <span class="sr-only">(current)</span></a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col text-center text-md-end">
+                Show <span sd:page-size-selector="javascript"></span> entries
+            </div>
+        </div>
+
+        <!-- Delete modal -->
+        <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="deleteModalLabel">Are you sure want to delete user?</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <input type="hidden" name="userId" id="deleteModalUserId" value=""/>
+                    <input type="hidden" name="userName" id="deleteModalUserName" value=""/>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close">Close</button>
+                        <button type="button" class="btn btn-danger" onclick="deleteUser()">Delete user</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Change password modal -->
+        <div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="changePasswordModalLabel">Change password for user</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form id="change-password-form" onsubmit="return false;">
+                        <div class="modal-body">
+                            <input type="hidden" name="userId" id="changePasswordModalUserId" value=""/>
+                            <input type="hidden" name="userName" id="changePasswordModalUserName" value=""/>
+
+                            <div class="mb-4 mt-3">
+                                <div class="input-group">
+                                    <span class="input-group-text" id="password-addon" title="New password"><i class="fa-solid fa-key"></i></span>
+                                    <input type="password" class="form-control" id="new-password" required placeholder="New password" title="New password"
+                                           aria-label="Password" aria-describedby="password-addon" />
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <div class="input-group">
+                                    <span class="input-group-text" id="repeat-password-addon" title="Repeat password"><i class="fa-solid fa-key"></i></span>
+                                    <input type="password" class="form-control" id="repeat-password" required placeholder="Repeat password"
+                                           aria-label="Repeat password" title="Repeat password" aria-describedby="repeat-password-addon" />
+                                </div>
+                                <span class="text-danger float-start">
+                                    <ul id="checkPasswordMatch" class="mb-1">
+                                    </ul>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-warning" onclick="changePassword()" id="submit-with-pass-button">Change password</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </appMain>
+
+    <ownScript>
+        <script src="/js/common.js?v=1"></script>
+        <script src="/js/users.js?v=1"></script>
+    </ownScript>
+</th:block>

@@ -78,47 +78,54 @@ function deleteUser() {
 
 function updatePageContent(id, name) {
     $('#user-row-' + id).remove();
-    let paginationSummary = $('#pagination-summary');
-    let paginationSummaryText = paginationSummary.text();
-    let words = paginationSummaryText.split(' ');
-    let firstEntryNumber = 0;
-    let lastEntryNumber = 0;
-    let totalEntries = 0;
-    let wordsNumberCounter = 0;
+
+    let paginationInfoDigits = getPaginationInfoDigits();
+    let firstEntryDigit = paginationInfoDigits[0];
+    let lastEntryDigit = paginationInfoDigits[1];
+    let totalEntries = paginationInfoDigits[2];
+    if (totalEntries < firstEntryDigit) {
+        if (totalEntries === 0) {
+            window.location.href = `${window.location.pathname}?${userDeleteParam}=${name}`;
+        } else {
+            let urlParams = new URLSearchParams(window.location.search);
+            urlParams.set('page', (urlParams.get('page') - 1));
+            urlParams.append(userDeleteParam, name);
+            window.location.href = `${window.location.pathname}?${urlParams}`;
+        }
+    } else if (lastEntryDigit < firstEntryDigit) {
+        let urlParams = new URLSearchParams(window.location.search);
+        urlParams.append(userDeleteParam, name);
+        window.location.href = `${window.location.pathname}?${urlParams}`;
+    } else {
+        updatePaginationInfo(paginationInfoDigits);
+        successToast(`User ${name} was deleted`);
+    }
+}
+
+function getPaginationInfoDigits() {
+    let paginationInfo = $('#pagination-summary').text();
+    let words = paginationInfo.split(' ');
+    let digits = [];
     for (let i = 0; i < words.length; i++) {
         if (isNumber(words[i])) {
-            wordsNumberCounter++;
-            if (wordsNumberCounter === 1) {
-                firstEntryNumber = words[i];
-            } else {
-                words[i] = words[i] - 1;
-                if (wordsNumberCounter === 2) {
-                    lastEntryNumber = words[i];
-                } else {
-                    totalEntries = words[i];
-                }
-            }
+            digits.push(words[i])
         }
     }
-    if (totalEntries < firstEntryNumber) {
-        if (totalEntries === 0) {
-            window.location.href = window.location.pathname + '?deleteSuccess=' + name;
-        } else {
-            let queryString = window.location.search;
-            let urlParams = new URLSearchParams(queryString);
-            urlParams.set('page', (urlParams.get('page') - 1));
-            urlParams.append('deleteSuccess', name);
-            window.location.href = window.location.pathname + '?' + urlParams;
+    digits[1] = --digits[1];
+    digits[2] = --digits[2];
+    return digits;
+}
+
+function updatePaginationInfo(digits) {
+    let paginationSummary = $('#pagination-summary');
+    let paginationInfo =paginationSummary.text();
+    let words = paginationInfo.split(' ');
+    for (let i = words.length - 1; i >= 0; i--) {
+        if (isNumber(words[i])) {
+            words[i] = digits.pop();
         }
-    } else if (lastEntryNumber < firstEntryNumber) {
-        let queryString = window.location.search;
-        let urlParams = new URLSearchParams(queryString);
-        urlParams.append('deleteSuccess', name);
-        window.location.href = window.location.pathname + '?' + urlParams;
-    } else {
-        paginationSummary.text(words.join(' '));
-        successToast('User ' + name + ' was deleted');
     }
+    paginationSummary.text(words.join(' '));
 }
 
 function isNumber(n) {

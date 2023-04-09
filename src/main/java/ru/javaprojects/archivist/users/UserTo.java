@@ -44,6 +44,10 @@ public class UserTo extends BaseTo implements HasIdAndEmail {
         this.roles = roles;
     }
 
+    public String getFullName() {
+        return firstName + " " + lastName;
+    }
+
     @Override
     public String toString() {
         return "UserTo:" + id + '[' + email + ']';

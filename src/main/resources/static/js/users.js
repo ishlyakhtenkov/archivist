@@ -7,7 +7,7 @@ window.onload = function() {
 function checkUserActionHappened() {
     let actionSpan = $("#action-span");
     if (actionSpan.length) {
-        successToast(`User ${actionSpan.data('name')} was ${actionSpan.data('action')}`);
+        successToast(`${actionSpan.data('action')}`);
     } else {
         checkUserDeleteHappened();
     }
@@ -182,6 +182,27 @@ function changePasswordProfile() {
             successToast('Password was changed');
         }).fail(function(data) {
             handleError(data, 'Failed to change password');
+        });
+    }
+}
+
+$('#forgotPasswordModal').on('show.bs.modal', function(e) {
+    $(e.currentTarget).find('#email').val('');
+});
+
+function forgotPassword() {
+    let forgotPasswordModal = $('#forgotPasswordModal');
+    let email = forgotPasswordModal.find('#email').val();
+    if (email.length) {
+        $.ajax({
+            url: "profile/forgotPassword",
+            type: "POST",
+            data: "email=" + email
+        }).done(function () {
+            forgotPasswordModal.modal('toggle');
+            $('#emailSentModal').modal('toggle');
+        }).fail(function(data) {
+            handleError(data, 'Failed to reset password');
         });
     }
 }

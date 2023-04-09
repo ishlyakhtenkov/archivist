@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS password_reset_tokens;
 DROP TABLE IF EXISTS user_roles;
 DROP TABLE IF EXISTS users;
 DROP SEQUENCE IF EXISTS global_seq;
@@ -23,3 +24,13 @@ CREATE TABLE user_roles
     CONSTRAINT user_roles_unique_idx UNIQUE (user_id, role),
     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
+
+CREATE TABLE password_reset_tokens
+(
+    id         BIGINT      DEFAULT nextval('global_seq')  PRIMARY KEY,
+    user_id    BIGINT      NOT NULL,
+    token      VARCHAR(36) NOT NULL,
+    expiry_date TIMESTAMP   NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+);
+CREATE UNIQUE INDEX password_reset_tokens_unique_user_idx ON password_reset_tokens (user_id);

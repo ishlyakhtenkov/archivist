@@ -6,8 +6,8 @@
 
 <th:block th:replace="~{fragments/main::page(title='Archivist',appMain=~{::appMain}, ownScript=~{::ownScript})}">
     <appMain>
+        <span th:if="${action != null}" th:data-action="${action}" th:id="action-span"></span>
         <!-- Search field, Add button -->
-        <span th:if="${userCreated != null || userUpdated != null}" th:data-action="${userCreated} ? 'created' : 'updated'" th:data-name="${userCreated} ? ${userCreated} : ${userUpdated}" th:id="action-span"></span>
         <div class="row row-cols-1 row-cols-md-2">
             <div class="col-md-4 text-start">
                 <h2 class="text-secondary font-weight-bold"><i class="fas fa-users me-2"></i>Users</h2>

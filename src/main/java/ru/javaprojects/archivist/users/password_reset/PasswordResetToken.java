@@ -1,4 +1,4 @@
-package ru.javaprojects.archivist.users;
+package ru.javaprojects.archivist.users.password_reset;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -9,6 +9,7 @@ import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import ru.javaprojects.archivist.common.model.BaseEntity;
+import ru.javaprojects.archivist.users.User;
 
 import java.util.Date;
 

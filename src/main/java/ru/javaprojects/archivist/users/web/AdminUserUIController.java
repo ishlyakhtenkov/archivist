@@ -52,6 +52,7 @@ public class AdminUserUIController {
 
     @GetMapping("/add")
     public String showAddForm(Model model) {
+        log.info("show user add form");
         model.addAttribute("roles", Role.values());
         model.addAttribute("user", new User());
         return "users/user-add";
@@ -66,12 +67,13 @@ public class AdminUserUIController {
         log.info("create {}", user);
         checkNew(user);
         service.create(user);
-        redirectAttributes.addFlashAttribute("userCreated", user.getFirstName() + " " + user.getLastName());
+        redirectAttributes.addFlashAttribute("action", "User " + user.getFullName() + " was created");
         return "redirect:/users";
     }
 
     @GetMapping("/edit/{id}")
     public String showEditForm(@PathVariable long id, Model model) {
+        log.info("show user={} edit form", id);
         model.addAttribute("roles", Role.values());
         model.addAttribute("userTo", asTo(service.get(id)));
         return "users/user-edit";
@@ -85,7 +87,7 @@ public class AdminUserUIController {
         }
         log.info("update {}", userTo);
         service.update(userTo);
-        redirectAttributes.addFlashAttribute("userUpdated", userTo.getFirstName() + " " + userTo.getLastName());
+        redirectAttributes.addFlashAttribute("action", "User " + userTo.getFullName() + " was updated");
         return "redirect:/users";
     }
 }

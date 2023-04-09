@@ -41,6 +41,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests()
                 .requestMatchers("/users/**").hasRole(Role.ADMIN.name())
+                .requestMatchers("/profile/forgotPassword", "/profile/resetPassword").anonymous()
                 .requestMatchers("/", "/webjars/**", "/css/**", "/images/**", "/js/**").permitAll()
                 .anyRequest().authenticated()
                 .and().formLogin().permitAll()

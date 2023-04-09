@@ -11,3 +11,6 @@ spring:
     properties:
       hibernate:
         format_sql: true
+
+password-reset:
+  url: http://localhost:8080/profile/resetPassword

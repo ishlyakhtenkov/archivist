@@ -8,6 +8,12 @@ spring:
   sql:
     init:
       mode: never
+  mail:
+    host: smtp.gmail.com
+    port: 465
+    username: niemi.filecabinet@gmail.com
+    password: jdarcyyrnysveblq
+    protocol: smtps
 
 server.servlet:
   encoding:
@@ -15,4 +21,6 @@ server.servlet:
     enabled: true # Enable http encoding support
     force: true
 
-password-reset-token.expiration-time: 86400000
+password-reset:
+  token-expiration-time: 86400000
+  url: https://javaprojects.ru/archivist/profile/resetPassword

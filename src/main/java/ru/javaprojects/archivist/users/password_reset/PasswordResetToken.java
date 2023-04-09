@@ -38,6 +38,12 @@ public class PasswordResetToken extends BaseEntity {
         this.user = user;
     }
 
+    public PasswordResetToken(Long id, String token, Date expiryDate) {
+        super(id);
+        this.token = token;
+        this.expiryDate = expiryDate;
+    }
+
     @Override
     public String toString() {
         return "PasswordResetToken{" +

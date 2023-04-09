@@ -17,9 +17,9 @@ import static ru.javaprojects.archivist.common.config.SecurityConfig.PASSWORD_EN
 @Service
 @RequiredArgsConstructor
 public class PasswordResetService {
-    private static final String PASSWORD_RESET_MESSAGE_SUBJECT = "Archivist: Password reset message";
-    private static final String PASSWORD_RESET_MESSAGE_LINK_TEMPLATE = "<a href='%s?token=%s'>Password reset link</a>";
-    private static final String PASSWORD_RESET_MESSAGE_TEXT_TEMPLATE = "<p>Please follow the link to reset your password:</p>";
+    public static final String PASSWORD_RESET_MESSAGE_SUBJECT = "Archivist: Password reset message";
+    public static final String PASSWORD_RESET_MESSAGE_LINK_TEMPLATE = "<a href='%s?token=%s'>Password reset link</a>";
+    public static final String PASSWORD_RESET_MESSAGE_TEXT_TEMPLATE = "<p>Please follow the link to reset your password:</p>";
 
     private final PasswordResetTokenRepository repository;
     private final UserService userService;

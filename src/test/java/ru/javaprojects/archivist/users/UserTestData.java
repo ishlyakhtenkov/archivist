@@ -6,7 +6,11 @@ import ru.javaprojects.archivist.MatcherFactory;
 import ru.javaprojects.archivist.users.Role;
 import ru.javaprojects.archivist.users.User;
 import ru.javaprojects.archivist.users.UserTo;
+import ru.javaprojects.archivist.users.password_reset.PasswordResetToken;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -42,6 +46,9 @@ public class UserTestData {
 
     public static final User user = new User(USER_ID, USER_MAIL, "John", "Doe", true, Set.of(Role.USER));
     public static final User admin = new User(ADMIN_ID, ADMIN_MAIL, "Jack", "London", true, Set.of(Role.USER, Role.ARCHIVIST, Role.ADMIN));
+
+    public static final PasswordResetToken adminPasswordResetToken = new PasswordResetToken(100004L,
+            "5a99dd09-d23f-44bb-8d41-b6ff44275d01",parseDate("2052-02-05 12:10:00"));
 
     public static User getNew() {
         return new User(null, "new@gmail.com", "newPassword", "newFirstName", "newLastName", true, Set.of(Role.USER, Role.ARCHIVIST));
@@ -95,5 +102,13 @@ public class UserTestData {
         params.add(EMAIL, "notEmail");
         params.add(ROLES, "");
         return params;
+    }
+
+    private static Date parseDate(String date) {
+        try {
+            return new SimpleDateFormat("yyyy-MM-dd Hh:mm:ss").parse(date);
+        } catch (ParseException e) {
+            return null;
+        }
     }
 }

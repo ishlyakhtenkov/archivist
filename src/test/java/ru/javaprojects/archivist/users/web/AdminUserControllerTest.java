@@ -127,7 +127,7 @@ public class AdminUserControllerTest extends AbstractControllerTest {
                 .with(csrf()))
                 .andExpect(status().isFound())
                 .andExpect(redirectedUrl(USERS_URL))
-                .andExpect(flash().attribute("userCreated", newUser.getFullName()));
+                .andExpect(flash().attribute("action", "User " + newUser.getFullName() + " was created"));
         User created = service.getByEmail(newUser.getEmail());
         newUser.setId(created.id());
         USER_MATCHER.assertMatch(created, newUser);
@@ -222,7 +222,7 @@ public class AdminUserControllerTest extends AbstractControllerTest {
                 .with(csrf()))
                 .andExpect(status().isFound())
                 .andExpect(redirectedUrl(USERS_URL))
-                .andExpect(flash().attribute("userUpdated", updatedUser.getFullName()));
+                .andExpect(flash().attribute("action", "User " + updatedUser.getFullName() + " was updated"));
         USER_MATCHER.assertMatch(service.get(USER_ID), updatedUser);
     }
 
@@ -238,7 +238,7 @@ public class AdminUserControllerTest extends AbstractControllerTest {
                 .with(csrf()))
                 .andExpect(status().isFound())
                 .andExpect(redirectedUrl(USERS_URL))
-                .andExpect(flash().attribute("userUpdated", updatedUser.getFullName()));
+                .andExpect(flash().attribute("action", "User " + updatedUser.getFullName() + " was updated"));
         USER_MATCHER.assertMatch(service.get(USER_ID), updatedUser);
     }
 

@@ -10,10 +10,10 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.util.MultiValueMap;
 import ru.javaprojects.archivist.AbstractControllerTest;
+import ru.javaprojects.archivist.common.error.exception.NotFoundException;
 import ru.javaprojects.archivist.users.User;
 import ru.javaprojects.archivist.users.UserService;
 import ru.javaprojects.archivist.users.UserTo;
-import ru.javaprojects.archivist.common.error.exception.NotFoundException;
 
 import java.util.List;
 import java.util.Objects;
@@ -21,12 +21,13 @@ import java.util.Objects;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static ru.javaprojects.archivist.AbstractControllerTest.ExceptionResultMatchers.exception;
 import static ru.javaprojects.archivist.common.config.SecurityConfig.PASSWORD_ENCODER;
+import static ru.javaprojects.archivist.users.UniqueMailValidator.DUPLICATE_EMAIL_ERROR_CODE;
+import static ru.javaprojects.archivist.users.UserTestData.*;
 import static ru.javaprojects.archivist.users.UserUtil.asTo;
 import static ru.javaprojects.archivist.users.web.AdminUserUIController.USERS_URL;
 import static ru.javaprojects.archivist.users.web.LoginController.LOGIN_URL;
-import static ru.javaprojects.archivist.users.UniqueMailValidator.DUPLICATE_EMAIL_ERROR_CODE;
-import static ru.javaprojects.archivist.users.UserTestData.*;
 
 public class AdminUserControllerTest extends AbstractControllerTest {
     private static final String USERS_ADD_FORM_URL = USERS_URL + "/add";
@@ -127,7 +128,7 @@ public class AdminUserControllerTest extends AbstractControllerTest {
                 .with(csrf()))
                 .andExpect(status().isFound())
                 .andExpect(redirectedUrl(USERS_URL))
-                .andExpect(flash().attribute("action", "User " + newUser.getFullName() + " was created"));
+                .andExpect(flash().attribute(ACTION, "User " + newUser.getFullName() + " was created"));
         User created = service.getByEmail(newUser.getEmail());
         newUser.setId(created.id());
         USER_MATCHER.assertMatch(created, newUser);
@@ -195,7 +196,8 @@ public class AdminUserControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(ADMIN_MAIL)
     void showEditFormNotFound() throws Exception {
-        assertNotFoundError(perform(MockMvcRequestBuilders.get(USERS_EDIT_FORM_URL + NOT_FOUND)));
+        perform(MockMvcRequestBuilders.get(USERS_EDIT_FORM_URL + NOT_FOUND))
+                .andExpect(exception().exceptionPage(ENTITY_NOT_FOUND, NotFoundException.class));
     }
 
     @Test
@@ -222,7 +224,7 @@ public class AdminUserControllerTest extends AbstractControllerTest {
                 .with(csrf()))
                 .andExpect(status().isFound())
                 .andExpect(redirectedUrl(USERS_URL))
-                .andExpect(flash().attribute("action", "User " + updatedUser.getFullName() + " was updated"));
+                .andExpect(flash().attribute(ACTION, "User " + updatedUser.getFullName() + " was updated"));
         USER_MATCHER.assertMatch(service.get(USER_ID), updatedUser);
     }
 
@@ -238,7 +240,7 @@ public class AdminUserControllerTest extends AbstractControllerTest {
                 .with(csrf()))
                 .andExpect(status().isFound())
                 .andExpect(redirectedUrl(USERS_URL))
-                .andExpect(flash().attribute("action", "User " + updatedUser.getFullName() + " was updated"));
+                .andExpect(flash().attribute(ACTION, "User " + updatedUser.getFullName() + " was updated"));
         USER_MATCHER.assertMatch(service.get(USER_ID), updatedUser);
     }
 
@@ -247,9 +249,10 @@ public class AdminUserControllerTest extends AbstractControllerTest {
     void updateNotFound() throws Exception {
         MultiValueMap<String, String> updatedParams = getUpdatedParams();
         updatedParams.set(ID, NOT_FOUND + "");
-        assertNotFoundError(perform(MockMvcRequestBuilders.post(USERS_UPDATE_URL)
+        perform(MockMvcRequestBuilders.post(USERS_UPDATE_URL)
                 .params(updatedParams)
-                .with(csrf())));
+                .with(csrf()))
+                .andExpect(exception().exceptionPage(ENTITY_NOT_FOUND, NotFoundException.class));
     }
 
     @Test
@@ -454,17 +457,5 @@ public class AdminUserControllerTest extends AbstractControllerTest {
                 .with(csrf()))
                 .andExpect(status().isForbidden());
         assertFalse(PASSWORD_ENCODER.matches(NEW_PASSWORD, service.get(USER_ID).getPassword()));
-    }
-
-    private void assertNotFoundError(ResultActions actions) throws Exception {
-        actions
-                .andExpect(status().isInternalServerError())
-                .andExpect(model().attribute("typeMessage", "Internal Server Error"))
-                .andExpect(model().attributeExists("exception"))
-                .andExpect(model().attribute("message", ENTITY_NOT_FOUND))
-                .andExpect(model().attribute("status", HttpStatus.INTERNAL_SERVER_ERROR.value()))
-                .andExpect(view().name("error/exception"))
-                .andExpect(result ->
-                        assertEquals(NotFoundException.class, Objects.requireNonNull(result.getResolvedException()).getClass()));
     }
 }

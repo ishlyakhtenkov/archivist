@@ -67,4 +67,9 @@ public class PasswordResetService {
         passwordResetToken.getUser().setPassword(PASSWORD_ENCODER.encode(passwordResetTo.getPassword()));
         repository.delete(passwordResetToken);
     }
+
+    public PasswordResetToken getByEmail(String email) {
+        return repository.findByUserEmailIgnoreCase(email).orElseThrow(() ->
+                new NotFoundException("Not found token for email=" + email));
+    }
 }

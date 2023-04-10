@@ -14,8 +14,7 @@ import ru.javaprojects.archivist.common.error.exception.NotFoundException;
 import ru.javaprojects.archivist.users.User;
 import ru.javaprojects.archivist.users.UserService;
 import ru.javaprojects.archivist.users.UserTestData;
-import ru.javaprojects.archivist.users.password_reset.PasswordResetToken;
-import ru.javaprojects.archivist.users.password_reset.PasswordResetTokenRepository;
+import ru.javaprojects.archivist.users.password_reset.*;
 import ru.javaprojects.archivist.users.password_reset.mail.MailSender;
 
 import java.util.Date;
@@ -24,6 +23,7 @@ import java.util.Objects;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static ru.javaprojects.archivist.AbstractControllerTest.ExceptionResultMatchers.exception;
 import static ru.javaprojects.archivist.common.config.SecurityConfig.PASSWORD_ENCODER;
 import static ru.javaprojects.archivist.users.UserTestData.*;
 import static ru.javaprojects.archivist.users.password_reset.PasswordResetService.*;
@@ -33,9 +33,15 @@ import static ru.javaprojects.archivist.users.web.ProfileUIController.PROFILE_UR
 class ProfileControllerTest extends AbstractControllerTest {
     private static final String PROFILE_CHANGE_PASSWORD_URL = PROFILE_URL + "/" + PASSWORD;
     private static final String PROFILE_FORGOT_PASSWORD_URL = PROFILE_URL + "/forgotPassword";
+    private static final String PROFILE_RESET_PASSWORD_URL = PROFILE_URL + "/resetPassword";
+
+    public static final String RESET_PASSWORD_VIEW = "users/reset-password";
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private PasswordResetService passwordResetService;
 
     @Autowired
     private PasswordResetTokenRepository passwordResetTokenRepository;
@@ -104,26 +110,24 @@ class ProfileControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    void forgotPasswordWhenNewTokenCreated() throws Exception {
+    void forgotPasswordNewTokenCreated() throws Exception {
         perform(MockMvcRequestBuilders.post(PROFILE_FORGOT_PASSWORD_URL)
                 .param(EMAIL, USER_MAIL)
                 .with(csrf()))
                 .andExpect(status().isNoContent());
-        PasswordResetToken passwordResetToken = passwordResetTokenRepository.findByUserEmailIgnoreCase(USER_MAIL)
-                .orElseThrow(() -> new NotFoundException("Not found password reset token for email=" + USER_MAIL));
+        PasswordResetToken passwordResetToken = passwordResetService.getByEmail(USER_MAIL);
         assertTrue(passwordResetToken.getExpiryDate().after(new Date()));
         String text = PASSWORD_RESET_MESSAGE_TEXT_TEMPLATE + String.format(PASSWORD_RESET_MESSAGE_LINK_TEMPLATE, passwordResetUrl, passwordResetToken.getToken());
         Mockito.verify(mailSender, Mockito.times(1)).sendEmail(USER_MAIL, PASSWORD_RESET_MESSAGE_SUBJECT, text);
     }
 
     @Test
-    void forgotPasswordWhenExistingTokenUpdated() throws Exception {
+    void forgotPasswordExistingTokenUpdated() throws Exception {
         perform(MockMvcRequestBuilders.post(PROFILE_FORGOT_PASSWORD_URL)
                 .param(EMAIL, ADMIN_MAIL)
                 .with(csrf()))
                 .andExpect(status().isNoContent());
-        PasswordResetToken passwordResetToken = passwordResetTokenRepository.findByUserEmailIgnoreCase(ADMIN_MAIL)
-                .orElseThrow(() -> new NotFoundException("Not found password reset token for email=" + ADMIN_MAIL));
+        PasswordResetToken passwordResetToken = passwordResetService.getByEmail(ADMIN_MAIL);
         assertTrue(passwordResetToken.getExpiryDate().after(new Date()));
         assertNotEquals(passwordResetToken.getExpiryDate(), adminPasswordResetToken.getExpiryDate());
         assertNotEquals(passwordResetToken.getToken(), adminPasswordResetToken.getToken());
@@ -132,18 +136,19 @@ class ProfileControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    void forgotPasswordWhenUserNotFound() throws Exception {
+    void forgotPasswordNotFound() throws Exception {
+        String notExistingEmail = "notExisted@gmail.com";
         perform(MockMvcRequestBuilders.post(PROFILE_FORGOT_PASSWORD_URL)
-                .param(EMAIL, "notExisted@gmail.com")
+                .param(EMAIL, notExistingEmail)
                 .with(csrf()))
                 .andExpect(status().isNotFound())
                 .andExpect(result -> assertEquals(Objects.requireNonNull(result.getResolvedException()).getClass(),
                         NotFoundException.class))
                 .andExpect(problemTitle(HttpStatus.NOT_FOUND.getReasonPhrase()))
                 .andExpect(problemStatus(HttpStatus.NOT_FOUND.value()))
-                .andExpect(problemDetail("Not found user with email=notExisted@gmail.com"))
+                .andExpect(problemDetail("Not found user with email=" + notExistingEmail))
                 .andExpect(problemInstance(PROFILE_FORGOT_PASSWORD_URL));
-        assertTrue(passwordResetTokenRepository.findByUserEmailIgnoreCase("notExisted@gmail.com").isEmpty());
+        assertThrows(NotFoundException.class, () -> passwordResetService.getByEmail(notExistingEmail));
         Mockito.verify(mailSender, Mockito.times(0)).sendEmail(Mockito.anyString(), Mockito.anyString(), Mockito.anyString());
     }
 
@@ -154,7 +159,108 @@ class ProfileControllerTest extends AbstractControllerTest {
                 .param(EMAIL, USER_MAIL)
                 .with(csrf()))
                 .andExpect(status().isForbidden());
-        assertTrue(passwordResetTokenRepository.findByUserEmailIgnoreCase(USER_MAIL).isEmpty());
+        assertThrows(NotFoundException.class, () -> passwordResetService.getByEmail(USER_MAIL));
         Mockito.verify(mailSender, Mockito.times(0)).sendEmail(Mockito.anyString(), Mockito.anyString(), Mockito.anyString());
+    }
+
+    @Test
+    void showResetPasswordForm() throws Exception {
+        String token = adminPasswordResetToken.getToken();
+        perform(MockMvcRequestBuilders.get(PROFILE_RESET_PASSWORD_URL)
+                .param(TOKEN, token)
+                .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists(PASSWORD_RESET_TO_ATTRIBUTE))
+                .andExpect(view().name(RESET_PASSWORD_VIEW))
+                .andExpect(result ->
+                        PASSWORD_RESET_TO_MATCHER.assertMatch((PasswordResetTo) Objects.requireNonNull(result.getModelAndView()).getModel().get("passwordResetTo"), new PasswordResetTo(token)));
+    }
+
+    @Test
+    void showResetPasswordFormTokenNotExist() throws Exception {
+        perform(MockMvcRequestBuilders.get(PROFILE_RESET_PASSWORD_URL)
+                .param(TOKEN, NOT_EXISTING_TOKEN)
+                .with(csrf()))
+                .andExpect(exception().exceptionPage(PASSWORD_RESET_TOKEN_NOT_FOUND, NotFoundException.class));
+    }
+
+    @Test
+    void showResetPasswordFormTokenExpired() throws Exception {
+        perform(MockMvcRequestBuilders.get(PROFILE_RESET_PASSWORD_URL)
+                .param(TOKEN, EXPIRED_TOKEN)
+                .with(csrf()))
+                .andExpect(exception().exceptionPage(PASSWORD_RESET_TOKEN_NOT_EXPIRED, PasswordResetException.class));
+    }
+
+    @Test
+    @WithUserDetails(ADMIN_MAIL)
+    void showResetPasswordFormAuthorized() throws Exception {
+        perform(MockMvcRequestBuilders.get(PROFILE_RESET_PASSWORD_URL)
+                .param(TOKEN, ADMIN_TOKEN)
+                .with(csrf()))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void resetPassword() throws Exception {
+        perform(MockMvcRequestBuilders.post(PROFILE_RESET_PASSWORD_URL)
+                .param(TOKEN, ADMIN_TOKEN)
+                .param(PASSWORD, NEW_PASSWORD)
+                .with(csrf()))
+                .andExpect(status().isFound())
+                .andExpect(redirectedUrl(LOGIN_URL))
+                .andExpect(flash().attribute(ACTION, "Password has been successfully reset"));
+        assertTrue(PASSWORD_ENCODER.matches(NEW_PASSWORD, userService.get(ADMIN_ID).getPassword()));
+        assertTrue(passwordResetTokenRepository.findByToken(ADMIN_TOKEN).isEmpty());
+    }
+
+    @Test
+    void resetPasswordTokenNotExist() throws Exception {
+        perform(MockMvcRequestBuilders.post(PROFILE_RESET_PASSWORD_URL)
+                .param(TOKEN, NOT_EXISTING_TOKEN)
+                .param(PASSWORD, NEW_PASSWORD)
+                .with(csrf()))
+                .andExpect(exception().exceptionPage(PASSWORD_RESET_TOKEN_NOT_FOUND, NotFoundException.class));
+    }
+
+    @Test
+    void resetPasswordTokenExpired() throws Exception {
+        perform(MockMvcRequestBuilders.post(PROFILE_RESET_PASSWORD_URL)
+                .param(TOKEN, EXPIRED_TOKEN)
+                .param(PASSWORD, NEW_PASSWORD)
+                .with(csrf()))
+                .andExpect(exception().exceptionPage(PASSWORD_RESET_TOKEN_NOT_EXPIRED, PasswordResetException.class));
+    }
+
+    @Test
+    void resetPasswordInvalid() throws Exception {
+        perform(MockMvcRequestBuilders.post(PROFILE_RESET_PASSWORD_URL)
+                .param(TOKEN, ADMIN_TOKEN)
+                .param(PASSWORD, INVALID_PASSWORD)
+                .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeHasFieldErrors(PASSWORD_RESET_TO_ATTRIBUTE, PASSWORD))
+                .andExpect(view().name(RESET_PASSWORD_VIEW));
+        assertFalse(PASSWORD_ENCODER.matches(INVALID_PASSWORD, userService.get(ADMIN_ID).getPassword()));
+    }
+
+    @Test
+    void resetPasswordWithoutTokenParam() throws Exception {
+        perform(MockMvcRequestBuilders.post(PROFILE_RESET_PASSWORD_URL)
+                .param(PASSWORD, NEW_PASSWORD)
+                .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeHasFieldErrors(PASSWORD_RESET_TO_ATTRIBUTE, TOKEN))
+                .andExpect(view().name(RESET_PASSWORD_VIEW));
+    }
+
+    @Test
+    @WithUserDetails(ADMIN_MAIL)
+    void resetPasswordAuthorized() throws Exception {
+        perform(MockMvcRequestBuilders.get(PROFILE_RESET_PASSWORD_URL)
+                .param(TOKEN, ADMIN_TOKEN)
+                .param(PASSWORD, NEW_PASSWORD)
+                .with(csrf()))
+                .andExpect(status().isForbidden());
     }
 }

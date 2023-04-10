@@ -16,6 +16,7 @@
         </a>
         <div>
             <a sec:authorize="!isAuthenticated()" th:href="@{/login}" type="button" class="d-lg-none btn btn-gray px-3 px-md-4 me-3 me-md-4">
+                <i class="fa-solid fa-right-to-bracket"></i>
                 Login
             </a>
         </div>
@@ -27,7 +28,7 @@
         </div>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mb-2 mb-lg-0">
-                <li class="nav-item menu-item mt-3 mt-lg-0 mb-0 mb-lg-3" id="test1" th:classappend="${activeMenuItem == 'Users'}? 'active' : ''">
+                <li sec:authorize="hasRole('ADMIN')" class="nav-item menu-item mt-3 mt-lg-0 mb-0 mb-lg-3" id="test1" th:classappend="${activeMenuItem == 'Users'}? 'active' : ''">
                     <a class="nav-link sidebar-nav-link" th:href="@{/users}"><span class="ms-4"><i class="fas fa-users me-2"></i>Users</span></a>
                 </li>
                 <li class="nav-item menu-item mb-0 mb-lg-3" id="test2">

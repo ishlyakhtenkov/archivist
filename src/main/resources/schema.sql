@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS contact_persons;
 DROP TABLE IF EXISTS companies;
 DROP TABLE IF EXISTS password_reset_tokens;
 DROP TABLE IF EXISTS user_roles;
@@ -43,7 +44,7 @@ CREATE TABLE companies
     city     VARCHAR(32)       NOT NULL,
     street   VARCHAR(64)       NOT NULL,
     house    VARCHAR(32)       NOT NULL,
-    zip_code VARCHAR(6)        NOT NULL
+    zipcode  VARCHAR(6)        NOT NULL
 );
 CREATE UNIQUE INDEX companies_unique_name_idx ON companies (name);
 

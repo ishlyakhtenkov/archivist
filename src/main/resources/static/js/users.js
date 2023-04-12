@@ -78,51 +78,33 @@ function deleteUser() {
 
 function updatePageContent(id, name) {
     $('#user-row-' + id).remove();
-
-    let paginationInfoDigits = getPaginationInfoDigits();
-    let firstEntryDigit = paginationInfoDigits[0];
-    let lastEntryDigit = paginationInfoDigits[1];
-    let totalEntries = paginationInfoDigits[2];
-    if (totalEntries < firstEntryDigit) {
-        if (totalEntries === 0) {
-            window.location.href = `${window.location.pathname}?${userDeleteParam}=${name}`;
-        } else {
-            let urlParams = new URLSearchParams(window.location.search);
-            urlParams.set('page', (urlParams.get('page') - 1));
-            urlParams.append(userDeleteParam, name);
-            window.location.href = `${window.location.pathname}?${urlParams}`;
-        }
-    } else if (lastEntryDigit < firstEntryDigit) {
+    let rowTotal = $('.table-row').length;
+    if (rowTotal === 0) {
         let urlParams = new URLSearchParams(window.location.search);
+        let pageParam = +urlParams.get('page');
+        if (pageParam !== 0) {
+            urlParams.set('page', `${pageParam - 1}`);
+        }
         urlParams.append(userDeleteParam, name);
         window.location.href = `${window.location.pathname}?${urlParams}`;
     } else {
-        updatePaginationInfo(paginationInfoDigits);
+        updatePaginationInfo();
         successToast(`User ${name} was deleted`);
     }
 }
 
-function getPaginationInfoDigits() {
-    let paginationInfo = $('#pagination-summary').text();
-    let words = paginationInfo.split(' ');
-    let digits = [];
-    for (let i = 0; i < words.length; i++) {
-        if (isNumber(words[i])) {
-            digits.push(words[i])
-        }
-    }
-    digits[1] = --digits[1];
-    digits[2] = --digits[2];
-    return digits;
-}
-
-function updatePaginationInfo(digits) {
+function updatePaginationInfo() {
     let paginationSummary = $('#pagination-summary');
     let paginationInfo =paginationSummary.text();
     let words = paginationInfo.split(' ');
+    let numberCounter = 0;
     for (let i = words.length - 1; i >= 0; i--) {
         if (isNumber(words[i])) {
-            words[i] = digits.pop();
+            numberCounter++;
+            words[i] = words[i] - 1;
+        }
+        if (numberCounter === 2) {
+            break;
         }
     }
     paginationSummary.text(words.join(' '));

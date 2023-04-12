@@ -46,6 +46,9 @@ public class AdminUserUIController {
             log.info("getPage(pageNumber={}, pageSize={})", pageable.getPageNumber(), pageable.getPageSize());
             usersPage = service.getAll(pageable);
         }
+        if (usersPage.getContent().isEmpty() && usersPage.getTotalElements() != 0) {
+            return "redirect:/users";
+        }
         model.addAttribute("usersPage", usersPage);
         return "users/users";
     }

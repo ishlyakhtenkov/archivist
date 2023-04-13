@@ -35,21 +35,21 @@ public class AdminUserUIController {
     @GetMapping
     public String getAll(@RequestParam(value = "keyword", required = false) String keyword,
                             @PageableDefault Pageable pageable, Model model) {
-        Page<User> usersPage;
+        Page<User> users;
         if (keyword != null) {
             if (keyword.isBlank()) {
                 return "redirect:/users";
             }
-            log.info("getPage(pageNumber={}, pageSize={}) with keyword={}", pageable.getPageNumber(), pageable.getPageSize(), keyword);
-            usersPage = service.getAllByKeyword(pageable, keyword.trim());
+            log.info("getAll(pageNumber={}, pageSize={}, keyword={})", pageable.getPageNumber(), pageable.getPageSize(), keyword);
+            users = service.getAll(pageable, keyword.trim());
         } else  {
-            log.info("getPage(pageNumber={}, pageSize={})", pageable.getPageNumber(), pageable.getPageSize());
-            usersPage = service.getAll(pageable);
+            log.info("getAll(pageNumber={}, pageSize={})", pageable.getPageNumber(), pageable.getPageSize());
+            users = service.getAll(pageable);
         }
-        if (usersPage.getContent().isEmpty() && usersPage.getTotalElements() != 0) {
+        if (users.getContent().isEmpty() && users.getTotalElements() != 0) {
             return "redirect:/users";
         }
-        model.addAttribute("usersPage", usersPage);
+        model.addAttribute("users", users);
         return "users/users";
     }
 

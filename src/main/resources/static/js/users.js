@@ -1,43 +1,3 @@
-const userDeleteParam = 'deleteSuccess';
-
-window.onload = function() {
-    checkUserActionHappened();
-};
-
-function checkUserActionHappened() {
-    let actionSpan = $("#action-span");
-    if (actionSpan.length) {
-        successToast(`${actionSpan.data('action')}`);
-    } else {
-        checkUserDeleteHappened();
-    }
-}
-
-function checkUserDeleteHappened() {
-    let queryString = window.location.search;
-    let urlParams = new URLSearchParams(queryString);
-    if (urlParams.has(userDeleteParam)) {
-        successToast(`User ${urlParams.get(userDeleteParam)} was deleted`);
-        urlParams.delete(userDeleteParam);
-        let url = (urlParams.toString().length > 0) ? (window.location.pathname + '?' + urlParams) : window.location.pathname;
-        window.history.replaceState(null, null, url);
-        fixPaginationLinks();
-    }
-}
-
-function fixPaginationLinks() {
-    let paginationLinks = $("a.page-link");
-    for (let i = 0; i < paginationLinks.length; i++) {
-        let paginationLink = paginationLinks[i];
-        let url = paginationLink.href.toString();
-        let urlParts = url.split('?');
-        let urlParams = new URLSearchParams(urlParts[1]);
-        urlParams.delete(userDeleteParam);
-        url = urlParts[0] + '?' + urlParams;
-        paginationLink.href = url;
-    }
-}
-
 function enableUser(checkbox, id) {
     let enabled = checkbox.checked;
     let name = checkbox.dataset.name;
@@ -70,48 +30,10 @@ function deleteUser() {
         url: "users/" + id,
         type: "DELETE"
     }).done(function() {
-        updatePageContent(id, name);
+        deleteTableRow(id, `User ${name} was deleted`);
     }).fail(function(data) {
         handleError(data, `Failed to delete user ${name}`);
     });
-}
-
-function updatePageContent(id, name) {
-    $('#user-row-' + id).remove();
-    let rowTotal = $('.table-row').length;
-    if (rowTotal === 0) {
-        let urlParams = new URLSearchParams(window.location.search);
-        let pageParam = +urlParams.get('page');
-        if (pageParam !== 0) {
-            urlParams.set('page', `${pageParam - 1}`);
-        }
-        urlParams.append(userDeleteParam, name);
-        window.location.href = `${window.location.pathname}?${urlParams}`;
-    } else {
-        updatePaginationInfo();
-        successToast(`User ${name} was deleted`);
-    }
-}
-
-function updatePaginationInfo() {
-    let paginationSummary = $('#pagination-summary');
-    let paginationInfo =paginationSummary.text();
-    let words = paginationInfo.split(' ');
-    let numberCounter = 0;
-    for (let i = words.length - 1; i >= 0; i--) {
-        if (isNumber(words[i])) {
-            numberCounter++;
-            words[i] = words[i] - 1;
-        }
-        if (numberCounter === 2) {
-            break;
-        }
-    }
-    paginationSummary.text(words.join(' '));
-}
-
-function isNumber(n) {
-    return /^-?[\d.]+(?:e-?\d+)?$/.test(n);
 }
 
 $('#changePasswordModal').on('show.bs.modal', function(e) {

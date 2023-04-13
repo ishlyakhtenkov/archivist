@@ -21,7 +21,7 @@ public class UserService {
         return repository.findAllByOrderByLastNameAscFirstName(pageable);
     }
 
-    public Page<User> getAllByKeyword(Pageable pageable, String keyword) {
+    public Page<User> getAll(Pageable pageable, String keyword) {
         return repository.findAllByFirstNameContainsIgnoreCaseOrLastNameContainsIgnoreCaseOrEmailContainsIgnoreCaseOrderByLastNameAscFirstName(
                 keyword, keyword, keyword, pageable);
     }
@@ -49,7 +49,7 @@ public class UserService {
 
     @Transactional
     public void enable(long id, boolean enabled) {
-        User user = repository.getExisted(id);
+        User user = get(id);
         user.setEnabled(enabled);
     }
 

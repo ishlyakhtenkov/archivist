@@ -36,4 +36,8 @@ public class Address {
     @Digits(integer = 6, fraction = 0)
     @Column(name = "zipcode", nullable = false)
     private String zipcode;
+
+    public String getFormattedAddress() {
+        return String.join(", ", zipcode, city, street, house);
+    }
 }

@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sd="http://www.thymeleaf.org/spring-data"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       th:with="activeMenuItem='Users'" lang="en">
 
-<th:block th:replace="~{fragments/main::page(title='Archivist',appMain=~{::appMain}, ownScript=~{::ownScript})}">
+<th:block th:replace="~{fragments/main::page(title='Archivist - users',appMain=~{::appMain}, ownScript=~{::ownScript})}">
     <appMain>
         <span th:if="${action != null}" th:data-action="${action}" th:id="action-span"></span>
         <!-- Search field, Add button -->
@@ -38,13 +37,13 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="user : ${usersPage}" th:id="'user-row-' + ${user.id}" class="table-row">
+                <tr th:each="user : ${users}" th:id="'row-' + ${user.id}" class="table-row">
                     <td  th:text="${user.firstName} + ' ' + ${user.lastName}"></td>
                     <td th:text="${user.email}"></td>
                     <td>
                         <div class="form-switch">
                             <input type="checkbox" role="switch" class="form-check-input" style="cursor: pointer;" th:checked="${user.enabled}"
-                                   th:data-name="${user.firstName} + ' ' + ${user.lastName}"
+                                   th:data-name="${user.fullName}"
                                    th:onclick="|enableUser(this, '${user.id}')|" />
                         </div>
                     </td>
@@ -54,13 +53,11 @@
                         <a th:href="@{'/users/edit/' + ${user.id}}" type="button" class="btn btn-outline-success btn-sm" title="Edit user">
                             <i class="fa-solid fa-user-pen"></i>
                         </a>
-
-
                     </td>
                     <td class="px-1 px-xxl-0">
                         <button type="button" class="btn btn-outline-warning btn-sm"
                                 title="Change password" data-bs-toggle="modal" data-bs-target="#changePasswordModal"
-                                th:data-name="${user.firstName} + ' ' + ${user.lastName}"
+                                th:data-name="${user.fullName}"
                                 th:data-id="${user.id}">
                             <i class="fa-solid fa-key"></i>
                         </button>
@@ -68,7 +65,7 @@
                     <td class="px-1 px-xxl-0">
                         <button type="button" class="btn btn-outline-danger btn-sm"
                                 title="Delete user" data-bs-toggle="modal" data-bs-target="#deleteModal"
-                                th:data-name="${user.firstName} + ' ' + ${user.lastName}"
+                                th:data-name="${user.fullName}"
                                 th:data-id="${user.id}">
                             <i class="fa-solid fa-user-xmark"></i>
                         </button>
@@ -163,6 +160,7 @@
 
     <ownScript>
         <script src="/js/common.js?v=1"></script>
+        <script src="/js/table-content.js?v=1"></script>
         <script src="/js/users.js?v=1"></script>
     </ownScript>
 </th:block>

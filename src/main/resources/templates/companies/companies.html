@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sd="http://www.thymeleaf.org/spring-data"
+      th:with="activeMenuItem='Companies'" lang="en">
+
+<th:block th:replace="~{fragments/main::page(title='Archivist - companies',appMain=~{::appMain}, ownScript=~{::ownScript})}">
+    <appMain>
+        <span th:if="${action != null}" th:data-action="${action}" th:id="action-span"></span>
+        <!-- Search field, Add button -->
+        <div class="row row-cols-1 row-cols-md-2">
+            <div class="col-md-4 text-start">
+                <h2 class="text-secondary font-weight-bold"><i class="fa-brands fa-fort-awesome me-2"></i>Companies</h2>
+            </div>
+            <div class="col-md-8 mb-2">
+                <div class="btn-toolbar justify-content-start justify-content-md-end">
+                    <form class="d-flex" role="search" th:action="@{/companies}" method="get">
+                        <input class="form-control" th:name="keyword" th:value="${param.keyword}" type="search" placeholder="Search companies" aria-label="Search">
+                    </form>
+                    <a th:href="@{/companies/add}" type="button" class="btn btn-secondary ms-2" title="Add new company">
+                        <span class="d-none d-md-block"><i class="fa-solid fa-plus"></i> Add Company</span>
+                        <span class="d-md-none"><i class="fa-solid fa-plus"></i> Add Comp.</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Companies table -->
+        <div class="table-responsive text-nowrap text-center">
+            <table class="table table-bordered">
+                <thead class="table-dark">
+                <tr>
+                    <th>Name</th>
+                    <th>Address</th>
+                    <th colspan="3">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="company : ${companies}" th:id="'row-' + ${company.id}" class="table-row">
+                    <td th:text="${company.name}"></td>
+                    <td th:text="${company.address.formattedAddress}"></td>
+                    <td class="px-1 px-xxl-0">
+                        <a th:href="@{'/companies/edit/' + ${company.id}}" type="button" class="btn btn-outline-info btn-sm" title="Details">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </a>
+                    </td>
+                    <td class="px-1 px-xxl-0">
+                        <a th:href="@{'/companies/edit/' + ${company.id}}" type="button" class="btn btn-outline-success btn-sm" title="Edit company">
+                            <i class="fa-solid fa-pencil"></i>
+                        </a>
+                    </td>
+                    <td class="px-1 px-xxl-0">
+                        <button type="button" class="btn btn-outline-danger btn-sm"
+                                title="Delete company" data-bs-toggle="modal" data-bs-target="#deleteModal"
+                                th:data-name="${company.name}"
+                                th:data-id="${company.id}">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="row">
+            <div class="col-12 col-md-6 text-center text-md-start">
+                <div sd:pagination-summary="" id="pagination-summary">info</div>
+            </div>
+
+            <div class="col-12 col-md-6 mt-3 mt-md-0">
+                <nav>
+                    <ul class="pagination justify-content-center justify-content-md-end" sd:pagination-split="7" sd:pagination="full">
+                        <!-- Pagination created by SpringDataDialect, this content is just for mockup -->
+                        <li class="disabled"><a href="#" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
+                        <li class="active"><a href="#">1 <span class="sr-only">(current)</span></a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col text-center text-md-end">
+                Show <span sd:page-size-selector="javascript"></span> entries
+            </div>
+        </div>
+
+        <!-- Delete modal -->
+        <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="deleteModalLabel">Are you sure want to delete company?</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <input type="hidden" name="companyId" id="deleteModalCompanyId" value=""/>
+                    <input type="hidden" name="companyName" id="deleteModalCompanyName" value=""/>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close">Close</button>
+                        <button type="button" class="btn btn-danger" onclick="deleteCompany()">Delete company</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </appMain>
+
+    <ownScript>
+        <script src="/js/common.js?v=1"></script>
+        <script src="/js/table-content.js?v=1"></script>
+        <script src="/js/companies.js?v=1"></script>
+    </ownScript>
+</th:block>

@@ -34,7 +34,7 @@ public class AdminUserUIController {
 
     @GetMapping
     public String getAll(@RequestParam(value = "keyword", required = false) String keyword,
-                            @PageableDefault Pageable pageable, Model model) {
+                            @PageableDefault Pageable pageable, Model model, RedirectAttributes redirectAttributes) {
         Page<User> users;
         if (keyword != null) {
             if (keyword.isBlank()) {
@@ -47,6 +47,9 @@ public class AdminUserUIController {
             users = service.getAll(pageable);
         }
         if (users.getContent().isEmpty() && users.getTotalElements() != 0) {
+            if (keyword != null) {
+                redirectAttributes.addAttribute("keyword", keyword);
+            }
             return "redirect:/users";
         }
         model.addAttribute("users", users);

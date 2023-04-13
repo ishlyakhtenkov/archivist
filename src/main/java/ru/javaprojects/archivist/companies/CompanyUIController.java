@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ru.javaprojects.archivist.companies.model.Company;
 
 @Controller
@@ -23,7 +24,7 @@ public class CompanyUIController {
 
     @GetMapping
     public String getAll(@RequestParam(value = "keyword", required = false) String keyword,
-                         @PageableDefault Pageable pageable, Model model) {
+                         @PageableDefault Pageable pageable, Model model, RedirectAttributes redirectAttributes) {
         Page<Company> companies;
         if (keyword != null) {
             if (keyword.isBlank()) {
@@ -36,6 +37,9 @@ public class CompanyUIController {
             companies = service.getAll(pageable);
         }
         if (companies.getContent().isEmpty() && companies.getTotalElements() != 0) {
+            if (keyword != null) {
+                redirectAttributes.addAttribute("keyword", keyword);
+            }
             return "redirect:/companies";
         }
         model.addAttribute("companies", companies);

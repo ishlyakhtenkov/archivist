@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:with="activeMenuItem='Companies'" lang="en">
+
+<th:block th:replace="~{fragments/main::page(title='Archivist - companies',appMain=~{::appMain}, ownScript=~{::ownScript})}">
+    <appMain>
+        <!-- Create company card -->
+        <div class="row d-flex justify-content-center align-items-center">
+            <div class="col-12">
+                <div class="card shadow-2-strong" style="border-radius: 1rem;">
+                    <div class="text-end mt-3 me-3">
+                        <a th:href="@{/companies}" type="button" class="btn-close pb-0" aria-label="Close"></a>
+                    </div>
+                    <div class="card-body px-3 px-md-5 pb-3 pb-md-5 pt-0 text-center">
+                        <h3 class="mb-4">Create Company</h3>
+                        <form th:action="@{/companies/create}" method="post" th:object="${company}">
+                            <div class="row">
+                                <div class="col-lg-7">
+                                    <div class="mb-4">
+                                        <div class="input-group">
+                                            <span class="input-group-text" id="name-addon" title="Name"><i class="fa-solid fa-a"></i></span>
+                                            <input type="text" th:field="*{name}"
+                                                   th:class="${#fields.hasErrors('name')} ? 'form-control is-invalid' : 'form-control'"
+                                                   required placeholder="Name" title="Name" aria-label="Name" aria-describedby="name-addon"/>
+                                        </div>
+                                        <span class="help-block" th:if="${#fields.hasErrors('name')}">
+                                            <ul>
+                                                <li class="text-danger text-start"
+                                                    th:each="err : ${#fields.errors('name')}" th:text="${err}"/>
+                                            </ul>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-2">
+                                    <div class="mb-4">
+                                        <div class="input-group">
+                                            <span class="input-group-text" id="zipcode-addon" title="Zipcode"><i class="fa-solid fa-barcode"></i></span>
+                                            <input type="text" th:field="*{address.zipcode}"
+                                                   th:class="${#fields.hasErrors('address.zipcode')} ? 'form-control is-invalid' : 'form-control'"
+                                                   placeholder="Zipcode" title="Zipcode" aria-label="Zipcode" aria-describedby="zipcode-addon"/>
+                                        </div>
+                                        <span class="help-block" th:if="${#fields.hasErrors('address.zipcode')}">
+                                            <ul>
+                                                <li class="text-danger text-start" th:each="err : ${#fields.errors('address.zipcode')}"
+                                                    th:text="${err}"/>
+                                            </ul>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="mb-4">
+                                        <div class="input-group">
+                                            <span class="input-group-text" id="city-addon" title="City"><i class="fa-solid fa-city"></i></span>
+                                            <input type="text" th:field="*{address.city}"
+                                                   th:class="${#fields.hasErrors('address.city')} ? 'form-control is-invalid' : 'form-control'"
+                                                   placeholder="City" title="City" aria-label="City" aria-describedby="city-addon"/>
+                                        </div>
+                                        <span class="help-block" th:if="${#fields.hasErrors('address.city')}">
+                                            <ul>
+                                                <li class="text-danger text-start" th:each="err : ${#fields.errors('address.city')}"
+                                                    th:text="${err}"/>
+                                            </ul>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="mb-4">
+                                        <div class="input-group">
+                                            <span class="input-group-text" id="street-addon" title="Street"><i class="fa-solid fa-road"></i></span>
+                                            <input type="text" th:field="*{address.street}"
+                                                   th:class="${#fields.hasErrors('address.street')} ? 'form-control is-invalid' : 'form-control'"
+                                                   required placeholder="Street" title="Street" aria-label="Street" aria-describedby="street-addon"/>
+                                        </div>
+                                        <span class="help-block" th:if="${#fields.hasErrors('address.street')}">
+                                            <ul>
+                                                <li class="text-danger text-start" th:each="err : ${#fields.errors('address.street')}"
+                                                    th:text="${err}"/>
+                                            </ul>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-lg-2">
+                                    <div class="mb-4">
+                                        <div class="input-group">
+                                            <span class="input-group-text" id="house-addon" title="House"><i class="fa-solid fa-house"></i></span>
+                                            <input type="text" th:field="*{address.house}"
+                                                   th:class="${#fields.hasErrors('address.house')} ? 'form-control is-invalid' : 'form-control'"
+                                                   required placeholder="House" title="House" aria-label="House" aria-describedby="house-addon"/>
+                                        </div>
+                                        <span class="help-block" th:if="${#fields.hasErrors('address.house')}">
+                                            <ul>
+                                                <li class="text-danger text-start" th:each="err : ${#fields.errors('address.house')}"
+                                                    th:text="${err}"/>
+                                            </ul>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <div class="mb-4">
+                                        <div class="input-group">
+                                            <span class="input-group-text" id="phone-addon" title="Phone"><i class="fa-solid fa-phone"></i></span>
+                                            <input type="text" th:field="*{contacts.phone}"
+                                                   th:class="${#fields.hasErrors('contacts.phone')} ? 'form-control is-invalid' : 'form-control'"
+                                                   placeholder="Phone" title="Phone" aria-label="Phone" aria-describedby="phone-addon"/>
+                                        </div>
+                                        <span class="help-block" th:if="${#fields.hasErrors('contacts.phone')}">
+                                            <ul>
+                                                <li class="text-danger text-start" th:each="err : ${#fields.errors('contacts.phone')}"
+                                                    th:text="${err}"/>
+                                            </ul>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="mb-4">
+                                        <div class="input-group">
+                                            <span class="input-group-text" id="fax-addon" title="Fax"><i class="fa-solid fa-fax"></i></span>
+                                            <input type="text" th:field="*{contacts.fax}"
+                                                   th:class="${#fields.hasErrors('contacts.fax')} ? 'form-control is-invalid' : 'form-control'"
+                                                   placeholder="Fax" title="Fax" aria-label="Fax" aria-describedby="fax-addon"/>
+                                        </div>
+                                        <span class="help-block" th:if="${#fields.hasErrors('contacts.fax')}">
+                                            <ul>
+                                                <li class="text-danger text-start" th:each="err : ${#fields.errors('contacts.fax')}"
+                                                    th:text="${err}"/>
+                                            </ul>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="mb-4">
+                                        <div class="input-group">
+                                            <span class="input-group-text" id="email-addon" title="E-mail"><i class="fa-solid fa-envelope"></i></span>
+                                            <input type="text" th:field="*{contacts.email}"
+                                                   th:class="${#fields.hasErrors('contacts.email')} ? 'form-control is-invalid' : 'form-control'"
+                                                   placeholder="E-mail" title="E-mail" aria-label="E-mail" aria-describedby="email-addon"/>
+                                        </div>
+                                        <span class="help-block" th:if="${#fields.hasErrors('contacts.email')}">
+                                            <ul>
+                                                <li class="text-danger text-start" th:each="err : ${#fields.errors('contacts.email')}"
+                                                    th:text="${err}"/>
+                                            </ul>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Contact persons block -->
+                            <div class="text-start mb-3">
+                                <h4>Contact persons</h4>
+                                <button type="button" class="btn btn-primary" onclick="addContactPersonRow()">
+                                    Add contact
+                                </button>
+                                <div id="contact-person-block" class="mt-3">
+                                    <div th:each="contactPerson, itemStat : *{contactPersons}" class="row contact-person-row">
+                                        <div class="col-lg-3">
+                                            <div class="mb-4">
+                                                <input type="text" th:field="*{contactPersons[__${itemStat.index}__].position}"
+                                                       th:class="${#fields.hasErrors('contactPersons[__${itemStat.index}__].position')} ? 'form-control is-invalid' : 'form-control'" required placeholder="Position" />
+                                                <span class="help-block" th:if="${#fields.hasErrors('contactPersons[__${itemStat.index}__].position')}">
+                                                    <ul>
+                                                        <li class="text-danger text-start"
+                                                            th:each="err : ${#fields.errors('contactPersons[__${itemStat.index}__].position')}" th:text="${err}"/>
+                                                    </ul>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <div class="mb-4">
+                                                <input type="text" th:field="*{contactPersons[__${itemStat.index}__].lastName}"
+                                                       th:class="${#fields.hasErrors('contactPersons[__${itemStat.index}__].lastName')} ? 'form-control is-invalid' : 'form-control'" required placeholder="Last name" />
+                                                <span class="help-block" th:if="${#fields.hasErrors('contactPersons[__${itemStat.index}__].lastName')}">
+                                                    <ul>
+                                                        <li class="text-danger text-start"
+                                                            th:each="err : ${#fields.errors('contactPersons[__${itemStat.index}__].lastName')}" th:text="${err}"/>
+                                                    </ul>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <div class="mb-4">
+                                                <input type="text" th:field="*{contactPersons[__${itemStat.index}__].firstName}"
+                                                       th:class="${#fields.hasErrors('contactPersons[__${itemStat.index}__].firstName')} ? 'form-control is-invalid' : 'form-control'" required placeholder="First name" />
+                                                <span class="help-block" th:if="${#fields.hasErrors('contactPersons[__${itemStat.index}__].firstName')}">
+                                                    <ul>
+                                                        <li class="text-danger text-start"
+                                                            th:each="err : ${#fields.errors('contactPersons[__${itemStat.index}__].firstName')}" th:text="${err}"/>
+                                                    </ul>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <div class="mb-4">
+                                                <input type="text" th:field="*{contactPersons[__${itemStat.index}__].middleName}"
+                                                       th:class="${#fields.hasErrors('contactPersons[__${itemStat.index}__].middleName')} ? 'form-control is-invalid' : 'form-control'" required placeholder="Middle name" />
+                                                <span class="help-block" th:if="${#fields.hasErrors('contactPersons[__${itemStat.index}__].middleName')}">
+                                                    <ul>
+                                                        <li class="text-danger text-start"
+                                                            th:each="err : ${#fields.errors('contactPersons[__${itemStat.index}__].middleName')}" th:text="${err}"/>
+                                                    </ul>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <div class="mb-4">
+                                                <input type="text" th:field="*{contactPersons[__${itemStat.index}__].phone}"
+                                                       th:class="${#fields.hasErrors('contactPersons[__${itemStat.index}__].phone')} ? 'form-control is-invalid' : 'form-control'" placeholder="Phone" />
+                                                <span class="help-block" th:if="${#fields.hasErrors('contactPersons[__${itemStat.index}__].phone')}">
+                                                    <ul>
+                                                        <li class="text-danger text-start"
+                                                            th:each="err : ${#fields.errors('contactPersons[__${itemStat.index}__].phone')}" th:text="${err}"/>
+                                                    </ul>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-1">
+                                            <div class="mb-4">
+                                                <button type="button" class="btn btn-outline-danger btn-sm btn-del-contact-person" title="Delete">
+                                                    <i class="fa-solid fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <span class="d-md-none d-grid">
+                                <button class="btn btn-success btn-lg" type="submit">Create company</button>
+                            </span>
+                            <span class="d-none d-md-block">
+                                <button class="btn btn-success btn-lg" type="submit">Create company</button>
+                            </span>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </appMain>
+
+    <ownScript>
+        <script src="/js/companies.js?v=1"></script>
+    </ownScript>
+</th:block>

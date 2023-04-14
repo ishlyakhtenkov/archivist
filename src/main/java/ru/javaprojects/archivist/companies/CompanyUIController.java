@@ -1,5 +1,6 @@
 package ru.javaprojects.archivist.companies;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -7,11 +8,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ru.javaprojects.archivist.companies.model.Company;
+
+import static ru.javaprojects.archivist.common.util.validation.ValidationUtil.checkNew;
 
 @Controller
 @RequestMapping(CompanyUIController.COMPANIES_URL)
@@ -44,5 +49,24 @@ public class CompanyUIController {
         }
         model.addAttribute("companies", companies);
         return "companies/companies";
+    }
+
+    @GetMapping("/add")
+    public String showAddForm(Model model) {
+        log.info("show company add form");
+        model.addAttribute("company", new Company());
+        return "companies/company-add";
+    }
+
+    @PostMapping("/create")
+    public String create(@Valid Company company, BindingResult result, Model model, RedirectAttributes redirectAttributes) {
+        if (result.hasErrors()) {
+            return "companies/company-add";
+        }
+        log.info("create {}", company);
+        checkNew(company);
+        service.create(company);
+        redirectAttributes.addFlashAttribute("action", "Company " + company.getName() + " was created");
+        return "redirect:/companies";
     }
 }

@@ -32,6 +32,10 @@ public class Company extends BaseEntity implements HasId {
     @Valid
     private Address address;
 
+    @Embedded
+    @Valid
+    private Contacts contacts;
+
     @Valid
     @CollectionTable(name = "contact_persons", joinColumns = @JoinColumn(name = "company_id"),
             uniqueConstraints = {@UniqueConstraint(columnNames = {"company_id", "position"},

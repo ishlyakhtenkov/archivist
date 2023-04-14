@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 import ru.javaprojects.archivist.companies.model.Company;
 
 @Service
@@ -21,5 +22,10 @@ public class CompanyService {
 
     public void delete(long id) {
         repository.deleteExisted(id);
+    }
+
+    public void create(Company company) {
+        Assert.notNull(company, "company must not be null");
+        repository.save(company);
     }
 }

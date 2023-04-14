@@ -1,5 +1,6 @@
 package ru.javaprojects.archivist.companies.model;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.validation.constraints.NotBlank;
@@ -36,7 +37,8 @@ public class ContactPerson {
     private String lastName;
 
     @NoHtml
-    @Size(min = 9, max = 32)
+    @Size(max = 32)
+    @Nullable
     @Column(name = "phone")
     private String phone;
 }

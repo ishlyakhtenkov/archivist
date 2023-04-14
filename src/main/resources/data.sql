@@ -24,10 +24,10 @@ INSERT INTO password_reset_tokens (user_id, token, expiry_date)
 VALUES (100001, '5a99dd09-d23f-44bb-8d41-b6ff44275d01', '2052-02-05 12:10:00'),
        (100002, '52bde839-9779-4005-b81c-9131c9590d79', '2022-02-06 19:35:56');
 
-INSERT INTO companies (name, city, street, house, zipcode)
-VALUES ('PAO "TTK"', 'Moscow', 'Aviamotornaya', '32', '121748'),
-       ('AO "Super Systems"', 'St Petersburg', 'Nevsky avenue', '42 b2', '134896'),
-       ('OOO "Custom Solutions"', 'Tver', 'Kominterna', '20', '114785');
+INSERT INTO companies (name, city, street, house, zipcode, phone, fax, email)
+VALUES ('PAO "TTK"', 'Moscow', 'Aviamotornaya', '32', '121748', '8(495)745-13-22', '8(495)745-13-21', 'ttk@mail.com'),
+       ('AO "Super Systems"', 'St Petersburg', 'Nevsky avenue', '42 b2', '134896', '8(498)332-11-45', null, 'supsystems@yandex.ru'),
+       ('OOO "Custom Solutions"', 'Tver', 'Kominterna', '20', '114785', '8(564)662-28-15', null, null);
 
 INSERT INTO contact_persons (company_id, position, first_name, middle_name, last_name, phone)
 VALUES (100006, 'Director', 'Ivanov', 'Pavel', 'Ivanovich', '8(495) 741-25-17'),

@@ -15,6 +15,12 @@ public class Address {
     @NotBlank
     @NoHtml
     @Size(min = 2, max = 32)
+    @Column(name = "country", nullable = false)
+    private String country;
+
+    @NotBlank
+    @NoHtml
+    @Size(min = 2, max = 32)
     @Column(name = "city", nullable = false)
     private String city;
 

@@ -26,7 +26,7 @@ function deleteCompany() {
 }
 
 function addContactPersonRow() {
-    $('#contact-person-block').append(generateContactPersonRowHtml());
+    $('#contact-person-block').prepend(generateContactPersonRowHtml());
     setupDeletePersonRowButtons();
 }
 
@@ -60,9 +60,16 @@ function generateContactPersonRowHtml() {
                 </div>
                 <div class="col-lg-1">
                     <div class="mb-4">
-                        <button type="button" class="btn btn-outline-danger btn-sm btn-del-contact-person" title="Delete">
-                            <i class="fa-solid fa-trash"></i>
-                        </button>
+                        <span class="d-lg-none d-grid">
+                           <button type="button" class="btn btn-danger btn-del-contact-person" title="Delete">
+                               <i class="fa-solid fa-arrow-up"></i> Delete contact <i class="fa-solid fa-arrow-up"></i>
+                           </button>
+                        </span>
+                        <span class="d-none d-lg-block">
+                            <button type="button" class="btn btn-danger btn-del-contact-person" title="Delete">
+                                Delete
+                            </button>
+                        </span>
                     </div>
                 </div>
             </div>`;
@@ -70,6 +77,6 @@ function generateContactPersonRowHtml() {
 
 function setupDeletePersonRowButtons() {
     $('.btn-del-contact-person').on('click', function() {
-        $(this).parent().parent().parent().remove();
+        $(this).parent().parent().parent().parent().remove();
     });
 }

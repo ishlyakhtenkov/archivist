@@ -16,7 +16,7 @@
                             <input type="hidden" th:field="*{id}">
                             <div class="mb-4">
                                 <div class="input-group">
-                                    <span class="input-group-text" id="first-name-addon" title="First name"><i class="fa-solid fa-user"></i></span>
+                                    <span class="input-group-text" id="first-name-addon" title="First name"><i class="fa-solid fa-user fa-fw"></i></span>
                                     <input type="text" th:field="*{firstName}"
                                            th:class="${#fields.hasErrors('firstName')} ? 'form-control is-invalid' : 'form-control'"
                                            required placeholder="First name" title="First name" aria-label="Firstname" aria-describedby="first-name-addon"/>
@@ -30,7 +30,7 @@
                             </div>
                             <div class="mb-4">
                                 <div class="input-group">
-                                    <span class="input-group-text" id="last-name-addon" title="Last name"><i class="fa-solid fa-user"></i></span>
+                                    <span class="input-group-text" id="last-name-addon" title="Last name"><i class="fa-solid fa-user fa-fw"></i></span>
                                     <input type="text" th:field="*{lastName}"
                                            th:class="${#fields.hasErrors('lastName')} ? 'form-control is-invalid' : 'form-control'"
                                            placeholder="Last name" title="Last name" aria-label="Lastname" aria-describedby="last-name-addon"/>
@@ -44,7 +44,7 @@
                             </div>
                             <div class="mb-4">
                                 <div class="input-group">
-                                    <span class="input-group-text" id="email-addon" title="E-mail"><i class="fa-solid fa-envelope"></i></span>
+                                    <span class="input-group-text" id="email-addon" title="E-mail"><i class="fa-solid fa-envelope fa-fw"></i></span>
                                     <input type="text" th:field="*{email}"
                                            th:class="${#fields.hasErrors('email')} ? 'form-control is-invalid' : 'form-control'"
                                            required placeholder="E-mail" title="E-mail" aria-label="Email" aria-describedby="email-addon"/>
@@ -58,7 +58,7 @@
                             </div>
                             <div class="mb-4">
                                 <div class="input-group">
-                                    <span class="input-group-text" id="roles-addon" title="Roles"><i class="fa-solid fa-chess"></i></span>
+                                    <span class="input-group-text" id="roles-addon" title="Roles"><i class="fa-solid fa-chess fa-fw"></i></span>
                                     <select class="form-control selectpicker border" data-style="btn-white"
                                             multiple th:field="*{roles}" title="Roles" required aria-label="Roles" aria-describedby="roles-addon">
                                         <option th:each="role : ${roles}"

@@ -41,6 +41,7 @@ CREATE TABLE companies
 (
     id       BIGINT DEFAULT nextval('global_seq')  PRIMARY KEY,
     name     VARCHAR(128)      NOT NULL,
+    country  VARCHAR(32)       NOT NULL,
     city     VARCHAR(32)       NOT NULL,
     street   VARCHAR(64)       NOT NULL,
     house    VARCHAR(32)       NOT NULL,

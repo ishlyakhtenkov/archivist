@@ -62,4 +62,3 @@ CREATE TABLE contact_persons
     phone       VARCHAR(32),
     FOREIGN KEY (company_id) REFERENCES companies (id) ON DELETE CASCADE
 );
-CREATE UNIQUE INDEX contact_persons_unique_company_position_idx ON contact_persons (company_id, position);

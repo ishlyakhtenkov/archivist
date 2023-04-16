@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+import ru.javaprojects.archivist.common.error.exception.NotFoundException;
 import ru.javaprojects.archivist.companies.model.Company;
 
 @Service
@@ -20,12 +21,22 @@ public class CompanyService {
         return repository.findAllByNameContainsIgnoreCaseOrderByName(pageable, keyword);
     }
 
+    public Company get(long id) {
+        return repository.findById(id).orElseThrow(() -> new NotFoundException("Entity with id=" + id + " not found"));
+    }
+
     public void delete(long id) {
         repository.deleteExisted(id);
     }
 
     public void create(Company company) {
         Assert.notNull(company, "company must not be null");
+        repository.save(company);
+    }
+
+    public void update(Company company) {
+        Assert.notNull(company, "company must not be null");
+        repository.getExisted(company.id());
         repository.save(company);
     }
 }

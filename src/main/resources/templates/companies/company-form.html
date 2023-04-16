@@ -12,8 +12,9 @@
                         <a th:href="@{/companies}" type="button" class="btn-close pb-0" aria-label="Close"></a>
                     </div>
                     <div class="card-body px-3 px-md-5 pb-3 pb-md-5 pt-0 text-center">
-                        <h3 class="mb-4">Create Company</h3>
-                        <form th:action="@{/companies/create}" method="post" th:object="${company}">
+                        <h3 class="mb-4" th:text="${company.id == null} ? 'Create Company' : 'Edit Company: ' + ${company.name}">Create/Edit Company</h3>
+                        <form th:action="${company.id == null} ? @{/companies/create} : @{/companies/update}" method="post" th:object="${company}">
+                            <input type="hidden" th:field="*{id}">
                             <div class="row">
                                 <div class="col-lg-4">
                                     <div class="mb-4">
@@ -253,10 +254,10 @@
                             </div>
 
                             <span class="d-md-none d-grid">
-                                <button class="btn btn-success btn-lg" type="submit">Create company</button>
+                                <button class="btn btn-success btn-lg" type="submit" th:text="${company.id == null} ? 'Create Company' : 'Save Company'">Create/Save company</button>
                             </span>
                             <span class="d-none d-md-block">
-                                <button class="btn btn-success btn-lg" type="submit">Create company</button>
+                                <button class="btn btn-success btn-lg" type="submit" th:text="${company.id == null} ? 'Create Company' : 'Save Company'">Create/Save company</button>
                             </span>
                         </form>
                     </div>
@@ -266,6 +267,6 @@
     </appMain>
 
     <ownScript>
-        <script src="/js/companies.js?v=1"></script>
+        <script src="/js/company-form.js?v=1"></script>
     </ownScript>
 </th:block>

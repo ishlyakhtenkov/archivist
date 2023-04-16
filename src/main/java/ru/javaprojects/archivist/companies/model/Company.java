@@ -37,9 +37,7 @@ public class Company extends BaseEntity implements HasId {
     private Contacts contacts;
 
     @Valid
-    @CollectionTable(name = "contact_persons", joinColumns = @JoinColumn(name = "company_id"),
-            uniqueConstraints = {@UniqueConstraint(columnNames = {"company_id", "position"},
-                    name = "contact_persons_unique_company_position_idx")})
+    @CollectionTable(name = "contact_persons", joinColumns = @JoinColumn(name = "company_id"))
     @ElementCollection(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)

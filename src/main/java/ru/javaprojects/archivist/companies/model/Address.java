@@ -44,6 +44,6 @@ public class Address {
     private String zipcode;
 
     public String getFormattedAddress() {
-        return String.join(", ", zipcode, city, street, house);
+        return String.join(", ", country, zipcode, city, street, house);
     }
 }

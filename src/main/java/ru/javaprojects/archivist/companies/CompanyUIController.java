@@ -9,10 +9,8 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ru.javaprojects.archivist.companies.model.Company;
 
@@ -26,6 +24,12 @@ public class CompanyUIController {
     static final String COMPANIES_URL = "/companies";
 
     private final CompanyService service;
+    private final UniqueNameValidator nameValidator;
+
+    @InitBinder("company")
+    protected void initBinder(WebDataBinder binder) {
+        binder.addValidators(nameValidator);
+    }
 
     @GetMapping
     public String getAll(@RequestParam(value = "keyword", required = false) String keyword,
@@ -55,18 +59,36 @@ public class CompanyUIController {
     public String showAddForm(Model model) {
         log.info("show company add form");
         model.addAttribute("company", new Company());
-        return "companies/company-add";
+        return "companies/company-form";
     }
 
     @PostMapping("/create")
     public String create(@Valid Company company, BindingResult result, Model model, RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
-            return "companies/company-add";
+            return "companies/company-form";
         }
         log.info("create {}", company);
         checkNew(company);
         service.create(company);
         redirectAttributes.addFlashAttribute("action", "Company " + company.getName() + " was created");
+        return "redirect:/companies";
+    }
+
+    @GetMapping("/edit/{id}")
+    public String showEditForm(@PathVariable long id, Model model) {
+        log.info("show company={} edit form", id);
+        model.addAttribute("company", service.get(id));
+        return "companies/company-form";
+    }
+
+    @PostMapping("/update")
+    public String update(@Valid Company company, BindingResult result, Model model, RedirectAttributes redirectAttributes) {
+        if (result.hasErrors()) {
+            return "companies/company-form";
+        }
+        log.info("update {}", company);
+        service.update(company);
+        redirectAttributes.addFlashAttribute("action", "Company " + company.getName() + " was updated");
         return "redirect:/companies";
     }
 }

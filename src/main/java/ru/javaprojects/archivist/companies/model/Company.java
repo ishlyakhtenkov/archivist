@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,6 +15,7 @@ import ru.javaprojects.archivist.common.model.BaseEntity;
 import ru.javaprojects.archivist.common.util.validation.NoHtml;
 
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "companies", uniqueConstraints = {@UniqueConstraint(columnNames = "name", name = "companies_unique_name_idx")})
@@ -42,6 +44,14 @@ public class Company extends BaseEntity implements HasId {
     @JoinColumn(name = "company_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<ContactPerson> contactPersons;
+
+    public Company(Long id, String name, Address address, Contacts contacts, List<ContactPerson> contactPersons) {
+        super(id);
+        this.name = name;
+        this.address = address;
+        this.contacts = contacts;
+        this.contactPersons = contactPersons;
+    }
 
     @Override
     public String toString() {

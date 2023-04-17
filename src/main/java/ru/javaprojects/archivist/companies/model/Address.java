@@ -5,10 +5,14 @@ import jakarta.persistence.Embeddable;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import ru.javaprojects.archivist.common.util.validation.NoHtml;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Embeddable
 public class Address {
 

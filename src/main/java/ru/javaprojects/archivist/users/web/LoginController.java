@@ -9,7 +9,7 @@ import ru.javaprojects.archivist.ArchivistApplication;
 @Controller
 @RequestMapping(LoginController.LOGIN_URL)
 public class LoginController {
-    static final String LOGIN_URL = "/login";
+    public static final String LOGIN_URL = "/login";
 
     @GetMapping
     public String login(@AuthenticationPrincipal ArchivistApplication.AuthUser authUser) {

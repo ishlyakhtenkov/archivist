@@ -29,7 +29,7 @@ VALUES ('PAO "TTK"', 'Russia', 'Moscow', 'Aviamotornaya', '32', '121748', '8(495
        ('AO "Super Systems"', 'Russia', 'St Petersburg', 'Nevsky avenue', '42 b2', '134896', '8(498)332-11-45', null, 'supsystems@yandex.ru'),
        ('OOO "Custom Solutions"', 'Russia', 'Tver', 'Kominterna', '20', '114785', '8(564)662-28-15', null, null);
 
-INSERT INTO contact_persons (company_id, position, first_name, middle_name, last_name, phone)
-VALUES (100006, 'Director', 'Pavel', 'Ivanovich', 'Ivanov', '8(495) 741-25-17'),
-       (100007, 'Chief engineer', 'Ivan', 'Alexandrovich', 'Petrov', '8(745) 111-25-89'),
-       (100007, 'Secretary', 'Anna', 'Ivanovna', 'Belkina', '8(745) 111-25-89');
+INSERT INTO contact_persons (company_id, position, last_name, first_name, middle_name, phone)
+VALUES (100006, 'Director', 'Ivanov', 'Pavel', 'Ivanovich', '8(495)741-25-17'),
+       (100007, 'Chief engineer', 'Petrov', 'Ivan', 'Alexandrovich', '8(745)111-25-89'),
+       (100007, 'Secretary', 'Belkina', 'Anna', 'Ivanovna', '8(745)111-25-89');

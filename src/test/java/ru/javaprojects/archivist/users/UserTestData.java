@@ -29,6 +29,7 @@ public class UserTestData {
     public static final long NOT_FOUND = 100;
     public static final String USER_MAIL = "user@gmail.com";
     public static final String ADMIN_MAIL = "admin@gmail.com";
+    public static final String ARCHIVIST_MAIL = "archivist@gmail.com";
     public static final String ADMIN_TOKEN = "5a99dd09-d23f-44bb-8d41-b6ff44275d01";
     public static final String NOT_EXISTING_TOKEN = UUID.randomUUID().toString();
     public static final String EXPIRED_TOKEN = "52bde839-9779-4005-b81c-9131c9590d79";
@@ -45,7 +46,7 @@ public class UserTestData {
     public static final String PASSWORD_RESET_TOKEN_NOT_EXPIRED = "Password reset token=" + EXPIRED_TOKEN + " expired";
     public static final String USER_ATTRIBUTE = "user";
     public static final String USER_TO_ATTRIBUTE = "userTo";
-    public static final String USERS_PAGE_ATTRIBUTE = "usersPage";
+    public static final String USERS_ATTRIBUTE = "users";
     public static final String PASSWORD_RESET_TO_ATTRIBUTE = "passwordResetTo";
     public static final String ID = "id";
     public static final String FIRST_NAME = "firstName";
@@ -66,13 +67,6 @@ public class UserTestData {
 
     public static User getUpdated() {
         return new User(USER_ID, "updated@gmail.com", user.getPassword(), "updatedFirstName", "updatedLastName", user.isEnabled(), Set.of(Role.USER, Role.ARCHIVIST, Role.ADMIN));
-    }
-
-    public static MultiValueMap<String, String> getPageableParams() {
-        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("page", "0");
-        params.add("size", "2");
-        return params;
     }
 
     public static MultiValueMap<String, String> getNewParams() {

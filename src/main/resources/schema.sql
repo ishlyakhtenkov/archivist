@@ -56,9 +56,9 @@ CREATE TABLE contact_persons
 (
     company_id  BIGINT           NOT NULL,
     position    VARCHAR(64)      NOT NULL,
+    last_name   VARCHAR(32)      NOT NULL,
     first_name  VARCHAR(32)      NOT NULL,
     middle_name VARCHAR(32)      NOT NULL,
-    last_name   VARCHAR(32)      NOT NULL,
     phone       VARCHAR(32),
     FOREIGN KEY (company_id) REFERENCES companies (id) ON DELETE CASCADE
 );

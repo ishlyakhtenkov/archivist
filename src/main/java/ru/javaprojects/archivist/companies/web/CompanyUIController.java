@@ -1,4 +1,4 @@
-package ru.javaprojects.archivist.companies;
+package ru.javaprojects.archivist.companies.web;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -6,14 +6,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import ru.javaprojects.archivist.ArchivistApplication;
+import ru.javaprojects.archivist.companies.CompanyService;
+import ru.javaprojects.archivist.companies.UniqueNameValidator;
 import ru.javaprojects.archivist.companies.model.Company;
 
 import static ru.javaprojects.archivist.common.util.validation.ValidationUtil.checkNew;

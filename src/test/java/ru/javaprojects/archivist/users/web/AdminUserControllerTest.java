@@ -22,6 +22,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static ru.javaprojects.archivist.AbstractControllerTest.ExceptionResultMatchers.exception;
+import static ru.javaprojects.archivist.CommonTestData.KEYWORD;
+import static ru.javaprojects.archivist.CommonTestData.getPageableParams;
 import static ru.javaprojects.archivist.common.config.SecurityConfig.PASSWORD_ENCODER;
 import static ru.javaprojects.archivist.users.UniqueMailValidator.DUPLICATE_EMAIL_ERROR_CODE;
 import static ru.javaprojects.archivist.users.UserTestData.*;
@@ -51,13 +53,13 @@ public class AdminUserControllerTest extends AbstractControllerTest {
         ResultActions actions = perform(MockMvcRequestBuilders.get(USERS_URL)
                 .params(getPageableParams()))
                 .andExpect(status().isOk())
-                .andExpect(model().attributeExists(USERS_PAGE_ATTRIBUTE))
+                .andExpect(model().attributeExists(USERS_ATTRIBUTE))
                 .andExpect(view().name(USERS_VIEW));
-        Page<User> usersPage = (Page<User>) Objects.requireNonNull(actions.andReturn().getModelAndView())
-                .getModel().get(USERS_PAGE_ATTRIBUTE);
-        assertEquals(4, usersPage.getTotalElements());
-        assertEquals(2, usersPage.getTotalPages());
-        USER_MATCHER.assertMatch(usersPage.getContent(), List.of(user, admin));
+        Page<User> users = (Page<User>) Objects.requireNonNull(actions.andReturn().getModelAndView())
+                .getModel().get(USERS_ATTRIBUTE);
+        assertEquals(4, users.getTotalElements());
+        assertEquals(2, users.getTotalPages());
+        USER_MATCHER.assertMatch(users.getContent(), List.of(user, admin));
     }
 
     @Test
@@ -65,19 +67,19 @@ public class AdminUserControllerTest extends AbstractControllerTest {
     @SuppressWarnings("unchecked")
     void getAllByKeyword() throws Exception {
         ResultActions actions = perform(MockMvcRequestBuilders.get(USERS_URL)
-                .param("keyword", "jack"))
+                .param(KEYWORD, "jack"))
                 .andExpect(status().isOk())
-                .andExpect(model().attributeExists(USERS_PAGE_ATTRIBUTE))
+                .andExpect(model().attributeExists(USERS_ATTRIBUTE))
                 .andExpect(view().name(USERS_VIEW));
-        Page<User> usersPage = (Page<User>) Objects.requireNonNull(actions.andReturn().getModelAndView())
-                .getModel().get(USERS_PAGE_ATTRIBUTE);
-        assertEquals(1, usersPage.getTotalElements());
-        assertEquals(1, usersPage.getTotalPages());
-        USER_MATCHER.assertMatch(usersPage.getContent(), List.of(admin));
+        Page<User> users = (Page<User>) Objects.requireNonNull(actions.andReturn().getModelAndView())
+                .getModel().get(USERS_ATTRIBUTE);
+        assertEquals(1, users.getTotalElements());
+        assertEquals(1, users.getTotalPages());
+        USER_MATCHER.assertMatch(users.getContent(), List.of(admin));
     }
 
     @Test
-    void getUsersUnAuthorized() throws Exception {
+    void getAllUnAuthorized() throws Exception {
         perform(MockMvcRequestBuilders.get(USERS_URL)
                 .params(getPageableParams()))
                 .andExpect(status().isFound())
@@ -87,7 +89,7 @@ public class AdminUserControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(USER_MAIL)
-    void getUsersForbidden() throws Exception {
+    void getAllForbidden() throws Exception {
         perform(MockMvcRequestBuilders.get(USERS_URL)
                 .params(getPageableParams()))
                 .andExpect(status().isForbidden());

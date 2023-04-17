@@ -5,10 +5,14 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import ru.javaprojects.archivist.common.util.validation.NoHtml;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Embeddable
 public class ContactPerson {
 
@@ -21,6 +25,12 @@ public class ContactPerson {
     @NotBlank
     @NoHtml
     @Size(min = 2, max = 32)
+    @Column(name = "last_name", nullable = false)
+    private String lastName;
+
+    @NotBlank
+    @NoHtml
+    @Size(min = 2, max = 32)
     @Column(name = "first_name", nullable = false)
     private String firstName;
 
@@ -29,12 +39,6 @@ public class ContactPerson {
     @Size(min = 2, max = 32)
     @Column(name = "middle_name", nullable = false)
     private String middleName;
-
-    @NotBlank
-    @NoHtml
-    @Size(min = 2, max = 32)
-    @Column(name = "last_name", nullable = false)
-    private String lastName;
 
     @NoHtml
     @Size(max = 32)

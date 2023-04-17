@@ -111,17 +111,6 @@ function forgotPassword() {
     }
 }
 
-function handleError(data, message) {
-    if (data.status === 0) {
-        window.location.reload();
-    }
-    let detail = data.responseJSON.detail;
-    if (detail.includes('changePassword')) {
-        detail = detail.replace('changePassword.', '');
-    }
-    failToast(`${message}:<br>${detail}`);
-}
-
 $("#repeat-password").on('keyup', function(){
     checkPasswordsMatch();
 });

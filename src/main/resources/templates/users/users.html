@@ -53,26 +53,26 @@
                     </td>
                     <td th:text="${#dates.format(user.registered, 'dd-MM-yyyy HH:mm')}"></td>
                     <td th:text="${#strings.substring(user.roles, 1, #strings.length(user.roles) - 1)}"></td>
-                    <td class="px-1 px-xxl-0">
-                        <a th:href="@{'/users/edit/' + ${user.id}}" type="button" class="btn btn-outline-success btn-sm" title="Edit user">
+                    <td>
+                        <a th:href="@{'/users/edit/' + ${user.id}}" type="button" title="Edit user" class="pencil-button">
                             <i class="fa-solid fa-user-pen"></i>
                         </a>
                     </td>
-                    <td class="px-1 px-xxl-0">
-                        <button type="button" class="btn btn-outline-warning btn-sm"
+                    <td>
+                        <a type="button" class="key-button"
                                 title="Change password" data-bs-toggle="modal" data-bs-target="#changePasswordModal"
                                 th:data-name="${user.fullName}"
                                 th:data-id="${user.id}">
                             <i class="fa-solid fa-key"></i>
-                        </button>
+                        </a>
                     </td>
-                    <td class="px-1 px-xxl-0">
-                        <button type="button" class="btn btn-outline-danger btn-sm"
+                    <td>
+                        <a type="button" class="trash-button"
                                 title="Delete user" data-bs-toggle="modal" data-bs-target="#deleteModal"
                                 th:data-name="${user.fullName}"
                                 th:data-id="${user.id}">
                             <i class="fa-solid fa-user-xmark"></i>
-                        </button>
+                        </a>
                     </td>
                 </tr>
                 </tbody>

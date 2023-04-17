@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       th:with="activeMenuItem='Companies'" lang="en">
 
 <th:block th:replace="~{fragments/main::page(title='Archivist - companies',appMain=~{::appMain}, ownScript=~{::ownScript})}">
@@ -105,7 +106,7 @@
 
                             <!-- Contact persons block -->
                             <div class="text-start mb-3">
-                                <h4>Contact persons</h4>
+                                <h4 class="text-secondary">Contact persons</h4>
                                 <div id="contact-person-block" class="mt-3">
                                     <span th:if="*{contactPersons.isEmpty()}">
                                         <h5 class="alert alert-warning py-2 mb-4">No contact persons found.</h5>
@@ -141,10 +142,10 @@
                                 </div>
                             </div>
 
-                            <span class="d-md-none d-grid">
+                            <span sec:authorize="hasAnyRole('ADMIN','ARCHIVIST')" class="d-md-none d-grid">
                                 <a th:href="@{'/companies/edit/' + ${company.id}}" class="btn btn-success btn-lg" type="button">Edit company</a>
                             </span>
-                            <span class="d-none d-md-block">
+                            <span sec:authorize="hasAnyRole('ADMIN','ARCHIVIST')" class="d-none d-md-block">
                                 <a th:href="@{'/companies/edit/' + ${company.id}}" class="btn btn-success btn-lg" type="button">Edit company</a>
                             </span>
                         </div>

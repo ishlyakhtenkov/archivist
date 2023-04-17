@@ -32,3 +32,11 @@ function failToast(message) {
         icon: 'error'
     })
 }
+
+function handleError(data, message) {
+    if (data.status === 0) {
+        window.location.reload();
+    }
+    let detail = data.responseJSON.detail;
+    failToast(`${message}:<br>${detail}`);
+}

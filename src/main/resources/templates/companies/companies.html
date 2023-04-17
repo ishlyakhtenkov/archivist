@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sd="http://www.thymeleaf.org/spring-data"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       th:with="activeMenuItem='Companies'" lang="en">
 
 <th:block th:replace="~{fragments/main::page(title='Archivist - companies',appMain=~{::appMain}, ownScript=~{::ownScript})}">
@@ -16,7 +17,7 @@
                     <form class="d-flex" role="search" th:action="@{/companies}" method="get">
                         <input class="form-control" th:name="keyword" th:value="${param.keyword}" type="search" placeholder="Search companies" aria-label="Search">
                     </form>
-                    <a th:href="@{/companies/add}" type="button" class="btn btn-secondary ms-2" title="Add new company">
+                    <a sec:authorize="hasAnyRole('ADMIN','ARCHIVIST')" th:href="@{/companies/add}" type="button" class="btn btn-secondary ms-2" title="Add new company">
                         <span class="d-none d-md-block"><i class="fa-solid fa-plus"></i> Add Company</span>
                         <span class="d-md-none"><i class="fa-solid fa-plus"></i> Add Comp.</span>
                     </a>
@@ -38,7 +39,8 @@
                     <th>Phone</th>
                     <th>Fax</th>
                     <th>Email</th>
-                    <th colspan="3">Actions</th>
+                    <th sec:authorize="hasAnyRole('ADMIN','ARCHIVIST')" colspan="3">Actions</th>
+                    <th sec:authorize="!hasAnyRole('ADMIN','ARCHIVIST')">Details</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -48,23 +50,23 @@
                     <td th:text="${company.contacts.phone}"></td>
                     <td th:text="${company.contacts.fax}"></td>
                     <td th:text="${company.contacts.email}"></td>
-                    <td class="px-1 px-xxl-0">
-                        <a th:href="@{'/companies/' + ${company.id}}" type="button" class="btn btn-outline-info btn-sm" title="Details">
+                    <td>
+                        <a th:href="@{'/companies/' + ${company.id}}" type="button" title="Company details" class="glass-button">
                             <i class="fa-solid fa-magnifying-glass"></i>
                         </a>
                     </td>
-                    <td class="px-1 px-xxl-0">
-                        <a th:href="@{'/companies/edit/' + ${company.id}}" type="button" class="btn btn-outline-success btn-sm" title="Edit company">
+                    <td sec:authorize="hasAnyRole('ADMIN','ARCHIVIST')">
+                        <a th:href="@{'/companies/edit/' + ${company.id}}" type="button" title="Edit company" class="pencil-button">
                             <i class="fa-solid fa-pencil"></i>
                         </a>
                     </td>
-                    <td class="px-1 px-xxl-0">
-                        <button type="button" class="btn btn-outline-danger btn-sm"
+                    <td sec:authorize="hasAnyRole('ADMIN','ARCHIVIST')">
+                        <a type="button" class="trash-button"
                                 title="Delete company" data-bs-toggle="modal" data-bs-target="#deleteModal"
                                 th:data-name="${company.name}"
                                 th:data-id="${company.id}">
                             <i class="fa-solid fa-trash"></i>
-                        </button>
+                        </a>
                     </td>
                 </tr>
                 </tbody>

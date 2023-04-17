@@ -3,6 +3,7 @@ package ru.javaprojects.archivist.common.config;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -40,10 +41,12 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests()
-//                .requestMatchers("/users/**").hasRole(Role.ADMIN.name())
+                .requestMatchers("/users/**").hasRole(Role.ADMIN.name())
+                .requestMatchers("/companies/add", "/companies/create", "/companies/edit/**", "/companies/update")
+                    .hasAnyRole(Role.ADMIN.name(), Role.ARCHIVIST.name())
+                .requestMatchers(HttpMethod.DELETE, "/companies/**").hasAnyRole(Role.ADMIN.name(), Role.ARCHIVIST.name())
                 .requestMatchers("/profile/forgotPassword", "/profile/resetPassword").anonymous()
                 .requestMatchers("/", "/webjars/**", "/css/**", "/images/**", "/js/**").permitAll()
-                .requestMatchers("/companies/**", "/users/**").permitAll()
                 .anyRequest().authenticated()
                 .and().formLogin().permitAll()
                 .loginPage("/login")

@@ -155,3 +155,35 @@
 .bootstrap-select>.dropdown-toggle.bs-placeholder,.bootstrap-select>.dropdown-toggle.bs-placeholder:active,.bootstrap-select>.dropdown-toggle.bs-placeholder:focus,.bootstrap-select>.dropdown-toggle.bs-placeholder:hover {
     color: #595C5F;
 }
+
+.trash-button {
+    color: #ea6360;
+}
+
+.trash-button:hover, .trash-button:focus {
+    color: red;
+}
+
+.pencil-button {
+    color: #49a48c;
+}
+
+.pencil-button:hover, .pencil-button:focus {
+    color: #157653;
+}
+
+.glass-button {
+    color: #62aaeb;
+}
+
+.glass-button:hover, .glass-button:focus {
+    color: #3b52a2;
+}
+
+.key-button {
+    color: #c5b269;
+}
+
+.key-button:hover, .key-button:focus {
+    color: #ac8c16;
+}

@@ -25,7 +25,11 @@
         </div>
 
         <!-- Companies table -->
-        <div class="table-responsive text-nowrap text-center">
+        <span th:if="${companies.isEmpty()}">
+            <h5 class="alert alert-warning mt-2">No companies found.</h5>
+        </span>
+
+        <div th:if="${!companies.isEmpty()}" class="table-responsive text-nowrap text-center">
             <table class="table table-bordered">
                 <thead class="table-dark">
                 <tr>
@@ -45,7 +49,7 @@
                     <td th:text="${company.contacts.fax}"></td>
                     <td th:text="${company.contacts.email}"></td>
                     <td class="px-1 px-xxl-0">
-                        <a th:href="@{'/companies/edit/' + ${company.id}}" type="button" class="btn btn-outline-info btn-sm" title="Details">
+                        <a th:href="@{'/companies/' + ${company.id}}" type="button" class="btn btn-outline-info btn-sm" title="Details">
                             <i class="fa-solid fa-magnifying-glass"></i>
                         </a>
                     </td>
@@ -68,7 +72,7 @@
         </div>
 
         <!-- Pagination -->
-        <div class="row">
+        <div th:if="${!companies.isEmpty()}" class="row">
             <div class="col-12 col-md-6 text-center text-md-start">
                 <div sd:pagination-summary="" id="pagination-summary">info</div>
             </div>
@@ -83,7 +87,7 @@
                 </nav>
             </div>
         </div>
-        <div class="row">
+        <div th:if="${!companies.isEmpty()}" class="row">
             <div class="col text-center text-md-end">
                 Show <span sd:page-size-selector="javascript"></span> entries
             </div>

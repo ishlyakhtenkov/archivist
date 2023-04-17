@@ -54,7 +54,7 @@
                                             <span class="input-group-text" id="zipcode-addon" title="Zipcode"><i class="fa-solid fa-barcode fa-fw"></i></span>
                                             <input type="text" th:field="*{address.zipcode}"
                                                    th:class="${#fields.hasErrors('address.zipcode')} ? 'form-control is-invalid' : 'form-control'"
-                                                   placeholder="Zipcode" title="Zipcode" aria-label="Zipcode" aria-describedby="zipcode-addon"/>
+                                                   required placeholder="Zipcode" title="Zipcode" aria-label="Zipcode" aria-describedby="zipcode-addon"/>
                                         </div>
                                         <span class="help-block" th:if="${#fields.hasErrors('address.zipcode')}">
                                             <ul>
@@ -73,7 +73,7 @@
                                             <span class="input-group-text" id="city-addon" title="City"><i class="fa-solid fa-city fa-fw"></i></span>
                                             <input type="text" th:field="*{address.city}"
                                                    th:class="${#fields.hasErrors('address.city')} ? 'form-control is-invalid' : 'form-control'"
-                                                   placeholder="City" title="City" aria-label="City" aria-describedby="city-addon"/>
+                                                   required placeholder="City" title="City" aria-label="City" aria-describedby="city-addon"/>
                                         </div>
                                         <span class="help-block" th:if="${#fields.hasErrors('address.city')}">
                                             <ul>

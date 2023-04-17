@@ -24,7 +24,11 @@
         </div>
 
         <!-- Users table -->
-        <div class="table-responsive text-nowrap text-center">
+        <span th:if="${users.isEmpty()}">
+            <h5 class="alert alert-warning mt-2">No users found.</h5>
+        </span>
+
+        <div th:if="${!users.isEmpty()}" class="table-responsive text-nowrap text-center">
             <table class="table table-bordered">
                 <thead class="table-dark">
                 <tr>
@@ -76,7 +80,7 @@
         </div>
 
         <!-- Pagination -->
-        <div class="row">
+        <div th:if="${!users.isEmpty()}" class="row">
             <div class="col-12 col-md-6 text-center text-md-start">
                 <div sd:pagination-summary="" id="pagination-summary">info</div>
             </div>
@@ -91,7 +95,7 @@
                 </nav>
             </div>
         </div>
-        <div class="row">
+        <div th:if="${!users.isEmpty()}" class="row">
             <div class="col text-center text-md-end">
                 Show <span sd:page-size-selector="javascript"></span> entries
             </div>

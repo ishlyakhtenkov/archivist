@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:with="activeMenuItem='Companies'" lang="en">
+
+<th:block th:replace="~{fragments/main::page(title='Archivist - companies',appMain=~{::appMain}, ownScript=~{::ownScript})}">
+    <appMain>
+        <!-- Company details card -->
+        <div class="row d-flex justify-content-center align-items-center">
+            <div class="col-12">
+                <div class="card shadow-2-strong" style="border-radius: 1rem;">
+                    <div class="text-end mt-3 me-3">
+                        <a th:href="@{/companies}" type="button" class="btn-close pb-0" aria-label="Close"></a>
+                    </div>
+                    <div class="card-body px-3 px-md-5 pb-3 pb-md-5 pt-0 text-center">
+                        <h3 class="mb-4" th:text="'Company details: ' + ${company.name}">Company details</h3>
+                        <div th:object="${company}">
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <div class="mb-4">
+                                        <div class="input-group">
+                                            <span class="input-group-text" id="name-addon" title="Name"><i class="fa-brands fa-fort-awesome fa-fw"></i></span>
+                                            <input type="text" th:field="*{name}" class="form-control" disabled
+                                                   title="Name" aria-label="Name" aria-describedby="name-addon"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="mb-4">
+                                        <div class="input-group">
+                                            <span class="input-group-text" id="country-addon" title="Country"><i class="fa-solid fa-flag fa-fw"></i></span>
+                                            <input type="text" th:field="*{address.country}" class="form-control" disabled
+                                                   title="Country" aria-label="Country" aria-describedby="country-addon"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="mb-4">
+                                        <div class="input-group">
+                                            <span class="input-group-text" id="zipcode-addon" title="Zipcode"><i class="fa-solid fa-barcode fa-fw"></i></span>
+                                            <input type="text" th:field="*{address.zipcode}" class="form-control" disabled
+                                                   title="Zipcode" aria-label="Zipcode" aria-describedby="zipcode-addon"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+
+                                <div class="col-lg-4">
+                                    <div class="mb-4">
+                                        <div class="input-group">
+                                            <span class="input-group-text" id="city-addon" title="City"><i class="fa-solid fa-city fa-fw"></i></span>
+                                            <input type="text" th:field="*{address.city}" class="form-control" disabled
+                                                   title="City" aria-label="City" aria-describedby="city-addon"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="mb-4">
+                                        <div class="input-group">
+                                            <span class="input-group-text" id="street-addon" title="Street"><i class="fa-solid fa-road fa-fw"></i></span>
+                                            <input type="text" th:field="*{address.street}" class="form-control" disabled
+                                                   title="Street" aria-label="Street" aria-describedby="street-addon"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="mb-4">
+                                        <div class="input-group">
+                                            <span class="input-group-text" id="house-addon" title="House"><i class="fa-solid fa-house fa-fw"></i></span>
+                                            <input type="text" th:field="*{address.house}" class="form-control" disabled
+                                                   title="House" aria-label="House" aria-describedby="house-addon"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <div class="mb-4">
+                                        <div class="input-group">
+                                            <span class="input-group-text" id="phone-addon" title="Phone"><i class="fa-solid fa-phone fa-fw"></i></span>
+                                            <input type="text" th:field="*{contacts.phone}" class="form-control" disabled
+                                                   placeholder="Phone" title="Phone" aria-label="Phone" aria-describedby="phone-addon"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="mb-4">
+                                        <div class="input-group">
+                                            <span class="input-group-text" id="fax-addon" title="Fax"><i class="fa-solid fa-fax fa-fw"></i></span>
+                                            <input type="text" th:field="*{contacts.fax}" class="form-control" disabled
+                                                   placeholder="Fax" title="Fax" aria-label="Fax" aria-describedby="fax-addon"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="mb-4">
+                                        <div class="input-group">
+                                            <span class="input-group-text" id="email-addon" title="E-mail"><i class="fa-solid fa-envelope fa-fw"></i></span>
+                                            <input type="text" th:field="*{contacts.email}" class="form-control" disabled
+                                                   placeholder="E-mail" title="E-mail" aria-label="E-mail" aria-describedby="email-addon"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Contact persons block -->
+                            <div class="text-start mb-3">
+                                <h4>Contact persons</h4>
+                                <div id="contact-person-block" class="mt-3">
+                                    <span th:if="*{contactPersons.isEmpty()}">
+                                        <h5 class="alert alert-warning py-2 mb-4">No contact persons found.</h5>
+                                    </span>
+
+                                    <div th:each="contactPerson, itemStat : *{contactPersons}" class="row contact-person-row">
+                                        <div class="col-lg-3">
+                                            <div class="mb-4">
+                                                <input type="text" th:field="*{contactPersons[__${itemStat.index}__].position}" class="form-control" disabled />
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <div class="mb-4">
+                                                <input type="text" th:field="*{contactPersons[__${itemStat.index}__].lastName}" class="form-control" disabled />
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <div class="mb-4">
+                                                <input type="text" th:field="*{contactPersons[__${itemStat.index}__].firstName}" class="form-control" disabled />
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <div class="mb-4">
+                                                <input type="text" th:field="*{contactPersons[__${itemStat.index}__].middleName}" class="form-control" disabled />
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <div class="mb-4">
+                                                <input type="text" th:field="*{contactPersons[__${itemStat.index}__].phone}" class="form-control" disabled placeholder="Phone" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <span class="d-md-none d-grid">
+                                <a th:href="@{'/companies/edit/' + ${company.id}}" class="btn btn-success btn-lg" type="button">Edit company</a>
+                            </span>
+                            <span class="d-none d-md-block">
+                                <a th:href="@{'/companies/edit/' + ${company.id}}" class="btn btn-success btn-lg" type="button">Edit company</a>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </appMain>
+</th:block>

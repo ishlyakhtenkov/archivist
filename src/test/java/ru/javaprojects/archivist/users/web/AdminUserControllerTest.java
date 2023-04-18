@@ -22,10 +22,9 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static ru.javaprojects.archivist.AbstractControllerTest.ExceptionResultMatchers.exception;
-import static ru.javaprojects.archivist.CommonTestData.KEYWORD;
-import static ru.javaprojects.archivist.CommonTestData.getPageableParams;
+import static ru.javaprojects.archivist.CommonTestData.*;
 import static ru.javaprojects.archivist.common.config.SecurityConfig.PASSWORD_ENCODER;
-import static ru.javaprojects.archivist.users.UniqueMailValidator.DUPLICATE_EMAIL_ERROR_CODE;
+import static ru.javaprojects.archivist.common.util.validation.Constants.DUPLICATE_ERROR_CODE;
 import static ru.javaprojects.archivist.users.UserTestData.*;
 import static ru.javaprojects.archivist.users.UserUtil.asTo;
 import static ru.javaprojects.archivist.users.web.AdminUserUIController.USERS_URL;
@@ -179,7 +178,7 @@ public class AdminUserControllerTest extends AbstractControllerTest {
                 .params(newParams)
                 .with(csrf()))
                 .andExpect(status().isOk())
-                .andExpect(model().attributeHasFieldErrorCode(USER_ATTRIBUTE, EMAIL, DUPLICATE_EMAIL_ERROR_CODE))
+                .andExpect(model().attributeHasFieldErrorCode(USER_ATTRIBUTE, EMAIL, DUPLICATE_ERROR_CODE))
                 .andExpect(view().name(USER_ADD_VIEW));
         assertNotEquals(getNew().getFullName(), service.getByEmail(USER_MAIL).getFullName());
     }
@@ -230,6 +229,7 @@ public class AdminUserControllerTest extends AbstractControllerTest {
         USER_MATCHER.assertMatch(service.get(USER_ID), updatedUser);
     }
 
+    //Check UniqueMailValidator works correct when update
     @Test
     @WithUserDetails(ADMIN_MAIL)
     void updateEmailNotChange() throws Exception {
@@ -300,7 +300,7 @@ public class AdminUserControllerTest extends AbstractControllerTest {
                 .params(updatedParams)
                 .with(csrf()))
                 .andExpect(status().isOk())
-                .andExpect(model().attributeHasFieldErrorCode(USER_TO_ATTRIBUTE, EMAIL, DUPLICATE_EMAIL_ERROR_CODE))
+                .andExpect(model().attributeHasFieldErrorCode(USER_TO_ATTRIBUTE, EMAIL, DUPLICATE_ERROR_CODE))
                 .andExpect(view().name(USER_EDIT_VIEW));
         assertNotEquals(service.get(USER_ID).getEmail(), ADMIN_MAIL);
     }

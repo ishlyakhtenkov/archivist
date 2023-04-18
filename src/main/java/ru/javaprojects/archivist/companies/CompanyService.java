@@ -25,6 +25,11 @@ public class CompanyService {
         return repository.findById(id).orElseThrow(() -> new NotFoundException("Entity with id=" + id + " not found"));
     }
 
+    public Company getByName(String name) {
+        return repository.findByNameIgnoreCase(name)
+                .orElseThrow(() -> new NotFoundException("Not found company with name=" + name));
+    }
+
     public void delete(long id) {
         repository.deleteExisted(id);
     }

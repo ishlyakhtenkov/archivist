@@ -6,10 +6,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 
+import static ru.javaprojects.archivist.common.util.validation.Constants.DUPLICATE_ERROR_CODE;
+
 @Component
 @AllArgsConstructor
 public class UniqueMailValidator implements org.springframework.validation.Validator {
-    public static final String DUPLICATE_EMAIL_ERROR_CODE = "Duplicate";
     public static final String DUPLICATE_EMAIL_MESSAGE = "User with this email already exists";
 
     private final UserRepository repository;
@@ -26,7 +27,7 @@ public class UniqueMailValidator implements org.springframework.validation.Valid
             repository.findByEmailIgnoreCase(user.getEmail())
                     .ifPresent(dbUser -> {
                         if (user.isNew() || !user.getId().equals(dbUser.getId())) {
-                            errors.rejectValue("email", DUPLICATE_EMAIL_ERROR_CODE, DUPLICATE_EMAIL_MESSAGE);
+                            errors.rejectValue("email", DUPLICATE_ERROR_CODE, DUPLICATE_EMAIL_MESSAGE);
                         }
                     });
         }

@@ -13,6 +13,8 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static ru.javaprojects.archivist.CommonTestData.*;
+
 public class UserTestData {
     public static final MatcherFactory.Matcher<User> USER_MATCHER =
             MatcherFactory.usingIgnoringFieldsComparator(User.class, "password", "registered");
@@ -26,10 +28,6 @@ public class UserTestData {
 
     public static final long USER_ID = 100000;
     public static final long ADMIN_ID = 100001;
-    public static final long NOT_FOUND = 100;
-    public static final String USER_MAIL = "user@gmail.com";
-    public static final String ADMIN_MAIL = "admin@gmail.com";
-    public static final String ARCHIVIST_MAIL = "archivist@gmail.com";
     public static final String ADMIN_TOKEN = "5a99dd09-d23f-44bb-8d41-b6ff44275d01";
     public static final String NOT_EXISTING_TOKEN = UUID.randomUUID().toString();
     public static final String EXPIRED_TOKEN = "52bde839-9779-4005-b81c-9131c9590d79";
@@ -41,19 +39,16 @@ public class UserTestData {
     public static final String ENABLED = "enabled";
     public static final String FALSE = "false";
     public static final String TRUE = "true";
-    public static final String ENTITY_NOT_FOUND = "Entity with id=" + NOT_FOUND + " not found";
     public static final String PASSWORD_RESET_TOKEN_NOT_FOUND = "Not found password reset token=" + NOT_EXISTING_TOKEN;
     public static final String PASSWORD_RESET_TOKEN_NOT_EXPIRED = "Password reset token=" + EXPIRED_TOKEN + " expired";
     public static final String USER_ATTRIBUTE = "user";
     public static final String USER_TO_ATTRIBUTE = "userTo";
     public static final String USERS_ATTRIBUTE = "users";
     public static final String PASSWORD_RESET_TO_ATTRIBUTE = "passwordResetTo";
-    public static final String ID = "id";
     public static final String FIRST_NAME = "firstName";
     public static final String LAST_NAME = "lastName";
     public static final String EMAIL = "email";
     public static final String ROLES = "roles";
-    public static final String ACTION = "action";
     public static final String TOKEN = "token";
 
     public static final User user = new User(USER_ID, USER_MAIL, "John", "Doe", true, Set.of(Role.USER));
@@ -83,6 +78,7 @@ public class UserTestData {
 
     public static MultiValueMap<String, String> getNewInvalidParams() {
         MultiValueMap<String, String> params = getUpdatedInvalidParams();
+        params.remove(ID);
         params.add(PASSWORD, INVALID_PASSWORD);
         params.add(ENABLED, TRUE);
         return params;
@@ -101,6 +97,7 @@ public class UserTestData {
 
     public static MultiValueMap<String, String> getUpdatedInvalidParams() {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add(ID, USER_ID + "");
         params.add(FIRST_NAME, "");
         params.add(LAST_NAME,"J");
         params.add(EMAIL, "notEmail");

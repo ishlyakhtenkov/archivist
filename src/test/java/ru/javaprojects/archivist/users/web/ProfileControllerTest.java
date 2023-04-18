@@ -24,6 +24,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static ru.javaprojects.archivist.AbstractControllerTest.ExceptionResultMatchers.exception;
+import static ru.javaprojects.archivist.CommonTestData.*;
 import static ru.javaprojects.archivist.common.config.SecurityConfig.PASSWORD_ENCODER;
 import static ru.javaprojects.archivist.users.UserTestData.*;
 import static ru.javaprojects.archivist.users.password_reset.PasswordResetService.*;

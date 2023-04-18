@@ -36,7 +36,7 @@ public class Address {
 
     @NotBlank
     @NoHtml
-    @Size(min = 2, max = 32)
+    @Size(min = 1, max = 32)
     @Column(name = "house", nullable = false)
     private String house;
 

@@ -9,10 +9,11 @@ import ru.javaprojects.archivist.companies.model.Company;
 
 import java.util.Objects;
 
+import static ru.javaprojects.archivist.common.util.validation.Constants.DUPLICATE_ERROR_CODE;
+
 @Component
 @AllArgsConstructor
 public class UniqueNameValidator implements org.springframework.validation.Validator {
-    public static final String DUPLICATE_NAME_ERROR_CODE = "Duplicate";
     public static final String DUPLICATE_NAME_MESSAGE = "Company with this name already exists";
 
     private final CompanyRepository repository;
@@ -29,7 +30,7 @@ public class UniqueNameValidator implements org.springframework.validation.Valid
             repository.findByNameIgnoreCase(company.getName())
                     .ifPresent(dbCompany -> {
                         if (company.isNew() || !Objects.equals(company.getId(), dbCompany.getId())) {
-                            errors.rejectValue("name", DUPLICATE_NAME_ERROR_CODE, DUPLICATE_NAME_MESSAGE);
+                            errors.rejectValue("name", DUPLICATE_ERROR_CODE, DUPLICATE_NAME_MESSAGE);
                         }
                     });
         }

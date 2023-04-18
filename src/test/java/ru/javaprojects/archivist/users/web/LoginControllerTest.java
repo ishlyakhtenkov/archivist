@@ -6,8 +6,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.javaprojects.archivist.AbstractControllerTest;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static ru.javaprojects.archivist.CommonTestData.USER_MAIL;
 import static ru.javaprojects.archivist.users.web.LoginController.LOGIN_URL;
-import static ru.javaprojects.archivist.users.UserTestData.USER_MAIL;
 
 class LoginControllerTest extends AbstractControllerTest {
 

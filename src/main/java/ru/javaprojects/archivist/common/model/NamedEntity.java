@@ -8,6 +8,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import ru.javaprojects.archivist.common.util.validation.NoHtml;
 
 @MappedSuperclass
 @Getter
@@ -16,6 +17,7 @@ import lombok.Setter;
 public abstract class NamedEntity extends BaseEntity {
 
     @NotBlank
+    @NoHtml
     @Size(min = 2, max = 128)
     @Column(name = "name", nullable = false)
     protected String name;

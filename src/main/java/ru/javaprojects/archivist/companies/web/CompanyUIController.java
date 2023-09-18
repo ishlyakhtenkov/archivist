@@ -13,7 +13,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ru.javaprojects.archivist.companies.CompanyService;
-import ru.javaprojects.archivist.companies.UniqueNameValidator;
+import ru.javaprojects.archivist.companies.UniqueCompanyNameValidator;
 import ru.javaprojects.archivist.companies.model.Company;
 
 import static ru.javaprojects.archivist.common.util.validation.ValidationUtil.checkNew;
@@ -26,7 +26,7 @@ public class CompanyUIController {
     static final String COMPANIES_URL = "/companies";
 
     private final CompanyService service;
-    private final UniqueNameValidator nameValidator;
+    private final UniqueCompanyNameValidator nameValidator;
 
     @InitBinder("company")
     protected void initBinder(WebDataBinder binder) {

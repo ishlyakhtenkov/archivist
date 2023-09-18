@@ -28,7 +28,6 @@ import static ru.javaprojects.archivist.CommonTestData.*;
 import static ru.javaprojects.archivist.common.util.validation.Constants.DUPLICATE_ERROR_CODE;
 import static ru.javaprojects.archivist.companies.CompanyTestData.*;
 import static ru.javaprojects.archivist.companies.web.CompanyUIController.COMPANIES_URL;
-import static ru.javaprojects.archivist.users.UserTestData.*;
 import static ru.javaprojects.archivist.users.web.LoginController.LOGIN_URL;
 
 class CompanyControllerTest extends AbstractControllerTest {

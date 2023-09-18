@@ -43,7 +43,7 @@ public class SecurityConfig {
         http.authorizeHttpRequests()
                 .requestMatchers("/users/**").hasRole(Role.ADMIN.name())
                 .requestMatchers("/companies/add", "/companies/create", "/companies/edit/**", "/companies/update")
-                    .hasAnyRole(Role.ADMIN.name(), Role.ARCHIVIST.name())
+                .hasAnyRole(Role.ADMIN.name(), Role.ARCHIVIST.name())
                 .requestMatchers(HttpMethod.DELETE, "/companies/**").hasAnyRole(Role.ADMIN.name(), Role.ARCHIVIST.name())
                 .requestMatchers("/profile/forgotPassword", "/profile/resetPassword").anonymous()
                 .requestMatchers("/", "/webjars/**", "/css/**", "/images/**", "/js/**").permitAll()
@@ -56,7 +56,8 @@ public class SecurityConfig {
                 .logoutSuccessUrl("/")
                 .invalidateHttpSession(true)
                 .clearAuthentication(true)
-                .deleteCookies("JSESSIONID");
+                .deleteCookies("JSESSIONID")
+                .and().rememberMe().key("remember-me-key").rememberMeCookieName("archivist-remember-me");
         return http.build();
     }
 }

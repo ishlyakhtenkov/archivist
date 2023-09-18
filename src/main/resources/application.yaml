@@ -24,3 +24,12 @@ server.servlet:
 password-reset:
   token-expiration-time: 86400000
   url: https://javaprojects.ru/archivist/profile/resetPassword
+
+logging:
+  charset:
+    console: UTF-8
+    file: UTF-8
+  file:
+    name: logs/archivist.log
+  pattern:
+    dateformat: yyyy-MM-dd HH:mm:ss

@@ -1,3 +1,4 @@
+DELETE FROM departments;
 DELETE FROM contact_persons;
 DELETE FROM companies;
 DELETE FROM password_reset_tokens;
@@ -33,3 +34,10 @@ INSERT INTO contact_persons (company_id, position, last_name, first_name, middle
 VALUES (100006, 'Director', 'Ivanov', 'Pavel', 'Ivanovich', '8(495)741-25-17'),
        (100007, 'Chief engineer', 'Petrov', 'Ivan', 'Alexandrovich', '8(745)111-25-89'),
        (100007, 'Secretary', 'Belkina', 'Anna', 'Ivanovna', '8(745)111-25-89');
+
+INSERT INTO departments (name, last_name, first_name, middle_name, phone, email)
+VALUES ('KTK-40', 'Sokolov', 'Alexandr', 'Ivanovich', '1-32-98', 'a.sokolov@npo.lan'),
+       ('NIO-6', 'Ivanov', 'Petr', 'Alexandrovich', '1-34-63', 'p.ivanov@npo.lan'),
+       ('NIO-8', 'Kozlov', 'Ivan', 'Ivanovich', '1-44-12', 'i.kozlov@npo.lan'),
+       ('DEP-25', 'Sidorov', 'Alexandr', 'Petrovich', '1-36-78', 'a.sidorov@npo.lan'),
+       ('DEP-33', 'Petrov', 'Vladimir', 'Ivanovich', '1-45-12', 'v.petrov@npo.lan');

@@ -16,7 +16,7 @@ function enableUser(checkbox, id) {
 $('#deleteModal').on('show.bs.modal', function(e) {
     let name = $(e.relatedTarget).data('name');
     let id = $(e.relatedTarget).data('id');
-    $(e.currentTarget).find('#deleteModalLabel').text(`Delete user: ${name}`);
+    $(e.currentTarget).find('#deleteModalLabel').text(`Delete user: ${name}?`);
     $(e.currentTarget).find('#deleteModalUserId').val(id);
     $(e.currentTarget).find('#deleteModalUserName').val(name);
 });

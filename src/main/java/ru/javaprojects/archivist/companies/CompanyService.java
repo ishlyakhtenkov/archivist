@@ -22,7 +22,7 @@ public class CompanyService {
     }
 
     public Company get(long id) {
-        return repository.findById(id).orElseThrow(() -> new NotFoundException("Entity with id=" + id + " not found"));
+        return repository.getExisted(id);
     }
 
     public Company getByName(String name) {

@@ -34,14 +34,8 @@
                 <li sec:authorize="isAuthenticated()" class="nav-item mb-0 mb-lg-3" th:classappend="${activeMenuItem == 'Companies'}? 'active' : ''">
                     <a class="nav-link sidebar-nav-link" th:href="@{/companies}"><span class="ms-4"><i class="fa-brands fa-fort-awesome fa-fw me-2"></i>Companies</span></a>
                 </li>
-                <li class="nav-item mb-0 mb-lg-3">
-                    <a class="nav-link sidebar-nav-link" href="#test3"><span class="ms-4"><i class="fa-solid fa-bug fa-fw me-2"></i>Link_3</span></a>
-                </li>
-                <li class="nav-item mb-0 mb-lg-3">
-                    <a class="nav-link sidebar-nav-link" href="#test4"><span class="ms-4"><i class="fa-solid fa-book-skull fa-fw me-2"></i>Link_4</span></a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link sidebar-nav-link" href="#test5"><span class="ms-4"><i class="fa-solid fa-comments fa-fw me-2"></i>Link_5</span></a>
+                <li sec:authorize="isAuthenticated()" class="nav-item mb-0 mb-lg-3" th:classappend="${activeMenuItem == 'Departments'}? 'active' : ''">
+                    <a class="nav-link sidebar-nav-link" th:href="@{/departments}"><span class="ms-4"><i class="fa-solid fa-house-user fa-fw me-2"></i>Departments</span></a>
                 </li>
             </ul>
         </div>

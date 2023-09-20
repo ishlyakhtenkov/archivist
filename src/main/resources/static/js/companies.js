@@ -1,7 +1,7 @@
 $('#deleteModal').on('show.bs.modal', function(e) {
     let name = $(e.relatedTarget).data('name');
     let id = $(e.relatedTarget).data('id');
-    $(e.currentTarget).find('#deleteModalLabel').text(`Delete company: ${name}`);
+    $(e.currentTarget).find('#deleteModalLabel').text(`Delete company: ${name}?`);
     $(e.currentTarget).find('#deleteModalCompanyId').val(id);
     $(e.currentTarget).find('#deleteModalCompanyName').val(name);
 });

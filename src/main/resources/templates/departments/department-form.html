@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:with="activeMenuItem='Departments'" lang="en">
+<!--/*@thymesVar id="department" type="ru.javaprojects.archivist.departments.model.Department"*/-->
+
+<th:block th:replace="~{fragments/main::page(title='Archivist - departments',appMain=~{::appMain}, ownScript=~{::ownScript})}">
+    <appMain>
+        <!-- Create/Edit department card -->
+        <div class="row d-flex justify-content-center align-items-center">
+            <div class="col-12 col-md-8 col-xl-5">
+                <div class="card shadow-2-strong" style="border-radius: 1rem;">
+                    <div class="text-end mt-3 me-3">
+                        <a th:href="@{/departments}" type="button" class="btn-close" aria-label="Close"></a>
+                    </div>
+                    <div class="card-body px-3 px-md-5 pb-3 pb-md-5 pt-0 text-center">
+                        <h3 class="mb-4" th:text="${department.id == null} ? 'Create Department' : 'Edit Department: ' + ${department.name}">Create/Edit Department</h3>
+                        <form th:action="${department.id == null} ? @{/departments/create} : @{/departments/update}" method="post" th:object="${department}">
+                            <input type="hidden" th:field="*{id}">
+                            <div class="mb-4">
+                                <div class="input-group">
+                                    <span class="input-group-text" id="name-addon" title="Name"><i class="fa-solid fa-house-user fa-fw"></i></span>
+                                    <input type="text" th:field="*{name}"
+                                           th:class="${#fields.hasErrors('name')} ? 'form-control is-invalid' : 'form-control'"
+                                           required placeholder="Name" title="Name" aria-label="Name" aria-describedby="name-addon"/>
+                                </div>
+                                <span class="help-block" th:if="${#fields.hasErrors('name')}">
+                                    <ul>
+                                        <li class="text-danger text-start"
+                                            th:each="err : ${#fields.errors('name')}" th:text="${err}"/>
+                                    </ul>
+                                </span>
+                            </div>
+                            <div class="mb-4">
+                                <div class="input-group">
+                                    <span class="input-group-text" id="chief-last-name-addon" title="Chief's last name"><i class="fa-solid fa-user fa-fw"></i></span>
+                                    <input type="text" th:field="*{chief.lastName}"
+                                           th:class="${#fields.hasErrors('chief.lastName')} ? 'form-control is-invalid' : 'form-control'"
+                                           required placeholder="Chief's last name" title="Chief's last name" aria-label="Chief's last name" aria-describedby="chief-last-name-addon"/>
+                                </div>
+                                <span class="help-block" th:if="${#fields.hasErrors('chief.lastName')}">
+                                    <ul>
+                                        <li class="text-danger text-start"
+                                            th:each="err : ${#fields.errors('chief.lastName')}" th:text="${err}"/>
+                                    </ul>
+                                </span>
+                            </div>
+                            <div class="mb-4">
+                                <div class="input-group">
+                                    <span class="input-group-text" id="chief-first-name-addon" title="Chief's first name"><i class="fa-solid fa-user fa-fw"></i></span>
+                                    <input type="text" th:field="*{chief.firstName}"
+                                           th:class="${#fields.hasErrors('chief.firstName')} ? 'form-control is-invalid' : 'form-control'"
+                                           required placeholder="Chief's first name" title="Chief's first name" aria-label="Chief's first name" aria-describedby="chief-first-name-addon"/>
+                                </div>
+                                <span class="help-block" th:if="${#fields.hasErrors('chief.firstName')}">
+                                    <ul>
+                                        <li class="text-danger text-start"
+                                            th:each="err : ${#fields.errors('chief.firstName')}" th:text="${err}"/>
+                                    </ul>
+                                </span>
+                            </div>
+                            <div class="mb-4">
+                                <div class="input-group">
+                                    <span class="input-group-text" id="chief-middle-name-addon" title="Chief's middle name"><i class="fa-solid fa-user fa-fw"></i></span>
+                                    <input type="text" th:field="*{chief.middleName}"
+                                           th:class="${#fields.hasErrors('chief.middleName')} ? 'form-control is-invalid' : 'form-control'"
+                                           required placeholder="Chief's middle name" title="Chief's middle name" aria-label="Chief's middle name" aria-describedby="chief-middle-name-addon"/>
+                                </div>
+                                <span class="help-block" th:if="${#fields.hasErrors('chief.middleName')}">
+                                    <ul>
+                                        <li class="text-danger text-start"
+                                            th:each="err : ${#fields.errors('chief.middleName')}" th:text="${err}"/>
+                                    </ul>
+                                </span>
+                            </div>
+                            <div class="mb-4">
+                                <div class="input-group">
+                                    <span class="input-group-text" id="chief-phone-addon" title="Chief's phone"><i class="fa-solid fa-phone fa-fw"></i></span>
+                                    <input type="text" th:field="*{chief.phone}"
+                                           th:class="${#fields.hasErrors('chief.phone')} ? 'form-control is-invalid' : 'form-control'"
+                                           placeholder="Chief's phone" title="Chief's phone" aria-label="Chief's phone" aria-describedby="chief-phone-addon"/>
+                                </div>
+                                <span class="help-block" th:if="${#fields.hasErrors('chief.phone')}">
+                                    <ul>
+                                        <li class="text-danger text-start"
+                                            th:each="err : ${#fields.errors('chief.phone')}" th:text="${err}"/>
+                                    </ul>
+                                </span>
+                            </div>
+                            <div class="mb-4">
+                                <div class="input-group">
+                                    <span class="input-group-text" id="chief-email-addon" title="Chief's email"><i class="fa-solid fa-envelope fa-fw"></i></span>
+                                    <input type="text" th:field="*{chief.email}"
+                                           th:class="${#fields.hasErrors('chief.email')} ? 'form-control is-invalid' : 'form-control'"
+                                           placeholder="Chief's email" title="Chief's email" aria-label="Chief's email" aria-describedby="chief-email-addon"/>
+                                </div>
+                                <span class="help-block" th:if="${#fields.hasErrors('chief.email')}">
+                                    <ul>
+                                        <li class="text-danger text-start"
+                                            th:each="err : ${#fields.errors('chief.email')}" th:text="${err}"/>
+                                    </ul>
+                                </span>
+                            </div>
+                            <div class="row">
+                                <div class="d-grid gap-2">
+                                    <button class="btn btn-success btn-lg" type="submit" th:text="${department.id == null} ? 'Create Department' : 'Save Department'">Create/Save department</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </appMain>
+
+    <ownScript>
+        <script src="/js/company-form.js?v=1"></script>
+    </ownScript>
+</th:block>

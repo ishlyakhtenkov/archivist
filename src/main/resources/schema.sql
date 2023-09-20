@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS departments;
 DROP TABLE IF EXISTS contact_persons;
 DROP TABLE IF EXISTS companies;
 DROP TABLE IF EXISTS password_reset_tokens;
@@ -62,3 +63,15 @@ CREATE TABLE contact_persons
     phone       VARCHAR(32),
     FOREIGN KEY (company_id) REFERENCES companies (id) ON DELETE CASCADE
 );
+
+CREATE TABLE departments
+(
+    id          BIGINT DEFAULT nextval('global_seq')  PRIMARY KEY,
+    name        VARCHAR(128)     NOT NULL,
+    last_name   VARCHAR(32)      NOT NULL,
+    first_name  VARCHAR(32)      NOT NULL,
+    middle_name VARCHAR(32)      NOT NULL,
+    phone       VARCHAR(32),
+    email       VARCHAR(128)
+);
+CREATE UNIQUE INDEX departments_unique_name_idx ON departments (name);

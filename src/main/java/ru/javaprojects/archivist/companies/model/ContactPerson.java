@@ -22,8 +22,8 @@ public class ContactPerson extends Person {
     @Column(name = "position", nullable = false)
     private String position;
 
-    public ContactPerson(String position, String lastName, String firstName, String middleName, String phone) {
-        super(lastName, firstName, middleName, phone);
+    public ContactPerson(String position, String lastName, String firstName, String middleName, String phone, String email) {
+        super(lastName, firstName, middleName, phone, email);
         this.position = position;
     }
 }

@@ -61,6 +61,7 @@ CREATE TABLE contact_persons
     first_name  VARCHAR(32)      NOT NULL,
     middle_name VARCHAR(32)      NOT NULL,
     phone       VARCHAR(32),
+    email       VARCHAR(128),
     FOREIGN KEY (company_id) REFERENCES companies (id) ON DELETE CASCADE
 );
 

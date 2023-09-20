@@ -3,7 +3,6 @@ package ru.javaprojects.archivist.departments;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
-import ru.javaprojects.archivist.departments.model.Department;
 
 import java.util.List;
 

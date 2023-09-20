@@ -31,18 +31,18 @@
                 <thead class="table-dark">
                 <tr>
                     <th>Name</th>
-                    <th>Chief</th>
-                    <th>Chief phone</th>
-                    <th>Chief email</th>
+                    <th>Boss</th>
+                    <th>Boss phone</th>
+                    <th>Boss email</th>
                     <th sec:authorize="hasAnyRole('ADMIN','ARCHIVIST') || isAnonymous()" colspan="2">Actions</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:each="department : ${departments}" class="table-row">
                     <td th:text="${department.name}"></td>
-                    <td th:text="${department.chief.fullName}"></td>
-                    <td th:text="${department.chief.phone}"></td>
-                    <td th:text="${department.chief.email}"></td>
+                    <td th:text="${department.boss.fullName}"></td>
+                    <td th:text="${department.boss.phone}"></td>
+                    <td th:text="${department.boss.email}"></td>
                     <td sec:authorize="hasAnyRole('ADMIN','ARCHIVIST') || isAnonymous()">
                         <a th:href="@{'/departments/edit/' + ${department.id}}" type="button" title="Edit department" class="pencil-button">
                             <i class="fa-solid fa-pencil"></i>

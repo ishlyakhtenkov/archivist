@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       th:with="activeMenuItem='Departments'" lang="en">
-<!--/*@thymesVar id="department" type="ru.javaprojects.archivist.departments.model.Department"*/-->
+<!--/*@thymesVar id="department" type="ru.javaprojects.archivist.departments.Department"*/-->
 
 <th:block th:replace="~{fragments/main::page(title='Archivist - departments',appMain=~{::appMain}, ownScript=~{::ownScript})}">
     <appMain>
@@ -32,71 +32,71 @@
                             </div>
                             <div class="mb-4">
                                 <div class="input-group">
-                                    <span class="input-group-text" id="chief-last-name-addon" title="Chief's last name"><i class="fa-solid fa-user fa-fw"></i></span>
-                                    <input type="text" th:field="*{chief.lastName}"
-                                           th:class="${#fields.hasErrors('chief.lastName')} ? 'form-control is-invalid' : 'form-control'"
-                                           required placeholder="Chief's last name" title="Chief's last name" aria-label="Chief's last name" aria-describedby="chief-last-name-addon"/>
+                                    <span class="input-group-text" id="boss-last-name-addon" title="Boss last name"><i class="fa-solid fa-user fa-fw"></i></span>
+                                    <input type="text" th:field="*{boss.lastName}"
+                                           th:class="${#fields.hasErrors('boss.lastName')} ? 'form-control is-invalid' : 'form-control'"
+                                           required placeholder="Boss last name" title="Boss last name" aria-label="Boss last name" aria-describedby="boss-last-name-addon"/>
                                 </div>
-                                <span class="help-block" th:if="${#fields.hasErrors('chief.lastName')}">
+                                <span class="help-block" th:if="${#fields.hasErrors('boss.lastName')}">
                                     <ul>
                                         <li class="text-danger text-start"
-                                            th:each="err : ${#fields.errors('chief.lastName')}" th:text="${err}"/>
+                                            th:each="err : ${#fields.errors('boss.lastName')}" th:text="${err}"/>
                                     </ul>
                                 </span>
                             </div>
                             <div class="mb-4">
                                 <div class="input-group">
-                                    <span class="input-group-text" id="chief-first-name-addon" title="Chief's first name"><i class="fa-solid fa-user fa-fw"></i></span>
-                                    <input type="text" th:field="*{chief.firstName}"
-                                           th:class="${#fields.hasErrors('chief.firstName')} ? 'form-control is-invalid' : 'form-control'"
-                                           required placeholder="Chief's first name" title="Chief's first name" aria-label="Chief's first name" aria-describedby="chief-first-name-addon"/>
+                                    <span class="input-group-text" id="boss-first-name-addon" title="Boss first name"><i class="fa-solid fa-user fa-fw"></i></span>
+                                    <input type="text" th:field="*{boss.firstName}"
+                                           th:class="${#fields.hasErrors('boss.firstName')} ? 'form-control is-invalid' : 'form-control'"
+                                           required placeholder="Boss first name" title="Boss first name" aria-label="Boss first name" aria-describedby="boss-first-name-addon"/>
                                 </div>
-                                <span class="help-block" th:if="${#fields.hasErrors('chief.firstName')}">
+                                <span class="help-block" th:if="${#fields.hasErrors('boss.firstName')}">
                                     <ul>
                                         <li class="text-danger text-start"
-                                            th:each="err : ${#fields.errors('chief.firstName')}" th:text="${err}"/>
+                                            th:each="err : ${#fields.errors('boss.firstName')}" th:text="${err}"/>
                                     </ul>
                                 </span>
                             </div>
                             <div class="mb-4">
                                 <div class="input-group">
-                                    <span class="input-group-text" id="chief-middle-name-addon" title="Chief's middle name"><i class="fa-solid fa-user fa-fw"></i></span>
-                                    <input type="text" th:field="*{chief.middleName}"
-                                           th:class="${#fields.hasErrors('chief.middleName')} ? 'form-control is-invalid' : 'form-control'"
-                                           required placeholder="Chief's middle name" title="Chief's middle name" aria-label="Chief's middle name" aria-describedby="chief-middle-name-addon"/>
+                                    <span class="input-group-text" id="boss-middle-name-addon" title="Boss middle name"><i class="fa-solid fa-user fa-fw"></i></span>
+                                    <input type="text" th:field="*{boss.middleName}"
+                                           th:class="${#fields.hasErrors('boss.middleName')} ? 'form-control is-invalid' : 'form-control'"
+                                           required placeholder="Boss middle name" title="Boss middle name" aria-label="Boss middle name" aria-describedby="boss-middle-name-addon"/>
                                 </div>
-                                <span class="help-block" th:if="${#fields.hasErrors('chief.middleName')}">
+                                <span class="help-block" th:if="${#fields.hasErrors('boss.middleName')}">
                                     <ul>
                                         <li class="text-danger text-start"
-                                            th:each="err : ${#fields.errors('chief.middleName')}" th:text="${err}"/>
+                                            th:each="err : ${#fields.errors('boss.middleName')}" th:text="${err}"/>
                                     </ul>
                                 </span>
                             </div>
                             <div class="mb-4">
                                 <div class="input-group">
-                                    <span class="input-group-text" id="chief-phone-addon" title="Chief's phone"><i class="fa-solid fa-phone fa-fw"></i></span>
-                                    <input type="text" th:field="*{chief.phone}"
-                                           th:class="${#fields.hasErrors('chief.phone')} ? 'form-control is-invalid' : 'form-control'"
-                                           placeholder="Chief's phone" title="Chief's phone" aria-label="Chief's phone" aria-describedby="chief-phone-addon"/>
+                                    <span class="input-group-text" id="boss-phone-addon" title="Boss phone"><i class="fa-solid fa-phone fa-fw"></i></span>
+                                    <input type="text" th:field="*{boss.phone}"
+                                           th:class="${#fields.hasErrors('boss.phone')} ? 'form-control is-invalid' : 'form-control'"
+                                           placeholder="Boss phone" title="Boss phone" aria-label="Boss phone" aria-describedby="boss-phone-addon"/>
                                 </div>
-                                <span class="help-block" th:if="${#fields.hasErrors('chief.phone')}">
+                                <span class="help-block" th:if="${#fields.hasErrors('boss.phone')}">
                                     <ul>
                                         <li class="text-danger text-start"
-                                            th:each="err : ${#fields.errors('chief.phone')}" th:text="${err}"/>
+                                            th:each="err : ${#fields.errors('boss.phone')}" th:text="${err}"/>
                                     </ul>
                                 </span>
                             </div>
                             <div class="mb-4">
                                 <div class="input-group">
-                                    <span class="input-group-text" id="chief-email-addon" title="Chief's email"><i class="fa-solid fa-envelope fa-fw"></i></span>
-                                    <input type="text" th:field="*{chief.email}"
-                                           th:class="${#fields.hasErrors('chief.email')} ? 'form-control is-invalid' : 'form-control'"
-                                           placeholder="Chief's email" title="Chief's email" aria-label="Chief's email" aria-describedby="chief-email-addon"/>
+                                    <span class="input-group-text" id="boss-email-addon" title="Boss email"><i class="fa-solid fa-envelope fa-fw"></i></span>
+                                    <input type="text" th:field="*{boss.email}"
+                                           th:class="${#fields.hasErrors('boss.email')} ? 'form-control is-invalid' : 'form-control'"
+                                           placeholder="Boss email" title="Boss email" aria-label="Boss email" aria-describedby="boss-email-addon"/>
                                 </div>
-                                <span class="help-block" th:if="${#fields.hasErrors('chief.email')}">
+                                <span class="help-block" th:if="${#fields.hasErrors('boss.email')}">
                                     <ul>
                                         <li class="text-danger text-start"
-                                            th:each="err : ${#fields.errors('chief.email')}" th:text="${err}"/>
+                                            th:each="err : ${#fields.errors('boss.email')}" th:text="${err}"/>
                                     </ul>
                                 </span>
                             </div>

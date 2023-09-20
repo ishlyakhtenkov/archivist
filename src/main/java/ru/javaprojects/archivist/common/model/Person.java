@@ -2,7 +2,9 @@ package ru.javaprojects.archivist.common.model;
 
 import jakarta.annotation.Nullable;
 import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
 import jakarta.persistence.MappedSuperclass;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
@@ -12,10 +14,11 @@ import lombok.NoArgsConstructor;
 import ru.javaprojects.archivist.common.util.validation.NoHtml;
 
 @MappedSuperclass
+@Embeddable
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-public abstract class Person {
+public class Person {
     @NotBlank
     @NoHtml
     @Size(min = 2, max = 32)
@@ -39,6 +42,13 @@ public abstract class Person {
     @Nullable
     @Column(name = "phone")
     protected String phone;
+
+    @Email
+    @NoHtml
+    @Size(max = 128)
+    @Nullable
+    @Column(name = "email")
+    protected String email;
 
     public String getFullName() {
         return String.join(" ", lastName, firstName, middleName);

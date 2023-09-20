@@ -43,13 +43,13 @@ public class CompanyTestData {
     public static final Company company1 = new Company(COMPANY1_ID, COMPANY1_NAME,
             new Address("Russia", "Moscow", "Aviamotornaya", "32", "121748"),
             new Contacts("8(495)745-13-22", "8(495)745-13-21", "ttk@mail.com"),
-            List.of(new ContactPerson("Director", "Ivanov", "Pavel", "Ivanovich", "8(495)741-25-17")));
+            List.of(new ContactPerson("Director", "Ivanov", "Pavel", "Ivanovich", "8(495)741-25-17", null)));
 
     public static final Company company2 = new Company(COMPANY2_ID, COMPANY2_NAME,
             new Address("Russia", "St Petersburg", "Nevsky avenue", "42 b2", "134896"),
             new Contacts("8(498)332-11-45", null, "supsystems@yandex.ru"),
-            List.of(new ContactPerson("Chief engineer", "Petrov", "Ivan", "Alexandrovich", "8(745)111-25-89"),
-                    new ContactPerson("Secretary", "Belkina", "Anna", "Ivanovna", "8(745)111-25-89")));
+            List.of(new ContactPerson("Chief engineer", "Petrov", "Ivan", "Alexandrovich", "8(745)111-25-89", null),
+                    new ContactPerson("Secretary", "Belkina", "Anna", "Ivanovna", "8(745)111-25-89", null)));
 
     public static final Company company3 = new Company(COMPANY3_ID, "OOO \"Custom Solutions\"",
             new Address("Russia", "Tver", "Kominterna", "20", "114785"),
@@ -61,7 +61,7 @@ public class CompanyTestData {
                 new Address("newCountry", "newCity", "newStreet", "newHouse", "999999"),
                 new Contacts("newPhone", "newFax", "new@gmail.com"),
                 List.of(new ContactPerson("newContactPersonPosition", "newContactPersonLastName", "newContactPersonFirstName",
-                        "newContactPersonMiddleName", "newContactPersonPhone")));
+                        "newContactPersonMiddleName", "newContactPersonPhone", null)));
     }
 
     public static Company getUpdated() {
@@ -69,7 +69,7 @@ public class CompanyTestData {
                 new Address("updatedCountry", "updatedCity", "updatedStreet", "updatedHouse", "888888"),
                 new Contacts("updatedPhone", "updatedFax", "updated@gmail.com"),
                 List.of(new ContactPerson("updatedContactPersonPosition", "updatedContactPersonLastName", "updatedContactPersonFirstName",
-                        "updatedContactPersonMiddleName", "updatedContactPersonPhone")));
+                        "updatedContactPersonMiddleName", "updatedContactPersonPhone", null)));
     }
 
     public static MultiValueMap<String, String> getNewParams() {

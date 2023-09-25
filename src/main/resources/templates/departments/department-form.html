@@ -18,10 +18,13 @@
                             <input type="hidden" th:field="*{id}">
                             <div class="mb-4">
                                 <div class="input-group">
-                                    <span class="input-group-text" id="name-addon" title="Name"><i class="fa-solid fa-house-user fa-fw"></i></span>
-                                    <input type="text" th:field="*{name}"
-                                           th:class="${#fields.hasErrors('name')} ? 'form-control is-invalid' : 'form-control'"
-                                           required placeholder="Name" title="Name" aria-label="Name" aria-describedby="name-addon"/>
+                                    <span class="input-group-text" id="nameAddon" title="Name"><i class="fa-solid fa-users-rectangle fa-fw"></i></span>
+                                    <div class="form-floating">
+                                        <input type="text" id="departmentNameInput" th:field="*{name}"
+                                               th:class="${#fields.hasErrors('name')} ? 'form-control is-invalid' : 'form-control'"
+                                               required placeholder="Department name" title="Name" aria-label="Name" aria-describedby="name-addon"/>
+                                        <label for="departmentNameInput" class="text-muted">Department name</label>
+                                    </div>
                                 </div>
                                 <span class="help-block" th:if="${#fields.hasErrors('name')}">
                                     <ul>
@@ -32,10 +35,13 @@
                             </div>
                             <div class="mb-4">
                                 <div class="input-group">
-                                    <span class="input-group-text" id="boss-last-name-addon" title="Boss last name"><i class="fa-solid fa-user fa-fw"></i></span>
-                                    <input type="text" th:field="*{boss.lastName}"
-                                           th:class="${#fields.hasErrors('boss.lastName')} ? 'form-control is-invalid' : 'form-control'"
-                                           required placeholder="Boss last name" title="Boss last name" aria-label="Boss last name" aria-describedby="boss-last-name-addon"/>
+                                    <span class="input-group-text" id="bossLastNameAddon" title="Boss last name"><i class="fa-solid fa-user fa-fw"></i></span>
+                                    <div class="form-floating">
+                                        <input type="text" id="bossLastNameInput" th:field="*{boss.lastName}"
+                                               th:class="${#fields.hasErrors('boss.lastName')} ? 'form-control is-invalid' : 'form-control'"
+                                               required placeholder="Boss last name" title="Boss last name" aria-label="Boss last name" aria-describedby="boss-last-name-addon"/>
+                                        <label for="bossLastNameInput" class="text-muted">Boss last name</label>
+                                    </div>
                                 </div>
                                 <span class="help-block" th:if="${#fields.hasErrors('boss.lastName')}">
                                     <ul>
@@ -46,10 +52,13 @@
                             </div>
                             <div class="mb-4">
                                 <div class="input-group">
-                                    <span class="input-group-text" id="boss-first-name-addon" title="Boss first name"><i class="fa-solid fa-user fa-fw"></i></span>
-                                    <input type="text" th:field="*{boss.firstName}"
-                                           th:class="${#fields.hasErrors('boss.firstName')} ? 'form-control is-invalid' : 'form-control'"
-                                           required placeholder="Boss first name" title="Boss first name" aria-label="Boss first name" aria-describedby="boss-first-name-addon"/>
+                                    <span class="input-group-text" id="bossFirstNameAddon" title="Boss first name"><i class="fa-solid fa-user fa-fw"></i></span>
+                                    <div class="form-floating">
+                                        <input type="text" id="bossFirstNameInput" th:field="*{boss.firstName}"
+                                               th:class="${#fields.hasErrors('boss.firstName')} ? 'form-control is-invalid' : 'form-control'"
+                                               required placeholder="Boss first name" title="Boss first name" aria-label="Boss first name" aria-describedby="boss-first-name-addon"/>
+                                        <label for="bossFirstNameInput" class="text-muted">Boss first name</label>
+                                    </div>
                                 </div>
                                 <span class="help-block" th:if="${#fields.hasErrors('boss.firstName')}">
                                     <ul>
@@ -60,10 +69,13 @@
                             </div>
                             <div class="mb-4">
                                 <div class="input-group">
-                                    <span class="input-group-text" id="boss-middle-name-addon" title="Boss middle name"><i class="fa-solid fa-user fa-fw"></i></span>
-                                    <input type="text" th:field="*{boss.middleName}"
-                                           th:class="${#fields.hasErrors('boss.middleName')} ? 'form-control is-invalid' : 'form-control'"
-                                           required placeholder="Boss middle name" title="Boss middle name" aria-label="Boss middle name" aria-describedby="boss-middle-name-addon"/>
+                                    <span class="input-group-text" id="bossMiddleNameAddon" title="Boss middle name"><i class="fa-solid fa-user fa-fw"></i></span>
+                                    <div class="form-floating">
+                                        <input type="text" id="bossMiddleNameInput" th:field="*{boss.middleName}"
+                                               th:class="${#fields.hasErrors('boss.middleName')} ? 'form-control is-invalid' : 'form-control'"
+                                               required placeholder="Boss middle name" title="Boss middle name" aria-label="Boss middle name" aria-describedby="boss-middle-name-addon"/>
+                                        <label for="bossMiddleNameInput" class="text-muted">Boss middle name</label>
+                                    </div>
                                 </div>
                                 <span class="help-block" th:if="${#fields.hasErrors('boss.middleName')}">
                                     <ul>
@@ -74,10 +86,13 @@
                             </div>
                             <div class="mb-4">
                                 <div class="input-group">
-                                    <span class="input-group-text" id="boss-phone-addon" title="Boss phone"><i class="fa-solid fa-phone fa-fw"></i></span>
-                                    <input type="text" th:field="*{boss.phone}"
-                                           th:class="${#fields.hasErrors('boss.phone')} ? 'form-control is-invalid' : 'form-control'"
-                                           placeholder="Boss phone" title="Boss phone" aria-label="Boss phone" aria-describedby="boss-phone-addon"/>
+                                    <span class="input-group-text" id="bossPhoneAddon" title="Boss phone"><i class="fa-solid fa-phone fa-fw"></i></span>
+                                    <div class="form-floating">
+                                        <input type="text" id="bossPhoneNumberInput" th:field="*{boss.phone}"
+                                               th:class="${#fields.hasErrors('boss.phone')} ? 'form-control is-invalid' : 'form-control'"
+                                               placeholder="Boss phone number" title="Boss phone number" aria-label="Boss phone number" aria-describedby="boss-phone-addon"/>
+                                        <label for="bossPhoneNumberInput" class="text-muted">Boss phone number</label>
+                                    </div>
                                 </div>
                                 <span class="help-block" th:if="${#fields.hasErrors('boss.phone')}">
                                     <ul>
@@ -88,10 +103,13 @@
                             </div>
                             <div class="mb-4">
                                 <div class="input-group">
-                                    <span class="input-group-text" id="boss-email-addon" title="Boss email"><i class="fa-solid fa-envelope fa-fw"></i></span>
-                                    <input type="text" th:field="*{boss.email}"
-                                           th:class="${#fields.hasErrors('boss.email')} ? 'form-control is-invalid' : 'form-control'"
-                                           placeholder="Boss email" title="Boss email" aria-label="Boss email" aria-describedby="boss-email-addon"/>
+                                    <span class="input-group-text" id="bossEmailAddon" title="Boss email"><i class="fa-solid fa-envelope fa-fw"></i></span>
+                                    <div class="form-floating">
+                                        <input type="text" id="bossEmailInput" th:field="*{boss.email}"
+                                               th:class="${#fields.hasErrors('boss.email')} ? 'form-control is-invalid' : 'form-control'"
+                                               placeholder="Boss email" title="Boss email" aria-label="Boss email" aria-describedby="boss-email-addon"/>
+                                        <label for="bossEmailInput" class="text-muted">Boss email</label>
+                                    </div>
                                 </div>
                                 <span class="help-block" th:if="${#fields.hasErrors('boss.email')}">
                                     <ul>

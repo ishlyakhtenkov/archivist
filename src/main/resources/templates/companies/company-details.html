@@ -19,27 +19,36 @@
                                 <div class="col-lg-4">
                                     <div class="mb-4">
                                         <div class="input-group">
-                                            <span class="input-group-text" id="name-addon" title="Name"><i class="fa-brands fa-fort-awesome fa-fw"></i></span>
-                                            <input type="text" th:field="*{name}" class="form-control" disabled
-                                                   title="Name" aria-label="Name" aria-describedby="name-addon"/>
+                                            <span class="input-group-text" id="nameAddon" title="Name"><i class="fa-brands fa-fort-awesome fa-fw"></i></span>
+                                            <div class="form-floating">
+                                                <input type="text" id="companyNameInput" th:field="*{name}" class="form-control" disabled
+                                                       title="Name" aria-label="Name" aria-describedby="name-addon"/>
+                                                <label for="companyNameInput" class="text-muted">Company name</label>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
                                     <div class="mb-4">
                                         <div class="input-group">
-                                            <span class="input-group-text" id="country-addon" title="Country"><i class="fa-solid fa-flag fa-fw"></i></span>
-                                            <input type="text" th:field="*{address.country}" class="form-control" disabled
-                                                   title="Country" aria-label="Country" aria-describedby="country-addon"/>
+                                            <span class="input-group-text" id="countryAddon" title="Country"><i class="fa-solid fa-flag fa-fw"></i></span>
+                                            <div class="form-floating">
+                                                <input type="text" id="countryInput" th:field="*{address.country}" class="form-control" disabled
+                                                       title="Country" aria-label="Country" aria-describedby="country-addon"/>
+                                                <label for="countryInput" class="text-muted">Country</label>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
                                     <div class="mb-4">
                                         <div class="input-group">
-                                            <span class="input-group-text" id="zipcode-addon" title="Zipcode"><i class="fa-solid fa-barcode fa-fw"></i></span>
-                                            <input type="text" th:field="*{address.zipcode}" class="form-control" disabled
-                                                   title="Zipcode" aria-label="Zipcode" aria-describedby="zipcode-addon"/>
+                                            <span class="input-group-text" id="zipcodAddon" title="Zipcode"><i class="fa-solid fa-barcode fa-fw"></i></span>
+                                            <div class="form-floating">
+                                                <input type="text" id="zipcodeInput" th:field="*{address.zipcode}" class="form-control" disabled
+                                                       title="Zipcode" aria-label="Zipcode" aria-describedby="zipcode-addon"/>
+                                                <label for="zipcodeInput" class="text-muted">Zipcode</label>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -49,27 +58,36 @@
                                 <div class="col-lg-4">
                                     <div class="mb-4">
                                         <div class="input-group">
-                                            <span class="input-group-text" id="city-addon" title="City"><i class="fa-solid fa-city fa-fw"></i></span>
-                                            <input type="text" th:field="*{address.city}" class="form-control" disabled
-                                                   title="City" aria-label="City" aria-describedby="city-addon"/>
+                                            <span class="input-group-text" id="cityAddon" title="City"><i class="fa-solid fa-city fa-fw"></i></span>
+                                            <div class="form-floating">
+                                                <input type="text" id="cityInput" th:field="*{address.city}" class="form-control" disabled
+                                                       title="City" aria-label="City" aria-describedby="city-addon"/>
+                                                <label for="cityInput" class="text-muted">City</label>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
                                     <div class="mb-4">
                                         <div class="input-group">
-                                            <span class="input-group-text" id="street-addon" title="Street"><i class="fa-solid fa-road fa-fw"></i></span>
-                                            <input type="text" th:field="*{address.street}" class="form-control" disabled
-                                                   title="Street" aria-label="Street" aria-describedby="street-addon"/>
+                                            <span class="input-group-text" id="streetAddon" title="Street"><i class="fa-solid fa-road fa-fw"></i></span>
+                                            <div class="form-floating">
+                                                <input type="text" id="streetInput" th:field="*{address.street}" class="form-control" disabled
+                                                       title="Street" aria-label="Street" aria-describedby="street-addon"/>
+                                                <label for="streetInput" class="text-muted">Street</label>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
                                     <div class="mb-4">
                                         <div class="input-group">
-                                            <span class="input-group-text" id="house-addon" title="House"><i class="fa-solid fa-house fa-fw"></i></span>
-                                            <input type="text" th:field="*{address.house}" class="form-control" disabled
-                                                   title="House" aria-label="House" aria-describedby="house-addon"/>
+                                            <span class="input-group-text" id="houseAddon" title="House"><i class="fa-solid fa-house fa-fw"></i></span>
+                                            <div class="form-floating">
+                                                <input type="text" id="houseInput" th:field="*{address.house}" class="form-control" disabled
+                                                       title="House" aria-label="House" aria-describedby="house-addon"/>
+                                                <label for="houseInput" class="text-muted">House</label>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -78,27 +96,36 @@
                                 <div class="col-lg-4">
                                     <div class="mb-4">
                                         <div class="input-group">
-                                            <span class="input-group-text" id="phone-addon" title="Phone"><i class="fa-solid fa-phone fa-fw"></i></span>
-                                            <input type="text" th:field="*{contacts.phone}" class="form-control" disabled
-                                                   placeholder="Phone" title="Phone" aria-label="Phone" aria-describedby="phone-addon"/>
+                                            <span class="input-group-text" id="phoneAddon" title="Phone"><i class="fa-solid fa-phone fa-fw"></i></span>
+                                            <div class="form-floating">
+                                                <input type="text" id="phoneInput" th:field="*{contacts.phone}" class="form-control" disabled
+                                                       placeholder="Phone" title="Phone number" aria-label="Phone number" aria-describedby="phone-addon"/>
+                                                <label for="phoneInput" class="text-muted">Phone number</label>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
                                     <div class="mb-4">
                                         <div class="input-group">
-                                            <span class="input-group-text" id="fax-addon" title="Fax"><i class="fa-solid fa-fax fa-fw"></i></span>
-                                            <input type="text" th:field="*{contacts.fax}" class="form-control" disabled
-                                                   placeholder="Fax" title="Fax" aria-label="Fax" aria-describedby="fax-addon"/>
+                                            <span class="input-group-text" id="faxAddon" title="Fax"><i class="fa-solid fa-fax fa-fw"></i></span>
+                                            <div class="form-floating">
+                                                <input type="text" id="faxInput" th:field="*{contacts.fax}" class="form-control" disabled
+                                                       placeholder="Fax" title="Fax" aria-label="Fax" aria-describedby="fax-addon"/>
+                                                <label for="faxInput" class="text-muted">Fax</label>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
                                     <div class="mb-4">
                                         <div class="input-group">
-                                            <span class="input-group-text" id="email-addon" title="E-mail"><i class="fa-solid fa-envelope fa-fw"></i></span>
-                                            <input type="text" th:field="*{contacts.email}" class="form-control" disabled
-                                                   placeholder="E-mail" title="E-mail" aria-label="E-mail" aria-describedby="email-addon"/>
+                                            <span class="input-group-text" id="emailAddon" title="E-mail"><i class="fa-solid fa-envelope fa-fw"></i></span>
+                                            <div class="form-floating">
+                                                <input type="text" id="emailInput" th:field="*{contacts.email}" class="form-control" disabled
+                                                       placeholder="E-mail" title="E-mail" aria-label="E-mail" aria-describedby="email-addon"/>
+                                                <label for="emailInput" class="text-muted">E-mail</label>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -107,35 +134,34 @@
                             <!-- Contact persons block -->
                             <div class="text-start mb-3">
                                 <h4 class="text-secondary">Contact persons</h4>
-                                <div id="contact-person-block" class="mt-3">
+                                <div id="contactPersonBlock" class="mt-3">
                                     <span th:if="*{contactPersons.isEmpty()}">
                                         <h5 class="alert alert-warning py-2 mb-4">No contact persons found.</h5>
                                     </span>
 
                                     <div th:each="contactPerson, itemStat : *{contactPersons}" class="row contact-person-row">
-                                        <div class="col-lg-3">
+                                        <div class="col-lg-4">
                                             <div class="mb-4">
-                                                <input type="text" th:field="*{contactPersons[__${itemStat.index}__].position}" class="form-control" disabled />
+                                                <div class="form-floating">
+                                                    <input type="text" th:id="*{contactPersons[__${itemStat.index}__].position}" th:field="*{contactPersons[__${itemStat.index}__].position}" class="form-control" disabled />
+                                                    <label th:for="*{contactPersons[__${itemStat.index}__].position}" class="text-muted">Position</label>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div class="col-lg-2">
+                                        <div class="col-lg-4">
                                             <div class="mb-4">
-                                                <input type="text" th:field="*{contactPersons[__${itemStat.index}__].lastName}" class="form-control" disabled />
+                                                <div class="form-floating">
+                                                    <input type="text" th:id="*{contactPersons[__${itemStat.index}__].fullName}" th:field="*{contactPersons[__${itemStat.index}__].fullName}" class="form-control" disabled />
+                                                    <label th:for="*{contactPersons[__${itemStat.index}__].fullName}" class="text-muted">Name</label>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div class="col-lg-2">
+                                        <div class="col-lg-4">
                                             <div class="mb-4">
-                                                <input type="text" th:field="*{contactPersons[__${itemStat.index}__].firstName}" class="form-control" disabled />
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-2">
-                                            <div class="mb-4">
-                                                <input type="text" th:field="*{contactPersons[__${itemStat.index}__].middleName}" class="form-control" disabled />
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-3">
-                                            <div class="mb-4">
-                                                <input type="text" th:field="*{contactPersons[__${itemStat.index}__].phone}" class="form-control" disabled placeholder="Phone" />
+                                                <div class="form-floating">
+                                                    <input type="text" th:id="*{contactPersons[__${itemStat.index}__].phone}" th:field="*{contactPersons[__${itemStat.index}__].phone}" class="form-control" disabled placeholder="Phone" />
+                                                    <label th:for="*{contactPersons[__${itemStat.index}__].phone}" class="text-muted">Phone number</label>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

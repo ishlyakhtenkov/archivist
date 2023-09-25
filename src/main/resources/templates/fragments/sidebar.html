@@ -5,7 +5,7 @@
 
 <div th:fragment="sidebar">
     <nav class="navbar navbar-expand-lg navbar-dark fixed-left sidebar-nav">
-        <button class="navbar-toggler ms-3 ms-md-4" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+        <button class="navbar-toggler ms-3" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -15,13 +15,13 @@
             <hr class="text-white d-none d-lg-block" style="width: 232px">
         </a>
         <div>
-            <a sec:authorize="!isAuthenticated()" th:href="@{/login}" type="button" class="d-lg-none btn btn-gray px-3 px-md-4 me-3 me-md-4">
+            <a sec:authorize="!isAuthenticated()" th:href="@{/login}" type="button" class="d-lg-none btn btn-gray px-3 px-md-4 me-3">
                 <i class="fa-solid fa-right-to-bracket"></i>
                 Login
             </a>
         </div>
         <div>
-            <a sec:authorize="isAuthenticated()" th:href="@{/profile}" type="button" class="d-lg-none btn btn-gray px-3 px-md-4 me-3 me-md-4">
+            <a sec:authorize="isAuthenticated()" th:href="@{/profile}" type="button" class="d-lg-none btn btn-gray px-3 px-md-4 me-3">
                 <i class="fa-solid fa-address-card"></i>
                 Profile
             </a>
@@ -31,12 +31,50 @@
                 <li sec:authorize="hasRole('ADMIN')" class="nav-item mt-3 mt-lg-0 mb-0 mb-lg-3" th:classappend="${activeMenuItem == 'Users'}? 'active' : ''">
                     <a class="nav-link sidebar-nav-link" th:href="@{/users}"><span class="ms-4"><i class="fas fa-users fa-fw me-2"></i>Users</span></a>
                 </li>
-                <li sec:authorize="isAuthenticated()" class="nav-item mb-0 mb-lg-3" th:classappend="${activeMenuItem == 'Companies'}? 'active' : ''">
-                    <a class="nav-link sidebar-nav-link" th:href="@{/companies}"><span class="ms-4"><i class="fa-brands fa-fort-awesome fa-fw me-2"></i>Companies</span></a>
+                <li sec:authorize="isAuthenticated()" class="nav-item" style="cursor:pointer" id="cardsNavLink">
+                    <div class="accordion-header">
+                        <a class="nav-link sidebar-nav-link" data-bs-toggle="collapse" data-bs-target="#cardsAccordion" aria-expanded="true" aria-controls="cardsAccordion" onclick="useCardsAccordion()">
+                            <span class="ms-4"><i class="fa-solid fa-folder-open fa-fw me-2"></i>Cards</span>
+                            <span class="float-end me-3 me-lg-1" id="cardsNavLinkIcon"><i class="fa-solid fa-chevron-down"></i></span>
+                        </a>
+                    </div>
                 </li>
-                <li sec:authorize="isAuthenticated()" class="nav-item mb-0 mb-lg-3" th:classappend="${activeMenuItem == 'Departments'}? 'active' : ''">
-                    <a class="nav-link sidebar-nav-link" th:href="@{/departments}"><span class="ms-4"><i class="fa-solid fa-house-user fa-fw me-2"></i>Departments</span></a>
+                <div id="cardsAccordion" class="accordion-collapse collapse"
+                     th:classappend="${activeMenuItem == 'Documents' || activeMenuItem == 'Change notices'}? 'show' : ''">
+                    <div class="accordion-body">
+                        <ul class="navbar-nav">
+                            <li sec:authorize="isAuthenticated()" class="nav-item mt-1" th:classappend="${activeMenuItem == 'Documents'}? 'active' : ''" id="documentsNavLink">
+                                <a class="nav-link sidebar-nav-link" th:href="@{/documents}"><span class="ms-5"><i class="fa-solid fa-scroll fa-fw me-2"></i>Documents</span></a>
+                            </li>
+                            <li sec:authorize="isAuthenticated()" class="nav-item mt-1" th:classappend="${activeMenuItem == 'Change notices'}? 'active' : ''" id="changeNoticesNavLink">
+                                <a class="nav-link sidebar-nav-link" th:href="@{/change-notices}"><span class="ms-5"><i class="fa-solid fa-file-pen fa-fw me-2"></i>Change notices</span></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <li sec:authorize="isAuthenticated()" class="nav-item mt-0 mt-lg-3 mb-0 mb-lg-3" th:classappend="${activeMenuItem == 'Tools'}? 'active' : ''">
+                    <a class="nav-link sidebar-nav-link" th:href="@{/tools}"><span class="ms-4"><i class="fa-solid fa-screwdriver-wrench fa-fw me-2"></i>Tools</span></a>
                 </li>
+                <li sec:authorize="isAuthenticated()" class="nav-item" style="cursor:pointer" id="referencesNavLink">
+                    <div class="accordion-header">
+                        <a class="nav-link sidebar-nav-link" data-bs-toggle="collapse" data-bs-target="#referencesAccordion" aria-expanded="true" aria-controls="referencesAccordion" onclick="useReferencesAccordion()">
+                            <span class="ms-4"><i class="fa-solid fa-book-bookmark fa-fw me-2"></i>References</span>
+                            <span class="float-end me-3 me-lg-1" id="referencesNavLinkIcon"><i class="fa-solid fa-chevron-down"></i></span>
+                        </a>
+                    </div>
+                </li>
+                <div id="referencesAccordion" class="accordion-collapse collapse">
+                    <div class="accordion-body">
+                        <ul class="navbar-nav">
+                            <li sec:authorize="isAuthenticated()" class="nav-item mt-1" th:classappend="${activeMenuItem == 'Companies'}? 'active' : ''" id="companiesNavLink">
+                                <a class="nav-link sidebar-nav-link" th:href="@{/companies}"><span class="ms-5"><i class="fa-brands fa-fort-awesome fa-fw me-2"></i>Companies</span></a>
+                            </li>
+                            <li sec:authorize="isAuthenticated()" class="nav-item mt-1" th:classappend="${activeMenuItem == 'Departments'}? 'active' : ''" id="departmentsNavLink">
+                                <a class="nav-link sidebar-nav-link" th:href="@{/departments}"><span class="ms-5"><i class="fa-solid fa-users-rectangle fa-fw me-2"></i>Departments</span></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </ul>
         </div>
     </nav>

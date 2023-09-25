@@ -5,7 +5,7 @@ window.onload = function() {
 };
 
 function checkActionHappened() {
-    let actionSpan = $("#action-span");
+    let actionSpan = $("#actionSpan");
     if (actionSpan.length) {
         successToast(`${actionSpan.data('action')}`);
     } else {
@@ -56,7 +56,7 @@ function deleteTableRow(id, message) {
 }
 
 function updatePaginationInfo() {
-    let paginationSummary = $('#pagination-summary');
+    let paginationSummary = $('#paginationSummary');
     let paginationInfo =paginationSummary.text();
     let words = paginationInfo.split(' ');
     let numberCounter = 0;

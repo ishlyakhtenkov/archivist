@@ -19,10 +19,13 @@
                                 <div class="col-lg-4">
                                     <div class="mb-4">
                                         <div class="input-group">
-                                            <span class="input-group-text" id="name-addon" title="Name"><i class="fa-brands fa-fort-awesome fa-fw"></i></span>
-                                            <input type="text" th:field="*{name}"
-                                                   th:class="${#fields.hasErrors('name')} ? 'form-control is-invalid' : 'form-control'"
-                                                   required placeholder="Name" title="Name" aria-label="Name" aria-describedby="name-addon"/>
+                                            <span class="input-group-text" id="nameAddon" title="Name"><i class="fa-brands fa-fort-awesome fa-fw"></i></span>
+                                            <div class="form-floating">
+                                                <input type="text" th:field="*{name}" id="companyNameInput"
+                                                       th:class="${#fields.hasErrors('name')} ? 'form-control is-invalid' : 'form-control'"
+                                                       required placeholder="Company name" title="Name" aria-label="Name" aria-describedby="nameAddon"/>
+                                                <label for="companyNameInput" class="text-muted">Company name</label>
+                                            </div>
                                         </div>
                                         <span class="help-block" th:if="${#fields.hasErrors('name')}">
                                             <ul>
@@ -35,10 +38,13 @@
                                 <div class="col-lg-4">
                                     <div class="mb-4">
                                         <div class="input-group">
-                                            <span class="input-group-text" id="country-addon" title="Country"><i class="fa-solid fa-flag fa-fw"></i></span>
-                                            <input type="text" th:field="*{address.country}"
-                                                   th:class="${#fields.hasErrors('address.country')} ? 'form-control is-invalid' : 'form-control'"
-                                                   required placeholder="Country" title="Country" aria-label="Country" aria-describedby="country-addon"/>
+                                            <span class="input-group-text" id="countryAddon" title="Country"><i class="fa-solid fa-flag fa-fw"></i></span>
+                                            <div class="form-floating">
+                                                <input type="text" th:field="*{address.country}" id="countryInput"
+                                                       th:class="${#fields.hasErrors('address.country')} ? 'form-control is-invalid' : 'form-control'"
+                                                       required placeholder="Country" title="Country" aria-label="Country" aria-describedby="countryAddon"/>
+                                                <label for="countryInput" class="text-muted">Country</label>
+                                            </div>
                                         </div>
                                         <span class="help-block" th:if="${#fields.hasErrors('address.country')}">
                                             <ul>
@@ -51,10 +57,13 @@
                                 <div class="col-lg-4">
                                     <div class="mb-4">
                                         <div class="input-group">
-                                            <span class="input-group-text" id="zipcode-addon" title="Zipcode"><i class="fa-solid fa-barcode fa-fw"></i></span>
-                                            <input type="text" th:field="*{address.zipcode}"
-                                                   th:class="${#fields.hasErrors('address.zipcode')} ? 'form-control is-invalid' : 'form-control'"
-                                                   required placeholder="Zipcode" title="Zipcode" aria-label="Zipcode" aria-describedby="zipcode-addon"/>
+                                            <span class="input-group-text" id="zipcodeAddon" title="Zipcode"><i class="fa-solid fa-barcode fa-fw"></i></span>
+                                            <div class="form-floating">
+                                                <input type="text" th:field="*{address.zipcode}" id="zipcodeInput"
+                                                       th:class="${#fields.hasErrors('address.zipcode')} ? 'form-control is-invalid' : 'form-control'"
+                                                       required placeholder="Zipcode" title="Zipcode" aria-label="Zipcode" aria-describedby="zipcode-addon"/>
+                                                <label for="zipcodeInput" class="text-muted">Zipcode</label>
+                                            </div>
                                         </div>
                                         <span class="help-block" th:if="${#fields.hasErrors('address.zipcode')}">
                                             <ul>
@@ -70,10 +79,13 @@
                                 <div class="col-lg-4">
                                     <div class="mb-4">
                                         <div class="input-group">
-                                            <span class="input-group-text" id="city-addon" title="City"><i class="fa-solid fa-city fa-fw"></i></span>
-                                            <input type="text" th:field="*{address.city}"
-                                                   th:class="${#fields.hasErrors('address.city')} ? 'form-control is-invalid' : 'form-control'"
-                                                   required placeholder="City" title="City" aria-label="City" aria-describedby="city-addon"/>
+                                            <span class="input-group-text" id="cityAddon" title="City"><i class="fa-solid fa-city fa-fw"></i></span>
+                                            <div class="form-floating">
+                                                <input type="text" th:field="*{address.city}" id="cityInput"
+                                                       th:class="${#fields.hasErrors('address.city')} ? 'form-control is-invalid' : 'form-control'"
+                                                       required placeholder="City" title="City" aria-label="City" aria-describedby="cityAddon"/>
+                                                <label for="cityInput" class="text-muted">City</label>
+                                            </div>
                                         </div>
                                         <span class="help-block" th:if="${#fields.hasErrors('address.city')}">
                                             <ul>
@@ -86,10 +98,13 @@
                                 <div class="col-lg-4">
                                     <div class="mb-4">
                                         <div class="input-group">
-                                            <span class="input-group-text" id="street-addon" title="Street"><i class="fa-solid fa-road fa-fw"></i></span>
-                                            <input type="text" th:field="*{address.street}"
-                                                   th:class="${#fields.hasErrors('address.street')} ? 'form-control is-invalid' : 'form-control'"
-                                                   required placeholder="Street" title="Street" aria-label="Street" aria-describedby="street-addon"/>
+                                            <span class="input-group-text" id="streetAddon" title="Street"><i class="fa-solid fa-road fa-fw"></i></span>
+                                            <div class="form-floating">
+                                                <input type="text" th:field="*{address.street}" id="streetInput"
+                                                       th:class="${#fields.hasErrors('address.street')} ? 'form-control is-invalid' : 'form-control'"
+                                                       required placeholder="Street" title="Street" aria-label="Street" aria-describedby="streetAddon"/>
+                                                <label for="streetInput" class="text-muted">Street</label>
+                                            </div>
                                         </div>
                                         <span class="help-block" th:if="${#fields.hasErrors('address.street')}">
                                             <ul>
@@ -102,10 +117,13 @@
                                 <div class="col-lg-4">
                                     <div class="mb-4">
                                         <div class="input-group">
-                                            <span class="input-group-text" id="house-addon" title="House"><i class="fa-solid fa-house fa-fw"></i></span>
-                                            <input type="text" th:field="*{address.house}"
-                                                   th:class="${#fields.hasErrors('address.house')} ? 'form-control is-invalid' : 'form-control'"
-                                                   required placeholder="House" title="House" aria-label="House" aria-describedby="house-addon"/>
+                                            <span class="input-group-text" id="houseAddon" title="House"><i class="fa-solid fa-house fa-fw"></i></span>
+                                            <div class="form-floating">
+                                                <input type="text" th:field="*{address.house}" id="houseInput"
+                                                       th:class="${#fields.hasErrors('address.house')} ? 'form-control is-invalid' : 'form-control'"
+                                                       required placeholder="House" title="House" aria-label="House" aria-describedby="houseAddon"/>
+                                                <label for="houseInput" class="text-muted">House</label>
+                                            </div>
                                         </div>
                                         <span class="help-block" th:if="${#fields.hasErrors('address.house')}">
                                             <ul>
@@ -120,10 +138,13 @@
                                 <div class="col-lg-4">
                                     <div class="mb-4">
                                         <div class="input-group">
-                                            <span class="input-group-text" id="phone-addon" title="Phone"><i class="fa-solid fa-phone fa-fw"></i></span>
-                                            <input type="text" th:field="*{contacts.phone}"
-                                                   th:class="${#fields.hasErrors('contacts.phone')} ? 'form-control is-invalid' : 'form-control'"
-                                                   placeholder="Phone" title="Phone" aria-label="Phone" aria-describedby="phone-addon"/>
+                                            <span class="input-group-text" id="phoneAddon" title="Phone"><i class="fa-solid fa-phone fa-fw"></i></span>
+                                            <div class="form-floating">
+                                                <input type="text" th:field="*{contacts.phone}" id="phoneInput"
+                                                       th:class="${#fields.hasErrors('contacts.phone')} ? 'form-control is-invalid' : 'form-control'"
+                                                       placeholder="Phone number" title="Phone number" aria-label="Phone number" aria-describedby="phoneAddon"/>
+                                                <label for="phoneInput" class="text-muted">Phone number</label>
+                                            </div>
                                         </div>
                                         <span class="help-block" th:if="${#fields.hasErrors('contacts.phone')}">
                                             <ul>
@@ -136,10 +157,13 @@
                                 <div class="col-lg-4">
                                     <div class="mb-4">
                                         <div class="input-group">
-                                            <span class="input-group-text" id="fax-addon" title="Fax"><i class="fa-solid fa-fax fa-fw"></i></span>
-                                            <input type="text" th:field="*{contacts.fax}"
-                                                   th:class="${#fields.hasErrors('contacts.fax')} ? 'form-control is-invalid' : 'form-control'"
-                                                   placeholder="Fax" title="Fax" aria-label="Fax" aria-describedby="fax-addon"/>
+                                            <span class="input-group-text" id="faxAddon" title="Fax"><i class="fa-solid fa-fax fa-fw"></i></span>
+                                            <div class="form-floating">
+                                                <input type="text" th:field="*{contacts.fax}" id="faxInput"
+                                                       th:class="${#fields.hasErrors('contacts.fax')} ? 'form-control is-invalid' : 'form-control'"
+                                                       placeholder="Fax" title="Fax" aria-label="Fax" aria-describedby="faxAddon"/>
+                                                <label for="faxInput" class="text-muted">Fax</label>
+                                            </div>
                                         </div>
                                         <span class="help-block" th:if="${#fields.hasErrors('contacts.fax')}">
                                             <ul>
@@ -152,10 +176,13 @@
                                 <div class="col-lg-4">
                                     <div class="mb-4">
                                         <div class="input-group">
-                                            <span class="input-group-text" id="email-addon" title="E-mail"><i class="fa-solid fa-envelope fa-fw"></i></span>
-                                            <input type="text" th:field="*{contacts.email}"
-                                                   th:class="${#fields.hasErrors('contacts.email')} ? 'form-control is-invalid' : 'form-control'"
-                                                   placeholder="E-mail" title="E-mail" aria-label="E-mail" aria-describedby="email-addon"/>
+                                            <span class="input-group-text" id="emailAddon" title="E-mail"><i class="fa-solid fa-envelope fa-fw"></i></span>
+                                            <div class="form-floating">
+                                                <input type="text" th:field="*{contacts.email}" id="emailInput"
+                                                       th:class="${#fields.hasErrors('contacts.email')} ? 'form-control is-invalid' : 'form-control'"
+                                                       placeholder="E-mail" title="E-mail" aria-label="E-mail" aria-describedby="emailAddon"/>
+                                                <label for="emailInput" class="text-muted">E-mail</label>
+                                            </div>
                                         </div>
                                         <span class="help-block" th:if="${#fields.hasErrors('contacts.email')}">
                                             <ul>
@@ -173,12 +200,15 @@
                                 <button type="button" class="btn btn-primary" onclick="addContactPersonRow()">
                                     <i class="fa-solid fa-address-book"></i> Add contact
                                 </button>
-                                <div id="contact-person-block" class="mt-3">
+                                <div id="contactPersonBlock" class="mt-3">
                                     <div th:each="contactPerson, itemStat : *{contactPersons}" class="row contact-person-row">
                                         <div class="col-lg-3">
                                             <div class="mb-4">
-                                                <input type="text" th:field="*{contactPersons[__${itemStat.index}__].position}"
-                                                       th:class="${#fields.hasErrors('contactPersons[__${itemStat.index}__].position')} ? 'form-control is-invalid' : 'form-control'" required placeholder="Position" />
+                                                <div class="form-floating">
+                                                    <input type="text" th:id="*{contactPersons[__${itemStat.index}__].position}" th:field="*{contactPersons[__${itemStat.index}__].position}"
+                                                           th:class="${#fields.hasErrors('contactPersons[__${itemStat.index}__].position')} ? 'form-control is-invalid' : 'form-control'" required placeholder="Position" />
+                                                    <label th:for="*{contactPersons[__${itemStat.index}__].position}" class="text-muted">Position</label>
+                                                </div>
                                                 <span class="help-block" th:if="${#fields.hasErrors('contactPersons[__${itemStat.index}__].position')}">
                                                     <ul>
                                                         <li class="text-danger text-start"
@@ -189,8 +219,11 @@
                                         </div>
                                         <div class="col-lg-2">
                                             <div class="mb-4">
-                                                <input type="text" th:field="*{contactPersons[__${itemStat.index}__].lastName}"
-                                                       th:class="${#fields.hasErrors('contactPersons[__${itemStat.index}__].lastName')} ? 'form-control is-invalid' : 'form-control'" required placeholder="Last name" />
+                                                <div class="form-floating">
+                                                    <input type="text" th:id="*{contactPersons[__${itemStat.index}__].lastName}" th:field="*{contactPersons[__${itemStat.index}__].lastName}"
+                                                           th:class="${#fields.hasErrors('contactPersons[__${itemStat.index}__].lastName')} ? 'form-control is-invalid' : 'form-control'" required placeholder="Last name" />
+                                                    <label th:for="*{contactPersons[__${itemStat.index}__].lastName}" class="text-muted">Last name</label>
+                                                </div>
                                                 <span class="help-block" th:if="${#fields.hasErrors('contactPersons[__${itemStat.index}__].lastName')}">
                                                     <ul>
                                                         <li class="text-danger text-start"
@@ -201,8 +234,11 @@
                                         </div>
                                         <div class="col-lg-2">
                                             <div class="mb-4">
-                                                <input type="text" th:field="*{contactPersons[__${itemStat.index}__].firstName}"
-                                                       th:class="${#fields.hasErrors('contactPersons[__${itemStat.index}__].firstName')} ? 'form-control is-invalid' : 'form-control'" required placeholder="First name" />
+                                                <div class="form-floating">
+                                                    <input type="text" th:id="*{contactPersons[__${itemStat.index}__].firstName}" th:field="*{contactPersons[__${itemStat.index}__].firstName}"
+                                                           th:class="${#fields.hasErrors('contactPersons[__${itemStat.index}__].firstName')} ? 'form-control is-invalid' : 'form-control'" required placeholder="First name" />
+                                                    <label th:for="*{contactPersons[__${itemStat.index}__].firstName}" class="text-muted">First name</label>
+                                                </div>
                                                 <span class="help-block" th:if="${#fields.hasErrors('contactPersons[__${itemStat.index}__].firstName')}">
                                                     <ul>
                                                         <li class="text-danger text-start"
@@ -213,8 +249,11 @@
                                         </div>
                                         <div class="col-lg-2">
                                             <div class="mb-4">
-                                                <input type="text" th:field="*{contactPersons[__${itemStat.index}__].middleName}"
-                                                       th:class="${#fields.hasErrors('contactPersons[__${itemStat.index}__].middleName')} ? 'form-control is-invalid' : 'form-control'" required placeholder="Middle name" />
+                                                <div class="form-floating">
+                                                    <input type="text" th:id="*{contactPersons[__${itemStat.index}__].middleName}" th:field="*{contactPersons[__${itemStat.index}__].middleName}"
+                                                           th:class="${#fields.hasErrors('contactPersons[__${itemStat.index}__].middleName')} ? 'form-control is-invalid' : 'form-control'" required placeholder="Middle name" />
+                                                    <label th:for="*{contactPersons[__${itemStat.index}__].middleName}" class="text-muted">Middle name</label>
+                                                </div>
                                                 <span class="help-block" th:if="${#fields.hasErrors('contactPersons[__${itemStat.index}__].middleName')}">
                                                     <ul>
                                                         <li class="text-danger text-start"
@@ -225,8 +264,11 @@
                                         </div>
                                         <div class="col-lg-2">
                                             <div class="mb-4">
-                                                <input type="text" th:field="*{contactPersons[__${itemStat.index}__].phone}"
-                                                       th:class="${#fields.hasErrors('contactPersons[__${itemStat.index}__].phone')} ? 'form-control is-invalid' : 'form-control'" placeholder="Phone" />
+                                                <div class="form-floating">
+                                                    <input type="text" th:id="*{contactPersons[__${itemStat.index}__].phone}" th:field="*{contactPersons[__${itemStat.index}__].phone}"
+                                                           th:class="${#fields.hasErrors('contactPersons[__${itemStat.index}__].phone')} ? 'form-control is-invalid' : 'form-control'" placeholder="Phone" />
+                                                    <label th:for="*{contactPersons[__${itemStat.index}__].phone}" class="text-muted">Phone number</label>
+                                                </div>
                                                 <span class="help-block" th:if="${#fields.hasErrors('contactPersons[__${itemStat.index}__].phone')}">
                                                     <ul>
                                                         <li class="text-danger text-start"
@@ -242,7 +284,7 @@
                                                        <i class="fa-solid fa-arrow-up"></i> Delete contact <i class="fa-solid fa-arrow-up"></i>
                                                    </button>
                                                 </span>
-                                                <span class="d-none d-lg-block">
+                                                <span class="d-none d-lg-block py-1">
                                                     <button type="button" class="btn btn-danger btn-del-contact-person" title="Delete contact">
                                                         Delete
                                                     </button>

@@ -101,20 +101,26 @@
                         <h1 class="modal-title fs-5" id="changePasswordModalLabel">Change password for user</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <form id="change-password-form" onsubmit="return false;">
+                    <form id="changePasswordForm" onsubmit="return false;">
                         <div class="modal-body">
                             <div class="mb-4 mt-3">
                                 <div class="input-group">
-                                    <span class="input-group-text" id="password-addon" title="New password"><i class="fa-solid fa-key"></i></span>
-                                    <input type="password" class="form-control" id="new-password" required placeholder="New password" title="New password"
-                                           aria-label="Password" aria-describedby="password-addon" />
+                                    <span class="input-group-text" id="passwordAddon" title="New password"><i class="fa-solid fa-key"></i></span>
+                                    <div class="form-floating">
+                                        <input type="password" class="form-control" id="newPassword" required placeholder="New password" title="New password"
+                                               aria-label="Password" aria-describedby="passwordAddon" />
+                                        <label for="newPassword" class="text-muted">New password</label>
+                                    </div>
                                 </div>
                             </div>
                             <div class="mb-3">
                                 <div class="input-group">
-                                    <span class="input-group-text" id="repeat-password-addon" title="Repeat password"><i class="fa-solid fa-key"></i></span>
-                                    <input type="password" class="form-control" id="repeat-password" required placeholder="Repeat password"
-                                           aria-label="Repeat password" title="Repeat password" aria-describedby="repeat-password-addon" />
+                                    <span class="input-group-text" id="repeatPasswordAddon" title="Repeat password"><i class="fa-solid fa-key"></i></span>
+                                    <div class="form-floating">
+                                        <input type="password" class="form-control" id="repeatPassword" required placeholder="Repeat password"
+                                               aria-label="Repeat password" title="Repeat password" aria-describedby="repeatPasswordAddon" />
+                                        <label for="repeatPassword" class="text-muted">Repeat password</label>
+                                    </div>
                                 </div>
                                 <span class="text-danger float-start">
                                     <ul id="checkPasswordMatch" class="mb-1">
@@ -124,7 +130,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-warning" onclick="changePasswordProfile()" id="submit-with-pass-button">Change password</button>
+                            <button type="submit" class="btn btn-warning" onclick="changePasswordProfile()" id="submitWithPassButton">Change password</button>
                         </div>
                     </form>
                 </div>

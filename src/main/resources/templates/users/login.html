@@ -3,7 +3,7 @@
 
 <th:block th:replace="~{fragments/main::page(title='Login',appMain=~{::appMain}, ownScript=~{::ownScript})}">
     <appMain>
-        <span th:if="${action != null}" th:data-action="${action}" th:id="action-span"></span>
+        <span th:if="${action != null}" th:data-action="${action}" th:id="actionSpan"></span>
         <!-- Login card -->
         <div class="row d-flex justify-content-center align-items-center">
             <div class="col-12 col-md-8 col-xl-5">
@@ -17,17 +17,24 @@
                         </div>
                         <form th:action="@{/login}" method="post">
                             <div class="input-group mt-5 mb-4">
-                                <span class="input-group-text" id="email-addon" title="E=mail"><i class="fa-solid fa-envelope"></i></span>
-                                <input type="text" name="username" class="form-control" required placeholder="E-mail" aria-label="Email" aria-describedby="email-addon" />
+                                <span class="input-group-text" id="emailAddon" title="E=mail"><i class="fa-solid fa-envelope"></i></span>
+                                <div class="form-floating">
+                                    <input type="text" id="emailInput" name="username" class="form-control" required placeholder="E-mail"
+                                           aria-label="Email" aria-describedby="emailAddon" />
+                                    <label for="emailInput" class="text-muted">E-mail</label>
+                                </div>
                             </div>
                             <div class="input-group mb-4">
-                                <span class="input-group-text" id="password-addon" title="Password"><i class="fa-solid fa-key"></i></span>
-                                <input type="password" name="password" class="form-control" required
-                                           placeholder="Password" aria-label="Password" aria-describedby="password-addon"/>
+                                <span class="input-group-text" id="passwordAddon" title="Password"><i class="fa-solid fa-key"></i></span>
+                                <div class="form-floating">
+                                    <input type="password" id="passwordInput" name="password" class="form-control" required
+                                           placeholder="Password" aria-label="Password" aria-describedby="passwordAddon"/>
+                                    <label for="passwordInput" class="text-muted">Password</label>
+                                </div>
                             </div>
                             <div class="form-check text-start mb-3">
-                                <input class="form-check-input" type="checkbox" name="remember-me" id="remember-me">
-                                <label class="form-check-label" for="remember-me">Remember me</label>
+                                <input class="form-check-input" type="checkbox" name="remember-me" id="rememberMe">
+                                <label class="form-check-label" for="rememberMe">Remember me</label>
                             </div>
                             <div class="row">
                                 <div class="col-7 col-md-6 my-auto">
@@ -51,7 +58,7 @@
                         <h5 class="modal-title text-center">Forgot your password?</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <form id="forgot-password-form" onsubmit="return false;">
+                    <form id="forgotPasswordForm" onsubmit="return false;">
                         <div class="modal-body text-left">
                             <p>Reset your password in three easy steps!</p>
                             <ol class="list-unstyled">
@@ -62,7 +69,10 @@
                             <div class="mb-4 mt-4">
                                 <div class="input-group">
                                     <span class="input-group-text" title="E-mail"><i class="fa-solid fa-envelope"></i></span>
-                                    <input type="email" class="form-control" id="email" required placeholder="E-mail" title="E-mail" />
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control" id="email" required placeholder="E-mail" title="E-mail" />
+                                        <label for="email" class="text-muted">E-mail</label>
+                                    </div>
                                 </div>
                             </div>
                         </div>

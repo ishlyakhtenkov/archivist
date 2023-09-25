@@ -46,18 +46,18 @@ $('#changePasswordModal').on('show.bs.modal', function(e) {
     if (id) {
         $(e.currentTarget).find('#changePasswordModalUserId').val(id);
     }
-    $(e.currentTarget).find('#new-password').val('');
-    $(e.currentTarget).find('#repeat-password').val('');
+    $(e.currentTarget).find('#newPassword').val('');
+    $(e.currentTarget).find('#repeatPassword').val('');
     $(e.currentTarget).find('#checkPasswordMatch').text('');
-    $(e.currentTarget).find('#change-password-button').prop('disabled', false);
+    $(e.currentTarget).find('#changePasswordButton').prop('disabled', false);
 });
 
 function changePassword() {
     let changePasswordModal = $('#changePasswordModal');
     let id = changePasswordModal.find('#changePasswordModalUserId').val();
     let name = changePasswordModal.find('#changePasswordModalUserName').val();
-    let password = changePasswordModal.find('#new-password').val();
-    let repeatPassword = changePasswordModal.find('#repeat-password').val();
+    let password = changePasswordModal.find('#newPassword').val();
+    let repeatPassword = changePasswordModal.find('#repeatPassword').val();
     if (password.length && repeatPassword.length && password === repeatPassword) {
         $.ajax({
             url: "users/password/" + id,
@@ -74,8 +74,8 @@ function changePassword() {
 
 function changePasswordProfile() {
     let changePasswordModal = $('#changePasswordModal');
-    let password = changePasswordModal.find('#new-password').val();
-    let repeatPassword = changePasswordModal.find('#repeat-password').val();
+    let password = changePasswordModal.find('#newPassword').val();
+    let repeatPassword = changePasswordModal.find('#repeatPassword').val();
     if (password.length && repeatPassword.length && password === repeatPassword) {
         $.ajax({
             url: "profile/password",
@@ -111,26 +111,26 @@ function forgotPassword() {
     }
 }
 
-$("#repeat-password").on('keyup', function(){
+$("#repeatPassword").on('keyup', function(){
     checkPasswordsMatch();
 });
 
-$("#new-password").on('keyup', function(){
+$("#newPassword").on('keyup', function(){
     checkPasswordsMatch();
 });
 
 function checkPasswordsMatch() {
-    let password = $("#new-password").val();
-    let repeatPassword = $("#repeat-password").val();
+    let password = $("#newPassword").val();
+    let repeatPassword = $("#repeatPassword").val();
     if (repeatPassword.length && password !== repeatPassword) {
-        $("#repeat-password").addClass('form-control is-invalid');
+        $("#repeatPassword").addClass('form-control is-invalid');
         $("#checkPasswordMatch").html('<li>password does not match</li>');
-        $('#submit-with-pass-button').prop('disabled', true);
+        $('#submitWithPassButton').prop('disabled', true);
     }
     else {
-        $("#repeat-password").removeClass('form-control is-invalid');
-        $("#repeat-password").addClass('form-control');
+        $("#repeatPassword").removeClass('form-control is-invalid');
+        $("#repeatPassword").addClass('form-control');
         $("#checkPasswordMatch").html('');
-        $('#submit-with-pass-button').prop('disabled', false);
+        $('#submitWithPassButton').prop('disabled', false);
     }
 }

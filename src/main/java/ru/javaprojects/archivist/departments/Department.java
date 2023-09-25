@@ -22,4 +22,9 @@ public class Department extends NamedEntity implements HasId {
     @Embedded
     @Valid
     private Person boss;
+
+    public Department(Long id, String name, Person boss) {
+        super(id, name);
+        this.boss = boss;
+    }
 }

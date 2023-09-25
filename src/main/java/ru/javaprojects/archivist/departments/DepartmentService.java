@@ -3,6 +3,7 @@ package ru.javaprojects.archivist.departments;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+import ru.javaprojects.archivist.common.error.exception.NotFoundException;
 
 import java.util.List;
 
@@ -17,6 +18,11 @@ public class DepartmentService {
 
     public Department get(long id) {
         return repository.getExisted(id);
+    }
+
+    public Department getByName(String name) {
+        return repository.findByNameIgnoreCase(name)
+                .orElseThrow(() -> new NotFoundException("Not found department with name=" + name));
     }
 
     public void create(Department department) {

@@ -15,6 +15,8 @@ public class CommonTestData {
     public static final long NOT_FOUND = 100;
     public static final String ENTITY_NOT_FOUND = "Entity with id=" + NOT_FOUND + " not found";
 
+    public static final String NAME_PARAM = "name";
+
     public static MultiValueMap<String, String> getPageableParams() {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("page", "0");

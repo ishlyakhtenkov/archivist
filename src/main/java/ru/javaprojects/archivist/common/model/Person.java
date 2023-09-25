@@ -16,8 +16,8 @@ import ru.javaprojects.archivist.common.util.validation.NoHtml;
 @MappedSuperclass
 @Embeddable
 @Data
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
+@AllArgsConstructor
 public class Person {
     @NotBlank
     @NoHtml

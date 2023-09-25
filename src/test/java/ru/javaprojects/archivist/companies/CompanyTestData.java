@@ -11,6 +11,7 @@ import ru.javaprojects.archivist.companies.model.Contacts;
 import java.util.List;
 
 import static ru.javaprojects.archivist.CommonTestData.ID;
+import static ru.javaprojects.archivist.CommonTestData.NAME_PARAM;
 
 public class CompanyTestData {
     public static final MatcherFactory.Matcher<Company> COMPANY_MATCHER =
@@ -25,7 +26,6 @@ public class CompanyTestData {
     public static final String COMPANIES_ATTRIBUTE = "companies";
     public static final String COMPANY_ATTRIBUTE = "company";
 
-    public static final String NAME = "name";
     public static final String COUNTRY_PARAM = "address.country";
     public static final String ZIPCODE_PARAM = "address.zipcode";
     public static final String CITY_PARAM = "address.city";
@@ -75,7 +75,7 @@ public class CompanyTestData {
     public static MultiValueMap<String, String> getNewParams() {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         Company newCompany = getNew();
-        params.add(NAME, newCompany.getName());
+        params.add(NAME_PARAM, newCompany.getName());
         params.add(COUNTRY_PARAM, newCompany.getAddress().getCountry());
         params.add(ZIPCODE_PARAM, newCompany.getAddress().getZipcode());
         params.add(CITY_PARAM, newCompany.getAddress().getCity());
@@ -94,7 +94,7 @@ public class CompanyTestData {
 
     public static MultiValueMap<String, String> getNewInvalidParams() {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add(NAME, "A");
+        params.add(NAME_PARAM, "A");
         params.add(COUNTRY_PARAM, "");
         params.add(ZIPCODE_PARAM, "someZipcode");
         params.add(CITY_PARAM, "C");
@@ -111,7 +111,7 @@ public class CompanyTestData {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         Company updatedCompany = getUpdated();
         params.add(ID, COMPANY1_ID + "");
-        params.add(NAME, updatedCompany.getName());
+        params.add(NAME_PARAM, updatedCompany.getName());
         params.add(COUNTRY_PARAM, updatedCompany.getAddress().getCountry());
         params.add(ZIPCODE_PARAM, updatedCompany.getAddress().getZipcode());
         params.add(CITY_PARAM, updatedCompany.getAddress().getCity());

@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.MultiValueMap;
 import ru.javaprojects.archivist.AbstractControllerTest;
 import ru.javaprojects.archivist.common.error.exception.NotFoundException;
@@ -306,6 +307,15 @@ class CompanyControllerTest extends AbstractControllerTest {
                 .with(csrf()))
                 .andExpect(status().isNoContent());
         assertThrows(NotFoundException.class, () -> service.get(COMPANY1_ID));
+    }
+
+    @Test
+    @WithUserDetails(ARCHIVIST_MAIL)
+    void deleteWhenDocumentsHasReference() throws Exception {
+        perform(MockMvcRequestBuilders.delete(COMPANIES_URL_SLASH + COMPANY2_ID)
+                .with(csrf()))
+                .andExpect(status().isUnprocessableEntity());
+        assertDoesNotThrow(() -> service.get(COMPANY2_ID));
     }
 
     @Test

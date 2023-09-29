@@ -24,7 +24,7 @@ import java.util.Map;
 
 @RestControllerAdvice(annotations = RestController.class)
 @Slf4j
-public class AjaxExceptionHandler extends ResponseEntityExceptionHandler {
+public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     private static final Map<Class<?>, HttpStatus> HTTP_STATUS_MAP = Map.of(
             EntityNotFoundException.class, HttpStatus.UNPROCESSABLE_ENTITY,
             DataIntegrityViolationException.class, HttpStatus.UNPROCESSABLE_ENTITY,

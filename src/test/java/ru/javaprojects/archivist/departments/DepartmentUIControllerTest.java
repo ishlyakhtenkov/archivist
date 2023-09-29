@@ -20,6 +20,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static ru.javaprojects.archivist.AbstractControllerTest.ExceptionResultMatchers.exception;
 import static ru.javaprojects.archivist.CommonTestData.*;
 import static ru.javaprojects.archivist.common.util.validation.Constants.DUPLICATE_ERROR_CODE;
+import static ru.javaprojects.archivist.companies.CompanyTestData.COMPANY2_ID;
 import static ru.javaprojects.archivist.departments.DepartmentTestData.*;
 import static ru.javaprojects.archivist.departments.DepartmentUIController.DEPARTMENTS_URL;
 import static ru.javaprojects.archivist.users.web.LoginController.LOGIN_URL;
@@ -286,6 +287,15 @@ class DepartmentUIControllerTest extends AbstractControllerTest {
                 .andExpect(flash().attribute(ACTION, "Department " + DEPARTMENT1_NAME + " was deleted"));
         entityManager.clear();
         assertThrows(NotFoundException.class, () -> service.get(DEPARTMENT1_ID));
+    }
+
+    @Test
+    @WithUserDetails(ARCHIVIST_MAIL)
+    void deleteWhenDocumentsHasReference() throws Exception {
+        perform(MockMvcRequestBuilders.post(DEPARTMENTS_DELETE_URL + DEPARTMENT2_ID)
+                .with(csrf()))
+                .andExpect(status().isInternalServerError());
+        assertDoesNotThrow(() -> service.get(DEPARTMENT2_ID));
     }
 
     @Test

@@ -17,7 +17,7 @@ import ru.javaprojects.archivist.users.password_reset.PasswordResetService;
 @AllArgsConstructor
 @Slf4j
 @Validated
-public class ProfileAjaxController {
+public class ProfileRestController {
     private final UserService userService;
     private final PasswordResetService passwordResetService;
 

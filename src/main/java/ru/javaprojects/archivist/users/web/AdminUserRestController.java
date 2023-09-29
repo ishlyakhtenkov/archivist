@@ -14,7 +14,7 @@ import ru.javaprojects.archivist.users.UserService;
 @AllArgsConstructor
 @Slf4j
 @Validated
-public class AdminUserAjaxController {
+public class AdminUserRestController {
     private final UserService service;
 
     @PatchMapping("/{id}")

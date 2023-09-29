@@ -11,7 +11,7 @@ import ru.javaprojects.archivist.companies.CompanyService;
 @RequestMapping(value = CompanyUIController.COMPANIES_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @AllArgsConstructor
 @Slf4j
-public class CompanyAjaxController {
+public class CompanyRestController {
     private final CompanyService service;
 
     @DeleteMapping("/{id}")

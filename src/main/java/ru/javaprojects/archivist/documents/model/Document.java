@@ -44,15 +44,15 @@ public class Document extends NamedEntity implements HasId {
     @Column(name = "status", nullable = false)
     private Status status;
 
-    @NotNull
-    @Enumerated(EnumType.STRING)
-    @Column(name = "type", nullable = false)
-    private Type type;
-
     @Nullable
     @Enumerated(EnumType.STRING)
     @Column(name = "letter")
     private Letter letter;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type", nullable = false)
+    private Type type;
 
     @Column(name = "annulled", nullable = false, columnDefinition = "bool default false")
     private boolean annulled = false;
@@ -60,7 +60,7 @@ public class Document extends NamedEntity implements HasId {
     @NoHtml
     @Size(max = 128)
     @Nullable
-    @Column(name = "email")
+    @Column(name = "comment")
     private String comment;
 
     @Nullable

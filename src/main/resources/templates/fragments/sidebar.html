@@ -39,8 +39,7 @@
                         </a>
                     </div>
                 </li>
-                <div id="cardsAccordion" class="accordion-collapse collapse"
-                     th:classappend="${activeMenuItem == 'Documents' || activeMenuItem == 'Change notices'}? 'show' : ''">
+                <div id="cardsAccordion" class="accordion-collapse collapse">
                     <div class="accordion-body">
                         <ul class="navbar-nav">
                             <li sec:authorize="isAuthenticated()" class="nav-item mt-1" th:classappend="${activeMenuItem == 'Documents'}? 'active' : ''" id="documentsNavLink">

@@ -46,6 +46,8 @@ $('#changePasswordModal').on('show.bs.modal', function(e) {
     if (id) {
         $(e.currentTarget).find('#changePasswordModalUserId').val(id);
     }
+    $("#repeatPassword").removeClass('is-invalid');
+    $('#submitWithPassButton').prop('disabled', false);
     $(e.currentTarget).find('#newPassword').val('');
     $(e.currentTarget).find('#repeatPassword').val('');
     $(e.currentTarget).find('#checkPasswordMatch').text('');
@@ -123,13 +125,12 @@ function checkPasswordsMatch() {
     let password = $("#newPassword").val();
     let repeatPassword = $("#repeatPassword").val();
     if (repeatPassword.length && password !== repeatPassword) {
-        $("#repeatPassword").addClass('form-control is-invalid');
+        $("#repeatPassword").addClass('is-invalid');
         $("#checkPasswordMatch").html('<li>password does not match</li>');
         $('#submitWithPassButton').prop('disabled', true);
     }
     else {
-        $("#repeatPassword").removeClass('form-control is-invalid');
-        $("#repeatPassword").addClass('form-control');
+        $("#repeatPassword").removeClass('is-invalid');
         $("#checkPasswordMatch").html('');
         $('#submitWithPassButton').prop('disabled', false);
     }

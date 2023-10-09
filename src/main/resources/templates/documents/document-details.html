@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:with="activeMenuItem='Documents'" lang="en">
+<!--/*@thymesVar id="document" type="ru.javaprojects.archivist.documents.model.Document"*/-->
+
+<th:block th:replace="~{fragments/main::page(title='Archivist - documents',appMain=~{::appMain}, ownScript=~{::ownScript})}">
+    <appMain>
+        <!-- Document details card -->
+        <div class="row d-flex justify-content-center align-items-center">
+            <div class="col-12 col-xxl-10">
+                <div class="card shadow-2-strong" style="border-radius: 1rem;">
+                    <div class="mt-3 me-3">
+                        <div class="row">
+                            <div class="col-6">
+                                <span th:if="${document.annulled}" class="badge bg-danger ms-3 ms-md-5">Annulled</span>
+                            </div>
+                            <div class="col-6 text-end">
+                                <a th:href="@{/documents}" type="button" class="btn-close text-end" aria-label="Close"></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body px-3 px-md-5 pb-3 pb-md-5 pt-0 text-center">
+                        <h3 class="mb-4" th:text="${document.decimalNumber}">Document decimal number</h3>
+                        <nav>
+                            <div class="nav nav-tabs" role="tablist">
+                                <button class="nav-link active" id="documentGeneralTabButton" data-bs-toggle="tab" data-bs-target="#documentGeneralTab" type="button" role="tab" aria-controls="nav-general" aria-selected="true">General</button>
+                                <button class="nav-link" id="documentChangesTabButton" data-bs-toggle="tab" data-bs-target="#documentChangesTab" type="button" role="tab" aria-controls="nav-changes" aria-selected="false">Changes</button>
+                                <button class="nav-link" id="documentApplicabilityTabButton" data-bs-toggle="tab" data-bs-target="#documentApplicabilityTab" type="button" role="tab" aria-controls="nav-applicability" aria-selected="false">Applicability</button>
+                                <button class="nav-link" id="documentSendingTabButton" data-bs-toggle="tab" data-bs-target="#documentSendingTab" type="button" role="tab" aria-controls="nav-sending" aria-selected="false">Sending</button>
+                                <button class="nav-link" id="documentContentTabButton" data-bs-toggle="tab" data-bs-target="#documentContentTab" type="button" role="tab" aria-controls="nav-content" aria-selected="false">Content</button>
+                            </div>
+                        </nav>
+                        <div class="tab-content text-start ms-2 mt-3">
+                            <div class="tab-pane fade show active" id="documentGeneralTab" role="tabpanel" aria-labelledby="nav-general-tab" tabindex="0">
+                                <div th:object="${document}">
+                                    <div class="input-group mb-3">
+                                        <span class="input-group-text doc-card-field px-md-5" id="nameAddon" title="Name">Name</span>
+                                        <input type="text" id="nameInput" th:field="*{name}" class="form-control bg-white" disabled
+                                               title="Name" aria-label="Name" aria-describedby="nameAddon"/>
+                                    </div>
+                                    <div class="input-group mb-3">
+                                        <span class="input-group-text doc-card-field d-none d-md-block" title="Decimal number">Decimal number</span>
+                                        <span class="input-group-text doc-card-field d-md-none" title="Decimal number">Dec. num</span>
+                                        <input type="text" id="decimalNumberInput" th:field="*{decimalNumber}" class="form-control bg-white" disabled
+                                               title="Decimal number" aria-label="Decimal number"/>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-4">
+                                            <div class="input-group mb-3">
+                                                <span class="input-group-text doc-card-field" id="statusAddon" title="Status">Status</span>
+                                                <input type="text" id="statusInput" th:field="*{status}" class="form-control bg-white" disabled
+                                                       title="Status" aria-label="Status" aria-describedby="statusAddon"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <div class="input-group mb-3">
+                                                <span class="input-group-text doc-card-field" id="letterAddon" title="Letter">Letter</span>
+                                                <input type="text" id="letterInput" th:field="*{letter}" class="form-control bg-white" disabled
+                                                       title="Letter" aria-label="Letter" aria-describedby="letterAddon"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <div class="input-group mb-3">
+                                                <span class="input-group-text doc-card-field px-3" id="typeAddon" title="Type">Type</span>
+                                                <input type="text" id="typeInput" th:field="*{type}" class="form-control bg-white" disabled
+                                                       title="Type" aria-label="Type" aria-describedby="typeAddon"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 col-xxl-4">
+                                            <div class="input-group mb-3">
+                                                <span class="input-group-text doc-card-field d-none d-md-block px-2" title="Inventory number">Inventory number</span>
+                                                <span class="input-group-text doc-card-field d-md-none" title="Inventory number">Inv. num</span>
+                                                <input type="text" id="inventoryNumberInput" th:field="*{inventoryNumber}" class="form-control bg-white" disabled
+                                                       title="Inventory number" aria-label="Inventory number"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-xxl-4">
+                                            <div class="input-group mb-3">
+                                                <span class="input-group-text doc-card-field d-none d-md-block" title="Accounting date">Accounting date</span>
+                                                <span class="input-group-text doc-card-field d-md-none" title="Accounting date">Acc. date</span>
+                                                <input type="text" id="accountingDateInput" th:field="*{accountingDate}" class="form-control bg-white" disabled
+                                                       title="Accounting date" aria-label="Accounting date"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-8">
+                                            <div class="input-group mb-3">
+                                                <span class="input-group-text doc-card-field d-none d-md-block px-3" title="Original Holder">Original Holder</span>
+                                                <span class="input-group-text doc-card-field d-md-none" title="Original Holder">O. Holder</span>
+                                                <input type="text" id="originalHolderInput" th:field="*{originalHolder.name}" class="form-control bg-white" disabled
+                                                       title="Original Holder" aria-label="Original Holder"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <div class="input-group mb-3">
+                                                <span class="input-group-text doc-card-field" id="developerAddon" title="Developer">Developer</span>
+                                                <input type="text" id="developerInput" th:field="*{developer.name}" class="form-control bg-white" disabled
+                                                       title="Developer" aria-label="Developer" aria-describedby="developerAddon"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="commentTextarea" class="form-label">Comment</label>
+                                        <textarea id="commentTextarea" th:field="*{comment}" class="form-control bg-white" disabled title="Comment"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="documentChangesTab" role="tabpanel" aria-labelledby="nav-changes-tab" tabindex="0"></div>
+                            <div class="tab-pane fade" id="documentApplicabilityTab" role="tabpanel" aria-labelledby="nav-applicability-tab" tabindex="0">Applicability</div>
+                            <div class="tab-pane fade" id="documentSendingTab" role="tabpanel" aria-labelledby="nav-sending-tab" tabindex="0">Sending</div>
+                            <div class="tab-pane fade" id="documentContentTab" role="tabpanel" aria-labelledby="nav-content-tab" tabindex="0">Content</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </appMain>
+
+    <ownScript>
+        <script src="/js/document-details.js?v=1"></script>
+    </ownScript>
+</th:block>

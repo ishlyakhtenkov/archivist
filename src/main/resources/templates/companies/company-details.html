@@ -22,7 +22,7 @@
                                             <span class="input-group-text" id="nameAddon" title="Name"><i class="fa-brands fa-fort-awesome fa-fw"></i></span>
                                             <div class="form-floating">
                                                 <input type="text" id="companyNameInput" th:field="*{name}" class="form-control" disabled
-                                                       title="Name" aria-label="Name" aria-describedby="name-addon"/>
+                                                       title="Name" aria-label="Name" aria-describedby="nameAddon"/>
                                                 <label for="companyNameInput" class="text-muted">Company name</label>
                                             </div>
                                         </div>
@@ -34,7 +34,7 @@
                                             <span class="input-group-text" id="countryAddon" title="Country"><i class="fa-solid fa-flag fa-fw"></i></span>
                                             <div class="form-floating">
                                                 <input type="text" id="countryInput" th:field="*{address.country}" class="form-control" disabled
-                                                       title="Country" aria-label="Country" aria-describedby="country-addon"/>
+                                                       title="Country" aria-label="Country" aria-describedby="countryAddon"/>
                                                 <label for="countryInput" class="text-muted">Country</label>
                                             </div>
                                         </div>
@@ -43,10 +43,10 @@
                                 <div class="col-lg-4">
                                     <div class="mb-4">
                                         <div class="input-group">
-                                            <span class="input-group-text" id="zipcodAddon" title="Zipcode"><i class="fa-solid fa-barcode fa-fw"></i></span>
+                                            <span class="input-group-text" id="zipcodeAddon" title="Zipcode"><i class="fa-solid fa-barcode fa-fw"></i></span>
                                             <div class="form-floating">
                                                 <input type="text" id="zipcodeInput" th:field="*{address.zipcode}" class="form-control" disabled
-                                                       title="Zipcode" aria-label="Zipcode" aria-describedby="zipcode-addon"/>
+                                                       title="Zipcode" aria-label="Zipcode" aria-describedby="zipcodeAddon"/>
                                                 <label for="zipcodeInput" class="text-muted">Zipcode</label>
                                             </div>
                                         </div>
@@ -61,7 +61,7 @@
                                             <span class="input-group-text" id="cityAddon" title="City"><i class="fa-solid fa-city fa-fw"></i></span>
                                             <div class="form-floating">
                                                 <input type="text" id="cityInput" th:field="*{address.city}" class="form-control" disabled
-                                                       title="City" aria-label="City" aria-describedby="city-addon"/>
+                                                       title="City" aria-label="City" aria-describedby="cityAddon"/>
                                                 <label for="cityInput" class="text-muted">City</label>
                                             </div>
                                         </div>
@@ -73,7 +73,7 @@
                                             <span class="input-group-text" id="streetAddon" title="Street"><i class="fa-solid fa-road fa-fw"></i></span>
                                             <div class="form-floating">
                                                 <input type="text" id="streetInput" th:field="*{address.street}" class="form-control" disabled
-                                                       title="Street" aria-label="Street" aria-describedby="street-addon"/>
+                                                       title="Street" aria-label="Street" aria-describedby="streetAddon"/>
                                                 <label for="streetInput" class="text-muted">Street</label>
                                             </div>
                                         </div>
@@ -85,7 +85,7 @@
                                             <span class="input-group-text" id="houseAddon" title="House"><i class="fa-solid fa-house fa-fw"></i></span>
                                             <div class="form-floating">
                                                 <input type="text" id="houseInput" th:field="*{address.house}" class="form-control" disabled
-                                                       title="House" aria-label="House" aria-describedby="house-addon"/>
+                                                       title="House" aria-label="House" aria-describedby="houseAddon"/>
                                                 <label for="houseInput" class="text-muted">House</label>
                                             </div>
                                         </div>
@@ -99,7 +99,7 @@
                                             <span class="input-group-text" id="phoneAddon" title="Phone"><i class="fa-solid fa-phone fa-fw"></i></span>
                                             <div class="form-floating">
                                                 <input type="text" id="phoneInput" th:field="*{contacts.phone}" class="form-control" disabled
-                                                       placeholder="Phone" title="Phone number" aria-label="Phone number" aria-describedby="phone-addon"/>
+                                                       placeholder="Phone" title="Phone number" aria-label="Phone number" aria-describedby="phoneAddon"/>
                                                 <label for="phoneInput" class="text-muted">Phone number</label>
                                             </div>
                                         </div>
@@ -111,7 +111,7 @@
                                             <span class="input-group-text" id="faxAddon" title="Fax"><i class="fa-solid fa-fax fa-fw"></i></span>
                                             <div class="form-floating">
                                                 <input type="text" id="faxInput" th:field="*{contacts.fax}" class="form-control" disabled
-                                                       placeholder="Fax" title="Fax" aria-label="Fax" aria-describedby="fax-addon"/>
+                                                       placeholder="Fax" title="Fax" aria-label="Fax" aria-describedby="faxAddon"/>
                                                 <label for="faxInput" class="text-muted">Fax</label>
                                             </div>
                                         </div>
@@ -123,7 +123,7 @@
                                             <span class="input-group-text" id="emailAddon" title="E-mail"><i class="fa-solid fa-envelope fa-fw"></i></span>
                                             <div class="form-floating">
                                                 <input type="text" id="emailInput" th:field="*{contacts.email}" class="form-control" disabled
-                                                       placeholder="E-mail" title="E-mail" aria-label="E-mail" aria-describedby="email-addon"/>
+                                                       placeholder="E-mail" title="E-mail" aria-label="E-mail" aria-describedby="emailAddon"/>
                                                 <label for="emailInput" class="text-muted">E-mail</label>
                                             </div>
                                         </div>

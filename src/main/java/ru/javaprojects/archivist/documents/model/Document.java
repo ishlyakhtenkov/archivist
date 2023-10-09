@@ -69,7 +69,7 @@ public class Document extends NamedEntity implements HasId {
 
     @Nullable
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "developer_id", nullable = false, insertable=false, updatable=false)
+    @JoinColumn(name = "developer_id", insertable=false, updatable=false)
     private Department developer;
 
     @NotNull

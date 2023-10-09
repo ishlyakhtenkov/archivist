@@ -7,6 +7,8 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.javaprojects.archivist.common.NamedRepository;
 import ru.javaprojects.archivist.documents.model.Document;
 
+import java.util.Optional;
+
 @Transactional(readOnly = true)
 public interface DocumentRepository extends NamedRepository<Document> {
 
@@ -15,4 +17,7 @@ public interface DocumentRepository extends NamedRepository<Document> {
 
     @EntityGraph(attributePaths = "originalHolder")
     Page<Document> findAllByDecimalNumberContainsIgnoreCaseOrderByDecimalNumber(Pageable pageable, String keyword);
+
+    @EntityGraph(attributePaths = {"originalHolder", "developer"})
+    Optional<Document> findById(long id);
 }

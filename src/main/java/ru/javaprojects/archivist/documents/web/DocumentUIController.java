@@ -8,6 +8,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -45,5 +46,12 @@ public class DocumentUIController {
         }
         model.addAttribute("documents", documents);
         return "documents/documents";
+    }
+
+    @GetMapping("/{id}")
+    public String documentDetails(@PathVariable long id, Model model) {
+        log.info("show document details {}", id);
+        model.addAttribute("document", service.get(id));
+        return "documents/document-details";
     }
 }

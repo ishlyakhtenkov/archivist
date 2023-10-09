@@ -22,7 +22,7 @@
                                     <div class="form-floating">
                                         <input type="text" id="departmentNameInput" th:field="*{name}"
                                                th:class="${#fields.hasErrors('name')} ? 'form-control is-invalid' : 'form-control'"
-                                               required placeholder="Department name" title="Name" aria-label="Name" aria-describedby="name-addon"/>
+                                               required placeholder="Department name" title="Name" aria-label="Name" aria-describedby="nameAddon"/>
                                         <label for="departmentNameInput" class="text-muted">Department name</label>
                                     </div>
                                 </div>
@@ -39,7 +39,7 @@
                                     <div class="form-floating">
                                         <input type="text" id="bossLastNameInput" th:field="*{boss.lastName}"
                                                th:class="${#fields.hasErrors('boss.lastName')} ? 'form-control is-invalid' : 'form-control'"
-                                               required placeholder="Boss last name" title="Boss last name" aria-label="Boss last name" aria-describedby="boss-last-name-addon"/>
+                                               required placeholder="Boss last name" title="Boss last name" aria-label="Boss last name" aria-describedby="bossLastNameAddon"/>
                                         <label for="bossLastNameInput" class="text-muted">Boss last name</label>
                                     </div>
                                 </div>
@@ -56,7 +56,7 @@
                                     <div class="form-floating">
                                         <input type="text" id="bossFirstNameInput" th:field="*{boss.firstName}"
                                                th:class="${#fields.hasErrors('boss.firstName')} ? 'form-control is-invalid' : 'form-control'"
-                                               required placeholder="Boss first name" title="Boss first name" aria-label="Boss first name" aria-describedby="boss-first-name-addon"/>
+                                               required placeholder="Boss first name" title="Boss first name" aria-label="Boss first name" aria-describedby="bossFirstNameAddon"/>
                                         <label for="bossFirstNameInput" class="text-muted">Boss first name</label>
                                     </div>
                                 </div>
@@ -73,7 +73,7 @@
                                     <div class="form-floating">
                                         <input type="text" id="bossMiddleNameInput" th:field="*{boss.middleName}"
                                                th:class="${#fields.hasErrors('boss.middleName')} ? 'form-control is-invalid' : 'form-control'"
-                                               required placeholder="Boss middle name" title="Boss middle name" aria-label="Boss middle name" aria-describedby="boss-middle-name-addon"/>
+                                               required placeholder="Boss middle name" title="Boss middle name" aria-label="Boss middle name" aria-describedby="bossMiddleNameAddon"/>
                                         <label for="bossMiddleNameInput" class="text-muted">Boss middle name</label>
                                     </div>
                                 </div>
@@ -90,7 +90,7 @@
                                     <div class="form-floating">
                                         <input type="text" id="bossPhoneNumberInput" th:field="*{boss.phone}"
                                                th:class="${#fields.hasErrors('boss.phone')} ? 'form-control is-invalid' : 'form-control'"
-                                               placeholder="Boss phone number" title="Boss phone number" aria-label="Boss phone number" aria-describedby="boss-phone-addon"/>
+                                               placeholder="Boss phone number" title="Boss phone number" aria-label="Boss phone number" aria-describedby="bossPhoneAddon"/>
                                         <label for="bossPhoneNumberInput" class="text-muted">Boss phone number</label>
                                     </div>
                                 </div>
@@ -107,7 +107,7 @@
                                     <div class="form-floating">
                                         <input type="text" id="bossEmailInput" th:field="*{boss.email}"
                                                th:class="${#fields.hasErrors('boss.email')} ? 'form-control is-invalid' : 'form-control'"
-                                               placeholder="Boss email" title="Boss email" aria-label="Boss email" aria-describedby="boss-email-addon"/>
+                                               placeholder="Boss email" title="Boss email" aria-label="Boss email" aria-describedby="bossEmailAddon"/>
                                         <label for="bossEmailInput" class="text-muted">Boss email</label>
                                     </div>
                                 </div>

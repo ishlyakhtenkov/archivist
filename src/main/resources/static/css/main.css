@@ -210,3 +210,9 @@
         line-height: 1;
     }
 }
+
+@media (max-width: 768px) {
+    .doc-card-field {
+        width: 95px;
+    }
+}

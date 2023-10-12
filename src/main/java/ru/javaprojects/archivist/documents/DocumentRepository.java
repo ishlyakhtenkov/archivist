@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.javaprojects.archivist.common.NamedRepository;
 import ru.javaprojects.archivist.documents.model.Document;
 
+import javax.print.Doc;
 import java.util.Optional;
 
 @Transactional(readOnly = true)
@@ -20,4 +21,8 @@ public interface DocumentRepository extends NamedRepository<Document> {
 
     @EntityGraph(attributePaths = {"originalHolder", "developer"})
     Optional<Document> findById(long id);
+
+    Optional<Document> findByDecimalNumberIgnoreCase(String decimalNumber);
+
+    Optional<Document> findByInventoryNumberIgnoreCase(String inventoryNumber);
 }

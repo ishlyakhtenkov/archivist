@@ -1,10 +1,12 @@
-package ru.javaprojects.archivist.users;
+package ru.javaprojects.archivist.users.web;
 
 import lombok.AllArgsConstructor;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
+import ru.javaprojects.archivist.users.HasIdAndEmail;
+import ru.javaprojects.archivist.users.UserRepository;
 
 import static ru.javaprojects.archivist.common.util.validation.Constants.DUPLICATE_ERROR_CODE;
 

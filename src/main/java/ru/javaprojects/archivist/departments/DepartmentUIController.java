@@ -42,7 +42,7 @@ public class DepartmentUIController {
     }
 
     @PostMapping("/create")
-    public String create(@Valid Department department, BindingResult result, Model model, RedirectAttributes redirectAttributes) {
+    public String create(@Valid Department department, BindingResult result, RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
             return "departments/department-form";
         }
@@ -61,7 +61,7 @@ public class DepartmentUIController {
     }
 
     @PostMapping("/update")
-    public String update(@Valid Department department, BindingResult result, Model model, RedirectAttributes redirectAttributes) {
+    public String update(@Valid Department department, BindingResult result, RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
             return "departments/department-form";
         }

@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       th:with="activeMenuItem='Documents'" lang="en">
 <!--/*@thymesVar id="document" type="ru.javaprojects.archivist.documents.model.Document"*/-->
 
 <th:block th:replace="~{fragments/main::page(title='Archivist - documents',appMain=~{::appMain}, ownScript=~{::ownScript})}">
     <appMain>
+        <span th:if="${action != null}" th:data-action="${action}" th:id="actionSpan"></span>
         <!-- Document details card -->
         <div class="row d-flex justify-content-center align-items-center">
             <div class="col-12 col-xxl-10">
@@ -35,34 +37,34 @@
                                 <div th:object="${document}">
                                     <div class="input-group mb-3">
                                         <span class="input-group-text doc-card-field px-md-5" id="nameAddon" title="Name">Name</span>
-                                        <input type="text" id="nameInput" th:field="*{name}" class="form-control bg-white" disabled
+                                        <input type="text" id="nameInput" th:field="*{name}" class="form-control bg-light" disabled
                                                title="Name" aria-label="Name" aria-describedby="nameAddon"/>
                                     </div>
                                     <div class="input-group mb-3">
                                         <span class="input-group-text doc-card-field d-none d-md-block" title="Decimal number">Decimal number</span>
                                         <span class="input-group-text doc-card-field d-md-none" title="Decimal number">Dec. num</span>
-                                        <input type="text" id="decimalNumberInput" th:field="*{decimalNumber}" class="form-control bg-white" disabled
+                                        <input type="text" id="decimalNumberInput" th:field="*{decimalNumber}" class="form-control bg-light" disabled
                                                title="Decimal number" aria-label="Decimal number"/>
                                     </div>
                                     <div class="row">
                                         <div class="col-lg-4">
                                             <div class="input-group mb-3">
                                                 <span class="input-group-text doc-card-field" id="statusAddon" title="Status">Status</span>
-                                                <input type="text" id="statusInput" th:field="*{status}" class="form-control bg-white" disabled
+                                                <input type="text" id="statusInput" th:value="*{status.displayName}" class="form-control bg-light" disabled
                                                        title="Status" aria-label="Status" aria-describedby="statusAddon"/>
                                             </div>
                                         </div>
                                         <div class="col-lg-4">
                                             <div class="input-group mb-3">
                                                 <span class="input-group-text doc-card-field" id="letterAddon" title="Letter">Letter</span>
-                                                <input type="text" id="letterInput" th:field="*{letter}" class="form-control bg-white" disabled
+                                                <input type="text" id="letterInput" th:field="*{letter}" class="form-control bg-light" disabled
                                                        title="Letter" aria-label="Letter" aria-describedby="letterAddon"/>
                                             </div>
                                         </div>
                                         <div class="col-lg-4">
                                             <div class="input-group mb-3">
                                                 <span class="input-group-text doc-card-field px-3" id="typeAddon" title="Type">Type</span>
-                                                <input type="text" id="typeInput" th:field="*{type}" class="form-control bg-white" disabled
+                                                <input type="text" id="typeInput" th:value="*{type.displayName}" class="form-control bg-light" disabled
                                                        title="Type" aria-label="Type" aria-describedby="typeAddon"/>
                                             </div>
                                         </div>
@@ -72,7 +74,7 @@
                                             <div class="input-group mb-3">
                                                 <span class="input-group-text doc-card-field d-none d-md-block px-2" title="Inventory number">Inventory number</span>
                                                 <span class="input-group-text doc-card-field d-md-none" title="Inventory number">Inv. num</span>
-                                                <input type="text" id="inventoryNumberInput" th:field="*{inventoryNumber}" class="form-control bg-white" disabled
+                                                <input type="text" id="inventoryNumberInput" th:field="*{inventoryNumber}" class="form-control bg-light" disabled
                                                        title="Inventory number" aria-label="Inventory number"/>
                                             </div>
                                         </div>
@@ -80,7 +82,7 @@
                                             <div class="input-group mb-3">
                                                 <span class="input-group-text doc-card-field d-none d-md-block" title="Accounting date">Accounting date</span>
                                                 <span class="input-group-text doc-card-field d-md-none" title="Accounting date">Acc. date</span>
-                                                <input type="text" id="accountingDateInput" th:field="*{accountingDate}" class="form-control bg-white" disabled
+                                                <input type="text" id="accountingDateInput" th:value="${#temporals.format(document.accountingDate, 'dd.MM.yyyy')}" class="form-control bg-light" disabled
                                                        title="Accounting date" aria-label="Accounting date"/>
                                             </div>
                                         </div>
@@ -90,22 +92,25 @@
                                             <div class="input-group mb-3">
                                                 <span class="input-group-text doc-card-field d-none d-md-block px-3" title="Original Holder">Original Holder</span>
                                                 <span class="input-group-text doc-card-field d-md-none" title="Original Holder">O. Holder</span>
-                                                <input type="text" id="originalHolderInput" th:field="*{originalHolder.name}" class="form-control bg-white" disabled
+                                                <input type="text" id="originalHolderInput" th:field="*{originalHolder.name}" class="form-control bg-light" disabled
                                                        title="Original Holder" aria-label="Original Holder"/>
                                             </div>
                                         </div>
                                         <div class="col-lg-4">
                                             <div class="input-group mb-3">
                                                 <span class="input-group-text doc-card-field" id="developerAddon" title="Developer">Developer</span>
-                                                <input type="text" id="developerInput" th:field="*{developer.name}" class="form-control bg-white" disabled
+                                                <input type="text" id="developerInput" th:field="*{developer.name}" class="form-control bg-light" disabled
                                                        title="Developer" aria-label="Developer" aria-describedby="developerAddon"/>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="mb-3">
+                                    <div class="mb-4">
                                         <label for="commentTextarea" class="form-label">Comment</label>
-                                        <textarea id="commentTextarea" th:field="*{comment}" class="form-control bg-white" disabled title="Comment"/>
+                                        <textarea id="commentTextarea" th:field="*{comment}" class="form-control bg-light" disabled title="Comment"/>
                                     </div>
+                                </div>
+                                <div sec:authorize="hasAnyRole('ADMIN','ARCHIVIST')" class="float-end">
+                                    <a th:href="@{'/documents/edit/' + ${document.id}}" class="btn btn-warning" type="button">Edit card</a>
                                 </div>
                             </div>
                             <div class="tab-pane fade" id="documentChangesTab" role="tabpanel" aria-labelledby="nav-changes-tab" tabindex="0"></div>
@@ -120,6 +125,7 @@
     </appMain>
 
     <ownScript>
+        <script src="/js/common.js?v=1"></script>
         <script src="/js/document-details.js?v=1"></script>
     </ownScript>
 </th:block>

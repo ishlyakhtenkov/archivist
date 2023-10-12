@@ -64,20 +64,12 @@ public class Document extends NamedEntity implements HasId {
     private String comment;
 
     @Nullable
-    @Column(name = "developer_id")
-    private Long developerId;
-
-    @Nullable
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "developer_id", insertable=false, updatable=false)
+    @JoinColumn(name = "developer_id")
     private Department developer;
 
     @NotNull
-    @Column(name = "original_holder_id")
-    private Long originalHolderId;
-
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "original_holder_id", nullable = false, insertable=false, updatable=false)
+    @JoinColumn(name = "original_holder_id", nullable = false)
     private Company originalHolder;
 }

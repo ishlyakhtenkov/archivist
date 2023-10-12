@@ -1,7 +1,8 @@
-package ru.javaprojects.archivist.companies;
+package ru.javaprojects.archivist.companies.web;
 
 import org.springframework.stereotype.Component;
 import ru.javaprojects.archivist.common.util.validation.UniqueNameValidator;
+import ru.javaprojects.archivist.companies.CompanyRepository;
 import ru.javaprojects.archivist.companies.model.Company;
 
 @Component

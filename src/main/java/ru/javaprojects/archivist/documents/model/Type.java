@@ -1,5 +1,15 @@
 package ru.javaprojects.archivist.documents.model;
 
 public enum Type {
-    PAPER, DIGITAL;
+    PAPER("Paper"), DIGITAL("Digital");
+
+    private final String displayName;
+
+    Type(String displayName) {
+        this.displayName = displayName;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
 }

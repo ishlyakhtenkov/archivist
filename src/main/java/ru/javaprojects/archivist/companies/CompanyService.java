@@ -3,15 +3,22 @@ package ru.javaprojects.archivist.companies;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import ru.javaprojects.archivist.common.error.exception.NotFoundException;
 import ru.javaprojects.archivist.companies.model.Company;
 
+import java.util.List;
+
 @Service
 @AllArgsConstructor
 public class CompanyService {
     private final CompanyRepository repository;
+
+    public List<Company> getAll() {
+        return repository.findAll(Sort.by("name"));
+    }
 
     public Page<Company> getAll(Pageable pageable) {
         return repository.findAllByOrderByName(pageable);

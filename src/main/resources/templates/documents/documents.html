@@ -48,10 +48,10 @@
                 </thead>
                 <tbody>
                 <tr th:each="document : ${documents}" th:id="'row-' + ${document.id}" class="table-row">
-                    <td th:text="${document.decimalNumber}"></td>
+                    <td th:text="${document.decimalNumber}" th:classappend="${document.annulled ? 'text-danger' : ''}"></td>
                     <td th:text="${document.letter}"></td>
-                    <td th:text="${document.status}"></td>
-                    <td th:text="${document.type}"></td>
+                    <td th:text="${document.status.displayName}"></td>
+                    <td th:text="${document.type.displayName}"></td>
                     <td th:text="${document.originalHolder.name}"></td>
                     <td>
                         <a th:href="@{'/documents/' + ${document.id}}" type="button" title="Document details" class="glass-button">
@@ -109,7 +109,9 @@
                     <input type="hidden" name="documentId" id="deleteModalDocumentId" value=""/>
                     <input type="hidden" name="documentDecimalNumber" id="deleteModalDocumentDecimalNumber" value=""/>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" onclick="deleteDocument()">Delete document</button>
+                        <form th:action="@{/documents/delete/id}" method="post" id="deleteDocumentForm">
+                            <button class="btn btn-danger" type="submit">Delete document</button>
+                        </form>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close">Close</button>
                     </div>
                 </div>

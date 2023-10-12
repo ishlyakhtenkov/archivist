@@ -13,7 +13,6 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ru.javaprojects.archivist.companies.CompanyService;
-import ru.javaprojects.archivist.companies.UniqueCompanyNameValidator;
 import ru.javaprojects.archivist.companies.model.Company;
 
 import static ru.javaprojects.archivist.common.util.validation.ValidationUtil.checkNew;
@@ -72,7 +71,7 @@ public class CompanyUIController {
     }
 
     @PostMapping("/create")
-    public String create(@Valid Company company, BindingResult result, Model model, RedirectAttributes redirectAttributes) {
+    public String create(@Valid Company company, BindingResult result, RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
             return "companies/company-form";
         }
@@ -91,7 +90,7 @@ public class CompanyUIController {
     }
 
     @PostMapping("/update")
-    public String update(@Valid Company company, BindingResult result, Model model, RedirectAttributes redirectAttributes) {
+    public String update(@Valid Company company, BindingResult result, RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
             return "companies/company-form";
         }

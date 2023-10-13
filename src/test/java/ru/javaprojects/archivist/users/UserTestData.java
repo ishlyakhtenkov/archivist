@@ -37,8 +37,6 @@ public class UserTestData {
     public static final String CHANGE_PASSWORD_LENGTH_ERROR = "changePassword.password: size must be between 5 and 32";
     public static final String PASSWORD = "password";
     public static final String ENABLED = "enabled";
-    public static final String FALSE = "false";
-    public static final String TRUE = "true";
     public static final String PASSWORD_RESET_TOKEN_NOT_FOUND = "Not found password reset token=" + NOT_EXISTING_TOKEN;
     public static final String PASSWORD_RESET_TOKEN_NOT_EXPIRED = "Password reset token=" + EXPIRED_TOKEN + " expired";
     public static final String USER_ATTRIBUTE = "user";

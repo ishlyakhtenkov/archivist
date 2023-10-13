@@ -72,4 +72,20 @@ public class Document extends NamedEntity implements HasId {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "original_holder_id", nullable = false)
     private Company originalHolder;
+
+    public Document(Long id, String name, String decimalNumber, String inventoryNumber, LocalDate accountingDate,
+                    Status status, Letter letter, Type type, boolean annulled, String comment, Department developer,
+                    Company originalHolder) {
+        super(id, name);
+        this.decimalNumber = decimalNumber;
+        this.inventoryNumber = inventoryNumber;
+        this.accountingDate = accountingDate;
+        this.status = status;
+        this.letter = letter;
+        this.type = type;
+        this.annulled = annulled;
+        this.comment = comment;
+        this.developer = developer;
+        this.originalHolder = originalHolder;
+    }
 }

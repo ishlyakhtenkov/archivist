@@ -19,6 +19,7 @@ public class DepartmentTestData {
     public static final long DEPARTMENT5_ID = 100013;
     public static final String DEPARTMENT1_NAME = "KTK-40";
     public static final String DEPARTMENT2_NAME = "NIO-6";
+    public static final String DEPARTMENT5_NAME = "DEP-33";
 
     public static final String DEPARTMENTS_ATTRIBUTE = "departments";
     public static final String DEPARTMENT_ATTRIBUTE = "department";

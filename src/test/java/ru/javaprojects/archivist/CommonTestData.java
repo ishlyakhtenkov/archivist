@@ -17,6 +17,9 @@ public class CommonTestData {
 
     public static final String NAME_PARAM = "name";
 
+    public static final String FALSE = "false";
+    public static final String TRUE = "true";
+
     public static MultiValueMap<String, String> getPageableParams() {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("page", "0");

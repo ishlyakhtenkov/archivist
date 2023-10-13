@@ -25,6 +25,11 @@ public class DocumentService {
         return repository.findById(id).orElseThrow(() -> new NotFoundException("Entity with id=" + id + " not found"));
     }
 
+    public Document getByDecimalNumber(String decimalNumber) {
+        return repository.findByDecimalNumberIgnoreCase(decimalNumber)
+                .orElseThrow(() -> new NotFoundException("Not found department with decimal number=" + decimalNumber));
+    }
+
     public void createOrUpdate(Document document) {
         Assert.notNull(document, "document must not be null");
         if (document.getId() != null) {

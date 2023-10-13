@@ -280,13 +280,13 @@ class DepartmentUIControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(ARCHIVIST_MAIL)
     void delete() throws Exception {
-        perform(MockMvcRequestBuilders.post(DEPARTMENTS_DELETE_URL + DEPARTMENT1_ID)
+        perform(MockMvcRequestBuilders.post(DEPARTMENTS_DELETE_URL + DEPARTMENT5_ID)
                 .with(csrf()))
                 .andExpect(status().isFound())
                 .andExpect(redirectedUrl(DEPARTMENTS_URL))
-                .andExpect(flash().attribute(ACTION, "Department " + DEPARTMENT1_NAME + " was deleted"));
+                .andExpect(flash().attribute(ACTION, "Department " + DEPARTMENT5_NAME + " was deleted"));
         entityManager.clear();
-        assertThrows(NotFoundException.class, () -> service.get(DEPARTMENT1_ID));
+        assertThrows(NotFoundException.class, () -> service.get(DEPARTMENT5_ID));
     }
 
     @Test

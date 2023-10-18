@@ -1,4 +1,4 @@
-package ru.javaprojects.archivist.documents;
+package ru.javaprojects.archivist.documents.repository;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

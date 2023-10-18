@@ -6,7 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
-import ru.javaprojects.archivist.common.error.exception.NotFoundException;
+import ru.javaprojects.archivist.common.error.NotFoundException;
 import ru.javaprojects.archivist.companies.model.Company;
 
 import java.util.List;

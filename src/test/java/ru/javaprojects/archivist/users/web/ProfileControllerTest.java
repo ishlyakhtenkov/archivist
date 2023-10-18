@@ -10,7 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.javaprojects.archivist.AbstractControllerTest;
-import ru.javaprojects.archivist.common.error.exception.NotFoundException;
+import ru.javaprojects.archivist.common.error.NotFoundException;
 import ru.javaprojects.archivist.users.User;
 import ru.javaprojects.archivist.users.UserService;
 import ru.javaprojects.archivist.users.UserTestData;

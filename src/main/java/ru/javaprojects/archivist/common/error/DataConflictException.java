@@ -1,4 +1,4 @@
-package ru.javaprojects.archivist.common.error.exception;
+package ru.javaprojects.archivist.common.error;
 
 public class DataConflictException extends RuntimeException{
     public DataConflictException(String message) {

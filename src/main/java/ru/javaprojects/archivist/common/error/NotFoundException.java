@@ -1,4 +1,4 @@
-package ru.javaprojects.archivist.common.error.exception;
+package ru.javaprojects.archivist.common.error;
 
 public class NotFoundException extends RuntimeException{
     public NotFoundException(String message) {

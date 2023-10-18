@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
-import ru.javaprojects.archivist.common.error.exception.NotFoundException;
+import ru.javaprojects.archivist.common.error.NotFoundException;
 import ru.javaprojects.archivist.users.UserService;
 import ru.javaprojects.archivist.users.password_reset.mail.MailSender;
 

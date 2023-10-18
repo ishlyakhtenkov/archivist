@@ -3,7 +3,7 @@ package ru.javaprojects.archivist.departments;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
-import ru.javaprojects.archivist.common.error.exception.NotFoundException;
+import ru.javaprojects.archivist.common.error.NotFoundException;
 
 import java.util.List;
 

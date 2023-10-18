@@ -1,4 +1,4 @@
-package ru.javaprojects.archivist.common.error;
+package ru.javaprojects.archivist.common.web;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolationException;
@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import ru.javaprojects.archivist.common.error.exception.DataConflictException;
-import ru.javaprojects.archivist.common.error.exception.IllegalRequestDataException;
-import ru.javaprojects.archivist.common.error.exception.NotFoundException;
+import ru.javaprojects.archivist.common.error.DataConflictException;
+import ru.javaprojects.archivist.common.error.IllegalRequestDataException;
+import ru.javaprojects.archivist.common.error.NotFoundException;
 import ru.javaprojects.archivist.common.util.validation.ValidationUtil;
 
 import java.util.LinkedHashMap;

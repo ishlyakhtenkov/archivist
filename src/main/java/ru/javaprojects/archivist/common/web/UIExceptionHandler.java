@@ -1,4 +1,4 @@
-package ru.javaprojects.archivist.common.error;
+package ru.javaprojects.archivist.common.web;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;

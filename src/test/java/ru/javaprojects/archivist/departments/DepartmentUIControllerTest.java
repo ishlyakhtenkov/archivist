@@ -8,7 +8,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.util.MultiValueMap;
 import ru.javaprojects.archivist.AbstractControllerTest;
-import ru.javaprojects.archivist.common.error.exception.NotFoundException;
+import ru.javaprojects.archivist.common.error.NotFoundException;
 import ru.javaprojects.archivist.common.model.Person;
 
 import java.util.List;
@@ -20,7 +20,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static ru.javaprojects.archivist.AbstractControllerTest.ExceptionResultMatchers.exception;
 import static ru.javaprojects.archivist.CommonTestData.*;
 import static ru.javaprojects.archivist.common.util.validation.Constants.DUPLICATE_ERROR_CODE;
-import static ru.javaprojects.archivist.companies.CompanyTestData.COMPANY2_ID;
 import static ru.javaprojects.archivist.departments.DepartmentTestData.*;
 import static ru.javaprojects.archivist.departments.DepartmentUIController.DEPARTMENTS_URL;
 import static ru.javaprojects.archivist.users.web.LoginController.LOGIN_URL;

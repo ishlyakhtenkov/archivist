@@ -6,7 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
-import ru.javaprojects.archivist.common.error.exception.NotFoundException;
+import ru.javaprojects.archivist.common.error.NotFoundException;
 
 import static ru.javaprojects.archivist.common.config.SecurityConfig.PASSWORD_ENCODER;
 import static ru.javaprojects.archivist.users.UserUtil.prepareToSave;

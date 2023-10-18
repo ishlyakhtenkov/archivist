@@ -48,3 +48,7 @@ VALUES ('Block M21', 'VUIA.465521.004', '926531', '2023-03-24', 'ORIGINAL', 'DIG
        ('Panel B45', 'UPIA.421478.001-01', '456213', '2021-05-18', 'ORIGINAL', 'DIGITAL', null, false, null, 100010, 100007),
        ('Block N56 project data', 'VUIA.465521.004D4', '312458', '2018-01-12', 'DUPLICATE', 'PAPER', 'O1', false, null, null, 100008),
        ('Device BKLV', 'VUIA.685412.003', '325698', '2017-03-15', 'ORIGINAL', 'DIGITAL', 'O', true, 'some comment', 100011, 100007);
+
+INSERT INTO applicabilities (document_id, applicability_id, primal)
+VALUES (100018, 100014, true),
+       (100018, 100016, false);

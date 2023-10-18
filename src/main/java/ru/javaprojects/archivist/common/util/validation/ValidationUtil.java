@@ -4,7 +4,7 @@ import lombok.experimental.UtilityClass;
 import org.springframework.core.NestedExceptionUtils;
 import org.springframework.lang.NonNull;
 import ru.javaprojects.archivist.common.HasId;
-import ru.javaprojects.archivist.common.error.exception.IllegalRequestDataException;
+import ru.javaprojects.archivist.common.error.IllegalRequestDataException;
 
 @UtilityClass
 public class ValidationUtil {

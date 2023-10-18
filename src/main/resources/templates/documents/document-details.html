@@ -32,9 +32,10 @@
                                 <button class="nav-link" id="documentContentTabButton" data-bs-toggle="tab" data-bs-target="#documentContentTab" type="button" role="tab" aria-controls="nav-content" aria-selected="false">Content</button>
                             </div>
                         </nav>
-                        <div class="tab-content text-start ms-2 mt-3">
-                            <div class="tab-pane fade show active" id="documentGeneralTab" role="tabpanel" aria-labelledby="nav-general-tab" tabindex="0">
+                        <div class="tab-content text-start ms-2">
+                            <div class="tab-pane fade show active mt-3" id="documentGeneralTab" role="tabpanel" aria-labelledby="nav-general-tab" tabindex="0">
                                 <div th:object="${document}">
+                                    <input type="hidden" id="documentId" th:value="*{id}">
                                     <div class="input-group mb-3">
                                         <span class="input-group-text doc-card-field px-md-5" id="nameAddon" title="Name">Name</span>
                                         <input type="text" id="nameInput" th:field="*{name}" class="form-control bg-light" disabled
@@ -114,10 +115,61 @@
                                 </div>
                             </div>
                             <div class="tab-pane fade" id="documentChangesTab" role="tabpanel" aria-labelledby="nav-changes-tab" tabindex="0"></div>
-                            <div class="tab-pane fade" id="documentApplicabilityTab" role="tabpanel" aria-labelledby="nav-applicability-tab" tabindex="0">Applicability</div>
+
+                            <!-- Applicability Tab-->
+                            <div class="tab-pane fade mt-2" id="documentApplicabilityTab" role="tabpanel" aria-labelledby="nav-applicability-tab" tabindex="0">
+                                <div class="text-end" id="addApplicabilityButtonDiv">
+                                    <button class="btn btn-sm btn-secondary" title="Add applicability" onclick="showInputApplicabilityDiv()">Add applicability</button>
+                                </div>
+                                <div id="inputApplicabilityDiv" hidden>
+                                    <div class="d-flex align-items-center">
+                                        <input type="text" id="applicabilityDecNumberInput" class="form-control me-3" title="Decimal number"
+                                               aria-label="Decimal number" placeholder="Applicability decimal number" required/>
+                                        <div class="form-check">
+                                            <input type="checkbox" id="primalCheckbox" class="form-check-input" style="cursor: pointer;">
+                                            <label class="form-check-label" for="primalCheckbox">Primal</label>
+                                        </div>
+                                        <button type="button" class="d-none d-md-block btn btn-sm btn-success px-3 ms-3 me-1"  title="Save">Save</button>
+                                        <button type="button" class="d-none d-md-block btn btn-sm btn-secondary" title="Cancel" onclick="cancelAddApplicability()">Cancel</button>
+                                    </div>
+                                    <button type="button" class="d-md-none btn btn-sm btn-success px-3 me-1 mt-1" title="Save">Save</button>
+                                    <button type="button" class="d-md-none btn btn-sm btn-secondary mt-1" title="Cancel" onclick="cancelAddApplicability()">Cancel</button>
+                                </div>
+
+                                <div class="table-responsive text-nowrap">
+                                    <table class="table table-hover" hidden id="applicabilitiesTable">
+                                        <thead>
+                                        <tr>
+                                            <th class="w-25 pt-0">Decimal number</th>
+                                            <th class="pt-0">Name</th>
+                                            <th class="pt-0"></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody class="table-group-divider"></tbody>
+                                    </table>
+                                </div>
+                            </div>
                             <div class="tab-pane fade" id="documentSendingTab" role="tabpanel" aria-labelledby="nav-sending-tab" tabindex="0">Sending</div>
                             <div class="tab-pane fade" id="documentContentTab" role="tabpanel" aria-labelledby="nav-content-tab" tabindex="0">Content</div>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Delete Applicability modal -->
+        <div class="modal fade" id="deleteApplicabilityModal" tabindex="-1" aria-labelledby="deleteApplicabilityModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="deleteApplicabilityModalLabel">Are you sure want to delete applicability?</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <input type="hidden" name="applicabilityId" id="deleteApplicabilityModalApplicabilityId" value=""/>
+                    <input type="hidden" name="applicabilityDecimalNumber" id="deleteApplicabilityModalApplicabilityDecimalNumber" value=""/>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-danger" onclick="deleteApplicability()">Delete applicability</button>
                     </div>
                 </div>
             </div>
@@ -129,3 +181,7 @@
         <script src="/js/document-details.js?v=1"></script>
     </ownScript>
 </th:block>
+
+<script>
+
+</script>

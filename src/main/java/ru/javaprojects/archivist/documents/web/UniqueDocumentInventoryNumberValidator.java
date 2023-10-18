@@ -5,7 +5,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
-import ru.javaprojects.archivist.documents.DocumentRepository;
+import ru.javaprojects.archivist.documents.repository.DocumentRepository;
 import ru.javaprojects.archivist.documents.model.Document;
 
 import java.util.Objects;

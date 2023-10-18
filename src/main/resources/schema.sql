@@ -96,3 +96,16 @@ CREATE TABLE documents
 );
 CREATE UNIQUE INDEX documents_unique_decimal_number_idx ON documents (decimal_number);
 CREATE UNIQUE INDEX documents_unique_inventory_number_idx ON documents (inventory_number);
+
+CREATE TABLE applicabilities
+(
+    id               BIGINT DEFAULT nextval('global_seq')  PRIMARY KEY,
+    document_id      BIGINT               NOT NULL,
+    applicability_id BIGINT               NOT NULL,
+    primal          BOOL   DEFAULT FALSE NOT NULL,
+    FOREIGN KEY (document_id) REFERENCES documents (id) ON DELETE CASCADE,
+    FOREIGN KEY (applicability_id) REFERENCES documents (id) ON DELETE CASCADE,
+    h2_extra_column VARCHAR AS CASE WHEN primal = FALSE THEN NULL ELSE 'has primal' END
+);
+CREATE UNIQUE INDEX applicabilities_unique_document_applicability_idx ON applicabilities (document_id, applicability_id);
+CREATE UNIQUE INDEX applicabilities_unique_primal_applicability_idx ON applicabilities (document_id, h2_extra_column);

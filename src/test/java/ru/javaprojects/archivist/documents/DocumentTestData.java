@@ -3,7 +3,9 @@ package ru.javaprojects.archivist.documents;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import ru.javaprojects.archivist.MatcherFactory;
+import ru.javaprojects.archivist.documents.model.Applicability;
 import ru.javaprojects.archivist.documents.model.Document;
+import ru.javaprojects.archivist.documents.to.ApplicabilityTo;
 
 import java.time.LocalDate;
 
@@ -107,5 +109,18 @@ public class DocumentTestData {
         MultiValueMap<String, String> params = getNewInvalidParams();
         params.add(ID, String.valueOf(DOCUMENT1_ID));
         return params;
+    }
+
+    public static final long DOCUMENT_5_APPLICABILITY_1_ID = 100020;
+    public static final long DOCUMENT_5_APPLICABILITY_2_ID = 100021;
+
+    public static final MatcherFactory.Matcher<Applicability> APPLICABILITY_MATCHER =
+            MatcherFactory.usingIgnoringFieldsComparator(Applicability.class, "document", "applicability");
+
+    public static final Applicability applicability1 = new Applicability(DOCUMENT_5_APPLICABILITY_1_ID, null, document1, true);
+    public static final Applicability applicability2 = new Applicability(DOCUMENT_5_APPLICABILITY_2_ID, null, document3, false);
+
+    public static ApplicabilityTo getNewApplicabilityTo() {
+        return new ApplicabilityTo(null, DOCUMENT3_ID, document1.getDecimalNumber(), false);
     }
 }

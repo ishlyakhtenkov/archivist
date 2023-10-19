@@ -10,6 +10,6 @@ import java.util.List;
 @Transactional(readOnly = true)
 public interface ApplicabilityRepository extends BaseRepository<Applicability> {
 
-    @Query("SELECT a FROM Applicability a JOIN FETCH a.applicability where a.document.id =:documentId ORDER BY a.applicability.decimalNumber")
+    @Query("SELECT a FROM Applicability a JOIN FETCH a.applicability WHERE a.document.id =:documentId ORDER BY a.applicability.decimalNumber")
     List<Applicability> findAllByDocumentId(Long documentId);
 }

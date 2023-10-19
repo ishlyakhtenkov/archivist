@@ -3,7 +3,6 @@ package ru.javaprojects.archivist.companies.web;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -29,12 +28,11 @@ import static ru.javaprojects.archivist.companies.CompanyTestData.*;
 import static ru.javaprojects.archivist.companies.web.CompanyUIController.COMPANIES_URL;
 import static ru.javaprojects.archivist.users.web.LoginController.LOGIN_URL;
 
-class CompanyControllerTest extends AbstractControllerTest {
+class CompanyUIControllerTest extends AbstractControllerTest {
     private static final String COMPANIES_ADD_FORM_URL = COMPANIES_URL + "/add";
     private static final String COMPANIES_CREATE_URL = COMPANIES_URL + "/create";
     private static final String COMPANIES_EDIT_FORM_URL = COMPANIES_URL + "/edit/";
     private static final String COMPANIES_UPDATE_URL = COMPANIES_URL + "/update";
-    private static final String COMPANIES_URL_SLASH = COMPANIES_URL + "/";
 
     private static final String COMPANIES_VIEW = "companies/companies";
     private static final String COMPANIES_FORM_VIEW = "companies/company-form";
@@ -297,56 +295,5 @@ class CompanyControllerTest extends AbstractControllerTest {
                 .andExpect(model().attributeHasFieldErrorCode(COMPANY_ATTRIBUTE, NAME_PARAM, DUPLICATE_ERROR_CODE))
                 .andExpect(view().name(COMPANIES_FORM_VIEW));
         assertNotEquals(service.get(COMPANY1_ID).getName(), COMPANY2_NAME);
-    }
-
-    @Test
-    @WithUserDetails(ARCHIVIST_MAIL)
-    void delete() throws Exception {
-        perform(MockMvcRequestBuilders.delete(COMPANIES_URL_SLASH + COMPANY1_ID)
-                .with(csrf()))
-                .andExpect(status().isNoContent());
-        assertThrows(NotFoundException.class, () -> service.get(COMPANY1_ID));
-    }
-
-    @Test
-    @WithUserDetails(ARCHIVIST_MAIL)
-    void deleteWhenDocumentsHasReference() throws Exception {
-        perform(MockMvcRequestBuilders.delete(COMPANIES_URL_SLASH + COMPANY2_ID)
-                .with(csrf()))
-                .andExpect(status().isConflict());
-        assertDoesNotThrow(() -> service.get(COMPANY2_ID));
-    }
-
-    @Test
-    @WithUserDetails(ARCHIVIST_MAIL)
-    void deleteNotFound() throws Exception {
-        perform(MockMvcRequestBuilders.delete(COMPANIES_URL_SLASH + NOT_FOUND)
-                .with(csrf()))
-                .andExpect(status().isNotFound())
-                .andExpect(result -> assertEquals(Objects.requireNonNull(result.getResolvedException()).getClass(),
-                        NotFoundException.class))
-                .andExpect(problemTitle(HttpStatus.NOT_FOUND.getReasonPhrase()))
-                .andExpect(problemStatus(HttpStatus.NOT_FOUND.value()))
-                .andExpect(problemDetail(ENTITY_NOT_FOUND))
-                .andExpect(problemInstance(COMPANIES_URL_SLASH + NOT_FOUND));
-    }
-
-    @Test
-    void deleteUnAuthorized() throws Exception {
-        perform(MockMvcRequestBuilders.delete(COMPANIES_URL_SLASH + COMPANY1_ID)
-                .with(csrf()))
-                .andExpect(status().isFound())
-                .andExpect(result ->
-                        assertTrue(Objects.requireNonNull(result.getResponse().getRedirectedUrl()).endsWith(LOGIN_URL)));
-        assertDoesNotThrow(() -> service.get(COMPANY1_ID));
-    }
-
-    @Test
-    @WithUserDetails(USER_MAIL)
-    void deleteForbidden() throws Exception {
-        perform(MockMvcRequestBuilders.delete(COMPANIES_URL_SLASH + COMPANY1_ID)
-                .with(csrf()))
-                .andExpect(status().isForbidden());
-        assertDoesNotThrow(() -> service.get(COMPANY1_ID));
     }
 }

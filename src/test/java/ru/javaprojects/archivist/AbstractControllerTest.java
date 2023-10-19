@@ -20,7 +20,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @Transactional
 @AutoConfigureMockMvc
-public class AbstractControllerTest {
+public abstract class AbstractControllerTest {
 
     @Autowired
     private MockMvc mockMvc;

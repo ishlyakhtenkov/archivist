@@ -10,13 +10,12 @@ import ru.javaprojects.archivist.documents.model.Document;
 
 import java.util.Objects;
 
-import static ru.javaprojects.archivist.common.util.validation.Constants.DUPLICATE_ERROR_CODE;
+import static ru.javaprojects.archivist.common.error.Constants.DUPLICATE_ERROR_CODE;
+import static ru.javaprojects.archivist.common.error.Constants.DUPLICATE_INVENTORY_NUMBER_MESSAGE;
 
 @Component
 @AllArgsConstructor
 public class UniqueDocumentInventoryNumberValidator implements org.springframework.validation.Validator {
-    public static final String DUPLICATE_INVENTORY_NUMBER_MESSAGE = "Document with this inventory number already exists";
-
     private final DocumentRepository repository;
 
     @Override

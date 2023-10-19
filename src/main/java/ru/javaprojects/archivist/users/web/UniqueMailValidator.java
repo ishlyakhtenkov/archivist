@@ -8,13 +8,12 @@ import org.springframework.validation.Errors;
 import ru.javaprojects.archivist.users.HasIdAndEmail;
 import ru.javaprojects.archivist.users.UserRepository;
 
-import static ru.javaprojects.archivist.common.util.validation.Constants.DUPLICATE_ERROR_CODE;
+import static ru.javaprojects.archivist.common.error.Constants.DUPLICATE_EMAIL_MESSAGE;
+import static ru.javaprojects.archivist.common.error.Constants.DUPLICATE_ERROR_CODE;
 
 @Component
 @AllArgsConstructor
 public class UniqueMailValidator implements org.springframework.validation.Validator {
-    public static final String DUPLICATE_EMAIL_MESSAGE = "User with this email already exists";
-
     private final UserRepository repository;
 
     @Override

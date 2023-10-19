@@ -47,7 +47,7 @@ function fillApplicabilitiesTable(applicabilities) {
 
 function addApplicabilityRow(applicability) {
     let decimalNumberTd = $('<td></td>').text(`${applicability.applicability.decimalNumber}`);
-    let nameTd = $('<td></td>').text(`${applicability.applicability.name}`);
+    let nameTd = $('<td></td>').html(`${applicability.applicability.name != null ? applicability.applicability.name : ''} ${applicability.primal ? '<span class="badge text-bg-primary mt-0">Primal</span>' : ''}`);
     let deleteActionTd = $('<td></td>').addClass('text-end').html(`<a type="button" class="trash-button me-3"
             title="Delete applicability" data-bs-toggle="modal" data-bs-target="#deleteApplicabilityModal"
             data-decimalnumber=${applicability.applicability.decimalNumber} data-id=${applicability.id}> <i class="fa-solid fa-trash"></i></a>`);
@@ -79,10 +79,33 @@ function deleteApplicability() {
         url: `applicabilities/${id}`,
         type: "DELETE"
     }).done(function() {
-
         getApplicabilities();
         successToast(`Applicability ${decimalNumber} was deleted`);
     }).fail(function(data) {
         handleError(data, `Failed to delete applicability ${decimalNumber}`);
     });
+}
+
+function createApplicability() {
+    let applicabilityDecimalNumber = $('#applicabilityDecNumberInput').val();
+    $.ajax({
+        url: '/documents/applicabilities',
+        type: 'POST',
+        data: JSON.stringify(makeApplicabilityObject()),
+        contentType: 'application/json; charset=utf-8'
+    }).done(() => {
+        getApplicabilities();
+        cancelAddApplicability();
+        successToast(`Applicability ${applicabilityDecimalNumber} was added`);
+    }).fail(function(data) {
+        handleError(data, `Failed to create applicability ${applicabilityDecimalNumber}`);
+    });
+}
+
+function makeApplicabilityObject() {
+    return {
+        documentId: documentId,
+        decimalNumber: $('#applicabilityDecNumberInput').val(),
+        primal: $('#primalCheckbox').is(':checked')
+    };
 }

@@ -50,7 +50,7 @@ public class SecurityConfig {
                 .requestMatchers("/documents/add", "/documents/edit/**", "/documents/delete/**").hasAnyRole(Role.ADMIN.name(), Role.ARCHIVIST.name())
                 .requestMatchers(HttpMethod.POST, "/documents").hasAnyRole(Role.ADMIN.name(), Role.ARCHIVIST.name())
                 .requestMatchers("/profile/forgotPassword", "/profile/resetPassword").anonymous()
-                .requestMatchers("/documents/*/applicabilities/**").permitAll()
+                .requestMatchers("/documents/*/applicabilities/**", "/documents/applicabilities").permitAll()
                 .requestMatchers("/", "/webjars/**", "/css/**", "/images/**", "/js/**").permitAll()
                 .anyRequest().authenticated()
                 .and().formLogin().permitAll()
@@ -63,6 +63,7 @@ public class SecurityConfig {
                 .clearAuthentication(true)
                 .deleteCookies("JSESSIONID")
                 .and().rememberMe().key("remember-me-key").rememberMeCookieName("archivist-remember-me");
+//                .and().csrf().disable(); //remove
         return http.build();
     }
 }

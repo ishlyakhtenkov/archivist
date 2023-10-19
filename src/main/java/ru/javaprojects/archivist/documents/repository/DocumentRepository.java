@@ -7,7 +7,6 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.javaprojects.archivist.common.NamedRepository;
 import ru.javaprojects.archivist.documents.model.Document;
 
-import javax.print.Doc;
 import java.util.Optional;
 
 @Transactional(readOnly = true)

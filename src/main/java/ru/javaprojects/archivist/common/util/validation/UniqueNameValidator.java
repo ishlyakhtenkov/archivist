@@ -9,7 +9,7 @@ import ru.javaprojects.archivist.common.model.NamedEntity;
 
 import java.util.Objects;
 
-import static ru.javaprojects.archivist.common.util.validation.Constants.DUPLICATE_ERROR_CODE;
+import static ru.javaprojects.archivist.common.error.Constants.DUPLICATE_ERROR_CODE;
 
 @RequiredArgsConstructor
 public abstract class UniqueNameValidator<E extends NamedEntity, R extends NamedRepository<E>> implements org.springframework.validation.Validator {

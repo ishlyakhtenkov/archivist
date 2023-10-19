@@ -24,7 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static ru.javaprojects.archivist.AbstractControllerTest.ExceptionResultMatchers.exception;
 import static ru.javaprojects.archivist.CommonTestData.*;
 import static ru.javaprojects.archivist.common.config.SecurityConfig.PASSWORD_ENCODER;
-import static ru.javaprojects.archivist.common.util.validation.Constants.DUPLICATE_ERROR_CODE;
+import static ru.javaprojects.archivist.common.error.Constants.DUPLICATE_ERROR_CODE;
 import static ru.javaprojects.archivist.users.UserTestData.*;
 import static ru.javaprojects.archivist.users.UserUtil.asTo;
 import static ru.javaprojects.archivist.users.web.AdminUserUIController.USERS_URL;

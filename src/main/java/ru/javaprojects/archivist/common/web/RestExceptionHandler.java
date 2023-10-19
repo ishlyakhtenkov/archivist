@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import ru.javaprojects.archivist.common.error.Constants;
 import ru.javaprojects.archivist.common.error.DataConflictException;
 import ru.javaprojects.archivist.common.error.IllegalRequestDataException;
 import ru.javaprojects.archivist.common.error.NotFoundException;
@@ -26,8 +27,8 @@ import java.util.Map;
 @Slf4j
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     private static final Map<Class<?>, HttpStatus> HTTP_STATUS_MAP = Map.of(
-            EntityNotFoundException.class, HttpStatus.UNPROCESSABLE_ENTITY,
-            DataIntegrityViolationException.class, HttpStatus.UNPROCESSABLE_ENTITY,
+            EntityNotFoundException.class, HttpStatus.CONFLICT,
+            DataIntegrityViolationException.class, HttpStatus.CONFLICT,
             IllegalRequestDataException.class, HttpStatus.UNPROCESSABLE_ENTITY,
             ConstraintViolationException.class, HttpStatus.UNPROCESSABLE_ENTITY,
             IllegalArgumentException.class, HttpStatus.UNPROCESSABLE_ENTITY,
@@ -36,7 +37,8 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     );
 
     @Override
-    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers,
+                                                                  HttpStatusCode status, WebRequest request) {
         ProblemDetail body = ex.getBody();
         Map<String, String> invalidParams = new LinkedHashMap<>();
         for (ObjectError error : ex.getBindingResult().getGlobalErrors()) {
@@ -56,17 +58,17 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     public ProblemDetail exception(Exception ex, WebRequest request) {
         HttpStatus status = HTTP_STATUS_MAP.get(ex.getClass());
         if (status != null) {
-            log.error("Exception: {}", ex.toString());
-            return createProblemDetail(ex, status, request);
+            log.error("Exception: {} at request {}", ex, request.getContextPath());
+            String message = ex.getMessage();
+            if (status == HttpStatus.CONFLICT) {
+                message = Constants.getDbConstraintMessage(message).orElse(message);
+            }
+            return createProblemDetail(ex, status, message, request);
         } else {
             Throwable root = ValidationUtil.getRootCause(ex);
-            log.error("Exception: " + root, root);
+            log.error("Exception " + root +  " at request " + request.getContextPath(), root);
             return createProblemDetail(ex, HttpStatus.INTERNAL_SERVER_ERROR, root.getClass().getName(), request);
         }
-    }
-
-    private ProblemDetail createProblemDetail(Exception ex, HttpStatusCode statusCode, WebRequest request) {
-        return createProblemDetail(ex, statusCode, ex.getMessage(), request);
     }
 
     private ProblemDetail createProblemDetail(Exception ex, HttpStatusCode statusCode, @NonNull String msg, WebRequest request) {

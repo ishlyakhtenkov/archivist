@@ -1,6 +1,7 @@
 package ru.javaprojects.archivist.documents.web;
 
 import jakarta.persistence.EntityManager;
+import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -22,7 +23,7 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static ru.javaprojects.archivist.AbstractControllerTest.ExceptionResultMatchers.exception;
 import static ru.javaprojects.archivist.CommonTestData.*;
-import static ru.javaprojects.archivist.common.util.validation.Constants.DUPLICATE_ERROR_CODE;
+import static ru.javaprojects.archivist.common.error.Constants.DUPLICATE_ERROR_CODE;
 import static ru.javaprojects.archivist.companies.CompanyTestData.COMPANY_MATCHER;
 import static ru.javaprojects.archivist.companies.CompanyTestData.company3;
 import static ru.javaprojects.archivist.departments.DepartmentTestData.DEPARTMENT_MATCHER;
@@ -205,6 +206,14 @@ class DocumentUIControllerTest extends AbstractControllerTest {
                 .andExpect(model().attributeHasFieldErrorCode(DOCUMENT_ATTRIBUTE, DECIMAL_NUMBER_PARAM, DUPLICATE_ERROR_CODE))
                 .andExpect(view().name(DOCUMENTS_FORM_VIEW));
         assertNotEquals(DocumentTestData.getNew().getName(), service.getByDecimalNumber(document1.getDecimalNumber()).getName());
+    }
+
+    @Test
+    void checkServiceValidationWorks() {
+        Document aNew = getNew();
+        aNew.setName(null);
+        aNew.setInventoryNumber("");
+        assertThrows(ConstraintViolationException.class, () -> service.createOrUpdate(aNew));
     }
 
     @Test

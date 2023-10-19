@@ -80,17 +80,18 @@ CREATE UNIQUE INDEX departments_unique_name_idx ON departments (name);
 CREATE TABLE documents
 (
     id                 BIGINT DEFAULT nextval('global_seq')  PRIMARY KEY,
-    name               VARCHAR(128)         NOT NULL,
+    name               VARCHAR(128),
     decimal_number     VARCHAR(32)          NOT NULL,
-    inventory_number   VARCHAR(10)          NOT NULL,
-    accounting_date    DATE                 NOT NULL,
-    status             VARCHAR(16)          NOT NULL,
-    type               VARCHAR(10)          NOT NULL,
+    inventory_number   VARCHAR(10),
+    accounting_date    DATE,
+    status             VARCHAR(16),
+    type               VARCHAR(10),
     letter             VARCHAR(2),
     annulled           BOOL   DEFAULT FALSE NOT NULL,
+    auto_generated     BOOL   DEFAULT FALSE NOT NULL,
     comment            VARCHAR(128),
     developer_id       BIGINT,
-    original_holder_id BIGINT               NOT NULL,
+    original_holder_id BIGINT,
     FOREIGN KEY (developer_id) REFERENCES departments (id),
     FOREIGN KEY (original_holder_id) REFERENCES companies (id)
 );

@@ -24,7 +24,7 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static ru.javaprojects.archivist.AbstractControllerTest.ExceptionResultMatchers.exception;
 import static ru.javaprojects.archivist.CommonTestData.*;
-import static ru.javaprojects.archivist.common.util.validation.Constants.DUPLICATE_ERROR_CODE;
+import static ru.javaprojects.archivist.common.error.Constants.DUPLICATE_ERROR_CODE;
 import static ru.javaprojects.archivist.companies.CompanyTestData.*;
 import static ru.javaprojects.archivist.companies.web.CompanyUIController.COMPANIES_URL;
 import static ru.javaprojects.archivist.users.web.LoginController.LOGIN_URL;
@@ -313,7 +313,7 @@ class CompanyControllerTest extends AbstractControllerTest {
     void deleteWhenDocumentsHasReference() throws Exception {
         perform(MockMvcRequestBuilders.delete(COMPANIES_URL_SLASH + COMPANY2_ID)
                 .with(csrf()))
-                .andExpect(status().isUnprocessableEntity());
+                .andExpect(status().isConflict());
         assertDoesNotThrow(() -> service.get(COMPANY2_ID));
     }
 

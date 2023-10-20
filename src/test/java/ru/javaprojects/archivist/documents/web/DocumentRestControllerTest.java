@@ -84,7 +84,6 @@ class DocumentRestControllerTest extends AbstractControllerTest {
                         MethodArgumentNotValidException.class))
                 .andExpect(problemTitle(HttpStatus.UNPROCESSABLE_ENTITY.getReasonPhrase()))
                 .andExpect(problemStatus(HttpStatus.UNPROCESSABLE_ENTITY.value()))
-                .andExpect(problemDetail("Invalid request content."))
                 .andExpect(problemInstance(APPLICABILITIES_URL));
     }
 

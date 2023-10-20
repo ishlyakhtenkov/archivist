@@ -33,10 +33,18 @@ function failToast(message) {
     })
 }
 
-function handleError(data, message) {
+function handleError(data, title) {
     if (data.status === 0) {
         window.location.reload();
     }
-    let detail = data.responseJSON.detail;
-    failToast(`${message}:<br>${detail}`);
+    let message = `${title}:<br>`;
+    if (data.status === 422) {
+        let invalidParams = data.responseJSON.invalid_params;
+        $.each(invalidParams, function(param, errorMessage) {
+            message += `${param}: ${errorMessage}<br>`;
+        });
+    } else {
+        message += data.responseJSON.detail;
+    }
+    failToast(message);
 }

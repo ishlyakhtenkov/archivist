@@ -1,19 +1,20 @@
 package ru.javaprojects.archivist.common.web;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.*;
-import org.springframework.lang.NonNull;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ProblemDetail;
+import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import ru.javaprojects.archivist.common.error.Constants;
 import ru.javaprojects.archivist.common.error.DataConflictException;
 import ru.javaprojects.archivist.common.error.IllegalRequestDataException;
@@ -25,7 +26,7 @@ import java.util.Map;
 
 @RestControllerAdvice(annotations = RestController.class)
 @Slf4j
-public class RestExceptionHandler extends ResponseEntityExceptionHandler {
+public class RestExceptionHandler {
     private static final Map<Class<?>, HttpStatus> HTTP_STATUS_MAP = Map.of(
             EntityNotFoundException.class, HttpStatus.CONFLICT,
             DataIntegrityViolationException.class, HttpStatus.CONFLICT,
@@ -36,10 +37,8 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
             DataConflictException.class, HttpStatus.CONFLICT
     );
 
-    @Override
-    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers,
-                                                                  HttpStatusCode status, WebRequest request) {
-        ProblemDetail body = ex.getBody();
+    @ExceptionHandler(BindException.class)
+    public ProblemDetail bindException(BindException ex, HttpServletRequest request) {
         Map<String, String> invalidParams = new LinkedHashMap<>();
         for (ObjectError error : ex.getBindingResult().getGlobalErrors()) {
             invalidParams.put(error.getObjectName(), error.getDefaultMessage());
@@ -47,31 +46,33 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         for (FieldError error : ex.getBindingResult().getFieldErrors()) {
             invalidParams.put(error.getField(), error.getDefaultMessage());
         }
-        body.setProperty("invalid_params", invalidParams);
-        body.setStatus(HttpStatus.UNPROCESSABLE_ENTITY);
-        return handleExceptionInternal(ex, body, headers, HttpStatus.UNPROCESSABLE_ENTITY, request);
+        log.warn("BindingException: {} at request {}", invalidParams, request.getRequestURI());
+        ProblemDetail problemDetail = createProblemDetail(ex, HttpStatus.UNPROCESSABLE_ENTITY, ex.getMessage());
+        problemDetail.setProperty("invalid_params", invalidParams);
+        return problemDetail;
     }
 
 
     //   https://howtodoinjava.com/spring-mvc/spring-problemdetail-errorresponse/#5-adding-problemdetail-to-custom-exceptions
     @ExceptionHandler(Exception.class)
-    public ProblemDetail exception(Exception ex, WebRequest request) {
+    public ProblemDetail exception(Exception ex, HttpServletRequest request) {
         HttpStatus status = HTTP_STATUS_MAP.get(ex.getClass());
         if (status != null) {
-            log.error("Exception: {} at request {}", ex, request.getContextPath());
+            log.error("Exception: {} at request {}", ex, request.getRequestURI());
             String message = ex.getMessage();
             if (status == HttpStatus.CONFLICT) {
                 message = Constants.getDbConstraintMessage(message).orElse(message);
             }
-            return createProblemDetail(ex, status, message, request);
+            return createProblemDetail(ex, status, message);
         } else {
             Throwable root = ValidationUtil.getRootCause(ex);
-            log.error("Exception " + root +  " at request " + request.getContextPath(), root);
-            return createProblemDetail(ex, HttpStatus.INTERNAL_SERVER_ERROR, root.getClass().getName(), request);
+            log.error("Exception " + root + " at request " + request.getRequestURI(), root);
+            return createProblemDetail(ex, HttpStatus.INTERNAL_SERVER_ERROR, root.getClass().getName());
         }
     }
 
-    private ProblemDetail createProblemDetail(Exception ex, HttpStatusCode statusCode, @NonNull String msg, WebRequest request) {
-        return createProblemDetail(ex, statusCode, msg, null, null, request);
+    private ProblemDetail createProblemDetail(Exception ex, HttpStatusCode statusCode, String detail) {
+        ErrorResponse.Builder builder = ErrorResponse.builder(ex, statusCode, detail);
+        return builder.build().getBody();
     }
 }

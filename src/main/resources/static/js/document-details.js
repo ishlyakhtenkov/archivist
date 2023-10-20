@@ -5,6 +5,7 @@ $(window).on('load', () => init());
 function init() {
     checkActionHappened();
     $('#documentApplicabilityTabButton').on('shown.bs.tab', () => {
+        cancelAddApplicability();
         getApplicabilities();
     });
     $('#deleteApplicabilityModal').on('show.bs.modal', function(e) {
@@ -88,18 +89,20 @@ function deleteApplicability() {
 
 function createApplicability() {
     let applicabilityDecimalNumber = $('#applicabilityDecNumberInput').val();
-    $.ajax({
-        url: '/documents/applicabilities',
-        type: 'POST',
-        data: JSON.stringify(makeApplicabilityObject()),
-        contentType: 'application/json; charset=utf-8'
-    }).done(() => {
-        getApplicabilities();
-        cancelAddApplicability();
-        successToast(`Applicability ${applicabilityDecimalNumber} was added`);
-    }).fail(function(data) {
-        handleError(data, `Failed to create applicability ${applicabilityDecimalNumber}`);
-    });
+    if (applicabilityDecimalNumber.length) {
+        $.ajax({
+            url: '/documents/applicabilities',
+            type: 'POST',
+            data: JSON.stringify(makeApplicabilityObject()),
+            contentType: 'application/json; charset=utf-8'
+        }).done(() => {
+            getApplicabilities();
+            cancelAddApplicability();
+            successToast(`Applicability ${applicabilityDecimalNumber} was added`);
+        }).fail(function(data) {
+            handleError(data, `Failed to create applicability ${applicabilityDecimalNumber}`);
+        });
+    }
 }
 
 function makeApplicabilityObject() {

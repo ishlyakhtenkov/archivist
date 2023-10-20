@@ -13,8 +13,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import ru.javaprojects.archivist.AbstractControllerTest;
 import ru.javaprojects.archivist.common.error.NotFoundException;
+import ru.javaprojects.archivist.documents.DocumentService;
 import ru.javaprojects.archivist.documents.model.Applicability;
+import ru.javaprojects.archivist.documents.model.Document;
 import ru.javaprojects.archivist.documents.repository.ApplicabilityRepository;
+import ru.javaprojects.archivist.documents.repository.DocumentRepository;
 import ru.javaprojects.archivist.documents.to.ApplicabilityTo;
 
 import java.util.Objects;
@@ -38,6 +41,9 @@ class DocumentRestControllerTest extends AbstractControllerTest {
     @Autowired
     private ApplicabilityRepository applicabilityRepository;
 
+    @Autowired
+    private DocumentService documentService;
+
     @Test
     @WithUserDetails(ARCHIVIST_MAIL)
     void createApplicability() throws Exception {
@@ -48,6 +54,24 @@ class DocumentRestControllerTest extends AbstractControllerTest {
                 .andExpect(status().isCreated());
         Applicability created = APPLICABILITY_MATCHER.readFromJson(action);
         Applicability newApplicability = new Applicability(created.getId(), document3, document1, false);
+        APPLICABILITY_MATCHER.assertMatch(created, newApplicability);
+        APPLICABILITY_MATCHER.assertMatch(applicabilityRepository.getExisted(created.id()), newApplicability);
+    }
+
+    @Test
+    @WithUserDetails(ARCHIVIST_MAIL)
+    void createApplicabilityWhenApplicabilityNotExists() throws Exception {
+        ApplicabilityTo newApplicabilityTo = getNewApplicabilityTo();
+        String notExistedDocumentDecimalNumber = "VUIA.111111.222";
+        newApplicabilityTo.setDecimalNumber(notExistedDocumentDecimalNumber);
+        ResultActions action = perform(MockMvcRequestBuilders.post(APPLICABILITIES_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(writeValue(newApplicabilityTo))
+                .with(csrf()))
+                .andExpect(status().isCreated());
+        Document applicability = documentService.getByDecimalNumber(notExistedDocumentDecimalNumber);
+        Applicability created = APPLICABILITY_MATCHER.readFromJson(action);
+        Applicability newApplicability = new Applicability(created.getId(), document3, applicability, false);
         APPLICABILITY_MATCHER.assertMatch(created, newApplicability);
         APPLICABILITY_MATCHER.assertMatch(applicabilityRepository.getExisted(created.id()), newApplicability);
     }

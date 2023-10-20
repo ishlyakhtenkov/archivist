@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.groups.Default;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -42,6 +43,7 @@ public class DocumentUIController {
     @InitBinder("document")
     protected void initBinder(WebDataBinder binder) {
         binder.addValidators(decimalNumberValidator, inventoryNumberValidator);
+        binder.registerCustomEditor(String.class, new StringTrimmerEditor(true));
     }
 
     @GetMapping

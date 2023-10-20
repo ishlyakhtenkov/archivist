@@ -29,6 +29,7 @@ public class DocumentTestData {
     public static final long DOCUMENT1_ID = 100014;
     public static final long DOCUMENT3_ID = 100016;
     public static final long DOCUMENT5_ID = 100018;
+    public static final long DOCUMENT6_ID = 100019;
 
     public static final String DOCUMENTS_ATTRIBUTE = "documents";
     public static final String DOCUMENT_ATTRIBUTE = "document";

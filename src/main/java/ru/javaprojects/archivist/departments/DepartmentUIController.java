@@ -3,6 +3,7 @@ package ru.javaprojects.archivist.departments;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -25,6 +26,7 @@ public class DepartmentUIController {
     @InitBinder("department")
     protected void initBinder(WebDataBinder binder) {
         binder.addValidators(nameValidator);
+        binder.registerCustomEditor(String.class, new StringTrimmerEditor(true));
     }
 
     @GetMapping

@@ -3,6 +3,7 @@ package ru.javaprojects.archivist.companies.web;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -30,6 +31,7 @@ public class CompanyUIController {
     @InitBinder("company")
     protected void initBinder(WebDataBinder binder) {
         binder.addValidators(nameValidator);
+        binder.registerCustomEditor(String.class, new StringTrimmerEditor(true));
     }
 
     @GetMapping

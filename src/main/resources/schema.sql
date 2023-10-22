@@ -110,3 +110,22 @@ CREATE TABLE applicabilities
 );
 CREATE UNIQUE INDEX applicabilities_unique_document_applicability_idx ON applicabilities (document_id, applicability_id);
 CREATE UNIQUE INDEX applicabilities_unique_primal_applicability_idx ON applicabilities (document_id, h2_extra_column);
+
+CREATE TABLE document_contents
+(
+    id               BIGINT DEFAULT nextval('global_seq')  PRIMARY KEY,
+    document_id      BIGINT                   NOT NULL,
+    change_number    INTEGER                  NOT NULL,
+    created          TIMESTAMP DEFAULT now()  NOT NULL,
+    FOREIGN KEY (document_id) REFERENCES documents (id) ON DELETE CASCADE
+);
+CREATE UNIQUE INDEX document_contents_unique_document_change_number_idx ON document_contents (document_id, change_number);
+
+CREATE TABLE document_content_files
+(
+    document_content_id BIGINT       NOT NULL,
+    name                VARCHAR(128) NOT NULL,
+    file_link           VARCHAR(512) NOT NULL,
+    FOREIGN KEY (document_content_id) REFERENCES document_contents (id) ON DELETE CASCADE
+);
+CREATE UNIQUE INDEX document_content_files_unique_document_content_name_idx ON document_content_files (document_content_id, name);

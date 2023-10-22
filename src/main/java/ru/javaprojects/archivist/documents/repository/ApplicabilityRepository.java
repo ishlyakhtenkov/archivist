@@ -11,5 +11,5 @@ import java.util.List;
 public interface ApplicabilityRepository extends BaseRepository<Applicability> {
 
     @Query("SELECT a FROM Applicability a JOIN FETCH a.applicability WHERE a.document.id =:documentId ORDER BY a.applicability.decimalNumber")
-    List<Applicability> findAllByDocumentId(Long documentId);
+    List<Applicability> findAllByDocumentId(long documentId);
 }

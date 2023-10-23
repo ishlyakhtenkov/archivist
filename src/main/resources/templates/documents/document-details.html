@@ -33,6 +33,7 @@
                             </div>
                         </nav>
                         <div class="tab-content text-start ms-2">
+                            <!-- General Tab-->
                             <div class="tab-pane fade show active mt-3" id="documentGeneralTab" role="tabpanel" aria-labelledby="nav-general-tab" tabindex="0">
                                 <div th:object="${document}">
                                     <input type="hidden" id="documentId" th:value="*{id}">
@@ -152,7 +153,13 @@
                                 </div>
                             </div>
                             <div class="tab-pane fade" id="documentSendingTab" role="tabpanel" aria-labelledby="nav-sending-tab" tabindex="0">Sending</div>
-                            <div class="tab-pane fade" id="documentContentTab" role="tabpanel" aria-labelledby="nav-content-tab" tabindex="0">Content</div>
+
+                            <!-- Content Tab-->
+                            <div class="tab-pane fade mt-3" id="documentContentTab" role="tabpanel" aria-labelledby="nav-content-tab" tabindex="0">
+                                <div id="contentArea"></div>
+                                <button hidden class="btn btn-sm btn-light" id="showPreviousContentButton"
+                                        title="Show previous content" onclick="getAllContents()">Show previous</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -176,6 +183,24 @@
                 </div>
             </div>
         </div>
+
+        <!-- Delete Content modal -->
+        <div class="modal fade" id="deleteContentModal" tabindex="-1" aria-labelledby="deleteContentModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="deleteContentModalLabel">Are you sure want to delete content?</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <input type="hidden" name="contentId" id="deleteContentModalContentId" value=""/>
+                    <input type="hidden" name="contentChangeNumber" id="deleteContentModalContentChangeNumber" value=""/>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-danger" onclick="deleteContent()">Delete content</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </appMain>
 
     <ownScript>
@@ -183,3 +208,7 @@
         <script src="/js/document-details.js?v=1"></script>
     </ownScript>
 </th:block>
+
+<script>
+
+</script>

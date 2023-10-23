@@ -3,11 +3,15 @@ package ru.javaprojects.archivist.documents.web;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.javaprojects.archivist.common.util.FileUtil;
 import ru.javaprojects.archivist.documents.DocumentService;
 import ru.javaprojects.archivist.documents.model.Applicability;
+import ru.javaprojects.archivist.documents.model.Content;
 import ru.javaprojects.archivist.documents.to.ApplicabilityTo;
 
 import java.util.List;
@@ -37,5 +41,33 @@ public class DocumentRestController {
     public Applicability createApplicability(@Valid @RequestBody ApplicabilityTo applicabilityTo) {
         log.info("create {}", applicabilityTo);
         return service.createApplicability(applicabilityTo);
+    }
+
+    @GetMapping("/{id}/content/latest")
+    public Content getLatestContent(@PathVariable long id) {
+        log.info("get latest content for document {}", id);
+        return service.getLatestContent(id);
+    }
+
+    @GetMapping("/{id}/content/all")
+    public List<Content> getAllContents(@PathVariable long id) {
+        log.info("get all contents for document {}", id);
+        return service.getAllContents(id);
+    }
+
+    @GetMapping(value = "/content/download", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    public ResponseEntity<Resource> downloadContentFile(@RequestParam String fileLink) {
+        log.debug("download file {}", fileLink);
+        Resource resource = FileUtil.download(fileLink);
+        return ResponseEntity.ok()
+                .header("Content-Disposition", "inline; filename=" + resource.getFilename())
+                .body(resource);
+    }
+
+    @DeleteMapping("/content/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteContent(@PathVariable long id) {
+        log.info("delete content {}", id);
+        service.deleteContent(id);
     }
 }

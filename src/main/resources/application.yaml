@@ -25,6 +25,9 @@ password-reset:
   token-expiration-time: 86400000
   url: https://javaprojects.ru/archivist/profile/resetPassword
 
+content-path:
+  documents: ./content/documents/
+
 logging:
   charset:
     console: UTF-8

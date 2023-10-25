@@ -61,9 +61,9 @@ VALUES (100014, 0, '2023-02-05 12:10:00'),
        (100015, 0, '2022-03-27 11:40:00');
 
 INSERT INTO document_content_files (document_content_id, name, file_link)
-VALUES (100022, 'VUIA.465521.004.docx', './content/documents/VUIA.465521.004/0/VUIA.465521.004.docx'),
-       (100022, 'VUIA.465521.004.pdf', './content/documents/VUIA.465521.004/0/VUIA.465521.004.pdf'),
-       (100023, 'VUIA.465521.004.docx', './content/documents/VUIA.465521.004/1/VUIA.465521.004.docx'),
-       (100024, 'VUIA.465521.004.pdf', './content/documents/VUIA.465521.004/2/VUIA.465521.004.pdf'),
-       (100025, 'List_1.pdf', './content/documents/VUIA.465521.004E3/0/List_1.pdf'),
-       (100025, 'List_2.pdf', './content/documents/VUIA.465521.004E3/0/List_2.pdf');
+VALUES (100022, 'VUIA.465521.004.docx', 'VUIA.465521.004/0/VUIA.465521.004.docx'),
+       (100022, 'VUIA.465521.004.pdf', 'VUIA.465521.004/0/VUIA.465521.004.pdf'),
+       (100023, 'VUIA.465521.004.docx', 'VUIA.465521.004/1/VUIA.465521.004.docx'),
+       (100024, 'VUIA.465521.004.pdf', 'VUIA.465521.004/2/VUIA.465521.004.pdf'),
+       (100025, 'List_1.pdf', 'VUIA.465521.004E3/0/List_1.pdf'),
+       (100025, 'List_2.pdf', 'VUIA.465521.004E3/0/List_2.pdf');

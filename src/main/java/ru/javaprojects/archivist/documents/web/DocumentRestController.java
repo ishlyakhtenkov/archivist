@@ -1,8 +1,9 @@
 package ru.javaprojects.archivist.documents.web;
 
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -18,10 +19,13 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = DocumentUIController.DOCUMENTS_URL, produces = MediaType.APPLICATION_JSON_VALUE)
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Slf4j
 public class DocumentRestController {
     private final DocumentService service;
+
+    @Value("${content-path.documents}")
+    private String contentPath;
 
     @GetMapping("/{id}/applicabilities")
     public List<Applicability> getApplicabilities(@PathVariable long id) {
@@ -58,7 +62,7 @@ public class DocumentRestController {
     @GetMapping(value = "/content/download", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public ResponseEntity<Resource> downloadContentFile(@RequestParam String fileLink) {
         log.debug("download file {}", fileLink);
-        Resource resource = FileUtil.download(fileLink);
+        Resource resource = FileUtil.download(contentPath + fileLink);
         return ResponseEntity.ok()
                 .header("Content-Disposition", "inline; filename=" + resource.getFilename())
                 .body(resource);

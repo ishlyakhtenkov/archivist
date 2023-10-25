@@ -1,4 +1,6 @@
 const documentId =$('#documentId').val();
+const contentArea = $('#contentArea');
+let previousContentOpened = false;
 
 $(window).on('load', () => init());
 
@@ -8,12 +10,24 @@ function init() {
         cancelAddApplicability();
         getApplicabilities();
     });
+    $('#documentContentTabButton').on('shown.bs.tab', () => {
+        previousContentOpened = false;
+        cancelAddContent();
+        getLatestContent();
+    });
     $('#deleteApplicabilityModal').on('show.bs.modal', function(e) {
         let decimalNumber = $(e.relatedTarget).data('decimalnumber');
         let id = $(e.relatedTarget).data('id');
         $(e.currentTarget).find('#deleteApplicabilityModalLabel').text(`Delete applicability: ${decimalNumber}?`);
         $(e.currentTarget).find('#deleteApplicabilityModalApplicabilityId').val(id);
         $(e.currentTarget).find('#deleteApplicabilityModalApplicabilityDecimalNumber').val(decimalNumber);
+    });
+    $('#deleteContentModal').on('show.bs.modal', function(e) {
+        let id = $(e.relatedTarget).data('id');
+        let changeNumber = $(e.relatedTarget).data('changenumber');
+        $(e.currentTarget).find('#deleteContentModalLabel').text(`Delete content (change number: ${changeNumber})?`);
+        $(e.currentTarget).find('#deleteContentModalContentId').val(id);
+        $(e.currentTarget).find('#deleteContentModalContentChangeNumber').val(changeNumber);
     });
 }
 
@@ -113,21 +127,6 @@ function makeApplicabilityObject() {
     };
 }
 
-const contentArea = $('#contentArea');
-let previousContentOpened = false;
-
-$('#deleteContentModal').on('show.bs.modal', function(e) {
-    let id = $(e.relatedTarget).data('id');
-    let changeNumber = $(e.relatedTarget).data('changenumber');
-    $(e.currentTarget).find('#deleteContentModalLabel').text(`Delete content (change number: ${changeNumber})?`);
-    $(e.currentTarget).find('#deleteContentModalContentId').val(id);
-    $(e.currentTarget).find('#deleteContentModalContentChangeNumber').val(changeNumber);
-});
-
-$('#documentContentTabButton').on('shown.bs.tab', () => {
-    getLatestContent();
-});
-
 function getLatestContent() {
     $.ajax({
         url: `/documents/${documentId}/content/latest`
@@ -196,7 +195,7 @@ function deleteContent() {
     deleteModal.modal('toggle');
     $.ajax({
         url: `content/${id}`,
-        type: "DELETE"
+        type: 'DELETE'
     }).done(function() {
         if (previousContentOpened) {
             getAllContents();
@@ -207,4 +206,45 @@ function deleteContent() {
     }).fail(function(data) {
         handleError(data, `Failed to delete content (change number: ${changeNumber})`);
     });
+}
+
+function showInputContentDiv() {
+    $('#addContentButtonDiv').attr('hidden', true);
+    $('#inputContentDiv').attr('hidden', false);
+}
+
+function cancelAddContent() {
+    $('#contentFilesInput').val('');
+    $('#contentChangeNumberInput').val('');
+    $('#addContentButtonDiv').attr('hidden', false);
+    $('#inputContentDiv').attr('hidden', true);
+}
+
+function createContent() {
+    let changeNumber = $('#contentChangeNumberInput').val();
+    let formData = new FormData();
+    formData.append('changeNumber', changeNumber);
+    let inputtedFiles = $('#contentFilesInput').prop('files');
+    for (let i = 0; i < inputtedFiles.length; i++) {
+        formData.append('files', inputtedFiles[i]);
+    }
+    if (changeNumber.length && inputtedFiles.length) {
+        $.ajax({
+            url: `/documents/${documentId}/content`,
+            type: 'POST',
+            data: formData,
+            processData:false,
+            contentType:false
+        }).done(function () {
+            if (previousContentOpened) {
+                getAllContents();
+            } else {
+                getLatestContent();
+            }
+            cancelAddContent();
+            successToast(`Content (change number = ${changeNumber}) was created`);
+        }).fail(function (data) {
+            handleError(data, `Failed to create content (change number = ${changeNumber})`);
+        });
+    }
 }

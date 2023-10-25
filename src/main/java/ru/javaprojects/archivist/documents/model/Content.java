@@ -48,4 +48,11 @@ public class Content extends BaseEntity implements HasId {
     @JoinColumn(name = "document_content_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<ContentFile> files;
+
+    public Content(Long id, Integer changeNumber, Document document, List<ContentFile> files) {
+        super(id);
+        this.changeNumber = changeNumber;
+        this.document = document;
+        this.files = files;
+    }
 }

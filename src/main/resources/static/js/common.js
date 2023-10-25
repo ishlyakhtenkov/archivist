@@ -40,9 +40,13 @@ function handleError(data, title) {
     let message = `${title}:<br>`;
     if (data.status === 422) {
         let invalidParams = data.responseJSON.invalid_params;
-        $.each(invalidParams, function(param, errorMessage) {
-            message += `${param}: ${errorMessage}<br>`;
-        });
+        if (invalidParams != null) {
+            $.each(invalidParams, function(param, errorMessage) {
+                message += `${param}: ${errorMessage}<br>`;
+            });
+        } else {
+            message += data.responseJSON.detail;
+        }
     } else {
         message += data.responseJSON.detail;
     }

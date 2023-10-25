@@ -1,6 +1,9 @@
 package ru.javaprojects.archivist.documents.web;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -8,7 +11,9 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import ru.javaprojects.archivist.common.util.FileUtil;
 import ru.javaprojects.archivist.documents.DocumentService;
 import ru.javaprojects.archivist.documents.model.Applicability;
@@ -18,6 +23,7 @@ import ru.javaprojects.archivist.documents.to.ApplicabilityTo;
 import java.util.List;
 
 @RestController
+@Validated
 @RequestMapping(value = DocumentUIController.DOCUMENTS_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 @Slf4j
@@ -61,7 +67,7 @@ public class DocumentRestController {
 
     @GetMapping(value = "/content/download", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public ResponseEntity<Resource> downloadContentFile(@RequestParam String fileLink) {
-        log.debug("download file {}", fileLink);
+        log.info("download file {}", fileLink);
         Resource resource = FileUtil.download(contentPath + fileLink);
         return ResponseEntity.ok()
                 .header("Content-Disposition", "inline; filename=" + resource.getFilename())
@@ -73,5 +79,13 @@ public class DocumentRestController {
     public void deleteContent(@PathVariable long id) {
         log.info("delete content {}", id);
         service.deleteContent(id);
+    }
+
+    @PostMapping(value = "/{id}/content", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @ResponseStatus(HttpStatus.CREATED)
+    public Content createContent(@PathVariable long id, @RequestParam @NotNull @PositiveOrZero Integer changeNumber,
+                                 @RequestPart @NotEmpty MultipartFile[] files) {
+        log.info("create content change number={} for document {}", changeNumber, id);
+        return service.createContent(id, changeNumber, files);
     }
 }

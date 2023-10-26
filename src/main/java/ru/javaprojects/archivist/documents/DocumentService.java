@@ -23,7 +23,6 @@ import ru.javaprojects.archivist.documents.repository.ContentRepository;
 import ru.javaprojects.archivist.documents.repository.DocumentRepository;
 import ru.javaprojects.archivist.documents.to.ApplicabilityTo;
 
-import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
@@ -79,6 +78,7 @@ public class DocumentService {
         applicabilityRepository.deleteExisted(id);
     }
 
+    @Transactional
     public Applicability createApplicability(ApplicabilityTo applicabilityTo) {
         Assert.notNull(applicabilityTo, "applicabilityTo must not be null");
         Document document = repository.getExisted(applicabilityTo.getDocumentId());
@@ -97,7 +97,6 @@ public class DocumentService {
         return contentRepository.findByDocument_IdOrderByChangeNumberDesc(documentId);
     }
 
-    @Transactional
     public void deleteContent(long id) {
         Content content = contentRepository.getExisted(id);
         contentRepository.delete(content);
@@ -107,12 +106,12 @@ public class DocumentService {
 
     @Transactional
     public Content createContent(long documentId, int changeNumber, MultipartFile[] files) {
-        Document document = repository.getExisted(documentId);
         Assert.notNull(files, "files must not be null");
+        Document document = repository.getExisted(documentId);
         List<ContentFile> contentFiles = Arrays.stream(files)
                 .map(file -> new ContentFile(file.getOriginalFilename(), generateFileLink(document, changeNumber, file)))
                 .toList();
-        Content content = contentRepository.save(new Content(null, changeNumber, document, contentFiles));
+        Content content = contentRepository.saveAndFlush(new Content(null, changeNumber, document, contentFiles));
         for (MultipartFile file : files) {
             FileUtil.upload(file, contentPath + generateFilePath(document, changeNumber), file.getOriginalFilename());
         }

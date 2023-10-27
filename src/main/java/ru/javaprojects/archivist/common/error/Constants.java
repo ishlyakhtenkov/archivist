@@ -14,6 +14,8 @@ public class Constants {
     public static final String DUPLICATE_INVENTORY_NUMBER_MESSAGE = "Document with this inventory number already exists";
     public static final String DUPLICATE_DOCUMENT_APPLICABILITY_MESSAGE = "Document already has this applicability";
     public static final String DUPLICATE_PRIMAL_APPLICABILITY_MESSAGE = "Document already has primal applicability";
+    public static final String DUPLICATE_CONTENT_CHANGE_NUMBER_MESSAGE = "Document already has content with this change number";
+    public static final String DUPLICATE_CONTENT_FILE_NAME_MESSAGE = "Document content already has file with this name";
 
     private static final Map<String, String> dbUniqueConstraintsMap = new HashMap<>();
 
@@ -25,6 +27,8 @@ public class Constants {
         dbUniqueConstraintsMap.put("documents_unique_inventory_number_idx", DUPLICATE_INVENTORY_NUMBER_MESSAGE);
         dbUniqueConstraintsMap.put("applicabilities_unique_document_applicability_idx", DUPLICATE_DOCUMENT_APPLICABILITY_MESSAGE);
         dbUniqueConstraintsMap.put("applicabilities_unique_primal_applicability_idx", DUPLICATE_PRIMAL_APPLICABILITY_MESSAGE);
+        dbUniqueConstraintsMap.put("document_contents_unique_document_change_number_idx", DUPLICATE_CONTENT_CHANGE_NUMBER_MESSAGE);
+        dbUniqueConstraintsMap.put("document_content_files_unique_document_content_name_idx", DUPLICATE_CONTENT_FILE_NAME_MESSAGE);
     }
 
     public static Optional<String> getDbConstraintMessage(String exceptionMessage) {

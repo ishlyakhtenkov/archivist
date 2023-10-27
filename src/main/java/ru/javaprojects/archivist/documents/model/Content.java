@@ -55,4 +55,12 @@ public class Content extends BaseEntity implements HasId {
         this.document = document;
         this.files = files;
     }
+
+    public Content(Long id, Integer changeNumber, LocalDateTime created, Document document, List<ContentFile> files) {
+        super(id);
+        this.changeNumber = changeNumber;
+        this.created = created;
+        this.document = document;
+        this.files = files;
+    }
 }

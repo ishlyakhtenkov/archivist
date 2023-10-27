@@ -81,9 +81,9 @@ public class DocumentRestController {
         service.deleteContent(id);
     }
 
-    @PostMapping(value = "/{id}/content", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/content", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public Content createContent(@PathVariable long id, @RequestParam @NotNull @PositiveOrZero Integer changeNumber,
+    public Content createContent(@RequestParam long id, @RequestParam @PositiveOrZero int changeNumber,
                                  @RequestPart @NotEmpty MultipartFile[] files) {
         log.info("create content change number={} for document {}", changeNumber, id);
         return service.createContent(id, changeNumber, files);

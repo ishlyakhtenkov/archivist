@@ -223,6 +223,7 @@ function cancelAddContent() {
 function createContent() {
     let changeNumber = $('#contentChangeNumberInput').val();
     let formData = new FormData();
+    formData.append('id', documentId);
     formData.append('changeNumber', changeNumber);
     let inputtedFiles = $('#contentFilesInput').prop('files');
     for (let i = 0; i < inputtedFiles.length; i++) {
@@ -230,7 +231,7 @@ function createContent() {
     }
     if (changeNumber.length && inputtedFiles.length) {
         $.ajax({
-            url: `/documents/${documentId}/content`,
+            url: '/documents/content',
             type: 'POST',
             data: formData,
             processData:false,

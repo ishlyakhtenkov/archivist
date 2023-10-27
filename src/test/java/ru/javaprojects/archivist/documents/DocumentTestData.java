@@ -4,10 +4,14 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import ru.javaprojects.archivist.MatcherFactory;
 import ru.javaprojects.archivist.documents.model.Applicability;
+import ru.javaprojects.archivist.documents.model.Content;
+import ru.javaprojects.archivist.documents.model.ContentFile;
 import ru.javaprojects.archivist.documents.model.Document;
 import ru.javaprojects.archivist.documents.to.ApplicabilityTo;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 
 import static java.time.Month.*;
 import static ru.javaprojects.archivist.CommonTestData.*;
@@ -124,4 +128,22 @@ public class DocumentTestData {
     public static ApplicabilityTo getNewApplicabilityTo() {
         return new ApplicabilityTo(null, DOCUMENT3_ID, document1.getDecimalNumber(), false);
     }
+
+    public static final long DOCUMENT_1_CONTENT_1_ID = 100022;
+    public static final long DOCUMENT_1_CONTENT_2_ID = 100023;
+    public static final long DOCUMENT_1_CONTENT_3_ID = 100024;
+
+    public static final MatcherFactory.Matcher<Content> CONTENT_MATCHER =
+            MatcherFactory.usingIgnoringFieldsComparator(Content.class, "document", "created");
+
+    public static final Content content1 = new Content(DOCUMENT_1_CONTENT_1_ID, 0, LocalDateTime.of(2023, FEBRUARY, 5, 12, 10, 0),
+            document1, List.of(new ContentFile("VUIA.465521.004.docx", "VUIA.465521.004/0/VUIA.465521.004.docx"),
+            new ContentFile("VUIA.465521.004.pdf", "VUIA.465521.004/0/VUIA.465521.004.pdf")));
+
+    public static final Content content2 = new Content(DOCUMENT_1_CONTENT_2_ID, 1, LocalDateTime.of(2023, MAY, 18, 14, 5, 0),
+            document1, List.of(new ContentFile("VUIA.465521.004.docx", "VUIA.465521.004/1/VUIA.465521.004.docx")));
+
+    public static final Content content3 = new Content(DOCUMENT_1_CONTENT_3_ID, 2, LocalDateTime.of(2023, JULY, 24, 9, 28, 0),
+            document1, List.of(new ContentFile("VUIA.465521.004.pdf", "VUIA.465521.004/2/VUIA.465521.004.pdf")));
+
 }

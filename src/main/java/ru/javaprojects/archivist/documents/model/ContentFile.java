@@ -1,7 +1,6 @@
 package ru.javaprojects.archivist.documents.model;
 
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.validation.constraints.NotBlank;
@@ -25,7 +24,6 @@ public class ContentFile {
 
     @NotBlank
     @Size(min = 2, max = 512)
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Column(name = "file_link", nullable = false)
     private String fileLink;
 }

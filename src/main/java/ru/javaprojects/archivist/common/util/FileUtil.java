@@ -42,10 +42,10 @@ public class FileUtil {
             if (resource.exists() || resource.isReadable()) {
                 return resource;
             } else {
-                throw new IllegalRequestDataException("Failed to download file " + resource.getFilename());
+                throw new IllegalRequestDataException("Failed to download file: " + resource.getFilename());
             }
         } catch (MalformedURLException ex) {
-            throw new NotFoundException("File" + fileLink + " not found");
+            throw new NotFoundException("File: " + fileLink + " not found");
         }
     }
 

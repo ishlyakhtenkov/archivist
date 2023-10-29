@@ -15,6 +15,7 @@ public class CommonTestData {
     public static final long NOT_FOUND = 100;
     public static final String ENTITY_NOT_FOUND = "Entity with id=" + NOT_FOUND + " not found";
 
+    public static final String ID_PARAM = "id";
     public static final String NAME_PARAM = "name";
 
     public static final String FALSE = "false";

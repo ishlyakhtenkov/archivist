@@ -1,5 +1,7 @@
 package ru.javaprojects.archivist.documents;
 
+import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import ru.javaprojects.archivist.MatcherFactory;
@@ -35,6 +37,8 @@ public class DocumentTestData {
     public static final long DOCUMENT5_ID = 100018;
     public static final long DOCUMENT6_ID = 100019;
 
+    public static final String NOT_EXISTED_DECIMAL_NUMBER = "VUIA.111111.222";
+
     public static final String DOCUMENTS_ATTRIBUTE = "documents";
     public static final String DOCUMENT_ATTRIBUTE = "document";
 
@@ -48,6 +52,9 @@ public class DocumentTestData {
     public static final String COMMENT_PARAM = "comment";
     public static final String DEVELOPER_PARAM = "developer";
     public static final String ORIGINAL_HOLDER_PARAM = "originalHolder";
+    public static final String FILE_LINK_PARAM = "fileLink";
+    public static final String CHANGE_NUMBER_PARAM = "changeNumber";
+    public static final String FILES_PARAM = "files";
 
     public static final Document document1 = new Document(DOCUMENT1_ID, "Block M21", "VUIA.465521.004", "926531",
             LocalDate.of(2023, MARCH, 24), ORIGINAL, O1, DIGITAL, false, "some comment", department1, company3);
@@ -133,6 +140,13 @@ public class DocumentTestData {
     public static final long DOCUMENT_1_CONTENT_2_ID = 100023;
     public static final long DOCUMENT_1_CONTENT_3_ID = 100024;
 
+    public static final String CONTENT_TEST_DATA_DIR_NAME = "test-data";
+    public static final String NOT_EXISTED_CONTENT_FILE = NOT_EXISTED_DECIMAL_NUMBER + ".pdf";
+    public static final String NOT_EXISTED_CONTENT_FILE_LINK = NOT_EXISTED_DECIMAL_NUMBER + "/0/" + NOT_EXISTED_CONTENT_FILE;
+    public static final String NEW_CONTENT_FILE = "VUIA.465521.004.txt";
+    public static final String NEW_CONTENT_FILE_LINK = "VUIA.465521.004/%s/" + NEW_CONTENT_FILE;
+    public static final String NOT_EXISTED_CONTENT_CHANGE_NUMBER = "3";
+
     public static final MatcherFactory.Matcher<Content> CONTENT_MATCHER =
             MatcherFactory.usingIgnoringFieldsComparator(Content.class, "document", "created");
 
@@ -146,4 +160,6 @@ public class DocumentTestData {
     public static final Content content3 = new Content(DOCUMENT_1_CONTENT_3_ID, 2, LocalDateTime.of(2023, JULY, 24, 9, 28, 0),
             document1, List.of(new ContentFile("VUIA.465521.004.pdf", "VUIA.465521.004/2/VUIA.465521.004.pdf")));
 
+    public static final MockMultipartFile CONTENT_FILE = new MockMultipartFile(FILES_PARAM, "VUIA.465521.004.txt",
+            MediaType.TEXT_PLAIN_VALUE, "VUIA.465521.004 content change num 3".getBytes());
 }

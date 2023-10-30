@@ -38,7 +38,7 @@
                 <thead class="table-dark">
                 <tr>
                     <th>Decimal number</th>
-                    <th>Letter</th>
+                    <th>Symbol</th>
                     <th>Status</th>
                     <th>Type</th>
                     <th>Original holder</th>
@@ -49,7 +49,7 @@
                 <tbody>
                 <tr th:each="document : ${documents}" th:id="'row-' + ${document.id}" class="table-row">
                     <td th:text="${document.decimalNumber}" th:classappend="${document.annulled ? 'text-danger' : ''}"></td>
-                    <td th:text="${document.letter}"></td>
+                    <td th:text="${document.symbol}"></td>
                     <td th:text="${document.status.displayName}"></td>
                     <td th:text="${document.type.displayName}"></td>
                     <td th:text="${document.originalHolder.name}"></td>

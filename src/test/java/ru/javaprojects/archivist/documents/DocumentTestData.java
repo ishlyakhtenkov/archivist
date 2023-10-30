@@ -21,8 +21,8 @@ import static ru.javaprojects.archivist.companies.CompanyTestData.company2;
 import static ru.javaprojects.archivist.companies.CompanyTestData.company3;
 import static ru.javaprojects.archivist.departments.DepartmentTestData.department1;
 import static ru.javaprojects.archivist.departments.DepartmentTestData.department2;
-import static ru.javaprojects.archivist.documents.model.Letter.O;
-import static ru.javaprojects.archivist.documents.model.Letter.O1;
+import static ru.javaprojects.archivist.documents.model.Symbol.O;
+import static ru.javaprojects.archivist.documents.model.Symbol.O1;
 import static ru.javaprojects.archivist.documents.model.Status.DUPLICATE;
 import static ru.javaprojects.archivist.documents.model.Status.ORIGINAL;
 import static ru.javaprojects.archivist.documents.model.Type.DIGITAL;
@@ -46,7 +46,7 @@ public class DocumentTestData {
     public static final String INVENTORY_NUMBER_PARAM = "inventoryNumber";
     public static final String ACCOUNTING_DATE_PARAM = "accountingDate";
     public static final String STATUS_PARAM = "status";
-    public static final String LETTER_PARAM = "letter";
+    public static final String SYMBOL_PARAM = "symbol";
     public static final String TYPE_PARAM = "type";
     public static final String ANNULLED_PARAM = "annulled";
     public static final String COMMENT_PARAM = "comment";
@@ -76,7 +76,7 @@ public class DocumentTestData {
         params.add(INVENTORY_NUMBER_PARAM, newDocument.getInventoryNumber());
         params.add(ACCOUNTING_DATE_PARAM, newDocument.getAccountingDate().toString());
         params.add(STATUS_PARAM, newDocument.getStatus().toString());
-        params.add(LETTER_PARAM, newDocument.getLetter().toString());
+        params.add(SYMBOL_PARAM, newDocument.getSymbol().toString());
         params.add(TYPE_PARAM, newDocument.getType().toString());
         params.add(ANNULLED_PARAM, FALSE);
         params.add(COMMENT_PARAM, newDocument.getComment());
@@ -108,7 +108,7 @@ public class DocumentTestData {
         params.add(INVENTORY_NUMBER_PARAM, updatedDocument.getInventoryNumber());
         params.add(ACCOUNTING_DATE_PARAM, updatedDocument.getAccountingDate().toString());
         params.add(STATUS_PARAM, updatedDocument.getStatus().toString());
-        params.add(LETTER_PARAM, updatedDocument.getLetter().toString());
+        params.add(SYMBOL_PARAM, updatedDocument.getSymbol().toString());
         params.add(TYPE_PARAM, updatedDocument.getType().toString());
         params.add(ANNULLED_PARAM, TRUE);
         params.add(COMMENT_PARAM, updatedDocument.getComment());

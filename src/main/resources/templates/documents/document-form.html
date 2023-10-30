@@ -72,13 +72,13 @@
                                         </div>
                                         <div class="col-lg-4">
                                             <div class="input-group mb-3">
-                                                <span class="input-group-text doc-card-field" id="letterAddon" title="Letter">Letter</span>
-                                                <select class="form-control selectpicker border" data-style="btn-white" id="letterSelect"
-                                                        th:field="*{letter}" title="&nbsp"  aria-label="Letter" aria-describedby="letterAddon">
+                                                <span class="input-group-text doc-card-field" id="symbolAddon" title="Symbol">Symbol</span>
+                                                <select class="form-control selectpicker border" data-style="btn-white" id="symbolSelect"
+                                                        th:field="*{symbol}" title="&nbsp" aria-label="Symbol" aria-describedby="symbolAddon">
                                                     <option value="" selected></option>
-                                                    <option th:each="letter : ${letters}"
-                                                            th:value="${letter}"
-                                                            th:text="${letter}">
+                                                    <option th:each="symbol : ${symbols}"
+                                                            th:value="${symbol}"
+                                                            th:text="${symbol}">
                                                     </option>
                                                 </select>
                                             </div>

@@ -86,7 +86,7 @@ CREATE TABLE documents
     accounting_date    DATE,
     status             VARCHAR(16),
     type               VARCHAR(10),
-    letter             VARCHAR(2),
+    symbol             VARCHAR(2),
     annulled           BOOL   DEFAULT FALSE NOT NULL,
     auto_generated     BOOL   DEFAULT FALSE NOT NULL,
     comment            VARCHAR(128),
@@ -129,3 +129,45 @@ CREATE TABLE document_content_files
     FOREIGN KEY (document_content_id) REFERENCES document_contents (id) ON DELETE CASCADE
 );
 CREATE UNIQUE INDEX document_content_files_unique_document_content_name_idx ON document_content_files (document_content_id, name);
+
+CREATE TABLE subscribers
+(
+    id          BIGINT DEFAULT nextval('global_seq')  PRIMARY KEY,
+    document_id BIGINT                   NOT NULL,
+    company_id  BIGINT                   NOT NULL,
+    accounted   BOOL   DEFAULT TRUE      NOT NULL,
+    FOREIGN KEY (document_id) REFERENCES documents (id) ON DELETE CASCADE,
+    FOREIGN KEY (company_id) REFERENCES companies (id) ON DELETE CASCADE
+);
+CREATE UNIQUE INDEX subscribers_unique_document_company_idx ON subscribers (document_id, company_id);
+
+CREATE TABLE letters
+(
+    id         BIGINT DEFAULT nextval('global_seq')  PRIMARY KEY,
+    number     VARCHAR(16),
+    date       DATE,
+    company_id BIGINT NOT NULL,
+    FOREIGN KEY (company_id) REFERENCES companies (id) ON DELETE CASCADE
+);
+CREATE UNIQUE INDEX letters_unique_number_idx ON letters (number);
+
+CREATE TABLE invoices
+(
+    id         BIGINT DEFAULT nextval('global_seq')  PRIMARY KEY,
+    number     VARCHAR(10) NOT NULL,
+    date       DATE        NOT NULL,
+    doc_status VARCHAR(16) NOT NULL,
+    letter_id  BIGINT      NOT NULL,
+    FOREIGN KEY (letter_id) REFERENCES letters (id) ON DELETE CASCADE
+);
+CREATE UNIQUE INDEX invoices_unique_number_date_idx ON invoices (number, date);
+
+CREATE TABLE document_invoice
+(
+    id          BIGINT DEFAULT nextval('global_seq')  PRIMARY KEY,
+    document_id BIGINT NOT NULL,
+    invoice_id  BIGINT NOT NULL,
+    FOREIGN KEY (document_id) REFERENCES documents (id) ON DELETE CASCADE,
+    FOREIGN KEY (invoice_id) REFERENCES invoices (id) ON DELETE CASCADE
+);
+CREATE UNIQUE INDEX document_invoice_unique_document_invoice_idx ON document_invoice (document_id, invoice_id);

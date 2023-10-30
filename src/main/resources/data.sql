@@ -67,3 +67,32 @@ VALUES (100022, 'VUIA.465521.004.docx', 'VUIA.465521.004/0/VUIA.465521.004.docx'
        (100024, 'VUIA.465521.004.pdf', 'VUIA.465521.004/2/VUIA.465521.004.pdf'),
        (100025, 'List_1.pdf', 'VUIA.465521.004E3/0/List_1.pdf'),
        (100025, 'List_2.pdf', 'VUIA.465521.004E3/0/List_2.pdf');
+
+INSERT INTO subscribers (document_id, company_id, accounted)
+VALUES (100014, 100006, true), --same invoice (and letter)
+       (100014, 100007, true),
+       (100014, 100008, false),
+       (100015, 100006, true), --same invoice (and letter)
+       (100015, 100008, true);
+
+INSERT INTO letters (number, date, company_id)
+VALUES (null, null, 100006), --has two documents in invoice
+       ('15/49-3256', '2019-02-14', 100006), -- second letter for subscriber
+       (null, null, 100007),
+       ('15/49-1456', '2016-05-20', 100008),
+       (null, null, 100008);
+
+INSERT INTO invoices (number, date, doc_status, letter_id)
+VALUES ('75', '2018-03-16', 'ACCOUNTED_COPY', 100031), --has two documents
+       ('84', '2019-02-12', 'DUPLICATE', 100032),
+       ('11', '2017-07-15', 'ACCOUNTED_COPY', 100033),
+       ('21', '2017-09-18', 'UNACCOUNTED_COPY', 100034),
+       ('33', '2016-01-12', 'ACCOUNTED_COPY', 100035);
+
+INSERT INTO document_invoice (document_id, invoice_id)
+VALUES (100014, 100036), --same invoice (and letter)
+       (100014, 100037),
+       (100014, 100038),
+       (100014, 100039),
+       (100015, 100036), --same invoice (and letter)
+       (100015, 100040);

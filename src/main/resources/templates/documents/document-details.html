@@ -112,7 +112,7 @@
                                     </div>
                                 </div>
                                 <div sec:authorize="hasAnyRole('ADMIN','ARCHIVIST')" class="float-end">
-                                    <a th:href="@{'/documents/edit/' + ${document.id}}" class="btn btn-warning" type="button">Edit card</a>
+                                    <a th:href="@{'/documents/edit/' + ${document.id}}" class="btn btn-sm btn-warning" type="button">Edit card</a>
                                 </div>
                             </div>
                             <div class="tab-pane fade" id="documentChangesTab" role="tabpanel" aria-labelledby="nav-changes-tab" tabindex="0"></div>
@@ -324,6 +324,39 @@
             </div>
         </div>
 
+        <!-- Resubscribe modal -->
+        <div class="modal fade" id="resubscribeModal" tabindex="-1" aria-labelledby="resubscribeModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="resubscribeModalLabel">Are you sure want to resubscribe?</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <input type="hidden" name="subscriberId" id="resubscribeModalSubscriberId" value=""/>
+                    <input type="hidden" name="subscriberName" id="resubscribeModalSubscriberName" value=""/>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-success" onclick="resubscribe()">Resubscribe</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sending list modal -->
+        <div class="modal fade" id="sendingListModal" tabindex="-1" aria-labelledby="sendingListModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="sendingListModalLabel">Subscriber's sending list</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Sending list
+                    </div>
+                </div>
+            </div>
+        </div>
+
 
     </appMain>
 
@@ -366,13 +399,15 @@
         let infoRow = $('<div></div>').addClass('row mt-2').html(`<div class="col-5 small"></div><div class="col-7 small text-end">${subscriber.status.replace('_', ' ').toLowerCase()}</div>`);
         cardBody.append(infoRow);
         if (subscriber.subscribed || subscriber.unsubscribeTimestamp != null) {
-            let infoRowHtml = `<a type="button" title=${subscriber.subscribed ? 'Unsubscribe' : 'Resubscribe'} data-bs-toggle="modal"
+            let infoRowHtml = `<a type="button" title='${subscriber.subscribed ? 'Unsubscribe' : 'Resubscribe'}' data-bs-toggle="modal"
                                 data-bs-target=${subscriber.subscribed ? '#unsubscribeModal' : '#resubscribeModal'}
-                                data-subscribername=${subscriber.company.name} data-subscriberid=${subscriber.id}>
-            <span class="badge text-bg-${subscriber.subscribed ? 'danger' : 'success'}">${subscriber.subscribed ? 'Unsub' : 'Resub'}</span></a>`;
+                                data-subscriberid='${subscriber.id}' data-subscribername='${subscriber.company.name}'>
+                                <span class="badge text-bg-${subscriber.subscribed ? 'danger' : 'success'}">${subscriber.subscribed ? 'Unsub' : 'Resub'}</span></a>`;
             infoRow.find('.col-5').html(infoRowHtml);
         }
-        infoRow.find('.col-7').append('<a type="button" title="Show info" class="ms-1"><i class="fa-solid fa-circle-info"></i></a>');
+        infoRow.find('.col-7').append(`<a type="button" title="Show info" class="ms-1" data-bs-toggle="modal"
+                                        data-bs-target="#sendingListModal" data-subscribername='${subscriber.company.name}'>
+                                        <i class="fa-solid fa-circle-info"></i></a>`);
         card.append(cardBody);
         return card;
     }
@@ -394,6 +429,10 @@
 
     }
 
+    function resubscribe() {
+
+    }
+
     $('#unsubscribeModal').on('show.bs.modal', function(e) {
         let subscriberName = $(e.relatedTarget).data('subscribername');
         let subscriberId = $(e.relatedTarget).data('subscriberid');
@@ -403,6 +442,17 @@
         $(e.currentTarget).find('#unsubscribeModalUnsubscribeReason').val('');
     });
 
+    $('#resubscribeModal').on('show.bs.modal', function(e) {
+        let subscriberName = $(e.relatedTarget).data('subscribername');
+        let subscriberId = $(e.relatedTarget).data('subscriberid');
+        $(e.currentTarget).find('#resubscribeModalLabel').text(`Resubscribe: ${subscriberName}?`);
+        $(e.currentTarget).find('#resubscribeModalSubscriberId').val(subscriberId);
+        $(e.currentTarget).find('#resubscribeModalSubscriberName').val(subscriberName);
+    });
 
+    $('#sendingListModal').on('show.bs.modal', function(e) {
+        let subscriberName = $(e.relatedTarget).data('subscribername');
+        $(e.currentTarget).find('#sendingListModalLabel').text(`${subscriberName} sending list`);
+    });
 
 </script>

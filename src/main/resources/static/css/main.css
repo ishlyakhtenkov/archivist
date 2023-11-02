@@ -227,3 +227,11 @@ input[type=date]:focus::-webkit-datetime-edit {
 .tab-content {
     min-height: 425px;
 }
+
+.bg-light-green {
+    background-color: var(--light-green);
+}
+
+.sending-title-field {
+    width: 105px;
+}

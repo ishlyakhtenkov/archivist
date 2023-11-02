@@ -18,6 +18,7 @@ import ru.javaprojects.archivist.common.util.FileUtil;
 import ru.javaprojects.archivist.documents.DocumentService;
 import ru.javaprojects.archivist.documents.model.Applicability;
 import ru.javaprojects.archivist.documents.model.Content;
+import ru.javaprojects.archivist.documents.model.Subscriber;
 import ru.javaprojects.archivist.documents.to.ApplicabilityTo;
 
 import java.util.List;
@@ -87,5 +88,11 @@ public class DocumentRestController {
                                  @RequestPart @NotEmpty MultipartFile[] files) {
         log.info("create content change number={} for document {}", changeNumber, id);
         return service.createContent(id, changeNumber, files);
+    }
+
+    @GetMapping("/{id}/subscribers")
+    public List<Subscriber> getSubscribers(@PathVariable long id) {
+        log.info("get subscribers for document {}", id);
+        return service.getSubscribers(id);
     }
 }

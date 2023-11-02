@@ -132,10 +132,13 @@ CREATE UNIQUE INDEX document_content_files_unique_document_content_name_idx ON d
 
 CREATE TABLE subscribers
 (
-    id          BIGINT DEFAULT nextval('global_seq')  PRIMARY KEY,
-    document_id BIGINT                   NOT NULL,
-    company_id  BIGINT                   NOT NULL,
-    accounted   BOOL   DEFAULT TRUE      NOT NULL,
+    id                    BIGINT DEFAULT nextval('global_seq')  PRIMARY KEY,
+    document_id           BIGINT                   NOT NULL,
+    company_id            BIGINT                   NOT NULL,
+    subscribed            BOOL   DEFAULT TRUE      NOT NULL,
+    doc_status            VARCHAR(16) NOT NULL,
+    unsubscribe_timestamp TIMESTAMP,
+    unsubscribe_reason    VARCHAR(256),
     FOREIGN KEY (document_id) REFERENCES documents (id) ON DELETE CASCADE,
     FOREIGN KEY (company_id) REFERENCES companies (id) ON DELETE CASCADE
 );

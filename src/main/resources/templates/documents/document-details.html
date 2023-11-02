@@ -28,7 +28,7 @@
                                 <button class="nav-link active" id="documentGeneralTabButton" data-bs-toggle="tab" data-bs-target="#documentGeneralTab" type="button" role="tab" aria-controls="nav-general" aria-selected="true">General</button>
                                 <button class="nav-link" id="documentChangesTabButton" data-bs-toggle="tab" data-bs-target="#documentChangesTab" type="button" role="tab" aria-controls="nav-changes" aria-selected="false">Changes</button>
                                 <button class="nav-link" id="documentApplicabilityTabButton" data-bs-toggle="tab" data-bs-target="#documentApplicabilityTab" type="button" role="tab" aria-controls="nav-applicability" aria-selected="false">Applicability</button>
-                                <button class="nav-link" id="documentSendingTabButton" data-bs-toggle="tab" data-bs-target="#documentSendingTab" type="button" role="tab" aria-controls="nav-sending" aria-selected="false">Sending</button>
+                                <button class="nav-link" id="documentSubscribersTabButton" data-bs-toggle="tab" data-bs-target="#documentSubscribersTab" type="button" role="tab" aria-controls="nav-subscribers" aria-selected="false">Subscribers</button>
                                 <button class="nav-link" id="documentContentTabButton" data-bs-toggle="tab" data-bs-target="#documentContentTab" type="button" role="tab" aria-controls="nav-content" aria-selected="false">Content</button>
                             </div>
                         </nav>
@@ -156,7 +156,18 @@
                                     </table>
                                 </div>
                             </div>
-                            <div class="tab-pane fade" id="documentSendingTab" role="tabpanel" aria-labelledby="nav-sending-tab" tabindex="0">Sending</div>
+
+                            <!-- Subscribers Tab-->
+                            <div class="tab-pane fade mt-2" id="documentSubscribersTab" role="tabpanel" aria-labelledby="nav-subscribers-tab" tabindex="0">
+                                <div class="text-end mb-1">
+                                    <button class="btn btn-sm btn-secondary" title="Add sending" data-bs-toggle="modal" data-bs-target="#addSendingModal">Add sending</button>
+                                </div>
+                                <div class="row row-cols-1 row-cols-md-2 row-cols-xxl-3">
+                                    <div class="col" id="subscriberColumn1"></div>
+                                    <div class="col" id="subscriberColumn2"></div>
+                                    <div class="col" id="subscriberColumn3"></div>
+                                </div>
+                            </div>
 
                             <!-- Content Tab-->
                             <div class="tab-pane fade mt-2" id="documentContentTab" role="tabpanel" aria-labelledby="nav-content-tab" tabindex="0">
@@ -224,7 +235,98 @@
                 </div>
             </div>
         </div>
+
+        <!-- Add sending modal -->
+        <div class="modal fade" id="addSendingModal" tabindex="-1" aria-labelledby="addSendingModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="addSendingModalLabel">Add new sending</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form id="addSendingForm" onsubmit="return false;">
+                        <div class="modal-body">
+                            <div class="mb-4 mt-3">
+                                <div class="input-group">
+                                    <span class="input-group-text sending-title-field" title="Company">Company</span>
+                                    <select class="form-select" id="company-selector" required></select>
+                                </div>
+                                <div class="input-group mt-3">
+                                    <span class="input-group-text sending-title-field" title="Status">Status</span>
+                                    <select class="form-select" id="status-selector" required>
+                                        <option value="DUPLICATE">Duplicate</option>
+                                        <option value="ACCOUNTED_COPY">Accounted copy</option>
+                                        <option value="UNACCOUNTED_COPY">Unaccounted copy</option>
+                                    </select>
+                                </div>
+                                <div class="row row-cols-1 row-cols-md-2">
+                                    <div class="col">
+                                        <div class="input-group mt-3">
+                                            <span class="input-group-text sending-title-field" title="Invoice number">Invoice num</span>
+                                            <input type="text" class="form-control" id="invoiceNumInput" required>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="input-group mt-3">
+                                            <span class="input-group-text d-none d-md-block" title="Invoice date">Date</span>
+                                            <span class="input-group-text sending-title-field d-md-none" title="Invoice date">Invoice date</span>
+                                            <input type="date" class="form-control" id="invoiceDateInput" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row row-cols-1 row-cols-md-2">
+                                    <div class="col">
+                                        <div class="input-group mt-3">
+                                            <span class="input-group-text sending-title-field" title="Letter number">Letter num</span>
+                                            <input type="text" class="form-control" id="letterNumInput">
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="input-group mt-3">
+                                            <span class="input-group-text d-none d-md-block" title="Letter date">Date</span>
+                                            <span class="input-group-text sending-title-field d-md-none" title="Letter date">Letter date</span>
+                                            <input type="date" class="form-control" id="letterDateInput">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-warning" onclick="addSending()">Add sending</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Unsubscribe modal -->
+        <div class="modal fade" id="unsubscribeModal" tabindex="-1" aria-labelledby="unsubscribeModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="unsubscribeModalLabel">Are you sure want to unsubscribe?</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form id="unsubscribeForm" onsubmit="return false;">
+                        <div class="modal-body">
+                            <input type="hidden" name="subscriberId" id="unsubscribeModalSubscriberId" value=""/>
+                            <input type="hidden" name="subscriberName" id="unsubscribeModalSubscriberName" value=""/>
+                            <label for="unsubscribeModalUnsubscribeReason" class="form-label">Unsubscribe reason</label>
+                            <textarea class="form-control" id="unsubscribeModalUnsubscribeReason" required></textarea>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-danger" onclick="unsubscribe()">Unsubscribe</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
     </appMain>
+
 
     <ownScript>
         <script src="/js/common.js?v=1"></script>
@@ -233,5 +335,74 @@
 </th:block>
 
 <script>
+    $('#documentSubscribersTabButton').on('shown.bs.tab', () => {
+        getSubscribers();
+    });
+
+    function getSubscribers() {
+        $.ajax({
+            url: `/documents/${documentId}/subscribers`
+        }).done(subscribers => {
+            clearSubscriberColumns();
+            if (subscribers.length !== 0) {
+                let index = 0;
+                subscribers.forEach(subscriber => {
+                    subscriberColumns[index].append(generateSubscriberCard(subscriber));
+                    index++;
+                });
+            }
+        }).fail(function (data) {
+            handleError(data, `Failed to get subscribers`);
+        });
+    }
+
+    function clearSubscriberColumns() {
+        subscriberColumns.forEach(subscriberColumn => subscriberColumn.empty());
+    }
+
+    function generateSubscriberCard(subscriber) {
+        let card = $('<div></div>').addClass(`card mt-1 bg-${subscriber.subscribed ? 'light-green' : 'light'}`);
+        let cardBody = $('<div></div>').addClass('card-body p-2 text-start').html(`<div class="card-title text-truncate m-0">${subscriber.company.name}</div>`);
+        let infoRow = $('<div></div>').addClass('row mt-2').html(`<div class="col-5 small"></div><div class="col-7 small text-end">${subscriber.status.replace('_', ' ').toLowerCase()}</div>`);
+        cardBody.append(infoRow);
+        if (subscriber.subscribed || subscriber.unsubscribeTimestamp != null) {
+            let infoRowHtml = `<a type="button" title=${subscriber.subscribed ? 'Unsubscribe' : 'Resubscribe'} data-bs-toggle="modal"
+                                data-bs-target=${subscriber.subscribed ? '#unsubscribeModal' : '#resubscribeModal'}
+                                data-subscribername=${subscriber.company.name} data-subscriberid=${subscriber.id}>
+            <span class="badge text-bg-${subscriber.subscribed ? 'danger' : 'success'}">${subscriber.subscribed ? 'Unsub' : 'Resub'}</span></a>`;
+            infoRow.find('.col-5').html(infoRowHtml);
+        }
+        infoRow.find('.col-7').append('<a type="button" title="Show info" class="ms-1"><i class="fa-solid fa-circle-info"></i></a>');
+        card.append(cardBody);
+        return card;
+    }
+
+    $('#addSendingModal').on('show.bs.modal', function(e) {
+        getCompanies(); // add to company-selector
+        $(e.currentTarget).find('#status-selector').val('');
+        $(e.currentTarget).find('#invoiceNumInput').val('');
+        $(e.currentTarget).find('#invoiceDateInput').val('');
+        $(e.currentTarget).find('#letterNumInput').val('');
+        $(e.currentTarget).find('#letterDateInput').val('');
+    });
+
+    function getCompanies() {
+
+    }
+
+    function unsubscribe() {
+
+    }
+
+    $('#unsubscribeModal').on('show.bs.modal', function(e) {
+        let subscriberName = $(e.relatedTarget).data('subscribername');
+        let subscriberId = $(e.relatedTarget).data('subscriberid');
+        $(e.currentTarget).find('#unsubscribeModalLabel').text(`Unsubscribe: ${subscriberName}?`);
+        $(e.currentTarget).find('#unsubscribeModalSubscriberId').val(subscriberId);
+        $(e.currentTarget).find('#unsubscribeModalSubscriberName').val(subscriberName);
+        $(e.currentTarget).find('#unsubscribeModalUnsubscribeReason').val('');
+    });
+
+
 
 </script>

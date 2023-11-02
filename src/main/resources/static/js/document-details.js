@@ -1,6 +1,7 @@
 const documentId =$('#documentId').val();
 const contentArea = $('#contentArea');
 let previousContentOpened = false;
+const subscriberColumns = [$('#subscriberColumn1'), $('#subscriberColumn2'), $('#subscriberColumn3')];
 
 $(window).on('load', () => init());
 

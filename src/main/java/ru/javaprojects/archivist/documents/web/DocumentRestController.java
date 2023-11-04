@@ -18,6 +18,7 @@ import ru.javaprojects.archivist.common.util.FileUtil;
 import ru.javaprojects.archivist.documents.DocumentService;
 import ru.javaprojects.archivist.documents.model.Applicability;
 import ru.javaprojects.archivist.documents.model.Content;
+import ru.javaprojects.archivist.documents.model.DocumentInvoice;
 import ru.javaprojects.archivist.documents.model.Subscriber;
 import ru.javaprojects.archivist.documents.to.ApplicabilityTo;
 
@@ -94,5 +95,11 @@ public class DocumentRestController {
     public List<Subscriber> getSubscribers(@PathVariable long id) {
         log.info("get subscribers for document {}", id);
         return service.getSubscribers(id);
+    }
+
+    @GetMapping("/{id}/sendings/by-company")
+    public List<DocumentInvoice> getSendings(@PathVariable long id, @RequestParam long companyId) {
+        log.info("get sendings to company {} for document {}", companyId, id);
+        return service.getSendings(id, companyId);
     }
 }

@@ -342,16 +342,29 @@
             </div>
         </div>
 
-        <!-- Sending list modal -->
-        <div class="modal fade" id="sendingListModal" tabindex="-1" aria-labelledby="sendingListModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
+        <!-- Subscriber info modal -->
+        <div class="modal fade" id="subscriberInfoModal" tabindex="-1" aria-labelledby="subscriberInfoModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="sendingListModalLabel">Subscriber's sending list</h1>
+                        <h1 class="modal-title fs-5" id="subscriberInfoModalLabel">Subscriber info</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        Sending list
+                        <div id="unsubscribeInfo"></div>
+                        <div class="table-responsive text-nowrap">
+                            <table class="table table-hover" hidden id="sendingsTable">
+                                <h5 class="text-secondary fw-bold mb-0">Sendings</h5>
+                                <thead>
+                                <tr>
+                                    <th>Doc status</th>
+                                    <th>Invoice</th>
+                                    <th>Letter</th>
+                                </tr>
+                                </thead>
+                                <tbody class="table-group-divider"></tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -368,6 +381,8 @@
 </th:block>
 
 <script>
+    const subscriberMap = new Map();
+
     $('#documentSubscribersTabButton').on('shown.bs.tab', () => {
         getSubscribers();
     });
@@ -380,6 +395,7 @@
             if (subscribers.length !== 0) {
                 let index = 0;
                 subscribers.forEach(subscriber => {
+                    subscriberMap.set(subscriber.id, subscriber);
                     subscriberColumns[index].append(generateSubscriberCard(subscriber));
                     index++;
                 });
@@ -395,9 +411,13 @@
 
     function generateSubscriberCard(subscriber) {
         let card = $('<div></div>').addClass(`card mt-1 bg-${subscriber.subscribed ? 'light-green' : 'light'}`);
-        let cardBody = $('<div></div>').addClass('card-body p-2 text-start').html(`<div class="card-title text-truncate m-0">${subscriber.company.name}</div>`);
+        let cardBody = $('<div></div>').addClass('card-body p-2 text-start');
+        let titleRow = $('<div></div>').addClass('row card-title me-2').html(`<div class="col-11 text-truncate">${subscriber.company.name}</div>
+                                        <div class="col-1"><a type="button" title="Show info" class="ms-1" data-bs-toggle="modal"
+                                        data-bs-target="#subscriberInfoModal" data-subscriberid='${subscriber.id}'>
+                                        <i class="fa-solid fa-circle-info"></i></a></div>`);
+        cardBody.append(titleRow);
         let infoRow = $('<div></div>').addClass('row mt-2').html(`<div class="col-5 small"></div><div class="col-7 small text-end">${subscriber.status.replace('_', ' ').toLowerCase()}</div>`);
-        cardBody.append(infoRow);
         if (subscriber.subscribed || subscriber.unsubscribeTimestamp != null) {
             let infoRowHtml = `<a type="button" title='${subscriber.subscribed ? 'Unsubscribe' : 'Resubscribe'}' data-bs-toggle="modal"
                                 data-bs-target=${subscriber.subscribed ? '#unsubscribeModal' : '#resubscribeModal'}
@@ -405,9 +425,7 @@
                                 <span class="badge text-bg-${subscriber.subscribed ? 'danger' : 'success'}">${subscriber.subscribed ? 'Unsub' : 'Resub'}</span></a>`;
             infoRow.find('.col-5').html(infoRowHtml);
         }
-        infoRow.find('.col-7').append(`<a type="button" title="Show info" class="ms-1" data-bs-toggle="modal"
-                                        data-bs-target="#sendingListModal" data-subscribername='${subscriber.company.name}'>
-                                        <i class="fa-solid fa-circle-info"></i></a>`);
+        cardBody.append(infoRow);
         card.append(cardBody);
         return card;
     }
@@ -450,9 +468,78 @@
         $(e.currentTarget).find('#resubscribeModalSubscriberName').val(subscriberName);
     });
 
-    $('#sendingListModal').on('show.bs.modal', function(e) {
-        let subscriberName = $(e.relatedTarget).data('subscribername');
-        $(e.currentTarget).find('#sendingListModalLabel').text(`${subscriberName} sending list`);
+    $('#subscriberInfoModal').on('show.bs.modal', function(e) {
+        let subscriber = subscriberMap.get($(e.relatedTarget).data('subscriberid'));
+        let subscribedBadgeText;
+        if (subscriber.subscribed) {
+            subscribedBadgeText = 'Subscribed';
+        } else if (subscriber.unsubscribeTimestamp != null) {
+            subscribedBadgeText = 'Unsubscribed';
+        } else {
+            subscribedBadgeText = 'Not subscribed';
+        }
+        let subscribedBadgeHtml = `<span class="badge text-bg-${subscriber.subscribed ? 'success' : 'secondary'}">${subscribedBadgeText}</span>`;
+        $(e.currentTarget).find('#subscriberInfoModalLabel').html(`${subscriber.company.name} ${subscribedBadgeHtml}`);
+        $('#unsubscribeInfo').empty();
+        if (subscriber.unsubscribeTimestamp != null) {
+            fillUnsubscribeInfoArea(subscriber);
+        }
+        $('#sendingsTable').attr('hidden', true);
+        $('#sendingsTable > tbody').empty();
+        getSendings(subscriber.company.id);
     });
+
+    function fillUnsubscribeInfoArea(subscriber) {
+        let unsubscribeInfoArea = $('#unsubscribeInfo');
+        let unsubscribeInfo = $('<div></div>').addClass('mb-2').text(`Unsubscribed ${new Date(subscriber.unsubscribeTimestamp).toLocaleString()} due to: ${subscriber.unsubscribeReason}`);
+        unsubscribeInfoArea.append(unsubscribeInfo);
+    }
+
+    function getSendings(companyId) {
+        $.ajax({
+            url: `/documents/${documentId}/sendings/by-company`,
+            data: `companyId=${companyId}`
+        }).done(sendings => {
+            if (sendings.length !== 0) {
+                $('#sendingsTable').attr('hidden', false);
+                sendings.forEach(sending => {
+                    addSendingRow(sending);
+                });
+                const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
+                const popoverList = [...popoverTriggerList].map(popoverTriggerEl =>
+                    new bootstrap.Popover(popoverTriggerEl, {html : true, sanitize: false}));
+            }
+        }).fail(function (data) {
+            handleError(data, `Failed to get sendings`);
+        });
+    }
+
+    function addSendingRow(sending) {
+        let docStatusTd = $('<td></td>').text(`${sending.invoice.status}`);
+        let invoiceTd = $('<td></td>').html(`${sending.invoice.number} (${new Date(sending.invoice.date).toLocaleDateString()})`);
+        let letterTdHtml = '';
+        if (sending.invoice.letter.number != null) {
+            letterTdHtml = `${sending.invoice.letter.number} (${new Date(sending.invoice.letter.date).toLocaleDateString()})`;
+        }
+        let letterTd = $('<td></td>').html(letterTdHtml);
+        let deleteSendingSubmitHtml = `<button class='btn btn-sm btn-secondary ms-3'>Cancel</button>
+                                       <button class='btn btn-sm btn-danger' onclick='deleteSending(${sending.id})'>Delete</button>`;
+
+        let deleteActionTd = $('<td></td>').addClass('text-end').html(`<a tabindex="0" type="button" class="trash-button me-3"
+                title="Delete sending" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-title="Delete this sending?"
+                data-bs-content="${deleteSendingSubmitHtml}"> <i class="fa-solid fa-trash"></i></a>`);
+        let sendingRow = $('<tr></tr>');
+        sendingRow.append(docStatusTd);
+        sendingRow.append(invoiceTd);
+        sendingRow.append(letterTd);
+        sendingRow.append(deleteActionTd);
+        $('#sendingsTable > tbody').append(sendingRow);
+    }
+
+    function deleteSending(sendingId) {
+        console.log('delete ' + sendingId);
+
+    }
+
 
 </script>

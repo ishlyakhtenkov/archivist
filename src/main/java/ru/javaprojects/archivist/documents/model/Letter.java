@@ -32,4 +32,11 @@ public class Letter extends BaseEntity implements HasId {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id")
     private Company company;
+
+    public Letter(Long id, String number, LocalDate date, Company company) {
+        super(id);
+        this.number = number;
+        this.date = date;
+        this.company = company;
+    }
 }

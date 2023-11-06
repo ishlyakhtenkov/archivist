@@ -1,7 +1,7 @@
 package ru.javaprojects.archivist.documents.model;
 
 public enum Status {
-    ORIGINAL("Original"), DUPLICATE("Duplicate"), ACCOUNTED_COPY("Accounted copy"), UNACCOUNTED_COPY("Unaccounted copy");
+    UNACCOUNTED_COPY("Unaccounted copy"), ACCOUNTED_COPY("Accounted copy"), DUPLICATE("Duplicate"), ORIGINAL("Original");
 
     private final String displayName;
 

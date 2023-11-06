@@ -39,4 +39,12 @@ public class Invoice extends BaseEntity implements HasId {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "letter_id")
     private Letter letter;
+
+    public Invoice(Long id, String number, LocalDate date, Status status, Letter letter) {
+        super(id);
+        this.number = number;
+        this.date = date;
+        this.status = status;
+        this.letter = letter;
+    }
 }

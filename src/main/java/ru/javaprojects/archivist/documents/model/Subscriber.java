@@ -47,4 +47,12 @@ public class Subscriber extends BaseEntity implements HasId {
     @Size(max = 256)
     @Column(name = "unsubscribe_reason")
     private String unsubscribeReason;
+
+    public Subscriber(Long id, Document document, Company company, boolean subscribed, Status status) {
+        super(id);
+        this.document = document;
+        this.company = company;
+        this.subscribed = subscribed;
+        this.status = status;
+    }
 }

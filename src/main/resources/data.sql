@@ -89,7 +89,7 @@ VALUES ('75', '2018-03-16', 'ACCOUNTED_COPY', 100031), --has two documents
        ('21', '2017-09-18', 'DUPLICATE', 100034),
        ('33', '2016-01-12', 'ACCOUNTED_COPY', 100035);
 
-INSERT INTO document_invoice (document_id, invoice_id)
+INSERT INTO sendings (document_id, invoice_id)
 VALUES (100014, 100036), --same invoice (and letter)
        (100014, 100037),
        (100014, 100038),

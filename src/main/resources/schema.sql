@@ -165,7 +165,7 @@ CREATE TABLE invoices
 );
 CREATE UNIQUE INDEX invoices_unique_number_date_idx ON invoices (number, date);
 
-CREATE TABLE document_invoice
+CREATE TABLE sendings
 (
     id          BIGINT DEFAULT nextval('global_seq')  PRIMARY KEY,
     document_id BIGINT NOT NULL,
@@ -173,4 +173,4 @@ CREATE TABLE document_invoice
     FOREIGN KEY (document_id) REFERENCES documents (id) ON DELETE CASCADE,
     FOREIGN KEY (invoice_id) REFERENCES invoices (id) ON DELETE CASCADE
 );
-CREATE UNIQUE INDEX document_invoice_unique_document_invoice_idx ON document_invoice (document_id, invoice_id);
+CREATE UNIQUE INDEX sendings_unique_document_invoice_idx ON sendings (document_id, invoice_id);

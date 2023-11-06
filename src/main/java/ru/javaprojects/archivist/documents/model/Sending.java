@@ -9,11 +9,11 @@ import ru.javaprojects.archivist.common.HasId;
 import ru.javaprojects.archivist.common.model.BaseEntity;
 
 @Entity
-@Table(name = "document_invoice", uniqueConstraints = @UniqueConstraint(columnNames = {"document_id", "invoice_id"}, name = "document_invoice_unique_document_invoice_idx"))
+@Table(name = "sendings", uniqueConstraints = @UniqueConstraint(columnNames = {"document_id", "invoice_id"}, name = "sendings_unique_document_invoice_idx"))
 @Getter
 @Setter
 @NoArgsConstructor
-public class DocumentInvoice extends BaseEntity implements HasId {
+public class Sending extends BaseEntity implements HasId {
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
@@ -24,4 +24,10 @@ public class DocumentInvoice extends BaseEntity implements HasId {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "invoice_id")
     private Invoice invoice;
+
+    public Sending(Long id, Document document, Invoice invoice) {
+        super(id);
+        this.document = document;
+        this.invoice = invoice;
+    }
 }

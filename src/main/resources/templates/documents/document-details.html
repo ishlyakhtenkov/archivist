@@ -249,11 +249,11 @@
                             <div class="mb-4 mt-3">
                                 <div class="input-group">
                                     <span class="input-group-text sending-title-field" title="Company">Company</span>
-                                    <select class="form-select" id="company-selector" required></select>
+                                    <select class="form-select" id="companySelector" required></select>
                                 </div>
                                 <div class="input-group mt-3">
                                     <span class="input-group-text sending-title-field" title="Status">Status</span>
-                                    <select class="form-select" id="status-selector" required>
+                                    <select class="form-select" id="statusSelector" required>
                                         <option value="DUPLICATE">Duplicate</option>
                                         <option value="ACCOUNTED_COPY">Accounted copy</option>
                                         <option value="UNACCOUNTED_COPY">Unaccounted copy</option>
@@ -293,7 +293,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-warning" onclick="addSending()">Add sending</button>
+                            <button type="submit" class="btn btn-warning" onclick="createSending()">Add sending</button>
                         </div>
                     </form>
                 </div>
@@ -382,16 +382,17 @@
 
 <script>
     const subscriberMap = new Map();
+    const companySelector = $('#companySelector');
 
     $('#documentSubscribersTabButton').on('shown.bs.tab', () => {
         getSubscribers();
     });
 
     function getSubscribers() {
+        clearSubscriberColumns();
         $.ajax({
             url: `/documents/${documentId}/subscribers`
         }).done(subscribers => {
-            clearSubscriberColumns();
             if (subscribers.length !== 0) {
                 let index = 0;
                 subscribers.forEach(subscriber => {
@@ -431,16 +432,61 @@
     }
 
     $('#addSendingModal').on('show.bs.modal', function(e) {
-        getCompanies(); // add to company-selector
-        $(e.currentTarget).find('#status-selector').val('');
+        companySelector.empty();
+        fillCompaniesSelector(); // add to company-selector
+        $(e.currentTarget).find('#statusSelector').val('');
         $(e.currentTarget).find('#invoiceNumInput').val('');
         $(e.currentTarget).find('#invoiceDateInput').val('');
         $(e.currentTarget).find('#letterNumInput').val('');
         $(e.currentTarget).find('#letterDateInput').val('');
     });
 
-    function getCompanies() {
+    function fillCompaniesSelector() {
+        $.ajax({
+            url: '/companies/all'
+        }).done(companies => {
+            if (companies.length !== 0) {
+                companies.forEach(company => {
+                    companySelector.append($('<option></option>').val(company.id).html(company.name));
+                });
+                companySelector.val('');
+            }
+        }).fail(function (data) {
+            handleError(data, `Failed to get companies`);
+        });
+    }
 
+    function createSending() {
+        let companyId = companySelector.val();
+        let status = $('#statusSelector').val();
+        let invoiceNum = $('#invoiceNumInput').val();
+        let invoiceDate = $('#invoiceDateInput').val();
+        if (companyId.length && status.length && invoiceNum.length && invoiceDate.length) {
+            $.ajax({
+                url: '/documents/sendings',
+                type: 'POST',
+                data: JSON.stringify(makeSendingToObject()),
+                contentType: 'application/json; charset=utf-8'
+            }).done(() => {
+                getSubscribers();
+                $('#addSendingModal').modal('toggle');
+                successToast(`Sending was added`);
+            }).fail(function(data) {
+                handleError(data, 'Failed to add sending');
+            });
+        }
+    }
+
+    function makeSendingToObject() {
+        return {
+            documentId: documentId,
+            companyId: companySelector.val(),
+            status: $('#statusSelector').val(),
+            invoiceNumber: $('#invoiceNumInput').val(),
+            invoiceDate: $('#invoiceDateInput').val(),
+            letterNumber: $('#letterNumInput').val(),
+            letterDate: $('#letterDateInput').val()
+        };
     }
 
     function unsubscribe() {
@@ -526,6 +572,7 @@
         let invoiceTd = $('<td></td>').html(`${sending.invoice.number} (${new Date(sending.invoice.date).toLocaleDateString()})`);
         let letterTdHtml = '';
         if (sending.invoice.letter.number != null) {
+            console.log(sending.invoice.letter.number);
             letterTdHtml = `${sending.invoice.letter.number} (${new Date(sending.invoice.letter.date).toLocaleDateString()})`;
         }
         let letterTd = $('<td></td>').html(letterTdHtml);

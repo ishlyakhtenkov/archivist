@@ -6,6 +6,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import ru.javaprojects.archivist.companies.CompanyService;
+import ru.javaprojects.archivist.companies.model.Company;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(value = CompanyUIController.COMPANIES_URL, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -19,5 +22,11 @@ public class CompanyRestController {
     public void delete(@PathVariable long id) {
         log.info("delete {}", id);
         service.delete(id);
+    }
+
+    @GetMapping("/all")
+    public List<Company> getAll() {
+        log.info("get all");
+        return service.getAll();
     }
 }

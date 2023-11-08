@@ -21,6 +21,7 @@ import ru.javaprojects.archivist.documents.repository.*;
 import ru.javaprojects.archivist.documents.to.ApplicabilityTo;
 import ru.javaprojects.archivist.documents.to.SendingTo;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -145,6 +146,7 @@ public class DocumentService {
 
     @Transactional
     public Sending createSending(SendingTo sendingTo) {
+        Assert.notNull(sendingTo, "sendingTo must not be null");
         Document document = repository.getExisted(sendingTo.getDocumentId());
         Invoice invoice = invoiceRepository.findByNumberAndDate(sendingTo.getInvoiceNumber(), sendingTo.getInvoiceDate())
                 .orElseGet(() -> {
@@ -189,5 +191,22 @@ public class DocumentService {
                 }
             }
         }
+    }
+
+    @Transactional
+    public void unsubscribe(long subscriberId, String unsubscribeReason) {
+        Assert.notNull(unsubscribeReason, "unsubscribeReason must not be null");
+        Subscriber subscriber = subscriberRepository.getExisted(subscriberId);
+        subscriber.setSubscribed(false);
+        subscriber.setUnsubscribeReason(unsubscribeReason);
+        subscriber.setUnsubscribeTimestamp(LocalDateTime.now());
+    }
+
+    @Transactional
+    public void resubscribe(long subscriberId) {
+        Subscriber subscriber = subscriberRepository.getExisted(subscriberId);
+        subscriber.setSubscribed(true);
+        subscriber.setUnsubscribeReason(null);
+        subscriber.setUnsubscribeTimestamp(null);
     }
 }

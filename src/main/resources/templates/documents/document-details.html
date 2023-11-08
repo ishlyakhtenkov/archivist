@@ -414,7 +414,7 @@
         let card = $('<div></div>').addClass(`card mt-1 bg-${subscriber.subscribed ? 'light-green' : 'light'}`);
         let cardBody = $('<div></div>').addClass('card-body p-2 text-start');
         let titleRow = $('<div></div>').addClass('row card-title me-2').html(`<div class="col-11 text-truncate">${subscriber.company.name}</div>
-                                        <div class="col-1"><a type="button" title="Show info" class="ms-1" data-bs-toggle="modal"
+                                        <div class="col-1 pe-2"><a type="button" title="Show info" class="ms-1" data-bs-toggle="modal"
                                         data-bs-target="#subscriberInfoModal" data-subscriberid='${subscriber.id}'>
                                         <i class="fa-solid fa-circle-info"></i></a></div>`);
         cardBody.append(titleRow);
@@ -593,6 +593,42 @@
     function deleteSending(sendingId, companyId) {
         console.log('delete ' + sendingId + ' ' + companyId);
         getSendings(companyId);
+    }
+
+    function resubscribe() {
+        let resubscribeModal = $('#resubscribeModal');
+        let id = resubscribeModal.find('#resubscribeModalSubscriberId').val();
+        let name = resubscribeModal.find('#resubscribeModalSubscriberName').val();
+        resubscribeModal.modal('toggle');
+        $.ajax({
+            url: `subscribers/${id}/resubscribe`,
+            type: "PATCH"
+        }).done(function() {
+            getSubscribers();
+            successToast(`${name} was resubscribed`);
+        }).fail(function(data) {
+            handleError(data, `Failed to resubscribe ${name}`);
+        });
+    }
+
+    function unsubscribe() {
+        let unsubscribeModal = $('#unsubscribeModal');
+        let id = unsubscribeModal.find('#unsubscribeModalSubscriberId').val();
+        let name = unsubscribeModal.find('#unsubscribeModalSubscriberName').val();
+        let unsubscribeReason = unsubscribeModal.find('#unsubscribeModalUnsubscribeReason').val();
+        if (unsubscribeReason.length) {
+            $.ajax({
+                url: `subscribers/${id}/unsubscribe`,
+                type: "PATCH",
+                data: "unsubscribeReason=" + unsubscribeReason
+            }).done(function() {
+                unsubscribeModal.modal('toggle');
+                getSubscribers();
+                successToast(`${name} was unsubscribed`);
+            }).fail(function(data) {
+                handleError(data, `Failed to unsubscribe ${name}`);
+            });
+        }
     }
 
 

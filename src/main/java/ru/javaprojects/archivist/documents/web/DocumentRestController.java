@@ -1,8 +1,10 @@
 package ru.javaprojects.archivist.documents.web;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,6 +16,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.javaprojects.archivist.common.util.FileUtil;
+import ru.javaprojects.archivist.common.util.validation.NoHtml;
 import ru.javaprojects.archivist.documents.DocumentService;
 import ru.javaprojects.archivist.documents.model.Applicability;
 import ru.javaprojects.archivist.documents.model.Content;
@@ -108,5 +111,20 @@ public class DocumentRestController {
     public Sending createSending(@Valid @RequestBody SendingTo sendingTo) {
         log.info("create {}", sendingTo);
         return service.createSending(sendingTo);
+    }
+
+
+    @PatchMapping("/subscribers/{id}/unsubscribe")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void unsubscribe(@PathVariable long id, @RequestParam @NotBlank @NoHtml @Size(max = 256) String unsubscribeReason) {
+        log.info("unsubscribe {}", id);
+        service.unsubscribe(id, unsubscribeReason);
+    }
+
+    @PatchMapping("/subscribers/{id}/resubscribe")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void resubscribe(@PathVariable long id) {
+        log.info("resubscribe {}", id);
+        service.resubscribe(id);
     }
 }

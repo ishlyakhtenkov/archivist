@@ -127,4 +127,11 @@ public class DocumentRestController {
         log.info("resubscribe {}", id);
         service.resubscribe(id);
     }
+
+    @DeleteMapping("/sendings/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteSending(@PathVariable long id) {
+        log.info("delete sending {}", id);
+        service.deleteSending(id);
+    }
 }

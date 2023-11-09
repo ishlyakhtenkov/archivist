@@ -10,6 +10,9 @@ import java.util.Optional;
 
 @Transactional(readOnly = true)
 public interface InvoiceRepository extends BaseRepository<Invoice> {
+
     @EntityGraph(attributePaths = "letter.company")
     Optional<Invoice> findByNumberAndDate(String number, LocalDate date);
+
+    long countAllByLetter_Id(long letterId);
 }

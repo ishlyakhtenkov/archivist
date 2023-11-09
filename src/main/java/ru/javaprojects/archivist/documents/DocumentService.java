@@ -209,4 +209,22 @@ public class DocumentService {
         subscriber.setUnsubscribeReason(null);
         subscriber.setUnsubscribeTimestamp(null);
     }
+
+    @Transactional
+    public void deleteSending(long sendingId) {
+        Sending sending = sendingRepository.findByIdWithInvoice(sendingId)
+                .orElseThrow(() -> new NotFoundException("Entity with id=" + sendingId + " not found"));
+        sendingRepository.delete(sending);
+        if (sendingRepository.countAllByInvoice_Id(sending.getInvoice().id()) == 0) {
+            invoiceRepository.delete(sending.getInvoice());
+            if (invoiceRepository.countAllByLetter_Id(sending.getInvoice().getLetter().id()) == 0) {
+                letterRepository.delete(sending.getInvoice().getLetter());
+            }
+        }
+        if (sendingRepository.countAllByDocument_IdAndInvoice_Letter_Company_Id(sending.getDocument().id(),
+                sending.getInvoice().getLetter().getCompany().id()) == 0) {
+            subscriberRepository.deleteByDocument_IdAndCompany_Id(sending.getDocument().id(),
+                    sending.getInvoice().getLetter().getCompany().id());
+        }
+    }
 }

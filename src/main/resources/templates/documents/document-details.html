@@ -285,7 +285,7 @@
                                         <div class="input-group mt-3">
                                             <span class="input-group-text d-none d-md-block" title="Letter date">Date</span>
                                             <span class="input-group-text sending-title-field d-md-none" title="Letter date">Letter date</span>
-                                            <input type="date" class="form-control" id="letterDateInput">
+                                            <input type="date" class="form-control" id="letterDateInput" onchange="$('#letterDateInput').css('color', 'black')">
                                         </div>
                                     </div>
                                 </div>
@@ -438,7 +438,7 @@
         $(e.currentTarget).find('#invoiceNumInput').val('');
         $(e.currentTarget).find('#invoiceDateInput').val('');
         $(e.currentTarget).find('#letterNumInput').val('');
-        $(e.currentTarget).find('#letterDateInput').val('');
+        $(e.currentTarget).find('#letterDateInput').val('').css('color', 'transparent');
     });
 
     function fillCompaniesSelector() {
@@ -572,7 +572,6 @@
         let invoiceTd = $('<td></td>').html(`${sending.invoice.number} (${new Date(sending.invoice.date).toLocaleDateString()})`);
         let letterTdHtml = '';
         if (sending.invoice.letter.number != null) {
-            console.log(sending.invoice.letter.number);
             letterTdHtml = `${sending.invoice.letter.number} (${new Date(sending.invoice.letter.date).toLocaleDateString()})`;
         }
         let letterTd = $('<td></td>').html(letterTdHtml);
@@ -591,8 +590,15 @@
     }
 
     function deleteSending(sendingId, companyId) {
-        console.log('delete ' + sendingId + ' ' + companyId);
-        getSendings(companyId);
+        $.ajax({
+            url: `sendings/${sendingId}`,
+            type: "DELETE"
+        }).done(function() {
+            getSendings(companyId);
+            successToast('Sending was deleted');
+        }).fail(function(data) {
+            handleError(data, 'Failed to delete sending');
+        });
     }
 
     function resubscribe() {
@@ -631,5 +637,8 @@
         }
     }
 
+    function changeStyle() {
+        $('#letterDateInput').css('color', 'black');
+    }
 
 </script>

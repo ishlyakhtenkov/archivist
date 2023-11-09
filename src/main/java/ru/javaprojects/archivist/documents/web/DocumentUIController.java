@@ -98,7 +98,7 @@ public class DocumentUIController {
 
     private void addDataForDocumentCardToModel(Model model) {
         model.addAttribute("statuses", Status.values());
-        model.addAttribute("letters", Symbol.values());
+        model.addAttribute("symbols", Symbol.values());
         model.addAttribute("types", Type.values());
         model.addAttribute("companies", companyService.getAll());
         model.addAttribute("developers", departmentService.getAll());

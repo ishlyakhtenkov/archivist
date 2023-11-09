@@ -15,4 +15,6 @@ public interface SubscriberRepository extends BaseRepository<Subscriber> {
     List<Subscriber> findAllByDocumentId(long documentId);
 
     Optional<Subscriber> findByDocument_IdAndCompany_Id(long documentId, long companyId);
+
+    void deleteByDocument_IdAndCompany_Id(long documentId, long companyId);
 }

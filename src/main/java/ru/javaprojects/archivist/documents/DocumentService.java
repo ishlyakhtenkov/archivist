@@ -23,6 +23,7 @@ import ru.javaprojects.archivist.documents.to.SendingTo;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
@@ -221,10 +222,16 @@ public class DocumentService {
                 letterRepository.delete(sending.getInvoice().getLetter());
             }
         }
-        if (sendingRepository.countAllByDocument_IdAndInvoice_Letter_Company_Id(sending.getDocument().id(),
-                sending.getInvoice().getLetter().getCompany().id()) == 0) {
+        List<Sending> sendings = sendingRepository.findAllByDocumentIdAndCompanyId(sending.getDocument().id(),
+                sending.getInvoice().getLetter().getCompany().id());
+        if (sendings.isEmpty()) {
             subscriberRepository.deleteByDocument_IdAndCompany_Id(sending.getDocument().id(),
                     sending.getInvoice().getLetter().getCompany().id());
+        } else {
+            Status status = sendings.stream().map(s -> s.getInvoice().getStatus()).max(Comparator.naturalOrder()).orElseThrow(() -> new IllegalStateException("no sendings to define subscriber status"));
+            Subscriber subscriber = subscriberRepository.findByDocument_IdAndCompany_Id(sending.getDocument().id(),
+                    sending.getInvoice().getLetter().getCompany().id()).orElseThrow(() -> new NotFoundException("Subscriber not found"));
+            subscriber.setStatus(status);
         }
     }
 }

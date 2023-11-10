@@ -489,14 +489,6 @@
         };
     }
 
-    function unsubscribe() {
-
-    }
-
-    function resubscribe() {
-
-    }
-
     $('#unsubscribeModal').on('show.bs.modal', function(e) {
         let subscriberName = $(e.relatedTarget).data('subscribername');
         let subscriberId = $(e.relatedTarget).data('subscriberid');
@@ -560,7 +552,6 @@
                     new bootstrap.Popover(popoverTriggerEl, {html : true, sanitize: false}));
             } else {
                 $('#subscriberInfoModal').modal('toggle');
-                getSubscribers();
             }
         }).fail(function (data) {
             handleError(data, `Failed to get sendings`);
@@ -595,6 +586,7 @@
             type: "DELETE"
         }).done(function() {
             getSendings(companyId);
+            getSubscribers();
             successToast('Sending was deleted');
         }).fail(function(data) {
             handleError(data, 'Failed to delete sending');

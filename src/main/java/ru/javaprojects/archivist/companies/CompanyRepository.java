@@ -18,4 +18,7 @@ public interface CompanyRepository extends NamedRepository<Company> {
 
     @EntityGraph(attributePaths = "contactPersons")
     Optional<Company> findById(long id);
+
+    @EntityGraph(attributePaths = "contactPersons")
+    Optional<Company> findWihContactPersonsByNameIgnoreCase(String name);
 }

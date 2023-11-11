@@ -33,7 +33,7 @@ public class CompanyService {
     }
 
     public Company getByName(String name) {
-        return repository.findByNameIgnoreCase(name)
+        return repository.findWihContactPersonsByNameIgnoreCase(name)
                 .orElseThrow(() -> new NotFoundException("Not found company with name=" + name));
     }
 

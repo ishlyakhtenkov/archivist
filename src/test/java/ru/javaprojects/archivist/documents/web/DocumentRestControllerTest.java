@@ -11,8 +11,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import ru.javaprojects.archivist.AbstractControllerTest;
 import ru.javaprojects.archivist.common.error.IllegalRequestDataException;
@@ -134,7 +132,6 @@ class DocumentRestControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(ARCHIVIST_MAIL)
-    @Transactional(propagation = Propagation.NEVER)
     void createApplicabilityDuplicate() throws Exception {
         ApplicabilityTo newApplicabilityTo = new ApplicabilityTo(null, DOCUMENT5_ID, document3.getDecimalNumber(), false);
         perform(MockMvcRequestBuilders.post(APPLICABILITIES_URL)
@@ -152,7 +149,6 @@ class DocumentRestControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(ARCHIVIST_MAIL)
-    @Transactional(propagation = Propagation.NEVER)
     void createApplicabilityDuplicatePrimal() throws Exception {
         ApplicabilityTo newApplicabilityTo = new ApplicabilityTo(null, DOCUMENT5_ID, NOT_EXISTED_DECIMAL_NUMBER, true);
         perform(MockMvcRequestBuilders.post(APPLICABILITIES_URL)

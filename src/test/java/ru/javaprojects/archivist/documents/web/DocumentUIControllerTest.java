@@ -1,6 +1,5 @@
 package ru.javaprojects.archivist.documents.web;
 
-import jakarta.persistence.EntityManager;
 import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,9 +43,6 @@ class DocumentUIControllerTest extends AbstractControllerTest {
 
     @Autowired
     private DocumentService service;
-
-    @Autowired
-    private EntityManager entityManager;
 
     @Test
     @WithUserDetails(USER_MAIL)
@@ -98,7 +94,7 @@ class DocumentUIControllerTest extends AbstractControllerTest {
                 .andExpect(view().name(DOCUMENTS_DETAILS_VIEW));
         Document document = (Document) Objects.requireNonNull(actions.andReturn().getModelAndView()).getModel().get(DOCUMENT_ATTRIBUTE);
         DOCUMENT_MATCHER.assertMatch(document, document1);
-        COMPANY_MATCHER.assertMatch(document.getOriginalHolder(), company3);
+        COMPANY_MATCHER.assertMatchWithoutFields(document.getOriginalHolder(), company3, "contactPersons");
         DEPARTMENT_MATCHER.assertMatch(document.getDeveloper(), department1);
     }
 
@@ -411,7 +407,6 @@ class DocumentUIControllerTest extends AbstractControllerTest {
                 .andExpect(status().isFound())
                 .andExpect(redirectedUrl(DOCUMENTS_URL))
                 .andExpect(flash().attribute(ACTION, "Document " + document1.getDecimalNumber() + " was deleted"));
-        entityManager.clear();
         assertThrows(NotFoundException.class, () -> service.get(DOCUMENT1_ID));
     }
 

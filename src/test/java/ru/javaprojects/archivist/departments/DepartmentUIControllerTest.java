@@ -1,6 +1,5 @@
 package ru.javaprojects.archivist.departments;
 
-import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.test.context.support.WithUserDetails;
@@ -36,9 +35,6 @@ class DepartmentUIControllerTest extends AbstractControllerTest {
 
     @Autowired
     private DepartmentService service;
-
-    @Autowired
-    private EntityManager entityManager;
 
     @Test
     @WithUserDetails(USER_MAIL)
@@ -284,7 +280,6 @@ class DepartmentUIControllerTest extends AbstractControllerTest {
                 .andExpect(status().isFound())
                 .andExpect(redirectedUrl(DEPARTMENTS_URL))
                 .andExpect(flash().attribute(ACTION, "Department " + DEPARTMENT5_NAME + " was deleted"));
-        entityManager.clear();
         assertThrows(NotFoundException.class, () -> service.get(DEPARTMENT5_ID));
     }
 

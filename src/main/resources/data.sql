@@ -1,3 +1,10 @@
+DELETE FROM sendings;
+DELETE FROM invoices;
+DELETE FROM letters;
+DELETE FROM subscribers;
+DELETE FROM document_content_files;
+DELETE FROM document_contents;
+DELETE FROM documents;
 DELETE FROM departments;
 DELETE FROM contact_persons;
 DELETE FROM companies;

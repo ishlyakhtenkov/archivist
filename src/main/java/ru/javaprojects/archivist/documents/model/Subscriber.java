@@ -55,4 +55,10 @@ public class Subscriber extends BaseEntity implements HasId {
         this.subscribed = subscribed;
         this.status = status;
     }
+
+    public Subscriber(Long id, Document document, Company company, boolean subscribed, Status status, LocalDateTime unsubscribeTimestamp, String unsubscribeReason) {
+        this(id, document, company, subscribed, status);
+        this.unsubscribeTimestamp = unsubscribeTimestamp;
+        this.unsubscribeReason = unsubscribeReason;
+    }
 }

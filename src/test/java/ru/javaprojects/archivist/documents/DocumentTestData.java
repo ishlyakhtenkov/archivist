@@ -5,11 +5,9 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import ru.javaprojects.archivist.MatcherFactory;
-import ru.javaprojects.archivist.documents.model.Applicability;
-import ru.javaprojects.archivist.documents.model.Content;
-import ru.javaprojects.archivist.documents.model.ContentFile;
-import ru.javaprojects.archivist.documents.model.Document;
+import ru.javaprojects.archivist.documents.model.*;
 import ru.javaprojects.archivist.documents.to.ApplicabilityTo;
+import ru.javaprojects.archivist.documents.to.SendingTo;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -17,14 +15,12 @@ import java.util.List;
 
 import static java.time.Month.*;
 import static ru.javaprojects.archivist.CommonTestData.*;
-import static ru.javaprojects.archivist.companies.CompanyTestData.company2;
-import static ru.javaprojects.archivist.companies.CompanyTestData.company3;
+import static ru.javaprojects.archivist.companies.CompanyTestData.*;
 import static ru.javaprojects.archivist.departments.DepartmentTestData.department1;
 import static ru.javaprojects.archivist.departments.DepartmentTestData.department2;
+import static ru.javaprojects.archivist.documents.model.Status.*;
 import static ru.javaprojects.archivist.documents.model.Symbol.O;
 import static ru.javaprojects.archivist.documents.model.Symbol.O1;
-import static ru.javaprojects.archivist.documents.model.Status.DUPLICATE;
-import static ru.javaprojects.archivist.documents.model.Status.ORIGINAL;
 import static ru.javaprojects.archivist.documents.model.Type.DIGITAL;
 import static ru.javaprojects.archivist.documents.model.Type.PAPER;
 
@@ -162,4 +158,37 @@ public class DocumentTestData {
 
     public static final MockMultipartFile CONTENT_FILE = new MockMultipartFile(FILES_PARAM, "VUIA.465521.004.txt",
             MediaType.TEXT_PLAIN_VALUE, "VUIA.465521.004 content change num 3".getBytes());
+
+
+    public static final long DOCUMENT_1_SUBSCRIBER_1_ID = 100026;
+    public static final long DOCUMENT_1_SUBSCRIBER_2_ID = 100027;
+    public static final long DOCUMENT_1_SUBSCRIBER_3_ID = 100028;
+
+    public static final MatcherFactory.Matcher<Subscriber> SUBSCRIBER_MATCHER =
+            MatcherFactory.usingIgnoringFieldsComparator(Subscriber.class, "document", "company", "unsubscribeTimestamp");
+
+    public static final Subscriber subscriber1 = new Subscriber(DOCUMENT_1_SUBSCRIBER_1_ID, document1, company1, true, DUPLICATE);
+    public static final Subscriber subscriber2 = new Subscriber(DOCUMENT_1_SUBSCRIBER_2_ID, document1, company2, false, UNACCOUNTED_COPY);
+    public static final Subscriber subscriber3 = new Subscriber(DOCUMENT_1_SUBSCRIBER_3_ID, document1, company3, false, DUPLICATE,
+            LocalDateTime.of(2022, OCTOBER, 14, 11, 35), "Letter # 2368-456 dated 2022-09-25");
+
+
+    public static final long DOCUMENT_1_COMPANY_1_SENDING_1_ID = 100041;
+    public static final long DOCUMENT_1_COMPANY_1_SENDING_2_ID = 100042;
+
+    public static final MatcherFactory.Matcher<Sending> SENDING_MATCHER =
+            MatcherFactory.usingIgnoringFieldsComparator(Sending.class, "document", "invoice.letter.company");
+
+
+    public static final Sending sending1 = new Sending(DOCUMENT_1_COMPANY_1_SENDING_1_ID, document1,
+            new Invoice(100036L, "75", LocalDate.of(2018, MARCH, 16), ACCOUNTED_COPY,
+                    new Letter(100031L, null, null, company1)));
+
+    public static final Sending sending2 = new Sending(DOCUMENT_1_COMPANY_1_SENDING_2_ID, document1,
+            new Invoice(100037L, "84", LocalDate.of(2019, FEBRUARY, 12), DUPLICATE,
+                    new Letter(100032L, "15/49-3256", LocalDate.of(2019, FEBRUARY, 14), company1)));
+
+    public static SendingTo getNewSendingTo() {
+        return new SendingTo(null, DOCUMENT1_ID, COMPANY1_ID, DUPLICATE, "100", LocalDate.of(2023, NOVEMBER, 11), "15/49-777", LocalDate.of(2023, NOVEMBER, 11));
+    }
 }

@@ -40,4 +40,16 @@ public class SendingTo extends BaseTo {
     private String letterNumber;
 
     private LocalDate letterDate;
+
+    public SendingTo(Long id, Long documentId, Long companyId, Status status, String invoiceNumber, LocalDate invoiceDate,
+                     String letterNumber, LocalDate letterDate) {
+        super(id);
+        this.documentId = documentId;
+        this.companyId = companyId;
+        this.status = status;
+        this.invoiceNumber = invoiceNumber;
+        this.invoiceDate = invoiceDate;
+        this.letterNumber = letterNumber;
+        this.letterDate = letterDate;
+    }
 }

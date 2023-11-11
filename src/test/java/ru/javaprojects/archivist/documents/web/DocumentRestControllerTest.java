@@ -16,18 +16,20 @@ import ru.javaprojects.archivist.AbstractControllerTest;
 import ru.javaprojects.archivist.common.error.IllegalRequestDataException;
 import ru.javaprojects.archivist.common.error.NotFoundException;
 import ru.javaprojects.archivist.documents.DocumentService;
-import ru.javaprojects.archivist.documents.model.Applicability;
-import ru.javaprojects.archivist.documents.model.Content;
-import ru.javaprojects.archivist.documents.model.ContentFile;
-import ru.javaprojects.archivist.documents.model.Document;
+import ru.javaprojects.archivist.documents.model.*;
 import ru.javaprojects.archivist.documents.repository.ApplicabilityRepository;
 import ru.javaprojects.archivist.documents.repository.ContentRepository;
+import ru.javaprojects.archivist.documents.repository.SendingRepository;
+import ru.javaprojects.archivist.documents.repository.SubscriberRepository;
 import ru.javaprojects.archivist.documents.to.ApplicabilityTo;
+import ru.javaprojects.archivist.documents.to.SendingTo;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
@@ -38,6 +40,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static ru.javaprojects.archivist.CommonTestData.*;
 import static ru.javaprojects.archivist.common.error.Constants.*;
 import static ru.javaprojects.archivist.common.util.JsonUtil.writeValue;
+import static ru.javaprojects.archivist.companies.CompanyTestData.*;
 import static ru.javaprojects.archivist.documents.DocumentTestData.*;
 import static ru.javaprojects.archivist.documents.web.DocumentUIController.DOCUMENTS_URL;
 import static ru.javaprojects.archivist.users.web.LoginController.LOGIN_URL;
@@ -51,12 +54,24 @@ class DocumentRestControllerTest extends AbstractControllerTest {
     private static final String DOCUMENT_CONTENT_ALL_URL = DOCUMENTS_URL + "/%d/content/all";
     private static final String CONTENT_URL_SLASH = CONTENT_URL + "/";
     private static final String CONTENT_DOWNLOAD_URL = CONTENT_URL_SLASH + "download";
+    private static final String DOCUMENT_SUBSCRIBERS_URL = DOCUMENTS_URL + "/%d/subscribers";
+    private static final String RESUBSCRIBE_URL = DOCUMENTS_URL + "/subscribers/%d/resubscribe";
+    private static final String UNSUBSCRIBE_URL = DOCUMENTS_URL + "/subscribers/%d/unsubscribe";
+    private static final String DOCUMENT_SENDINGS_BY_COMPANY_URL = DOCUMENTS_URL + "/%d/sendings/by-company";
+    private static final String SENDINGS_URL = DOCUMENTS_URL + "/sendings";
+    private static final String SENDINGS_URL_SLASH = SENDINGS_URL + "/";
 
     @Autowired
     private ApplicabilityRepository applicabilityRepository;
 
     @Autowired
     private ContentRepository contentRepository;
+
+    @Autowired
+    private SendingRepository sendingRepository;
+
+    @Autowired
+    private SubscriberRepository subscriberRepository;
 
     @Autowired
     private DocumentService documentService;
@@ -530,5 +545,464 @@ class DocumentRestControllerTest extends AbstractControllerTest {
                 }
             });
         }
+    }
+
+    @Test
+    @WithUserDetails(USER_MAIL)
+    void getSubscribers() throws Exception {
+        perform(MockMvcRequestBuilders.get(String.format(DOCUMENT_SUBSCRIBERS_URL, DOCUMENT1_ID))
+                .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(SUBSCRIBER_MATCHER.contentJson(subscriber2, subscriber3, subscriber1));
+    }
+
+    @Test
+    @WithUserDetails(USER_MAIL)
+    void getSubscribersWhenDocumentNotExists() throws Exception {
+        perform(MockMvcRequestBuilders.get(String.format(DOCUMENT_SUBSCRIBERS_URL, NOT_FOUND))
+                .with(csrf()))
+                .andExpect(status().isNotFound())
+                .andExpect(result -> assertEquals(Objects.requireNonNull(result.getResolvedException()).getClass(),
+                        NotFoundException.class))
+                .andExpect(problemTitle(HttpStatus.NOT_FOUND.getReasonPhrase()))
+                .andExpect(problemStatus(HttpStatus.NOT_FOUND.value()))
+                .andExpect(problemDetail(ENTITY_NOT_FOUND))
+                .andExpect(problemInstance(String.format(DOCUMENT_SUBSCRIBERS_URL, NOT_FOUND)));
+    }
+
+    @Test
+    void getSubscribersUnauthorized() throws Exception {
+        perform(MockMvcRequestBuilders.patch(String.format(DOCUMENT_SUBSCRIBERS_URL, DOCUMENT1_ID))
+                .with(csrf()))
+                .andExpect(status().isFound())
+                .andExpect(result ->
+                        assertTrue(Objects.requireNonNull(result.getResponse().getRedirectedUrl()).endsWith(LOGIN_URL)));
+    }
+
+    @Test
+    @WithUserDetails(USER_MAIL)
+    void getSendings() throws Exception {
+        perform(MockMvcRequestBuilders.get(String.format(DOCUMENT_SENDINGS_BY_COMPANY_URL, DOCUMENT1_ID))
+                .param("companyId", String.valueOf(COMPANY1_ID))
+                .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(SENDING_MATCHER.contentJson(sending2, sending1));
+    }
+
+    @Test
+    @WithUserDetails(USER_MAIL)
+    void getSendingsWhenDocumentNotExists() throws Exception {
+        perform(MockMvcRequestBuilders.get(String.format(DOCUMENT_SENDINGS_BY_COMPANY_URL, NOT_FOUND))
+                .param("companyId", String.valueOf(COMPANY1_ID))
+                .with(csrf()))
+                .andExpect(status().isNotFound())
+                .andExpect(result -> assertEquals(Objects.requireNonNull(result.getResolvedException()).getClass(),
+                        NotFoundException.class))
+                .andExpect(problemTitle(HttpStatus.NOT_FOUND.getReasonPhrase()))
+                .andExpect(problemStatus(HttpStatus.NOT_FOUND.value()))
+                .andExpect(problemDetail(ENTITY_NOT_FOUND))
+                .andExpect(problemInstance(String.format(DOCUMENT_SENDINGS_BY_COMPANY_URL, NOT_FOUND)));
+    }
+
+    @Test
+    @WithUserDetails(USER_MAIL)
+    void getSendingsWhenCompanyNotExists() throws Exception {
+        perform(MockMvcRequestBuilders.get(String.format(DOCUMENT_SENDINGS_BY_COMPANY_URL, DOCUMENT1_ID))
+                .param("companyId", String.valueOf(NOT_FOUND))
+                .with(csrf()))
+                .andExpect(status().isNotFound())
+                .andExpect(result -> assertEquals(Objects.requireNonNull(result.getResolvedException()).getClass(),
+                        NotFoundException.class))
+                .andExpect(problemTitle(HttpStatus.NOT_FOUND.getReasonPhrase()))
+                .andExpect(problemStatus(HttpStatus.NOT_FOUND.value()))
+                .andExpect(problemDetail(ENTITY_NOT_FOUND))
+                .andExpect(problemInstance(String.format(DOCUMENT_SENDINGS_BY_COMPANY_URL, DOCUMENT1_ID)));
+    }
+
+    @Test
+    void getSendingsUnauthorized() throws Exception {
+        perform(MockMvcRequestBuilders.patch(String.format(DOCUMENT_SENDINGS_BY_COMPANY_URL, DOCUMENT1_ID))
+                .with(csrf()))
+                .andExpect(status().isFound())
+                .andExpect(result ->
+                        assertTrue(Objects.requireNonNull(result.getResponse().getRedirectedUrl()).endsWith(LOGIN_URL)));
+    }
+
+    @Test
+    @WithUserDetails(ARCHIVIST_MAIL)
+    void createSending() throws Exception {
+        SendingTo newSendingTo = getNewSendingTo();
+        ResultActions action = perform(MockMvcRequestBuilders.post(SENDINGS_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(writeValue(newSendingTo))
+                .with(csrf()))
+                .andExpect(status().isCreated());
+        Sending created = SENDING_MATCHER.readFromJson(action);
+        Sending newSending = new Sending(created.getId(), document1,
+                new Invoice(created.getInvoice().getId(), newSendingTo.getInvoiceNumber(), newSendingTo.getInvoiceDate(), newSendingTo.getStatus(),
+                        new Letter(created.getInvoice().getLetter().getId(), newSendingTo.getLetterNumber(), newSendingTo.getLetterDate(), company1)));
+        SENDING_MATCHER.assertMatch(created, newSending);
+        SENDING_MATCHER.assertMatch(sendingRepository.findByIdWithInvoice(created.id()).orElseThrow(() -> new NotFoundException("Not found sending id=" + created.getId())), newSending);
+    }
+
+    @Test
+    @WithUserDetails(ARCHIVIST_MAIL)
+    void createSendingWhenDocumentNotExists() throws Exception {
+        SendingTo newSendingTo = getNewSendingTo();
+        newSendingTo.setDocumentId(NOT_FOUND);
+        perform(MockMvcRequestBuilders.post(SENDINGS_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(writeValue(newSendingTo))
+                .with(csrf()))
+                .andExpect(status().isNotFound())
+                .andExpect(result -> assertEquals(Objects.requireNonNull(result.getResolvedException()).getClass(),
+                        NotFoundException.class))
+                .andExpect(problemTitle(HttpStatus.NOT_FOUND.getReasonPhrase()))
+                .andExpect(problemStatus(HttpStatus.NOT_FOUND.value()))
+                .andExpect(problemDetail(ENTITY_NOT_FOUND))
+                .andExpect(problemInstance(SENDINGS_URL));
+    }
+
+    @Test
+    @WithUserDetails(ARCHIVIST_MAIL)
+    void createSendingWhenCompanyNotExists() throws Exception {
+        SendingTo newSendingTo = getNewSendingTo();
+        newSendingTo.setCompanyId(NOT_FOUND);
+        perform(MockMvcRequestBuilders.post(SENDINGS_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(writeValue(newSendingTo))
+                .with(csrf()))
+                .andExpect(status().isNotFound())
+                .andExpect(result -> assertEquals(Objects.requireNonNull(result.getResolvedException()).getClass(),
+                        NotFoundException.class))
+                .andExpect(problemTitle(HttpStatus.NOT_FOUND.getReasonPhrase()))
+                .andExpect(problemStatus(HttpStatus.NOT_FOUND.value()))
+                .andExpect(problemDetail(ENTITY_NOT_FOUND))
+                .andExpect(problemInstance(SENDINGS_URL));
+    }
+
+    @Test
+    @WithUserDetails(ARCHIVIST_MAIL)
+    void createSendingInvalid() throws Exception {
+        SendingTo newSendingTo = getNewSendingTo();
+        newSendingTo.setInvoiceNumber(null);
+        perform(MockMvcRequestBuilders.post(SENDINGS_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(writeValue(newSendingTo))
+                .with(csrf()))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(result -> assertEquals(Objects.requireNonNull(result.getResolvedException()).getClass(),
+                        MethodArgumentNotValidException.class))
+                .andExpect(problemTitle(HttpStatus.UNPROCESSABLE_ENTITY.getReasonPhrase()))
+                .andExpect(problemStatus(HttpStatus.UNPROCESSABLE_ENTITY.value()))
+                .andExpect(problemInstance(SENDINGS_URL));
+    }
+
+    @Test
+    @WithUserDetails(ARCHIVIST_MAIL)
+    void createSendingWithOriginalStatus() throws Exception {
+        SendingTo newSendingTo = getNewSendingTo();
+        newSendingTo.setStatus(Status.ORIGINAL);
+        perform(MockMvcRequestBuilders.post(SENDINGS_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(writeValue(newSendingTo))
+                .with(csrf()))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(result -> assertEquals(Objects.requireNonNull(result.getResolvedException()).getClass(),
+                        MethodArgumentNotValidException.class))
+                .andExpect(problemTitle(HttpStatus.UNPROCESSABLE_ENTITY.getReasonPhrase()))
+                .andExpect(problemStatus(HttpStatus.UNPROCESSABLE_ENTITY.value()))
+                .andExpect(problemInstance(SENDINGS_URL));
+    }
+
+    @Test
+    @WithUserDetails(ARCHIVIST_MAIL)
+    void createSendingDuplicateInvoice() throws Exception {
+        SendingTo newSendingTo = getNewSendingTo();
+        newSendingTo.setInvoiceNumber(sending1.getInvoice().getNumber());
+        newSendingTo.setInvoiceDate(sending1.getInvoice().getDate());
+        newSendingTo.setStatus(sending1.getInvoice().getStatus());
+        perform(MockMvcRequestBuilders.post(SENDINGS_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(writeValue(newSendingTo))
+                .with(csrf()))
+                .andExpect(status().isConflict())
+                .andExpect(result -> assertEquals(Objects.requireNonNull(result.getResolvedException()).getClass(),
+                        DataIntegrityViolationException.class))
+                .andExpect(problemTitle(HttpStatus.CONFLICT.getReasonPhrase()))
+                .andExpect(problemStatus(HttpStatus.CONFLICT.value()))
+                .andExpect(problemDetail(DUPLICATE_SENDING_INVOICE_NUMBER_MESSAGE))
+                .andExpect(problemInstance(SENDINGS_URL));
+    }
+
+    @Test
+    @WithUserDetails(ARCHIVIST_MAIL)
+    void createSendingDuplicateInvoiceWhenDifferentStatus() throws Exception {
+        SendingTo newSendingTo = getNewSendingTo();
+        newSendingTo.setInvoiceNumber(sending1.getInvoice().getNumber());
+        newSendingTo.setInvoiceDate(sending1.getInvoice().getDate());
+        perform(MockMvcRequestBuilders.post(SENDINGS_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(writeValue(newSendingTo))
+                .with(csrf()))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(result -> assertEquals(Objects.requireNonNull(result.getResolvedException()).getClass(),
+                        IllegalRequestDataException.class))
+                .andExpect(problemTitle(HttpStatus.UNPROCESSABLE_ENTITY.getReasonPhrase()))
+                .andExpect(problemStatus(HttpStatus.UNPROCESSABLE_ENTITY.value()))
+                .andExpect(problemDetail("specified invoice exists and has " + sending1.getInvoice().getStatus().getDisplayName() + " status"))
+                .andExpect(problemInstance(SENDINGS_URL));
+    }
+
+    @Test
+    @WithUserDetails(ARCHIVIST_MAIL)
+    void createSendingDuplicateInvoiceWhenDifferentCompany() throws Exception {
+        SendingTo newSendingTo = getNewSendingTo();
+        newSendingTo.setInvoiceNumber(sending1.getInvoice().getNumber());
+        newSendingTo.setInvoiceDate(sending1.getInvoice().getDate());
+        newSendingTo.setCompanyId(COMPANY2_ID);
+        perform(MockMvcRequestBuilders.post(SENDINGS_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(writeValue(newSendingTo))
+                .with(csrf()))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(result -> assertEquals(Objects.requireNonNull(result.getResolvedException()).getClass(),
+                        IllegalRequestDataException.class))
+                .andExpect(problemTitle(HttpStatus.UNPROCESSABLE_ENTITY.getReasonPhrase()))
+                .andExpect(problemStatus(HttpStatus.UNPROCESSABLE_ENTITY.value()))
+                .andExpect(problemDetail("specified invoice exists and addressed to " + company1.getName()))
+                .andExpect(problemInstance(SENDINGS_URL));
+    }
+
+    @Test
+    @WithUserDetails(ARCHIVIST_MAIL)
+    void createSendingWithResubscribe() throws Exception {
+        SendingTo newSendingTo = getNewSendingTo();
+        newSendingTo.setCompanyId(COMPANY3_ID);
+        ResultActions action = perform(MockMvcRequestBuilders.post(SENDINGS_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(writeValue(newSendingTo))
+                .with(csrf()))
+                .andExpect(status().isCreated());
+        Sending created = SENDING_MATCHER.readFromJson(action);
+        Sending newSending = new Sending(created.getId(), document1,
+                new Invoice(created.getInvoice().getId(), newSendingTo.getInvoiceNumber(), newSendingTo.getInvoiceDate(), newSendingTo.getStatus(),
+                        new Letter(created.getInvoice().getLetter().getId(), newSendingTo.getLetterNumber(), newSendingTo.getLetterDate(), company3)));
+        SENDING_MATCHER.assertMatch(created, newSending);
+        SENDING_MATCHER.assertMatch(sendingRepository.findByIdWithInvoice(created.id()).orElseThrow(() -> new NotFoundException("Not found sending id=" + created.getId())), newSending);
+        assertTrue(subscriberRepository.findByDocument_IdAndCompany_Id(newSendingTo.getDocumentId(), COMPANY3_ID).orElseThrow().isSubscribed());
+    }
+
+    @Test
+    @WithUserDetails(ARCHIVIST_MAIL)
+    void createSendingWithoutResubscribe() throws Exception {
+        SendingTo newSendingTo = getNewSendingTo();
+        newSendingTo.setCompanyId(COMPANY3_ID);
+        newSendingTo.setInvoiceDate(LocalDate.of(2020, Month.DECEMBER, 1));
+        ResultActions action = perform(MockMvcRequestBuilders.post(SENDINGS_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(writeValue(newSendingTo))
+                .with(csrf()))
+                .andExpect(status().isCreated());
+        Sending created = SENDING_MATCHER.readFromJson(action);
+        Sending newSending = new Sending(created.getId(), document1,
+                new Invoice(created.getInvoice().getId(), newSendingTo.getInvoiceNumber(), newSendingTo.getInvoiceDate(), newSendingTo.getStatus(),
+                        new Letter(created.getInvoice().getLetter().getId(), newSendingTo.getLetterNumber(), newSendingTo.getLetterDate(), company3)));
+        SENDING_MATCHER.assertMatch(created, newSending);
+        SENDING_MATCHER.assertMatch(sendingRepository.findByIdWithInvoice(created.id()).orElseThrow(() -> new NotFoundException("Not found sending id=" + created.getId())), newSending);
+        assertFalse(subscriberRepository.findByDocument_IdAndCompany_Id(newSendingTo.getDocumentId(), COMPANY3_ID).orElseThrow().isSubscribed());
+    }
+
+    @Test
+    @WithUserDetails(ARCHIVIST_MAIL)
+    void createSendingWhenSubscriberCreates() throws Exception {
+        SendingTo newSendingTo = getNewSendingTo();
+        newSendingTo.setDocumentId(DOCUMENT3_ID);
+        ResultActions action = perform(MockMvcRequestBuilders.post(SENDINGS_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(writeValue(newSendingTo))
+                .with(csrf()))
+                .andExpect(status().isCreated());
+        Sending created = SENDING_MATCHER.readFromJson(action);
+        Sending newSending = new Sending(created.getId(), document3,
+                new Invoice(created.getInvoice().getId(), newSendingTo.getInvoiceNumber(), newSendingTo.getInvoiceDate(), newSendingTo.getStatus(),
+                        new Letter(created.getInvoice().getLetter().getId(), newSendingTo.getLetterNumber(), newSendingTo.getLetterDate(), company1)));
+        SENDING_MATCHER.assertMatch(created, newSending);
+        SENDING_MATCHER.assertMatch(sendingRepository.findByIdWithInvoice(created.id()).orElseThrow(() -> new NotFoundException("Not found sending id=" + created.getId())), newSending);
+        Subscriber createdSubscriber = subscriberRepository.findByDocument_IdAndCompany_Id(DOCUMENT3_ID, newSendingTo.getCompanyId()).orElseThrow();
+        SUBSCRIBER_MATCHER.assertMatch(createdSubscriber, new Subscriber(createdSubscriber.getId(), document3, company1, true, newSendingTo.getStatus()));
+    }
+
+    @Test
+    void createSendingUnauthorized() throws Exception {
+        perform(MockMvcRequestBuilders.post(SENDINGS_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(writeValue(getNewSendingTo()))
+                .with(csrf()))
+                .andExpect(status().isFound())
+                .andExpect(result ->
+                        assertTrue(Objects.requireNonNull(result.getResponse().getRedirectedUrl()).endsWith(LOGIN_URL)));
+    }
+
+    @Test
+    @WithUserDetails(USER_MAIL)
+    void createSendingForbidden() throws Exception {
+        perform(MockMvcRequestBuilders.post(SENDINGS_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(writeValue(getNewSendingTo()))
+                .with(csrf()))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithUserDetails(ARCHIVIST_MAIL)
+    void resubscribe() throws Exception {
+        perform(MockMvcRequestBuilders.patch(String.format(RESUBSCRIBE_URL, DOCUMENT_1_SUBSCRIBER_3_ID))
+                .with(csrf()))
+                .andExpect(status().isNoContent());
+        assertTrue(subscriberRepository.getExisted(DOCUMENT_1_SUBSCRIBER_3_ID).isSubscribed());
+    }
+
+    @Test
+    @WithUserDetails(ARCHIVIST_MAIL)
+    void resubscribeNotFound() throws Exception {
+        perform(MockMvcRequestBuilders.patch(String.format(RESUBSCRIBE_URL, NOT_FOUND))
+                .with(csrf()))
+                .andExpect(status().isNotFound())
+                .andExpect(result -> assertEquals(Objects.requireNonNull(result.getResolvedException()).getClass(),
+                        NotFoundException.class))
+                .andExpect(problemTitle(HttpStatus.NOT_FOUND.getReasonPhrase()))
+                .andExpect(problemStatus(HttpStatus.NOT_FOUND.value()))
+                .andExpect(problemDetail(ENTITY_NOT_FOUND))
+                .andExpect(problemInstance(String.format(RESUBSCRIBE_URL, NOT_FOUND)));
+    }
+
+    @Test
+    void resubscribeUnauthorized() throws Exception {
+        perform(MockMvcRequestBuilders.patch(String.format(RESUBSCRIBE_URL, DOCUMENT_1_SUBSCRIBER_3_ID))
+                .with(csrf()))
+                .andExpect(status().isFound())
+                .andExpect(result ->
+                        assertTrue(Objects.requireNonNull(result.getResponse().getRedirectedUrl()).endsWith(LOGIN_URL)));
+    }
+
+    @Test
+    @WithUserDetails(USER_MAIL)
+    void resubscribeForbidden() throws Exception {
+        perform(MockMvcRequestBuilders.patch(String.format(RESUBSCRIBE_URL, DOCUMENT_1_SUBSCRIBER_3_ID))
+                .with(csrf()))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithUserDetails(ARCHIVIST_MAIL)
+    void unsubscribe() throws Exception {
+        perform(MockMvcRequestBuilders.patch(String.format(UNSUBSCRIBE_URL, DOCUMENT_1_SUBSCRIBER_1_ID))
+                .param("unsubscribeReason", "Some reason for unsubscribe")
+                .with(csrf()))
+                .andExpect(status().isNoContent());
+        assertFalse(subscriberRepository.getExisted(DOCUMENT_1_SUBSCRIBER_1_ID).isSubscribed());
+    }
+
+    @Test
+    @WithUserDetails(ARCHIVIST_MAIL)
+    void unsubscribeInvalidReason() throws Exception {
+        perform(MockMvcRequestBuilders.patch(String.format(UNSUBSCRIBE_URL, DOCUMENT_1_SUBSCRIBER_1_ID))
+                .param("unsubscribeReason", "<p>Some reason for unsubscribe</p>")
+                .with(csrf()))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(result -> assertEquals(Objects.requireNonNull(result.getResolvedException()).getClass(),
+                        ConstraintViolationException.class))
+                .andExpect(problemTitle(HttpStatus.UNPROCESSABLE_ENTITY.getReasonPhrase()))
+                .andExpect(problemStatus(HttpStatus.UNPROCESSABLE_ENTITY.value()))
+                .andExpect(problemInstance(String.format(UNSUBSCRIBE_URL, DOCUMENT_1_SUBSCRIBER_1_ID)));
+        assertTrue(subscriberRepository.getExisted(DOCUMENT_1_SUBSCRIBER_1_ID).isSubscribed());
+    }
+
+    @Test
+    @WithUserDetails(ARCHIVIST_MAIL)
+    void unsubscribeNotFound() throws Exception {
+        perform(MockMvcRequestBuilders.patch(String.format(UNSUBSCRIBE_URL, NOT_FOUND))
+                .param("unsubscribeReason", "Some reason for unsubscribe")
+                .with(csrf()))
+                .andExpect(status().isNotFound())
+                .andExpect(result -> assertEquals(Objects.requireNonNull(result.getResolvedException()).getClass(),
+                        NotFoundException.class))
+                .andExpect(problemTitle(HttpStatus.NOT_FOUND.getReasonPhrase()))
+                .andExpect(problemStatus(HttpStatus.NOT_FOUND.value()))
+                .andExpect(problemDetail(ENTITY_NOT_FOUND))
+                .andExpect(problemInstance(String.format(UNSUBSCRIBE_URL, NOT_FOUND)));
+    }
+
+    @Test
+    void unsubscribeUnauthorized() throws Exception {
+        perform(MockMvcRequestBuilders.patch(String.format(UNSUBSCRIBE_URL, DOCUMENT_1_SUBSCRIBER_1_ID))
+                .param("unsubscribeReason", "Some reason for unsubscribe")
+                .with(csrf()))
+                .andExpect(status().isFound())
+                .andExpect(result ->
+                        assertTrue(Objects.requireNonNull(result.getResponse().getRedirectedUrl()).endsWith(LOGIN_URL)));
+    }
+
+    @Test
+    @WithUserDetails(USER_MAIL)
+    void unsubscribeForbidden() throws Exception {
+        perform(MockMvcRequestBuilders.patch(String.format(UNSUBSCRIBE_URL, DOCUMENT_1_SUBSCRIBER_1_ID))
+                .param("unsubscribeReason", "Some reason for unsubscribe")
+                .with(csrf()))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithUserDetails(ARCHIVIST_MAIL)
+    void deleteSendingWhenSubscriberNotDeletes() throws Exception {
+        perform(MockMvcRequestBuilders.delete(SENDINGS_URL_SLASH + DOCUMENT_1_COMPANY_1_SENDING_2_ID)
+                .with(csrf()))
+                .andExpect(status().isNoContent());
+        assertThrows(NotFoundException.class, () -> sendingRepository.getExisted(DOCUMENT_1_SUBSCRIBER_3_ID));
+        assertDoesNotThrow(() -> subscriberRepository.getExisted(DOCUMENT_1_SUBSCRIBER_3_ID));
+    }
+
+    @Test
+    @WithUserDetails(ARCHIVIST_MAIL)
+    void deleteSendingWhenSubscriberDeletes() throws Exception {
+        perform(MockMvcRequestBuilders.delete(SENDINGS_URL_SLASH + DOCUMENT_1_COMPANY_1_SENDING_1_ID)
+                .with(csrf()))
+                .andExpect(status().isNoContent());
+        assertThrows(NotFoundException.class, () -> sendingRepository.getExisted(DOCUMENT_1_COMPANY_1_SENDING_1_ID));
+        assertDoesNotThrow(() -> subscriberRepository.getExisted(DOCUMENT_1_SUBSCRIBER_1_ID));
+    }
+
+    @Test
+    @WithUserDetails(ARCHIVIST_MAIL)
+    void deleteSendingNotFound() throws Exception {
+        perform(MockMvcRequestBuilders.delete(SENDINGS_URL_SLASH + NOT_FOUND)
+                .with(csrf()))
+                .andExpect(status().isNotFound())
+                .andExpect(result -> assertEquals(Objects.requireNonNull(result.getResolvedException()).getClass(),
+                        NotFoundException.class))
+                .andExpect(problemTitle(HttpStatus.NOT_FOUND.getReasonPhrase()))
+                .andExpect(problemStatus(HttpStatus.NOT_FOUND.value()))
+                .andExpect(problemDetail(ENTITY_NOT_FOUND))
+                .andExpect(problemInstance(SENDINGS_URL_SLASH + NOT_FOUND));
+    }
+
+    @Test
+    void deleteSendingUnauthorized() throws Exception {
+        perform(MockMvcRequestBuilders.delete(SENDINGS_URL_SLASH + DOCUMENT_1_COMPANY_1_SENDING_1_ID)
+                .with(csrf()))
+                .andExpect(status().isFound())
+                .andExpect(result ->
+                        assertTrue(Objects.requireNonNull(result.getResponse().getRedirectedUrl()).endsWith(LOGIN_URL)));
+    }
+
+    @Test
+    @WithUserDetails(USER_MAIL)
+    void deleteSendingForbidden() throws Exception {
+        perform(MockMvcRequestBuilders.delete(SENDINGS_URL_SLASH + DOCUMENT_1_COMPANY_1_SENDING_1_ID)
+                .with(csrf()))
+                .andExpect(status().isForbidden());
     }
 }

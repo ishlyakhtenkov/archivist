@@ -50,8 +50,8 @@
                 <tr th:each="document : ${documents}" th:id="'row-' + ${document.id}" class="table-row">
                     <td th:text="${document.decimalNumber}" th:classappend="${document.annulled ? 'text-danger' : ''}"></td>
                     <td th:text="${document.symbol}"></td>
-                    <td th:text="${document.status.displayName}"></td>
-                    <td th:text="${document.type.displayName}"></td>
+                    <td th:text="${document.status}"></td>
+                    <td th:text="${document.type}"></td>
                     <td th:text="${document.originalHolder.name}"></td>
                     <td>
                         <a th:href="@{'/documents/' + ${document.id}}" type="button" title="Document details" class="glass-button">

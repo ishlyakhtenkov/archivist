@@ -1,3 +1,5 @@
+DELETE FROM changes;
+DELETE FROM change_notices;
 DELETE FROM sendings;
 DELETE FROM invoices;
 DELETE FROM letters;
@@ -67,7 +69,7 @@ VALUES (100014, 0, '2023-02-05 12:10:00'),
        (100014, 2, '2023-07-24 09:28:00'),
        (100015, 0, '2022-03-27 11:40:00');
 
-INSERT INTO document_content_files (document_content_id, name, file_link)
+INSERT INTO document_content_files (document_content_id, file_name, file_link)
 VALUES (100022, 'VUIA.465521.004.docx', 'VUIA.465521.004/0/VUIA.465521.004.docx'),
        (100022, 'VUIA.465521.004.pdf', 'VUIA.465521.004/0/VUIA.465521.004.pdf'),
        (100023, 'VUIA.465521.004.docx', 'VUIA.465521.004/1/VUIA.465521.004.docx'),
@@ -103,3 +105,12 @@ VALUES (100014, 100036), --same invoice (and letter)
        (100014, 100039),
        (100015, 100036), --same invoice (and letter)
        (100015, 100040);
+
+INSERT INTO change_notices (name, release_date, auto_generated)
+VALUES ('VUIA.SK.591', '2020-06-18', true),
+       ('VUIA.TN.429', '2021-12-14', true);
+
+INSERT INTO changes (document_id, change_notice_id, change_number)
+VALUES (100014, 100047, 1),
+       (100014, 100048, 2),
+       (100015, 100047, 1);

@@ -15,14 +15,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import ru.javaprojects.archivist.changenotices.model.Change;
 import ru.javaprojects.archivist.common.util.FileUtil;
 import ru.javaprojects.archivist.common.util.validation.NoHtml;
+import ru.javaprojects.archivist.common.util.validation.ValidationUtil;
 import ru.javaprojects.archivist.documents.DocumentService;
 import ru.javaprojects.archivist.documents.model.Applicability;
 import ru.javaprojects.archivist.documents.model.Content;
 import ru.javaprojects.archivist.documents.model.Sending;
 import ru.javaprojects.archivist.documents.model.Subscriber;
 import ru.javaprojects.archivist.documents.to.ApplicabilityTo;
+import ru.javaprojects.archivist.documents.to.ChangeTo;
 import ru.javaprojects.archivist.documents.to.SendingTo;
 
 import java.util.List;
@@ -55,6 +58,7 @@ public class DocumentRestController {
     @ResponseStatus(HttpStatus.CREATED)
     public Applicability createApplicability(@Valid @RequestBody ApplicabilityTo applicabilityTo) {
         log.info("create {}", applicabilityTo);
+        ValidationUtil.checkNew(applicabilityTo);
         return service.createApplicability(applicabilityTo);
     }
 
@@ -110,6 +114,7 @@ public class DocumentRestController {
     @ResponseStatus(HttpStatus.CREATED)
     public Sending createSending(@Valid @RequestBody SendingTo sendingTo) {
         log.info("create {}", sendingTo);
+        ValidationUtil.checkNew(sendingTo);
         return service.createSending(sendingTo);
     }
 
@@ -133,5 +138,26 @@ public class DocumentRestController {
     public void deleteSending(@PathVariable long id) {
         log.info("delete sending {}", id);
         service.deleteSending(id);
+    }
+
+    @GetMapping("/{id}/changes")
+    public List<Change> getChanges(@PathVariable long id) {
+        log.info("get changes for document {}", id);
+        return service.getChanges(id);
+    }
+
+    @PostMapping(value = "/changes", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.CREATED)
+    public Change createChange(@Valid @RequestBody ChangeTo changeTo) {
+        log.info("create {}", changeTo);
+        ValidationUtil.checkNew(changeTo);
+        return service.createChange(changeTo);
+    }
+
+    @DeleteMapping("/changes/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteChange(@PathVariable long id) {
+        log.info("delete change {}", id);
+        service.deleteChange(id);
     }
 }

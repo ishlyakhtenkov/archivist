@@ -65,7 +65,7 @@
                                                         th:field="*{status}" title="&nbsp" required aria-label="Status" aria-describedby="statusAddon">
                                                     <option th:each="status : ${statuses}"
                                                             th:value="${status}"
-                                                            th:text="${status.displayName}">
+                                                            th:text="${status}">
                                                     </option>
                                                 </select>
                                             </div>
@@ -90,7 +90,7 @@
                                                         th:field="*{type}" title="&nbsp" required aria-label="Type" aria-describedby="typeAddon">
                                                     <option th:each="type : ${types}"
                                                             th:value="${type}"
-                                                            th:text="${type.displayName}">
+                                                            th:text="${type}">
                                                     </option>
                                                 </select>
                                             </div>

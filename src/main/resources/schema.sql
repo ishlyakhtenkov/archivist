@@ -1,3 +1,12 @@
+DROP TABLE IF EXISTS changes;
+DROP TABLE IF EXISTS change_notices;
+DROP TABLE IF EXISTS sendings;
+DROP TABLE IF EXISTS invoices;
+DROP TABLE IF EXISTS letters;
+DROP TABLE IF EXISTS subscribers;
+DROP TABLE IF EXISTS document_content_files;
+DROP TABLE IF EXISTS document_contents;
+DROP TABLE IF EXISTS documents;
 DROP TABLE IF EXISTS departments;
 DROP TABLE IF EXISTS contact_persons;
 DROP TABLE IF EXISTS companies;
@@ -124,11 +133,11 @@ CREATE UNIQUE INDEX document_contents_unique_document_change_number_idx ON docum
 CREATE TABLE document_content_files
 (
     document_content_id BIGINT       NOT NULL,
-    name                VARCHAR(128) NOT NULL,
+    file_name           VARCHAR(128) NOT NULL,
     file_link           VARCHAR(512) NOT NULL,
     FOREIGN KEY (document_content_id) REFERENCES document_contents (id) ON DELETE CASCADE
 );
-CREATE UNIQUE INDEX document_content_files_unique_document_content_name_idx ON document_content_files (document_content_id, name);
+CREATE UNIQUE INDEX document_content_files_unique_document_content_file_name_idx ON document_content_files (document_content_id, file_name);
 
 CREATE TABLE subscribers
 (
@@ -174,3 +183,29 @@ CREATE TABLE sendings
     FOREIGN KEY (invoice_id) REFERENCES invoices (id) ON DELETE CASCADE
 );
 CREATE UNIQUE INDEX sendings_unique_document_invoice_idx ON sendings (document_id, invoice_id);
+
+CREATE TABLE change_notices
+(
+    id                 BIGINT DEFAULT nextval('global_seq')  PRIMARY KEY,
+    name               VARCHAR(128)         NOT NULL,
+    release_date       DATE                 NOT NULL,
+    change_reason_code VARCHAR(40),
+    auto_generated     BOOL   DEFAULT FALSE NOT NULL,
+    file_name          VARCHAR(128),
+    file_link          VARCHAR(512),
+    developer_id       BIGINT,
+    FOREIGN KEY (developer_id) REFERENCES departments (id)
+);
+CREATE UNIQUE INDEX change_notices_unique_name_idx ON change_notices (name);
+
+CREATE TABLE changes
+(
+    id               BIGINT  DEFAULT nextval('global_seq')  PRIMARY KEY,
+    document_id      BIGINT  NOT NULL,
+    change_notice_id BIGINT  NOT NULL,
+    change_number    INTEGER NOT NULL,
+    FOREIGN KEY (document_id) REFERENCES documents (id) ON DELETE CASCADE,
+    FOREIGN KEY (change_notice_id) REFERENCES change_notices (id) ON DELETE CASCADE
+);
+CREATE UNIQUE INDEX changes_unique_document_change_notice_idx ON changes (document_id, change_notice_id);
+CREATE UNIQUE INDEX changes_unique_document_change_number_idx ON changes (document_id, change_number);

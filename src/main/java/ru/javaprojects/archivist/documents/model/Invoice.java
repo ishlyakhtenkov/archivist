@@ -37,7 +37,7 @@ public class Invoice extends BaseEntity implements HasId {
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "letter_id")
+    @JoinColumn(name = "letter_id", nullable = false)
     private Letter letter;
 
     public Invoice(Long id, String number, LocalDate date, Status status, Letter letter) {

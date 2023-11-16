@@ -2,6 +2,8 @@ const documentId =$('#documentId').val();
 const contentArea = $('#contentArea');
 let previousContentOpened = false;
 const subscriberColumns = [$('#subscriberColumn1'), $('#subscriberColumn2'), $('#subscriberColumn3')];
+const subscriberMap = new Map();
+const companySelector = $('#companySelector');
 
 $(window).on('load', () => init());
 
@@ -15,6 +17,9 @@ function init() {
         previousContentOpened = false;
         cancelAddContent();
         getLatestContent();
+    });
+    $('#documentSubscribersTabButton').on('shown.bs.tab', () => {
+        getSubscribers();
     });
     $('#deleteApplicabilityModal').on('show.bs.modal', function(e) {
         let decimalNumber = $(e.relatedTarget).data('decimalnumber');
@@ -62,8 +67,8 @@ function fillApplicabilitiesTable(applicabilities) {
 }
 
 function addApplicabilityRow(applicability) {
-    let decimalNumberTd = $('<td></td>').text(`${applicability.applicability.decimalNumber}`);
-    let nameTd = $('<td></td>').html(`${applicability.applicability.name != null ? applicability.applicability.name : ''} ${applicability.primal ? '<span class="badge text-bg-primary mt-0">Primal</span>' : ''}`);
+    let decimalNumberTd = $('<td></td>').html(`${applicability.applicability.decimalNumber} ${applicability.primal ? '<span class="badge text-bg-primary mt-0" style="font-size: 9px;">Primal</span>' : ''}`);
+    let nameTd = $('<td></td>').text(`${applicability.applicability.name != null ? applicability.applicability.name : ''}`);
     let deleteActionTd = $('<td></td>').addClass('text-end').html(`<a type="button" class="trash-button me-3"
             title="Delete applicability" data-bs-toggle="modal" data-bs-target="#deleteApplicabilityModal"
             data-decimalnumber=${applicability.applicability.decimalNumber} data-id=${applicability.id}> <i class="fa-solid fa-trash"></i></a>`);
@@ -181,7 +186,7 @@ function generateContentCard(content, bgColor) {
     infoRow.append(deleteButtonCol);
     cardHeader.append(infoRow);
     content.files.forEach(file => {
-        let fileRow = $('<div></div>').html(`<a href="/documents/content/download?fileLink=${file.fileLink}" target="_blank">${file.name}</a>`);
+        let fileRow = $('<div></div>').html(`<a href="/documents/content/download?fileLink=${file.fileLink}" target="_blank">${file.fileName}</a>`);
         cardBody.append(fileRow);
     });
     card.append(cardHeader);
@@ -247,6 +252,247 @@ function createContent() {
             successToast(`Content (change number = ${changeNumber}) was created`);
         }).fail(function (data) {
             handleError(data, `Failed to create content (change number = ${changeNumber})`);
+        });
+    }
+}
+
+function getSubscribers() {
+    clearSubscriberColumns();
+    $.ajax({
+        url: `/documents/${documentId}/subscribers`
+    }).done(subscribers => {
+        if (subscribers.length !== 0) {
+            let index = 0;
+            subscribers.forEach(subscriber => {
+                subscriberMap.set(subscriber.id, subscriber);
+                subscriberColumns[index].append(generateSubscriberCard(subscriber));
+                index++;
+            });
+        }
+    }).fail(function (data) {
+        handleError(data, `Failed to get subscribers`);
+    });
+}
+
+function clearSubscriberColumns() {
+    subscriberColumns.forEach(subscriberColumn => subscriberColumn.empty());
+}
+
+function generateSubscriberCard(subscriber) {
+    let card = $('<div></div>').addClass(`card mt-1 bg-${subscriber.subscribed ? 'light-green' : 'light'}`);
+    let cardBody = $('<div></div>').addClass('card-body p-2 text-start');
+    let titleRow = $('<div></div>').addClass('row card-title me-2').html(`<div class="col-11 text-truncate">${subscriber.company.name}</div>
+                                        <div class="col-1 pe-2"><a type="button" title="Show info" class="ms-1" data-bs-toggle="modal"
+                                        data-bs-target="#subscriberInfoModal" data-subscriberid='${subscriber.id}'>
+                                        <i class="fa-solid fa-circle-info"></i></a></div>`);
+    cardBody.append(titleRow);
+    let infoRow = $('<div></div>').addClass('row mt-2').html(`<div class="col-5 small"></div><div class="col-7 small text-end">${subscriber.status.replace('_', ' ').toLowerCase()}</div>`);
+    if (subscriber.subscribed || subscriber.unsubscribeTimestamp != null) {
+        let infoRowHtml = `<a type="button" title='${subscriber.subscribed ? 'Unsubscribe' : 'Resubscribe'}' data-bs-toggle="modal"
+                                data-bs-target=${subscriber.subscribed ? '#unsubscribeModal' : '#resubscribeModal'}
+                                data-subscriberid='${subscriber.id}' data-subscribername='${subscriber.company.name}'>
+                                <span class="badge text-bg-${subscriber.subscribed ? 'danger' : 'success'}">${subscriber.subscribed ? 'Unsub' : 'Resub'}</span></a>`;
+        infoRow.find('.col-5').html(infoRowHtml);
+    }
+    cardBody.append(infoRow);
+    card.append(cardBody);
+    return card;
+}
+
+$('#addSendingModal').on('show.bs.modal', function(e) {
+    companySelector.empty();
+    fillCompaniesSelector(); // add to company-selector
+    $(e.currentTarget).find('#statusSelector').val('');
+    $(e.currentTarget).find('#invoiceNumInput').val('');
+    $(e.currentTarget).find('#invoiceDateInput').val('');
+    $(e.currentTarget).find('#letterNumInput').val('');
+    $(e.currentTarget).find('#letterDateInput').val('').css('color', 'transparent');
+});
+
+function fillCompaniesSelector() {
+    $.ajax({
+        url: '/companies/all'
+    }).done(companies => {
+        if (companies.length !== 0) {
+            companies.forEach(company => {
+                companySelector.append($('<option></option>').val(company.id).html(company.name));
+            });
+            companySelector.val('');
+        }
+    }).fail(function (data) {
+        handleError(data, `Failed to get companies`);
+    });
+}
+
+function createSending() {
+    let companyId = companySelector.val();
+    let status = $('#statusSelector').val();
+    let invoiceNum = $('#invoiceNumInput').val();
+    let invoiceDate = $('#invoiceDateInput').val();
+    if (companyId.length && status.length && invoiceNum.length && invoiceDate.length) {
+        $.ajax({
+            url: '/documents/sendings',
+            type: 'POST',
+            data: JSON.stringify(makeSendingToObject()),
+            contentType: 'application/json; charset=utf-8'
+        }).done(() => {
+            getSubscribers();
+            $('#addSendingModal').modal('toggle');
+            successToast(`Sending was added`);
+        }).fail(function(data) {
+            handleError(data, 'Failed to add sending');
+        });
+    }
+}
+
+function makeSendingToObject() {
+    return {
+        documentId: documentId,
+        companyId: companySelector.val(),
+        status: $('#statusSelector').val(),
+        invoiceNumber: $('#invoiceNumInput').val(),
+        invoiceDate: $('#invoiceDateInput').val(),
+        letterNumber: $('#letterNumInput').val(),
+        letterDate: $('#letterDateInput').val()
+    };
+}
+
+$('#unsubscribeModal').on('show.bs.modal', function(e) {
+    let subscriberName = $(e.relatedTarget).data('subscribername');
+    let subscriberId = $(e.relatedTarget).data('subscriberid');
+    $(e.currentTarget).find('#unsubscribeModalLabel').text(`Unsubscribe: ${subscriberName}?`);
+    $(e.currentTarget).find('#unsubscribeModalSubscriberId').val(subscriberId);
+    $(e.currentTarget).find('#unsubscribeModalSubscriberName').val(subscriberName);
+    $(e.currentTarget).find('#unsubscribeModalUnsubscribeReason').val('');
+});
+
+$('#resubscribeModal').on('show.bs.modal', function(e) {
+    let subscriberName = $(e.relatedTarget).data('subscribername');
+    let subscriberId = $(e.relatedTarget).data('subscriberid');
+    $(e.currentTarget).find('#resubscribeModalLabel').text(`Resubscribe: ${subscriberName}?`);
+    $(e.currentTarget).find('#resubscribeModalSubscriberId').val(subscriberId);
+    $(e.currentTarget).find('#resubscribeModalSubscriberName').val(subscriberName);
+});
+
+$('#subscriberInfoModal').on('show.bs.modal', function(e) {
+    let subscriber = subscriberMap.get($(e.relatedTarget).data('subscriberid'));
+    fillSubscriberInfoModalLabel(subscriber);
+    fillUnsubscribeInfoArea(subscriber);
+    getSendings(subscriber.company.id);
+});
+
+function fillSubscriberInfoModalLabel(subscriber) {
+    let subscribedBadgeText;
+    if (subscriber.subscribed) {
+        subscribedBadgeText = 'Subscribed';
+    } else if (subscriber.unsubscribeTimestamp != null) {
+        subscribedBadgeText = 'Unsubscribed';
+    } else {
+        subscribedBadgeText = 'Not subscribed';
+    }
+    let subscribedBadgeHtml = `<span class="badge text-bg-${subscriber.subscribed ? 'success' : 'secondary'}">${subscribedBadgeText}</span>`;
+    $('#subscriberInfoModalLabel').html(`${subscriber.company.name} ${subscribedBadgeHtml}`);
+}
+
+function fillUnsubscribeInfoArea(subscriber) {
+    $('#unsubscribeInfo').empty();
+    if (subscriber.unsubscribeTimestamp != null) {
+        let unsubscribeInfoArea = $('#unsubscribeInfo');
+        let unsubscribeInfo = $('<div></div>').addClass('mb-2').text(`Unsubscribed ${new Date(subscriber.unsubscribeTimestamp).toLocaleString()} due to: ${subscriber.unsubscribeReason}`);
+        unsubscribeInfoArea.append(unsubscribeInfo);
+    }
+}
+
+function getSendings(companyId) {
+    $('#sendingsTable').attr('hidden', true);
+    $('#sendingsTable > tbody').empty();
+    $.ajax({
+        url: `/documents/${documentId}/sendings/by-company`,
+        data: `companyId=${companyId}`
+    }).done(sendings => {
+        if (sendings.length !== 0) {
+            $('#sendingsTable').attr('hidden', false);
+            sendings.forEach(sending => {
+                addSendingRow(sending, companyId);
+            });
+            let popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
+            let popoverList = [...popoverTriggerList].map(popoverTriggerEl =>
+                new bootstrap.Popover(popoverTriggerEl, {html : true, sanitize: false}));
+        } else {
+            $('#subscriberInfoModal').modal('toggle');
+        }
+    }).fail(function (data) {
+        handleError(data, `Failed to get sendings`);
+    });
+}
+
+function addSendingRow(sending, companyId) {
+    let docStatusTd = $('<td></td>').text(`${sending.invoice.status}`);
+    let invoiceTd = $('<td></td>').html(`${sending.invoice.number} (${new Date(sending.invoice.date).toLocaleDateString()})`);
+    let letterTdHtml = '';
+    if (sending.invoice.letter.number != null) {
+        letterTdHtml = `${sending.invoice.letter.number} (${new Date(sending.invoice.letter.date).toLocaleDateString()})`;
+    }
+    let letterTd = $('<td></td>').html(letterTdHtml);
+    let deleteSendingSubmitHtml = `<button class='btn btn-sm btn-secondary ms-3'>Cancel</button>
+                                       <button class='btn btn-sm btn-danger' onclick='deleteSending(${sending.id}, ${companyId})'>Delete</button>`;
+
+    let deleteActionTd = $('<td></td>').addClass('text-end').html(`<a tabindex="0" type="button" class="trash-button me-3"
+                title="Delete sending" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-title="Delete this sending?"
+                data-bs-content="${deleteSendingSubmitHtml}"> <i class="fa-solid fa-trash"></i></a>`);
+    let sendingRow = $('<tr></tr>');
+    sendingRow.append(docStatusTd);
+    sendingRow.append(invoiceTd);
+    sendingRow.append(letterTd);
+    sendingRow.append(deleteActionTd);
+    $('#sendingsTable > tbody').append(sendingRow);
+}
+
+function deleteSending(sendingId, companyId) {
+    $.ajax({
+        url: `sendings/${sendingId}`,
+        type: "DELETE"
+    }).done(function() {
+        getSendings(companyId);
+        getSubscribers();
+        successToast('Sending was deleted');
+    }).fail(function(data) {
+        handleError(data, 'Failed to delete sending');
+    });
+}
+
+function resubscribe() {
+    let resubscribeModal = $('#resubscribeModal');
+    let id = resubscribeModal.find('#resubscribeModalSubscriberId').val();
+    let name = resubscribeModal.find('#resubscribeModalSubscriberName').val();
+    resubscribeModal.modal('toggle');
+    $.ajax({
+        url: `subscribers/${id}/resubscribe`,
+        type: "PATCH"
+    }).done(function() {
+        getSubscribers();
+        successToast(`${name} was resubscribed`);
+    }).fail(function(data) {
+        handleError(data, `Failed to resubscribe ${name}`);
+    });
+}
+
+function unsubscribe() {
+    let unsubscribeModal = $('#unsubscribeModal');
+    let id = unsubscribeModal.find('#unsubscribeModalSubscriberId').val();
+    let name = unsubscribeModal.find('#unsubscribeModalSubscriberName').val();
+    let unsubscribeReason = unsubscribeModal.find('#unsubscribeModalUnsubscribeReason').val();
+    if (unsubscribeReason.length) {
+        $.ajax({
+            url: `subscribers/${id}/unsubscribe`,
+            type: "PATCH",
+            data: "unsubscribeReason=" + unsubscribeReason
+        }).done(function() {
+            unsubscribeModal.modal('toggle');
+            getSubscribers();
+            successToast(`${name} was unsubscribed`);
+        }).fail(function(data) {
+            handleError(data, `Failed to unsubscribe ${name}`);
         });
     }
 }

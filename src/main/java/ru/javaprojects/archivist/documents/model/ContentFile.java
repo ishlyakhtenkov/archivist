@@ -19,11 +19,11 @@ public class ContentFile {
     @NotBlank
     @NoHtml
     @Size(min = 2, max = 128)
-    @Column(name = "name", nullable = false)
-    private String name;
+    @Column(name = "file_name")
+    private String fileName;
 
     @NotBlank
     @Size(min = 2, max = 512)
-    @Column(name = "file_link", nullable = false)
+    @Column(name = "file_link")
     private String fileLink;
 }

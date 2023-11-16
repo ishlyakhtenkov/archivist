@@ -52,7 +52,7 @@
                                         <div class="col-lg-4">
                                             <div class="input-group mb-3">
                                                 <span class="input-group-text doc-card-field" id="statusAddon" title="Status">Status</span>
-                                                <input type="text" id="statusInput" th:value="*{status.displayName}" class="form-control bg-light" disabled
+                                                <input type="text" id="statusInput" th:value="*{status}" class="form-control bg-light" disabled
                                                        title="Status" aria-label="Status" aria-describedby="statusAddon"/>
                                             </div>
                                         </div>
@@ -66,7 +66,7 @@
                                         <div class="col-lg-4">
                                             <div class="input-group mb-3">
                                                 <span class="input-group-text doc-card-field px-3" id="typeAddon" title="Type">Type</span>
-                                                <input type="text" id="typeInput" th:value="*{type.displayName}" class="form-control bg-light" disabled
+                                                <input type="text" id="typeInput" th:value="*{type}" class="form-control bg-light" disabled
                                                        title="Type" aria-label="Type" aria-describedby="typeAddon"/>
                                             </div>
                                         </div>
@@ -115,7 +115,47 @@
                                     <a th:href="@{'/documents/edit/' + ${document.id}}" class="btn btn-sm btn-warning" type="button">Edit card</a>
                                 </div>
                             </div>
-                            <div class="tab-pane fade" id="documentChangesTab" role="tabpanel" aria-labelledby="nav-changes-tab" tabindex="0"></div>
+
+                            <!-- Changes Tab-->
+                            <div class="tab-pane fade mt-2" id="documentChangesTab" role="tabpanel" aria-labelledby="nav-changes-tab" tabindex="0">
+                                <div class="text-end" id="addChangeButtonDiv">
+                                    <button class="btn btn-sm btn-secondary" title="Add change" onclick="showInputChangeDiv()">Add change</button>
+                                </div>
+                                <div id="inputChangeDiv" hidden>
+                                    <form onsubmit="return false;">
+                                        <div class="row row-cols-3 row-cols-md-4 d-flex align-items-center">
+                                            <div class="col-6 col-md-3">
+                                                <input type="number" id="changeChangeNumberInput" class="form-control" title="Change number" placeholder="Change number" required/>
+                                            </div>
+                                            <div class="col-6 col-md-3">
+                                                <input type="text" id="changeChangeNoticeNameInput" class="form-control" title="Change notice"
+                                                       aria-label="Change notice" placeholder="Change notice" required/>
+                                            </div>
+                                            <div class="col-6 col-md-3">
+                                                <input type="text" onblur="if(this.value==''){this.type='text'}" onfocus="(this.type='date')" class="form-control" id="changeChangeNoticeDateInput" placeholder="Change date" required>
+                                            </div>
+                                            <div class="col-6 col-md-3 btn-toolbar text-start py-2">
+                                                <button type="submit" class="btn btn-sm btn-success px-3 me-1" title="Save" onclick="createChange()">Save</button>
+                                                <button type="button" class="btn btn-sm btn-secondary" title="Cancel" onclick="cancelAddChange()">Cancel</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+
+                                <div class="table-responsive text-nowrap text-center">
+                                    <table class="table table-hover" hidden id="changesTable">
+                                        <thead>
+                                        <tr>
+                                            <th class="w-25 pt-0">Change number</th>
+                                            <th class="w-25 pt-0">Change notice</th>
+                                            <th class="w-25 pt-0">Change date</th>
+                                            <th class="pt-0"></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody class="table-group-divider"></tbody>
+                                    </table>
+                                </div>
+                            </div>
 
                             <!-- Applicability Tab-->
                             <div class="tab-pane fade mt-2" id="documentApplicabilityTab" role="tabpanel" aria-labelledby="nav-applicability-tab" tabindex="0">
@@ -381,256 +421,107 @@
 </th:block>
 
 <script>
-    const subscriberMap = new Map();
-    const companySelector = $('#companySelector');
 
-    $('#documentSubscribersTabButton').on('shown.bs.tab', () => {
-        getSubscribers();
+    $('#documentChangesTabButton').on('shown.bs.tab', () => {
+        cancelAddChange();
+        getChanges();
     });
 
-    function getSubscribers() {
-        clearSubscriberColumns();
+    function getChanges() {
         $.ajax({
-            url: `/documents/${documentId}/subscribers`
-        }).done(subscribers => {
-            if (subscribers.length !== 0) {
-                let index = 0;
-                subscribers.forEach(subscriber => {
-                    subscriberMap.set(subscriber.id, subscriber);
-                    subscriberColumns[index].append(generateSubscriberCard(subscriber));
-                    index++;
-                });
-            }
+            url: `/documents/${documentId}/changes`
+        }).done(changes => {
+            fillChangesTable(changes);
         }).fail(function (data) {
-            handleError(data, `Failed to get subscribers`);
+            handleError(data, `Failed to get changes`);
         });
     }
 
-    function clearSubscriberColumns() {
-        subscriberColumns.forEach(subscriberColumn => subscriberColumn.empty());
-    }
-
-    function generateSubscriberCard(subscriber) {
-        let card = $('<div></div>').addClass(`card mt-1 bg-${subscriber.subscribed ? 'light-green' : 'light'}`);
-        let cardBody = $('<div></div>').addClass('card-body p-2 text-start');
-        let titleRow = $('<div></div>').addClass('row card-title me-2').html(`<div class="col-11 text-truncate">${subscriber.company.name}</div>
-                                        <div class="col-1 pe-2"><a type="button" title="Show info" class="ms-1" data-bs-toggle="modal"
-                                        data-bs-target="#subscriberInfoModal" data-subscriberid='${subscriber.id}'>
-                                        <i class="fa-solid fa-circle-info"></i></a></div>`);
-        cardBody.append(titleRow);
-        let infoRow = $('<div></div>').addClass('row mt-2').html(`<div class="col-5 small"></div><div class="col-7 small text-end">${subscriber.status.replace('_', ' ').toLowerCase()}</div>`);
-        if (subscriber.subscribed || subscriber.unsubscribeTimestamp != null) {
-            let infoRowHtml = `<a type="button" title='${subscriber.subscribed ? 'Unsubscribe' : 'Resubscribe'}' data-bs-toggle="modal"
-                                data-bs-target=${subscriber.subscribed ? '#unsubscribeModal' : '#resubscribeModal'}
-                                data-subscriberid='${subscriber.id}' data-subscribername='${subscriber.company.name}'>
-                                <span class="badge text-bg-${subscriber.subscribed ? 'danger' : 'success'}">${subscriber.subscribed ? 'Unsub' : 'Resub'}</span></a>`;
-            infoRow.find('.col-5').html(infoRowHtml);
+    function fillChangesTable(changes) {
+        $('#changesTable > tbody').empty();
+        if (changes.length !== 0) {
+            $('#changesTable').attr('hidden', false);
+            changes.forEach(change => {
+                addChangeRow(change);
+            });
+            let popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
+            let popoverList = [...popoverTriggerList].map(popoverTriggerEl =>
+                new bootstrap.Popover(popoverTriggerEl, {html : true, sanitize: false}));
+        } else {
+            $('#changesTable').attr('hidden', true);
         }
-        cardBody.append(infoRow);
-        card.append(cardBody);
-        return card;
     }
 
-    $('#addSendingModal').on('show.bs.modal', function(e) {
-        companySelector.empty();
-        fillCompaniesSelector(); // add to company-selector
-        $(e.currentTarget).find('#statusSelector').val('');
-        $(e.currentTarget).find('#invoiceNumInput').val('');
-        $(e.currentTarget).find('#invoiceDateInput').val('');
-        $(e.currentTarget).find('#letterNumInput').val('');
-        $(e.currentTarget).find('#letterDateInput').val('').css('color', 'transparent');
-    });
-
-    function fillCompaniesSelector() {
-        $.ajax({
-            url: '/companies/all'
-        }).done(companies => {
-            if (companies.length !== 0) {
-                companies.forEach(company => {
-                    companySelector.append($('<option></option>').val(company.id).html(company.name));
-                });
-                companySelector.val('');
-            }
-        }).fail(function (data) {
-            handleError(data, `Failed to get companies`);
-        });
+    function addChangeRow(change) {
+        let changeNumberTd = $('<td></td>').text(change.changeNumber);
+        let changeNoticeTd = $('<td></td>').text(change.changeNotice.name);
+        let changeDateTd = $('<td></td>').text(change.changeNotice.releaseDate);
+        let deleteChangeSubmitHtml = `<button class='btn btn-sm btn-secondary ms-3'>Cancel</button>
+                                       <button class='btn btn-sm btn-danger' onclick='deleteChange(${change.id}, ${change.changeNumber})'>Delete</button>`;
+        let deleteActionTd = $('<td></td>').addClass('text-end').html(`<a tabindex="0" type="button" class="trash-button me-3"
+                title="Delete change" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-title="Delete this change?"
+                data-bs-content="${deleteChangeSubmitHtml}"> <i class="fa-solid fa-trash"></i></a>`);
+        let changeRow = $('<tr></tr>');
+        changeRow.append(changeNumberTd);
+        changeRow.append(changeNoticeTd);
+        changeRow.append(changeDateTd);
+        changeRow.append(deleteActionTd);
+        $('#changesTable > tbody').append(changeRow);
     }
 
-    function createSending() {
-        let companyId = companySelector.val();
-        let status = $('#statusSelector').val();
-        let invoiceNum = $('#invoiceNumInput').val();
-        let invoiceDate = $('#invoiceDateInput').val();
-        if (companyId.length && status.length && invoiceNum.length && invoiceDate.length) {
+    function showInputChangeDiv() {
+        $('#addChangeButtonDiv').attr('hidden', true);
+        $('#inputChangeDiv').attr('hidden', false);
+    }
+
+    function cancelAddChange() {
+        $('#changeChangeNumberInput').val('');
+        $('#changeChangeNoticeNameInput').val('');
+        $('#changeChangeNoticeDateInput').attr('type', 'text').val('');
+        $('#addChangeButtonDiv').attr('hidden', false);
+        $('#inputChangeDiv').attr('hidden', true);
+    }
+
+    function createChange() {
+        let changeNumber = $('#changeChangeNumberInput').val();
+        if (changeNumber.length && $('#changeChangeNoticeNameInput').val().length &&
+            $('#changeChangeNoticeDateInput').val().length) {
             $.ajax({
-                url: '/documents/sendings',
+                url: '/documents/changes',
                 type: 'POST',
-                data: JSON.stringify(makeSendingToObject()),
+                data: JSON.stringify(makeChangeObject()),
                 contentType: 'application/json; charset=utf-8'
             }).done(() => {
-                getSubscribers();
-                $('#addSendingModal').modal('toggle');
-                successToast(`Sending was added`);
+                getChanges();
+                cancelAddChange();
+                successToast(`Change ${changeNumber} was added`);
             }).fail(function(data) {
-                handleError(data, 'Failed to add sending');
+                handleError(data, `Failed to create change ${changeNumber}`);
             });
+
         }
     }
 
-    function makeSendingToObject() {
+    function makeChangeObject() {
         return {
             documentId: documentId,
-            companyId: companySelector.val(),
-            status: $('#statusSelector').val(),
-            invoiceNumber: $('#invoiceNumInput').val(),
-            invoiceDate: $('#invoiceDateInput').val(),
-            letterNumber: $('#letterNumInput').val(),
-            letterDate: $('#letterDateInput').val()
+            changeNoticeName: $('#changeChangeNoticeNameInput').val(),
+            changeNoticeDate: $('#changeChangeNoticeDateInput').val(),
+            changeNumber: $('#changeChangeNumberInput').val()
         };
     }
 
-    $('#unsubscribeModal').on('show.bs.modal', function(e) {
-        let subscriberName = $(e.relatedTarget).data('subscribername');
-        let subscriberId = $(e.relatedTarget).data('subscriberid');
-        $(e.currentTarget).find('#unsubscribeModalLabel').text(`Unsubscribe: ${subscriberName}?`);
-        $(e.currentTarget).find('#unsubscribeModalSubscriberId').val(subscriberId);
-        $(e.currentTarget).find('#unsubscribeModalSubscriberName').val(subscriberName);
-        $(e.currentTarget).find('#unsubscribeModalUnsubscribeReason').val('');
-    });
-
-    $('#resubscribeModal').on('show.bs.modal', function(e) {
-        let subscriberName = $(e.relatedTarget).data('subscribername');
-        let subscriberId = $(e.relatedTarget).data('subscriberid');
-        $(e.currentTarget).find('#resubscribeModalLabel').text(`Resubscribe: ${subscriberName}?`);
-        $(e.currentTarget).find('#resubscribeModalSubscriberId').val(subscriberId);
-        $(e.currentTarget).find('#resubscribeModalSubscriberName').val(subscriberName);
-    });
-
-    $('#subscriberInfoModal').on('show.bs.modal', function(e) {
-        let subscriber = subscriberMap.get($(e.relatedTarget).data('subscriberid'));
-        fillSubscriberInfoModalLabel(subscriber);
-        fillUnsubscribeInfoArea(subscriber);
-        getSendings(subscriber.company.id);
-    });
-
-    function fillSubscriberInfoModalLabel(subscriber) {
-        let subscribedBadgeText;
-        if (subscriber.subscribed) {
-            subscribedBadgeText = 'Subscribed';
-        } else if (subscriber.unsubscribeTimestamp != null) {
-            subscribedBadgeText = 'Unsubscribed';
-        } else {
-            subscribedBadgeText = 'Not subscribed';
-        }
-        let subscribedBadgeHtml = `<span class="badge text-bg-${subscriber.subscribed ? 'success' : 'secondary'}">${subscribedBadgeText}</span>`;
-       $('#subscriberInfoModalLabel').html(`${subscriber.company.name} ${subscribedBadgeHtml}`);
-    }
-
-    function fillUnsubscribeInfoArea(subscriber) {
-        $('#unsubscribeInfo').empty();
-        if (subscriber.unsubscribeTimestamp != null) {
-            let unsubscribeInfoArea = $('#unsubscribeInfo');
-            let unsubscribeInfo = $('<div></div>').addClass('mb-2').text(`Unsubscribed ${new Date(subscriber.unsubscribeTimestamp).toLocaleString()} due to: ${subscriber.unsubscribeReason}`);
-            unsubscribeInfoArea.append(unsubscribeInfo);
-        }
-    }
-
-    function getSendings(companyId) {
-        $('#sendingsTable').attr('hidden', true);
-        $('#sendingsTable > tbody').empty();
+    function deleteChange(changeId, changeNumber) {
         $.ajax({
-            url: `/documents/${documentId}/sendings/by-company`,
-            data: `companyId=${companyId}`
-        }).done(sendings => {
-            if (sendings.length !== 0) {
-                $('#sendingsTable').attr('hidden', false);
-                sendings.forEach(sending => {
-                    addSendingRow(sending, companyId);
-                });
-                const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
-                const popoverList = [...popoverTriggerList].map(popoverTriggerEl =>
-                    new bootstrap.Popover(popoverTriggerEl, {html : true, sanitize: false}));
-            } else {
-                $('#subscriberInfoModal').modal('toggle');
-            }
-        }).fail(function (data) {
-            handleError(data, `Failed to get sendings`);
-        });
-    }
-
-    function addSendingRow(sending, companyId) {
-        let docStatusTd = $('<td></td>').text(`${sending.invoice.status}`);
-        let invoiceTd = $('<td></td>').html(`${sending.invoice.number} (${new Date(sending.invoice.date).toLocaleDateString()})`);
-        let letterTdHtml = '';
-        if (sending.invoice.letter.number != null) {
-            letterTdHtml = `${sending.invoice.letter.number} (${new Date(sending.invoice.letter.date).toLocaleDateString()})`;
-        }
-        let letterTd = $('<td></td>').html(letterTdHtml);
-        let deleteSendingSubmitHtml = `<button class='btn btn-sm btn-secondary ms-3'>Cancel</button>
-                                       <button class='btn btn-sm btn-danger' onclick='deleteSending(${sending.id}, ${companyId})'>Delete</button>`;
-
-        let deleteActionTd = $('<td></td>').addClass('text-end').html(`<a tabindex="0" type="button" class="trash-button me-3"
-                title="Delete sending" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-title="Delete this sending?"
-                data-bs-content="${deleteSendingSubmitHtml}"> <i class="fa-solid fa-trash"></i></a>`);
-        let sendingRow = $('<tr></tr>');
-        sendingRow.append(docStatusTd);
-        sendingRow.append(invoiceTd);
-        sendingRow.append(letterTd);
-        sendingRow.append(deleteActionTd);
-        $('#sendingsTable > tbody').append(sendingRow);
-    }
-
-    function deleteSending(sendingId, companyId) {
-        $.ajax({
-            url: `sendings/${sendingId}`,
+            url: `changes/${changeId}`,
             type: "DELETE"
         }).done(function() {
-            getSendings(companyId);
-            getSubscribers();
-            successToast('Sending was deleted');
+            getChanges();
+            successToast(`Change ${changeNumber} was deleted`);
         }).fail(function(data) {
-            handleError(data, 'Failed to delete sending');
+            handleError(data, `Failed to delete change ${changeNumber}`);
         });
     }
 
-    function resubscribe() {
-        let resubscribeModal = $('#resubscribeModal');
-        let id = resubscribeModal.find('#resubscribeModalSubscriberId').val();
-        let name = resubscribeModal.find('#resubscribeModalSubscriberName').val();
-        resubscribeModal.modal('toggle');
-        $.ajax({
-            url: `subscribers/${id}/resubscribe`,
-            type: "PATCH"
-        }).done(function() {
-            getSubscribers();
-            successToast(`${name} was resubscribed`);
-        }).fail(function(data) {
-            handleError(data, `Failed to resubscribe ${name}`);
-        });
-    }
-
-    function unsubscribe() {
-        let unsubscribeModal = $('#unsubscribeModal');
-        let id = unsubscribeModal.find('#unsubscribeModalSubscriberId').val();
-        let name = unsubscribeModal.find('#unsubscribeModalSubscriberName').val();
-        let unsubscribeReason = unsubscribeModal.find('#unsubscribeModalUnsubscribeReason').val();
-        if (unsubscribeReason.length) {
-            $.ajax({
-                url: `subscribers/${id}/unsubscribe`,
-                type: "PATCH",
-                data: "unsubscribeReason=" + unsubscribeReason
-            }).done(function() {
-                unsubscribeModal.modal('toggle');
-                getSubscribers();
-                successToast(`${name} was unsubscribed`);
-            }).fail(function(data) {
-                handleError(data, `Failed to unsubscribe ${name}`);
-            });
-        }
-    }
-
-    function changeStyle() {
-        $('#letterDateInput').css('color', 'black');
-    }
 
 </script>

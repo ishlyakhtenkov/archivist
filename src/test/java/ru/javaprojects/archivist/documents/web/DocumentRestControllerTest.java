@@ -400,7 +400,7 @@ class DocumentRestControllerTest extends AbstractControllerTest {
                 .param(FILE_LINK_PARAM, content1.getFiles().get(1).getFileLink()))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PDF))
-                .andExpect(header().string("Content-Disposition", "inline; filename=" + content1.getFiles().get(1).getName()));
+                .andExpect(header().string("Content-Disposition", "inline; filename=" + content1.getFiles().get(1).getFileName()));
     }
 
     @Test
@@ -752,7 +752,7 @@ class DocumentRestControllerTest extends AbstractControllerTest {
                         IllegalRequestDataException.class))
                 .andExpect(problemTitle(HttpStatus.UNPROCESSABLE_ENTITY.getReasonPhrase()))
                 .andExpect(problemStatus(HttpStatus.UNPROCESSABLE_ENTITY.value()))
-                .andExpect(problemDetail("specified invoice exists and has " + sending1.getInvoice().getStatus().getDisplayName() + " status"))
+                .andExpect(problemDetail("specified invoice exists and has " + sending1.getInvoice().getStatus() + " status"))
                 .andExpect(problemInstance(SENDINGS_URL));
     }
 

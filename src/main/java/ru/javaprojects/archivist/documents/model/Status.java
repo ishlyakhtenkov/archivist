@@ -1,15 +1,12 @@
 package ru.javaprojects.archivist.documents.model;
 
+import org.springframework.util.StringUtils;
+
 public enum Status {
-    UNACCOUNTED_COPY("Unaccounted copy"), ACCOUNTED_COPY("Accounted copy"), DUPLICATE("Duplicate"), ORIGINAL("Original");
+    UNACCOUNTED_COPY, ACCOUNTED_COPY, DUPLICATE, ORIGINAL;
 
-    private final String displayName;
-
-    Status(String displayName) {
-        this.displayName = displayName;
-    }
-
-    public String getDisplayName() {
-        return displayName;
+    @Override
+    public String toString() {
+        return StringUtils.capitalize(name().replace('_', ' ').toLowerCase());
     }
 }

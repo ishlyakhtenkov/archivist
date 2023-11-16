@@ -1,15 +1,12 @@
 package ru.javaprojects.archivist.documents.model;
 
+import org.springframework.util.StringUtils;
+
 public enum Type {
-    PAPER("Paper"), DIGITAL("Digital");
+    PAPER, DIGITAL;
 
-    private final String displayName;
-
-    Type(String displayName) {
-        this.displayName = displayName;
-    }
-
-    public String getDisplayName() {
-        return displayName;
+    @Override
+    public String toString() {
+        return StringUtils.capitalize(name().toLowerCase());
     }
 }

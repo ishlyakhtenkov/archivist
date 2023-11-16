@@ -30,7 +30,7 @@ public class Letter extends BaseEntity implements HasId {
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "company_id")
+    @JoinColumn(name = "company_id", nullable = false)
     private Company company;
 
     public Letter(Long id, String number, LocalDate date, Company company) {

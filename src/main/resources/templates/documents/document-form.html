@@ -64,7 +64,7 @@
                                                 <select class="form-control selectpicker border" data-style="btn-white" id="statusSelect"
                                                         th:field="*{status}" title="&nbsp" required aria-label="Status" aria-describedby="statusAddon">
                                                     <option th:each="status : ${statuses}"
-                                                            th:value="${status}"
+                                                            th:value="${status.name}"
                                                             th:text="${status}">
                                                     </option>
                                                 </select>
@@ -89,7 +89,7 @@
                                                 <select class="form-control selectpicker border" data-style="btn-white" id="typeSelect"
                                                         th:field="*{type}" title="&nbsp" required aria-label="Type" aria-describedby="typeAddon">
                                                     <option th:each="type : ${types}"
-                                                            th:value="${type}"
+                                                            th:value="${type.name}"
                                                             th:text="${type}">
                                                     </option>
                                                 </select>
@@ -123,8 +123,12 @@
                                             </div>
                                         </div>
                                         <div class="col-xxl-4 d-none d-xxl-block">
+                                            <div class="form-check float-start mb-3 mt-xxl-2">
+                                                <input type="checkbox" th:field="*{secret}" class="form-check-input" style="cursor: pointer;" id="secretCheckbox" onchange="$('#secretCheckbox2').prop('checked', $('#secretCheckbox').prop('checked'))">
+                                                <label class="form-check-label" for="secretCheckbox">Secret</label>
+                                            </div>
                                             <div class="form-check float-end mb-3 mt-xxl-2">
-                                                <input type="checkbox" th:field="*{annulled}" class="form-check-input" style="cursor: pointer;" id="annulledCheckbox">
+                                                <input type="checkbox" th:field="*{annulled}" class="form-check-input" style="cursor: pointer;" id="annulledCheckbox" onchange="$('#annulledCheckbox2').prop('checked', $('#annulledCheckbox').prop('checked'))">
                                                 <label class="form-check-label" for="annulledCheckbox">Annulled</label>
                                             </div>
                                         </div>
@@ -159,10 +163,18 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="d-xxl-none mb-3">
-                                        <div class="form-check float-end mb-3 mt-xxl-2">
-                                            <input type="checkbox" th:field="*{annulled}" class="form-check-input" style="cursor: pointer;" id="annulledCheckbox2">
-                                            <label class="form-check-label" for="annulledCheckbox2">Annulled</label>
+                                    <div class="row d-xxl-none mb-1 mt-xxl-2">
+                                        <div class="col">
+                                            <div class="form-check">
+                                                <input type="checkbox" th:field="*{secret}" class="form-check-input" style="cursor: pointer;" id="secretCheckbox2" onchange="$('#secretCheckbox').prop('checked', $('#secretCheckbox2').prop('checked'))">
+                                                <label class="form-check-label" for="secretCheckbox2">Secret</label>
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="form-check float-end">
+                                                <input type="checkbox" th:field="*{annulled}" class="form-check-input" style="cursor: pointer;" id="annulledCheckbox2" onchange="$('#annulledCheckbox').prop('checked', $('#annulledCheckbox2').prop('checked'))">
+                                                <label class="form-check-label" for="annulledCheckbox2">Annulled</label>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="mb-4">

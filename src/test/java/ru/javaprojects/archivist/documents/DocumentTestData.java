@@ -45,6 +45,7 @@ public class DocumentTestData {
     public static final String SYMBOL_PARAM = "symbol";
     public static final String TYPE_PARAM = "type";
     public static final String ANNULLED_PARAM = "annulled";
+    public static final String SECRET_PARAM = "secret";
     public static final String COMMENT_PARAM = "comment";
     public static final String DEVELOPER_PARAM = "developer";
     public static final String ORIGINAL_HOLDER_PARAM = "originalHolder";
@@ -53,15 +54,15 @@ public class DocumentTestData {
     public static final String FILES_PARAM = "files";
 
     public static final Document document1 = new Document(DOCUMENT1_ID, "Block M21", "VUIA.465521.004", "926531",
-            LocalDate.of(2023, MARCH, 24), ORIGINAL, O1, DIGITAL, false, "some comment", department1, company3);
+            LocalDate.of(2023, MARCH, 24), ORIGINAL, O1, DIGITAL, false, false, "some comment", department1, company3);
 
     public static final Document document3 = new Document(DOCUMENT3_ID, "Panel B45", "UPIA.421478.001-01", "456213",
-            LocalDate.of(2021, MAY, 18), ORIGINAL, null, DIGITAL, false, null, department2, company2);
+            LocalDate.of(2021, MAY, 18), ORIGINAL, null, DIGITAL, false, true, null, department2, company2);
 
 
     public static Document getNew() {
         return new Document(null, "newName", "newDecimalNumber", "newInvNum", LocalDate.of(2023, OCTOBER, 12),
-                ORIGINAL, O, PAPER, false, "newComment", department1, company3);
+                ORIGINAL, O, PAPER, false, false, "newComment", department1, company3);
     }
 
     public static MultiValueMap<String, String> getNewParams() {
@@ -71,10 +72,11 @@ public class DocumentTestData {
         params.add(DECIMAL_NUMBER_PARAM, newDocument.getDecimalNumber());
         params.add(INVENTORY_NUMBER_PARAM, newDocument.getInventoryNumber());
         params.add(ACCOUNTING_DATE_PARAM, newDocument.getAccountingDate().toString());
-        params.add(STATUS_PARAM, newDocument.getStatus().toString());
-        params.add(SYMBOL_PARAM, newDocument.getSymbol().toString());
-        params.add(TYPE_PARAM, newDocument.getType().toString());
+        params.add(STATUS_PARAM, newDocument.getStatus().name());
+        params.add(SYMBOL_PARAM, newDocument.getSymbol().name());
+        params.add(TYPE_PARAM, newDocument.getType().name());
         params.add(ANNULLED_PARAM, FALSE);
+        params.add(SECRET_PARAM, FALSE);
         params.add(COMMENT_PARAM, newDocument.getComment());
         params.add(DEVELOPER_PARAM, String.valueOf(newDocument.getDeveloper().getId()));
         params.add(ORIGINAL_HOLDER_PARAM, String.valueOf(newDocument.getOriginalHolder().getId()));
@@ -92,7 +94,7 @@ public class DocumentTestData {
 
     public static Document getUpdated() {
         return new Document(DOCUMENT1_ID, "updatedName", "updatedDecimalNumber", "updInvNum", LocalDate.of(2021, JULY, 7),
-                DUPLICATE, O1, DIGITAL, true, "updatedComment", department2, company2);
+                DUPLICATE, O1, DIGITAL, true, false, "updatedComment", department2, company2);
     }
 
     public static MultiValueMap<String, String> getUpdatedParams() {
@@ -103,10 +105,11 @@ public class DocumentTestData {
         params.add(DECIMAL_NUMBER_PARAM, updatedDocument.getDecimalNumber());
         params.add(INVENTORY_NUMBER_PARAM, updatedDocument.getInventoryNumber());
         params.add(ACCOUNTING_DATE_PARAM, updatedDocument.getAccountingDate().toString());
-        params.add(STATUS_PARAM, updatedDocument.getStatus().toString());
-        params.add(SYMBOL_PARAM, updatedDocument.getSymbol().toString());
-        params.add(TYPE_PARAM, updatedDocument.getType().toString());
+        params.add(STATUS_PARAM, updatedDocument.getStatus().name());
+        params.add(SYMBOL_PARAM, updatedDocument.getSymbol().name());
+        params.add(TYPE_PARAM, updatedDocument.getType().name());
         params.add(ANNULLED_PARAM, TRUE);
+        params.add(SECRET_PARAM, FALSE);
         params.add(COMMENT_PARAM, updatedDocument.getComment());
         params.add(DEVELOPER_PARAM, String.valueOf(updatedDocument.getDeveloper().getId()));
         params.add(ORIGINAL_HOLDER_PARAM, String.valueOf(updatedDocument.getOriginalHolder().getId()));

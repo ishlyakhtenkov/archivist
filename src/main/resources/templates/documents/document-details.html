@@ -88,6 +88,11 @@
                                                        title="Accounting date" aria-label="Accounting date"/>
                                             </div>
                                         </div>
+                                        <div class="col-xxl-4 d-none d-xxl-block">
+                                            <div class="form-check mb-3 mt-xxl-2">
+                                                <input type="checkbox" th:field="*{secret}" class="form-check-input" disabled id="secretCheckbox"> Secret
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-lg-8">
@@ -104,6 +109,11 @@
                                                 <input type="text" id="developerInput" th:field="*{developer.name}" class="form-control bg-light" disabled
                                                        title="Developer" aria-label="Developer" aria-describedby="developerAddon"/>
                                             </div>
+                                        </div>
+                                    </div>
+                                    <div class="d-xxl-none mb-1 mt-xxl-2">
+                                        <div class="form-check">
+                                            <input type="checkbox" th:field="*{secret}" class="form-check-input" disabled id="secretCheckbox2"> Secret
                                         </div>
                                     </div>
                                     <div class="mb-4">

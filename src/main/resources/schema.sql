@@ -97,6 +97,7 @@ CREATE TABLE documents
     type               VARCHAR(10),
     symbol             VARCHAR(2),
     annulled           BOOL   DEFAULT FALSE NOT NULL,
+    secret             BOOL   DEFAULT FALSE NOT NULL,
     auto_generated     BOOL   DEFAULT FALSE NOT NULL,
     comment            VARCHAR(128),
     developer_id       BIGINT,
@@ -112,7 +113,7 @@ CREATE TABLE applicabilities
     id               BIGINT DEFAULT nextval('global_seq')  PRIMARY KEY,
     document_id      BIGINT               NOT NULL,
     applicability_id BIGINT               NOT NULL,
-    primal          BOOL   DEFAULT FALSE NOT NULL,
+    primal           BOOL   DEFAULT FALSE NOT NULL,
     FOREIGN KEY (document_id) REFERENCES documents (id) ON DELETE CASCADE,
     FOREIGN KEY (applicability_id) REFERENCES documents (id) ON DELETE CASCADE,
     h2_extra_column VARCHAR AS CASE WHEN primal = FALSE THEN NULL ELSE 'has primal' END

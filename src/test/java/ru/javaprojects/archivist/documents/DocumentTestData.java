@@ -5,8 +5,11 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import ru.javaprojects.archivist.MatcherFactory;
+import ru.javaprojects.archivist.changenotices.model.Change;
+import ru.javaprojects.archivist.changenotices.model.ChangeNotice;
 import ru.javaprojects.archivist.documents.model.*;
 import ru.javaprojects.archivist.documents.to.ApplicabilityTo;
+import ru.javaprojects.archivist.documents.to.ChangeTo;
 import ru.javaprojects.archivist.documents.to.SendingTo;
 
 import java.time.LocalDate;
@@ -16,8 +19,7 @@ import java.util.List;
 import static java.time.Month.*;
 import static ru.javaprojects.archivist.CommonTestData.*;
 import static ru.javaprojects.archivist.companies.CompanyTestData.*;
-import static ru.javaprojects.archivist.departments.DepartmentTestData.department1;
-import static ru.javaprojects.archivist.departments.DepartmentTestData.department2;
+import static ru.javaprojects.archivist.departments.DepartmentTestData.*;
 import static ru.javaprojects.archivist.documents.model.Status.*;
 import static ru.javaprojects.archivist.documents.model.Symbol.O;
 import static ru.javaprojects.archivist.documents.model.Symbol.O1;
@@ -29,6 +31,7 @@ public class DocumentTestData {
             MatcherFactory.usingIgnoringFieldsComparator(Document.class, "originalHolder", "developer");
 
     public static final long DOCUMENT1_ID = 100014;
+    public static final long DOCUMENT2_ID = 100015;
     public static final long DOCUMENT3_ID = 100016;
     public static final long DOCUMENT5_ID = 100018;
     public static final long DOCUMENT6_ID = 100019;
@@ -55,6 +58,10 @@ public class DocumentTestData {
 
     public static final Document document1 = new Document(DOCUMENT1_ID, "Block M21", "VUIA.465521.004", "926531",
             LocalDate.of(2023, MARCH, 24), ORIGINAL, O1, DIGITAL, false, false, "some comment", department1, company3);
+
+    public static final Document document2 = new Document(DOCUMENT2_ID, "Block M21 electric scheme", "VUIA.465521.004E3", "926532",
+            LocalDate.of(2023, MARCH, 24), ORIGINAL, null, PAPER, false, false, null, department3, company2);
+
 
     public static final Document document3 = new Document(DOCUMENT3_ID, "Panel B45", "UPIA.421478.001-01", "456213",
             LocalDate.of(2021, MAY, 18), ORIGINAL, null, DIGITAL, false, true, null, department2, company2);
@@ -193,5 +200,28 @@ public class DocumentTestData {
 
     public static SendingTo getNewSendingTo() {
         return new SendingTo(null, DOCUMENT1_ID, COMPANY1_ID, DUPLICATE, "100", LocalDate.of(2023, NOVEMBER, 11), "15/49-777", LocalDate.of(2023, NOVEMBER, 11));
+    }
+
+    public static final long DOCUMENT_1_CHANGE_1_ID = 100049;
+    public static final long DOCUMENT_1_CHANGE_2_ID = 100050;
+
+
+    public static final MatcherFactory.Matcher<Change> CHANGE_MATCHER =
+            MatcherFactory.usingIgnoringFieldsComparator(Change.class, "document", "changeNotice");
+
+    public static final ChangeNotice changeNotice1 = ChangeNotice.autoGenerate("VUIA.SK.591", LocalDate.of(2020, JUNE, 18));
+    public static final ChangeNotice changeNotice2 = ChangeNotice.autoGenerate("VUIA.TN.429", LocalDate.of(2021, DECEMBER, 14));
+
+    static {
+        changeNotice1.setId(100047L);
+        changeNotice2.setId(100048L);
+    }
+
+    public static final Change change1 = new Change(DOCUMENT_1_CHANGE_1_ID, document1, changeNotice1, 1);
+
+    public static final Change change2 = new Change(DOCUMENT_1_CHANGE_2_ID, document1, changeNotice2, 2);
+
+    public static ChangeTo getNewChangeTo() {
+        return new ChangeTo(null, DOCUMENT1_ID, "VUIA.9999-2023", LocalDate.of(2023, NOVEMBER, 20), 3);
     }
 }

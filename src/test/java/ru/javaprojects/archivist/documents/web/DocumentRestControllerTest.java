@@ -13,6 +13,9 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import ru.javaprojects.archivist.AbstractControllerTest;
+import ru.javaprojects.archivist.changenotices.model.Change;
+import ru.javaprojects.archivist.changenotices.model.ChangeNotice;
+import ru.javaprojects.archivist.changenotices.repository.ChangeRepository;
 import ru.javaprojects.archivist.common.error.IllegalRequestDataException;
 import ru.javaprojects.archivist.common.error.NotFoundException;
 import ru.javaprojects.archivist.documents.DocumentService;
@@ -22,6 +25,7 @@ import ru.javaprojects.archivist.documents.repository.ContentRepository;
 import ru.javaprojects.archivist.documents.repository.SendingRepository;
 import ru.javaprojects.archivist.documents.repository.SubscriberRepository;
 import ru.javaprojects.archivist.documents.to.ApplicabilityTo;
+import ru.javaprojects.archivist.documents.to.ChangeTo;
 import ru.javaprojects.archivist.documents.to.SendingTo;
 
 import java.io.IOException;
@@ -60,6 +64,9 @@ class DocumentRestControllerTest extends AbstractControllerTest {
     private static final String DOCUMENT_SENDINGS_BY_COMPANY_URL = DOCUMENTS_URL + "/%d/sendings/by-company";
     private static final String SENDINGS_URL = DOCUMENTS_URL + "/sendings";
     private static final String SENDINGS_URL_SLASH = SENDINGS_URL + "/";
+    private static final String CHANGES_URL = DOCUMENTS_URL + "/changes";
+    private static final String DOCUMENT_CHANGES_URL = DOCUMENTS_URL + "/%d/changes";
+    private static final String CHANGES_URL_SLASH = CHANGES_URL + "/";
 
     @Autowired
     private ApplicabilityRepository applicabilityRepository;
@@ -72,6 +79,9 @@ class DocumentRestControllerTest extends AbstractControllerTest {
 
     @Autowired
     private SubscriberRepository subscriberRepository;
+
+    @Autowired
+    private ChangeRepository changeRepository;
 
     @Autowired
     private DocumentService documentService;
@@ -226,7 +236,7 @@ class DocumentRestControllerTest extends AbstractControllerTest {
 
     @Test
     void getApplicabilitiesUnAuthorized() throws Exception {
-        perform(MockMvcRequestBuilders.patch(String.format(DOCUMENT_APPLICABILITIES_URL, DOCUMENT5_ID))
+        perform(MockMvcRequestBuilders.get(String.format(DOCUMENT_APPLICABILITIES_URL, DOCUMENT5_ID))
                 .with(csrf()))
                 .andExpect(status().isFound())
                 .andExpect(result ->
@@ -258,7 +268,7 @@ class DocumentRestControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    void deleteUnAuthorized() throws Exception {
+    void deleteApplicabilityUnAuthorized() throws Exception {
         perform(MockMvcRequestBuilders.delete(APPLICABILITIES_URL_SLASH + DOCUMENT_5_APPLICABILITY_1_ID)
                 .with(csrf()))
                 .andExpect(status().isFound())
@@ -269,7 +279,7 @@ class DocumentRestControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(USER_MAIL)
-    void deleteForbidden() throws Exception {
+    void deleteApplicabilityForbidden() throws Exception {
         perform(MockMvcRequestBuilders.delete(APPLICABILITIES_URL_SLASH + DOCUMENT_5_APPLICABILITY_1_ID)
                 .with(csrf()))
                 .andExpect(status().isForbidden());
@@ -1004,5 +1014,225 @@ class DocumentRestControllerTest extends AbstractControllerTest {
         perform(MockMvcRequestBuilders.delete(SENDINGS_URL_SLASH + DOCUMENT_1_COMPANY_1_SENDING_1_ID)
                 .with(csrf()))
                 .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithUserDetails(ARCHIVIST_MAIL)
+    void createChange() throws Exception {
+        ChangeTo newChangeTo = getNewChangeTo();
+        ResultActions action = perform(MockMvcRequestBuilders.post(CHANGES_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(writeValue(newChangeTo))
+                .with(csrf()))
+                .andExpect(status().isCreated());
+        Change created = CHANGE_MATCHER.readFromJson(action);
+        ChangeNotice changeNotice = ChangeNotice.autoGenerate(newChangeTo.getChangeNoticeName(), newChangeTo.getChangeNoticeDate());
+        changeNotice.setId(created.getChangeNotice().getId());
+        Change newChange = new Change(created.getId(), document1, changeNotice, newChangeTo.getChangeNumber());
+        CHANGE_MATCHER.assertMatchWithoutFields(created, newChange, "document.developer", "document.originalHolder");
+        CHANGE_MATCHER.assertMatch(changeRepository.getExisted(created.id()), newChange);
+    }
+
+    @Test
+    @WithUserDetails(ARCHIVIST_MAIL)
+    void createChangeWhenChangeNoticeExists() throws Exception {
+        ChangeTo newChangeTo = new ChangeTo(null, DOCUMENT2_ID, "VUIA.TN.429", LocalDate.of(2021, Month.DECEMBER, 14), 2);
+        ResultActions action = perform(MockMvcRequestBuilders.post(CHANGES_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(writeValue(newChangeTo))
+                .with(csrf()))
+                .andExpect(status().isCreated());
+        Change created = CHANGE_MATCHER.readFromJson(action);
+        ChangeNotice changeNotice = ChangeNotice.autoGenerate(newChangeTo.getChangeNoticeName(), newChangeTo.getChangeNoticeDate());
+        changeNotice.setId(created.getChangeNotice().getId());
+        Change newChange = new Change(created.getId(), document2, changeNotice, newChangeTo.getChangeNumber());
+        CHANGE_MATCHER.assertMatchWithoutFields(created, newChange, "document.developer", "document.originalHolder");
+        CHANGE_MATCHER.assertMatch(changeRepository.getExisted(created.id()), newChange);
+    }
+
+    @Test
+    @WithUserDetails(ARCHIVIST_MAIL)
+    void createChangeWhenChangeNoticeExistsDifferentChangeDate() throws Exception {
+        ChangeTo newChangeTo = new ChangeTo(null, DOCUMENT2_ID, "VUIA.TN.429", LocalDate.of(2021, Month.DECEMBER, 15), 2);
+        perform(MockMvcRequestBuilders.post(CHANGES_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(writeValue(newChangeTo))
+                .with(csrf()))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(result -> assertEquals(Objects.requireNonNull(result.getResolvedException()).getClass(),
+                        IllegalRequestDataException.class))
+                .andExpect(problemTitle(HttpStatus.UNPROCESSABLE_ENTITY.getReasonPhrase()))
+                .andExpect(problemStatus(HttpStatus.UNPROCESSABLE_ENTITY.value()))
+                .andExpect(problemDetail("Change notice " + newChangeTo.getChangeNoticeName() +
+                        " already exists and has release date: " + LocalDate.of(2021, Month.DECEMBER, 14)))
+                .andExpect(problemInstance(CHANGES_URL));
+    }
+
+    @Test
+    @WithUserDetails(ARCHIVIST_MAIL)
+    void createChangeWhenDocumentNotExists() throws Exception {
+        ChangeTo newChangeTo = getNewChangeTo();
+        newChangeTo.setDocumentId(NOT_FOUND);
+        perform(MockMvcRequestBuilders.post(CHANGES_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(writeValue(newChangeTo))
+                .with(csrf()))
+                .andExpect(status().isNotFound())
+                .andExpect(result -> assertEquals(Objects.requireNonNull(result.getResolvedException()).getClass(),
+                        NotFoundException.class))
+                .andExpect(problemTitle(HttpStatus.NOT_FOUND.getReasonPhrase()))
+                .andExpect(problemStatus(HttpStatus.NOT_FOUND.value()))
+                .andExpect(problemDetail(ENTITY_NOT_FOUND))
+                .andExpect(problemInstance(CHANGES_URL));
+    }
+
+    @Test
+    @WithUserDetails(ARCHIVIST_MAIL)
+    void createChangeInvalid() throws Exception {
+        ChangeTo newChangeTo = getNewChangeTo();
+        newChangeTo.setChangeNoticeName("");
+        perform(MockMvcRequestBuilders.post(CHANGES_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(writeValue(newChangeTo))
+                .with(csrf()))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(result -> assertEquals(Objects.requireNonNull(result.getResolvedException()).getClass(),
+                        MethodArgumentNotValidException.class))
+                .andExpect(problemTitle(HttpStatus.UNPROCESSABLE_ENTITY.getReasonPhrase()))
+                .andExpect(problemStatus(HttpStatus.UNPROCESSABLE_ENTITY.value()))
+                .andExpect(problemInstance(CHANGES_URL));
+    }
+
+    @Test
+    @WithUserDetails(ARCHIVIST_MAIL)
+    void createChangeDuplicateChangeNotice() throws Exception {
+        ChangeTo newChangeTo = getNewChangeTo();
+        newChangeTo.setChangeNoticeName("VUIA.SK.591");
+        newChangeTo.setChangeNoticeDate(LocalDate.of(2020, Month.JUNE, 18));
+        perform(MockMvcRequestBuilders.post(CHANGES_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(writeValue(newChangeTo))
+                .with(csrf()))
+                .andExpect(status().isConflict())
+                .andExpect(result -> assertEquals(Objects.requireNonNull(result.getResolvedException()).getClass(),
+                        DataIntegrityViolationException.class))
+                .andExpect(problemTitle(HttpStatus.CONFLICT.getReasonPhrase()))
+                .andExpect(problemStatus(HttpStatus.CONFLICT.value()))
+                .andExpect(problemDetail(DUPLICATE_DOCUMENT_CHANGE_NOTICE_MESSAGE))
+                .andExpect(problemInstance(CHANGES_URL));
+    }
+
+    @Test
+    @WithUserDetails(ARCHIVIST_MAIL)
+    void createChangeDuplicateChangeNumber() throws Exception {
+        ChangeTo newChangeTo = getNewChangeTo();
+        newChangeTo.setChangeNumber(2);
+        perform(MockMvcRequestBuilders.post(CHANGES_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(writeValue(newChangeTo))
+                .with(csrf()))
+                .andExpect(status().isConflict())
+                .andExpect(result -> assertEquals(Objects.requireNonNull(result.getResolvedException()).getClass(),
+                        DataIntegrityViolationException.class))
+                .andExpect(problemTitle(HttpStatus.CONFLICT.getReasonPhrase()))
+                .andExpect(problemStatus(HttpStatus.CONFLICT.value()))
+                .andExpect(problemDetail(DUPLICATE_DOCUMENT_CHANGE_NUMBER_MESSAGE))
+                .andExpect(problemInstance(CHANGES_URL));
+    }
+
+    @Test
+    void createChangeUnauthorized() throws Exception {
+        perform(MockMvcRequestBuilders.post(CHANGES_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(writeValue(getNewChangeTo()))
+                .with(csrf()))
+                .andExpect(status().isFound())
+                .andExpect(result ->
+                        assertTrue(Objects.requireNonNull(result.getResponse().getRedirectedUrl()).endsWith(LOGIN_URL)));
+    }
+
+    @Test
+    @WithUserDetails(USER_MAIL)
+    void createChangeForbidden() throws Exception {
+        perform(MockMvcRequestBuilders.post(CHANGES_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(writeValue(getNewChangeTo()))
+                .with(csrf()))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithUserDetails(USER_MAIL)
+    void getChanges() throws Exception {
+        perform(MockMvcRequestBuilders.get(String.format(DOCUMENT_CHANGES_URL, DOCUMENT1_ID))
+                .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(CHANGE_MATCHER.contentJson(change2, change1));
+    }
+
+    @Test
+    @WithUserDetails(USER_MAIL)
+    void getChangesWhenDocumentNotExists() throws Exception {
+        perform(MockMvcRequestBuilders.get(String.format(DOCUMENT_CHANGES_URL, NOT_FOUND))
+                .with(csrf()))
+                .andExpect(status().isNotFound())
+                .andExpect(result -> assertEquals(Objects.requireNonNull(result.getResolvedException()).getClass(),
+                        NotFoundException.class))
+                .andExpect(problemTitle(HttpStatus.NOT_FOUND.getReasonPhrase()))
+                .andExpect(problemStatus(HttpStatus.NOT_FOUND.value()))
+                .andExpect(problemDetail(ENTITY_NOT_FOUND))
+                .andExpect(problemInstance(String.format(DOCUMENT_CHANGES_URL, NOT_FOUND)));
+    }
+
+    @Test
+    void getChangesUnauthorized() throws Exception {
+        perform(MockMvcRequestBuilders.get(String.format(DOCUMENT_CHANGES_URL, DOCUMENT1_ID))
+                .with(csrf()))
+                .andExpect(status().isFound())
+                .andExpect(result ->
+                        assertTrue(Objects.requireNonNull(result.getResponse().getRedirectedUrl()).endsWith(LOGIN_URL)));
+    }
+
+    @Test
+    @WithUserDetails(ARCHIVIST_MAIL)
+    void deleteChange() throws Exception {
+        perform(MockMvcRequestBuilders.delete(CHANGES_URL_SLASH + DOCUMENT_1_CHANGE_2_ID)
+                .with(csrf()))
+                .andExpect(status().isNoContent());
+        assertThrows(NotFoundException.class, () -> changeRepository.getExisted(DOCUMENT_1_CHANGE_2_ID));
+    }
+
+    @Test
+    @WithUserDetails(ARCHIVIST_MAIL)
+    void deleteChangeNotFound() throws Exception {
+        perform(MockMvcRequestBuilders.delete(CHANGES_URL_SLASH + NOT_FOUND)
+                .with(csrf()))
+                .andExpect(status().isNotFound())
+                .andExpect(result -> assertEquals(Objects.requireNonNull(result.getResolvedException()).getClass(),
+                        NotFoundException.class))
+                .andExpect(problemTitle(HttpStatus.NOT_FOUND.getReasonPhrase()))
+                .andExpect(problemStatus(HttpStatus.NOT_FOUND.value()))
+                .andExpect(problemDetail(ENTITY_NOT_FOUND))
+                .andExpect(problemInstance(CHANGES_URL_SLASH + NOT_FOUND));
+    }
+
+    @Test
+    void deleteChangeUnauthorized() throws Exception {
+        perform(MockMvcRequestBuilders.delete(CHANGES_URL_SLASH + DOCUMENT_1_CHANGE_2_ID)
+                .with(csrf()))
+                .andExpect(status().isFound())
+                .andExpect(result ->
+                        assertTrue(Objects.requireNonNull(result.getResponse().getRedirectedUrl()).endsWith(LOGIN_URL)));
+        assertDoesNotThrow(() -> changeRepository.getExisted(DOCUMENT_1_CHANGE_2_ID));
+    }
+
+    @Test
+    @WithUserDetails(USER_MAIL)
+    void deleteChangeForbidden() throws Exception {
+        perform(MockMvcRequestBuilders.delete(CHANGES_URL_SLASH + DOCUMENT_1_CHANGE_2_ID)
+                .with(csrf()))
+                .andExpect(status().isForbidden());
+        assertDoesNotThrow(() -> changeRepository.getExisted(DOCUMENT_1_CHANGE_2_ID));
     }
 }

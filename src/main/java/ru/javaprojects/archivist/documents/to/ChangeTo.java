@@ -31,4 +31,12 @@ public class ChangeTo extends BaseTo {
     @NotNull
     @PositiveOrZero
     private Integer changeNumber;
+
+    public ChangeTo(Long id, Long documentId, String changeNoticeName, LocalDate changeNoticeDate, Integer changeNumber) {
+        super(id);
+        this.documentId = documentId;
+        this.changeNoticeName = changeNoticeName;
+        this.changeNoticeDate = changeNoticeDate;
+        this.changeNumber = changeNumber;
+    }
 }

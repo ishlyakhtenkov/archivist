@@ -57,6 +57,8 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/documents/sendings").hasAnyRole(Role.ADMIN.name(), Role.ARCHIVIST.name())
                 .requestMatchers(HttpMethod.DELETE, "/documents/sendings/**").hasAnyRole(Role.ADMIN.name(), Role.ARCHIVIST.name())
                 .requestMatchers(HttpMethod.PATCH, "/documents/subscribers/**").hasAnyRole(Role.ADMIN.name(), Role.ARCHIVIST.name())
+                .requestMatchers(HttpMethod.POST, "/documents/changes").hasAnyRole(Role.ADMIN.name(), Role.ARCHIVIST.name())
+                .requestMatchers(HttpMethod.DELETE, "/documents/changes/**").hasAnyRole(Role.ADMIN.name(), Role.ARCHIVIST.name())
                 .requestMatchers("/", "/webjars/**", "/css/**", "/images/**", "/js/**").permitAll()
                 .anyRequest().authenticated()
                 .and().formLogin().permitAll()

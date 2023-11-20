@@ -17,6 +17,8 @@ public class Constants {
     public static final String DUPLICATE_CONTENT_CHANGE_NUMBER_MESSAGE = "Document already has content with this change number";
     public static final String DUPLICATE_CONTENT_FILE_NAME_MESSAGE = "Document content already has file with this name";
     public static final String DUPLICATE_SENDING_INVOICE_NUMBER_MESSAGE = "Document already has sanding with this invoice";
+    public static final String DUPLICATE_DOCUMENT_CHANGE_NOTICE_MESSAGE = "Document already has change by this change notice";
+    public static final String DUPLICATE_DOCUMENT_CHANGE_NUMBER_MESSAGE = "Document already has this change number";
 
     private static final Map<String, String> dbUniqueConstraintsMap = new HashMap<>();
 
@@ -31,6 +33,8 @@ public class Constants {
         dbUniqueConstraintsMap.put("document_contents_unique_document_change_number_idx", DUPLICATE_CONTENT_CHANGE_NUMBER_MESSAGE);
         dbUniqueConstraintsMap.put("document_content_files_unique_document_content_name_idx", DUPLICATE_CONTENT_FILE_NAME_MESSAGE);
         dbUniqueConstraintsMap.put("sendings_unique_document_invoice_idx", DUPLICATE_SENDING_INVOICE_NUMBER_MESSAGE);
+        dbUniqueConstraintsMap.put("changes_unique_document_change_notice_idx", DUPLICATE_DOCUMENT_CHANGE_NOTICE_MESSAGE);
+        dbUniqueConstraintsMap.put("changes_unique_document_change_number_idx", DUPLICATE_DOCUMENT_CHANGE_NUMBER_MESSAGE);
     }
 
     public static Optional<String> getDbConstraintMessage(String exceptionMessage) {

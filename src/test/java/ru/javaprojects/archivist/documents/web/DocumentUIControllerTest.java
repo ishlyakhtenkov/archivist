@@ -34,8 +34,7 @@ import static ru.javaprojects.archivist.users.web.LoginController.LOGIN_URL;
 class DocumentUIControllerTest extends AbstractControllerTest {
     private static final String DOCUMENTS_ADD_FORM_URL = DOCUMENTS_URL + "/add";
     private static final String DOCUMENTS_EDIT_FORM_URL = DOCUMENTS_URL + "/edit/";
-    private static final String DOCUMENTS_DELETE_URL = DOCUMENTS_URL + "/delete/";
-    private static final String DOCUMENTS_URL_SLASH = DOCUMENTS_URL + "/";
+    static final String DOCUMENTS_URL_SLASH = DOCUMENTS_URL + "/";
 
     private static final String DOCUMENTS_VIEW = "documents/documents";
     private static final String DOCUMENTS_DETAILS_VIEW = "documents/document-details";
@@ -397,43 +396,5 @@ class DocumentUIControllerTest extends AbstractControllerTest {
                 .andExpect(model().attributeHasFieldErrorCode(DOCUMENT_ATTRIBUTE, INVENTORY_NUMBER_PARAM, DUPLICATE_ERROR_CODE))
                 .andExpect(view().name(DOCUMENTS_FORM_VIEW));
         assertNotEquals(service.get(DOCUMENT1_ID).getInventoryNumber(), document3.getInventoryNumber());
-    }
-
-    @Test
-    @WithUserDetails(ARCHIVIST_MAIL)
-    void delete() throws Exception {
-        perform(MockMvcRequestBuilders.post(DOCUMENTS_DELETE_URL + DOCUMENT1_ID)
-                .with(csrf()))
-                .andExpect(status().isFound())
-                .andExpect(redirectedUrl(DOCUMENTS_URL))
-                .andExpect(flash().attribute(ACTION, "Document " + document1.getDecimalNumber() + " was deleted"));
-        assertThrows(NotFoundException.class, () -> service.get(DOCUMENT1_ID));
-    }
-
-    @Test
-    @WithUserDetails(ARCHIVIST_MAIL)
-    void deleteNotFound() throws Exception {
-        perform(MockMvcRequestBuilders.post(DOCUMENTS_DELETE_URL + NOT_FOUND)
-                .with(csrf()))
-                .andExpect(exception().exceptionPage(ENTITY_NOT_FOUND, NotFoundException.class));
-    }
-
-    @Test
-    void deleteUnAuthorized() throws Exception {
-        perform(MockMvcRequestBuilders.post(DOCUMENTS_DELETE_URL + DOCUMENT1_ID)
-                .with(csrf()))
-                .andExpect(status().isFound())
-                .andExpect(result ->
-                        assertTrue(Objects.requireNonNull(result.getResponse().getRedirectedUrl()).endsWith(LOGIN_URL)));
-        assertDoesNotThrow(() -> service.get(DOCUMENT1_ID));
-    }
-
-    @Test
-    @WithUserDetails(USER_MAIL)
-    void deleteForbidden() throws Exception {
-        perform(MockMvcRequestBuilders.post(DOCUMENTS_DELETE_URL + DOCUMENT1_ID)
-                .with(csrf()))
-                .andExpect(status().isForbidden());
-        assertDoesNotThrow(() -> service.get(DOCUMENT1_ID));
     }
 }

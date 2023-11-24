@@ -7,6 +7,7 @@ import org.springframework.util.MultiValueMap;
 import ru.javaprojects.archivist.MatcherFactory;
 import ru.javaprojects.archivist.changenotices.model.Change;
 import ru.javaprojects.archivist.changenotices.model.ChangeNotice;
+import ru.javaprojects.archivist.changenotices.model.ChangeReasonCode;
 import ru.javaprojects.archivist.documents.model.*;
 import ru.javaprojects.archivist.documents.to.ApplicabilityTo;
 import ru.javaprojects.archivist.documents.to.ChangeTo;
@@ -18,6 +19,8 @@ import java.util.List;
 
 import static java.time.Month.*;
 import static ru.javaprojects.archivist.CommonTestData.*;
+import static ru.javaprojects.archivist.changenotices.model.ChangeReasonCode.DESIGN_IMPROVEMENTS;
+import static ru.javaprojects.archivist.changenotices.model.ChangeReasonCode.QUALITY_IMPROVEMENT;
 import static ru.javaprojects.archivist.companies.CompanyTestData.*;
 import static ru.javaprojects.archivist.departments.DepartmentTestData.*;
 import static ru.javaprojects.archivist.documents.model.Status.*;
@@ -202,15 +205,20 @@ public class DocumentTestData {
         return new SendingTo(null, DOCUMENT1_ID, COMPANY1_ID, DUPLICATE, "100", LocalDate.of(2023, NOVEMBER, 11), "15/49-777", LocalDate.of(2023, NOVEMBER, 11));
     }
 
-    public static final long DOCUMENT_1_CHANGE_1_ID = 100049;
-    public static final long DOCUMENT_1_CHANGE_2_ID = 100050;
+    public static final long DOCUMENT_1_CHANGE_1_ID = 100050;
+    public static final long DOCUMENT_1_CHANGE_2_ID = 100051;
 
 
     public static final MatcherFactory.Matcher<Change> CHANGE_MATCHER =
             MatcherFactory.usingIgnoringFieldsComparator(Change.class, "document", "changeNotice");
 
-    public static final ChangeNotice changeNotice1 = ChangeNotice.autoGenerate("VUIA.SK.591", LocalDate.of(2020, JUNE, 18));
-    public static final ChangeNotice changeNotice2 = ChangeNotice.autoGenerate("VUIA.TN.429", LocalDate.of(2021, DECEMBER, 14));
+    public static final long CHANGE_NOTICE_1_ID = 100047L;
+    public static final long CHANGE_NOTICE_2_ID = 100048L;
+
+    public static final ChangeNotice changeNotice1 = new ChangeNotice(CHANGE_NOTICE_1_ID, "VUIA.SK.591", LocalDate.of(2020, JUNE, 18),
+            DESIGN_IMPROVEMENTS, department1, new ContentFile("VUIA.SK.591.pdf", "VUIA.SK.591/VUIA.SK.591.pdf"));
+    public static final ChangeNotice changeNotice2 = new ChangeNotice(CHANGE_NOTICE_2_ID, "VUIA.TN.429", LocalDate.of(2021, DECEMBER, 14),
+            QUALITY_IMPROVEMENT, department3, new ContentFile("VUIA.TN.429.pdf", "VUIA.TN.429/VUIA.TN.429.pdf"));
 
     static {
         changeNotice1.setId(100047L);

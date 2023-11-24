@@ -17,3 +17,4 @@ password-reset:
 
 content-path:
   documents: ./content/documents/
+  change-notices: ./content/change-notices/

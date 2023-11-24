@@ -106,11 +106,13 @@ VALUES (100014, 100036), --same invoice (and letter)
        (100015, 100036), --same invoice (and letter)
        (100015, 100040);
 
-INSERT INTO change_notices (name, release_date, auto_generated)
-VALUES ('VUIA.SK.591', '2020-06-18', true),
-       ('VUIA.TN.429', '2021-12-14', true);
+INSERT INTO change_notices (name, release_date, change_reason_code, auto_generated, file_name, file_link, developer_id)
+VALUES ('VUIA.SK.591', '2020-06-18', 'DESIGN_IMPROVEMENTS', false, 'VUIA.SK.591.pdf', 'VUIA.SK.591/VUIA.SK.591.pdf', 100009),
+       ('VUIA.TN.429', '2021-12-14', 'QUALITY_IMPROVEMENT', false, 'VUIA.TN.429.pdf', 'VUIA.TN.429/VUIA.TN.429.pdf', 100011),
+       ('VUIA.SK.592', '2020-09-11', null, true, null, null, null);
 
 INSERT INTO changes (document_id, change_notice_id, change_number)
 VALUES (100014, 100047, 1),
        (100014, 100048, 2),
-       (100015, 100047, 1);
+       (100015, 100047, 1),
+       (100015, 100049, 2);

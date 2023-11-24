@@ -41,6 +41,13 @@ public class DocumentRestController {
     @Value("${content-path.documents}")
     private String contentPath;
 
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable long id) {
+        log.info("delete {}", id);
+        service.delete(id);
+    }
+
     @GetMapping("/{id}/applicabilities")
     public List<Applicability> getApplicabilities(@PathVariable long id) {
         log.info("get applicabilities for document {}", id);

@@ -213,7 +213,7 @@
 
 @media (max-width: 768px) {
     .doc-card-field {
-        width: 95px;
+        min-width: 95px;
     }
 }
 

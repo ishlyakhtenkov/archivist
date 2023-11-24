@@ -49,6 +49,7 @@ public class SecurityConfig {
                 .hasAnyRole(Role.ADMIN.name(), Role.ARCHIVIST.name())
                 .requestMatchers("/documents/add", "/documents/edit/**", "/documents/delete/**").hasAnyRole(Role.ADMIN.name(), Role.ARCHIVIST.name())
                 .requestMatchers(HttpMethod.POST, "/documents").hasAnyRole(Role.ADMIN.name(), Role.ARCHIVIST.name())
+                .requestMatchers(HttpMethod.DELETE, "/documents/**").hasAnyRole(Role.ADMIN.name(), Role.ARCHIVIST.name())
                 .requestMatchers("/profile/forgotPassword", "/profile/resetPassword").anonymous()
                 .requestMatchers(HttpMethod.POST, "/documents/applicabilities").hasAnyRole(Role.ADMIN.name(), Role.ARCHIVIST.name())
                 .requestMatchers(HttpMethod.DELETE, "/documents/applicabilities/**").hasAnyRole(Role.ADMIN.name(), Role.ARCHIVIST.name())

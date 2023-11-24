@@ -19,8 +19,8 @@ import ru.javaprojects.archivist.companies.CompanyService;
 import ru.javaprojects.archivist.departments.DepartmentService;
 import ru.javaprojects.archivist.documents.DocumentService;
 import ru.javaprojects.archivist.documents.model.Document;
-import ru.javaprojects.archivist.documents.model.Symbol;
 import ru.javaprojects.archivist.documents.model.Status;
+import ru.javaprojects.archivist.documents.model.Symbol;
 import ru.javaprojects.archivist.documents.model.Type;
 
 @Controller
@@ -110,14 +110,5 @@ public class DocumentUIController {
         model.addAttribute("document", service.get(id));
         addDataForDocumentCardToModel(model);
         return "documents/document-form";
-    }
-
-    @PostMapping("/delete/{id}")
-    public String delete(@PathVariable long id, RedirectAttributes redirectAttributes) {
-        log.info("delete document={}", id);
-        Document document = service.get(id);
-        service.delete(id);
-        redirectAttributes.addFlashAttribute("action", "Document " + document.getDecimalNumber() + " was deleted");
-        return "redirect:/documents";
     }
 }

@@ -47,6 +47,7 @@ import static ru.javaprojects.archivist.common.util.JsonUtil.writeValue;
 import static ru.javaprojects.archivist.companies.CompanyTestData.*;
 import static ru.javaprojects.archivist.documents.DocumentTestData.*;
 import static ru.javaprojects.archivist.documents.web.DocumentUIController.DOCUMENTS_URL;
+import static ru.javaprojects.archivist.documents.web.DocumentUIControllerTest.DOCUMENTS_URL_SLASH;
 import static ru.javaprojects.archivist.users.web.LoginController.LOGIN_URL;
 
 class DocumentRestControllerTest extends AbstractControllerTest {
@@ -88,6 +89,48 @@ class DocumentRestControllerTest extends AbstractControllerTest {
 
     @Value("${content-path.documents}")
     private String contentPath;
+
+    @Test
+    @WithUserDetails(ARCHIVIST_MAIL)
+    void delete() throws Exception {
+        perform(MockMvcRequestBuilders.delete(DOCUMENTS_URL_SLASH + DOCUMENT1_ID)
+                .with(csrf()))
+                .andExpect(status().isNoContent());
+        assertThrows(NotFoundException.class, () -> documentService.get(DOCUMENT1_ID));
+    }
+
+    @Test
+    @WithUserDetails(ARCHIVIST_MAIL)
+    void deleteNotFound() throws Exception {
+        perform(MockMvcRequestBuilders.delete(DOCUMENTS_URL_SLASH + NOT_FOUND)
+                .with(csrf()))
+                .andExpect(status().isNotFound())
+                .andExpect(result -> assertEquals(Objects.requireNonNull(result.getResolvedException()).getClass(),
+                        NotFoundException.class))
+                .andExpect(problemTitle(HttpStatus.NOT_FOUND.getReasonPhrase()))
+                .andExpect(problemStatus(HttpStatus.NOT_FOUND.value()))
+                .andExpect(problemDetail(ENTITY_NOT_FOUND))
+                .andExpect(problemInstance(DOCUMENTS_URL_SLASH + NOT_FOUND));
+    }
+
+    @Test
+    void deleteUnAuthorized() throws Exception {
+        perform(MockMvcRequestBuilders.delete(DOCUMENTS_URL_SLASH + DOCUMENT1_ID)
+                .with(csrf()))
+                .andExpect(status().isFound())
+                .andExpect(result ->
+                        assertTrue(Objects.requireNonNull(result.getResponse().getRedirectedUrl()).endsWith(LOGIN_URL)));
+        assertDoesNotThrow(() -> documentService.get(DOCUMENT1_ID));
+    }
+
+    @Test
+    @WithUserDetails(USER_MAIL)
+    void deleteForbidden() throws Exception {
+        perform(MockMvcRequestBuilders.delete(DOCUMENTS_URL_SLASH + DOCUMENT1_ID)
+                .with(csrf()))
+                .andExpect(status().isForbidden());
+        assertDoesNotThrow(() -> documentService.get(DOCUMENT1_ID));
+    }
 
     @Test
     @WithUserDetails(ARCHIVIST_MAIL)
@@ -255,7 +298,7 @@ class DocumentRestControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(ARCHIVIST_MAIL)
-    void deleteNotFound() throws Exception {
+    void deleteApplicabilityNotFound() throws Exception {
         perform(MockMvcRequestBuilders.delete(APPLICABILITIES_URL_SLASH + NOT_FOUND)
                 .with(csrf()))
                 .andExpect(status().isNotFound())
@@ -1036,17 +1079,15 @@ class DocumentRestControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(ARCHIVIST_MAIL)
     void createChangeWhenChangeNoticeExists() throws Exception {
-        ChangeTo newChangeTo = new ChangeTo(null, DOCUMENT2_ID, "VUIA.TN.429", LocalDate.of(2021, Month.DECEMBER, 14), 2);
+        ChangeTo newChangeTo = new ChangeTo(null, DOCUMENT2_ID, "VUIA.TN.429", LocalDate.of(2021, Month.DECEMBER, 14), 3);
         ResultActions action = perform(MockMvcRequestBuilders.post(CHANGES_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(writeValue(newChangeTo))
                 .with(csrf()))
                 .andExpect(status().isCreated());
         Change created = CHANGE_MATCHER.readFromJson(action);
-        ChangeNotice changeNotice = ChangeNotice.autoGenerate(newChangeTo.getChangeNoticeName(), newChangeTo.getChangeNoticeDate());
-        changeNotice.setId(created.getChangeNotice().getId());
-        Change newChange = new Change(created.getId(), document2, changeNotice, newChangeTo.getChangeNumber());
-        CHANGE_MATCHER.assertMatchWithoutFields(created, newChange, "document.developer", "document.originalHolder");
+        Change newChange = new Change(created.getId(), document2, changeNotice2, newChangeTo.getChangeNumber());
+        CHANGE_MATCHER.assertMatchWithoutFields(created, newChange, "document.developer", "document.originalHolder", "changeNotice.developer");
         CHANGE_MATCHER.assertMatch(changeRepository.getExisted(created.id()), newChange);
     }
 

@@ -9,6 +9,10 @@ $(window).on('load', () => init());
 
 function init() {
     checkActionHappened();
+    $('#documentChangesTabButton').on('shown.bs.tab', () => {
+        cancelAddChange();
+        getChanges();
+    });
     $('#documentApplicabilityTabButton').on('shown.bs.tab', () => {
         cancelAddApplicability();
         getApplicabilities();
@@ -495,4 +499,100 @@ function unsubscribe() {
             handleError(data, `Failed to unsubscribe ${name}`);
         });
     }
+}
+
+function getChanges() {
+    $.ajax({
+        url: `/documents/${documentId}/changes`
+    }).done(changes => {
+        fillChangesTable(changes);
+    }).fail(function (data) {
+        handleError(data, `Failed to get changes`);
+    });
+}
+
+function fillChangesTable(changes) {
+    $('#changesTable > tbody').empty();
+    if (changes.length !== 0) {
+        $('#changesTable').attr('hidden', false);
+        changes.forEach(change => {
+            addChangeRow(change);
+        });
+        let popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
+        let popoverList = [...popoverTriggerList].map(popoverTriggerEl =>
+            new bootstrap.Popover(popoverTriggerEl, {html : true, sanitize: false}));
+    } else {
+        $('#changesTable').attr('hidden', true);
+    }
+}
+
+function addChangeRow(change) {
+    let changeNumberTd = $('<td></td>').text(change.changeNumber);
+    let changeNoticeTd = $('<td></td>').text(change.changeNotice.name);
+    let changeDateTd = $('<td></td>').text(change.changeNotice.releaseDate);
+    let deleteChangeSubmitHtml = `<button class='btn btn-sm btn-secondary ms-3'>Cancel</button>
+                                       <button class='btn btn-sm btn-danger' onclick='deleteChange(${change.id}, ${change.changeNumber})'>Delete</button>`;
+    let deleteActionTd = $('<td></td>').addClass('text-end').html(`<a tabindex="0" type="button" class="trash-button me-3"
+                title="Delete change" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-title="Delete this change?"
+                data-bs-content="${deleteChangeSubmitHtml}"> <i class="fa-solid fa-trash"></i></a>`);
+    let changeRow = $('<tr></tr>');
+    changeRow.append(changeNumberTd);
+    changeRow.append(changeNoticeTd);
+    changeRow.append(changeDateTd);
+    changeRow.append(deleteActionTd);
+    $('#changesTable > tbody').append(changeRow);
+}
+
+function showInputChangeDiv() {
+    $('#addChangeButtonDiv').attr('hidden', true);
+    $('#inputChangeDiv').attr('hidden', false);
+}
+
+function cancelAddChange() {
+    $('#changeChangeNumberInput').val('');
+    $('#changeChangeNoticeNameInput').val('');
+    $('#changeChangeNoticeDateInput').attr('type', 'text').val('');
+    $('#addChangeButtonDiv').attr('hidden', false);
+    $('#inputChangeDiv').attr('hidden', true);
+}
+
+function createChange() {
+    let changeNumber = $('#changeChangeNumberInput').val();
+    if (changeNumber.length && $('#changeChangeNoticeNameInput').val().length &&
+        $('#changeChangeNoticeDateInput').val().length) {
+        $.ajax({
+            url: '/documents/changes',
+            type: 'POST',
+            data: JSON.stringify(makeChangeObject()),
+            contentType: 'application/json; charset=utf-8'
+        }).done(() => {
+            getChanges();
+            cancelAddChange();
+            successToast(`Change ${changeNumber} was added`);
+        }).fail(function(data) {
+            handleError(data, `Failed to create change ${changeNumber}`);
+        });
+
+    }
+}
+
+function makeChangeObject() {
+    return {
+        documentId: documentId,
+        changeNoticeName: $('#changeChangeNoticeNameInput').val(),
+        changeNoticeDate: $('#changeChangeNoticeDateInput').val(),
+        changeNumber: $('#changeChangeNumberInput').val()
+    };
+}
+
+function deleteChange(changeId, changeNumber) {
+    $.ajax({
+        url: `changes/${changeId}`,
+        type: "DELETE"
+    }).done(function() {
+        getChanges();
+        successToast(`Change ${changeNumber} was deleted`);
+    }).fail(function(data) {
+        handleError(data, `Failed to delete change ${changeNumber}`);
+    });
 }

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      th:with="activeMenuItem='Change notices'" lang="en">
+<!--/*@thymesVar id="changeNotice" type="ru.javaprojects.archivist.changenotices.model.ChangeNotice"*/-->
+
+<th:block th:replace="~{fragments/main::page(title='Archivist - change notices',appMain=~{::appMain}, ownScript=~{::ownScript})}">
+    <appMain>
+        <span th:if="${action != null}" th:data-action="${action}" th:id="actionSpan"></span>
+        <!-- Change notice details card -->
+        <div class="row d-flex justify-content-center align-items-center">
+            <div class="col-12 col-xxl-10">
+                <div class="card shadow-2-strong" style="border-radius: 1rem;">
+                    <div class="text-end mt-3 me-3">
+                        <a th:href="@{/change-notices}" type="button" class="btn-close pb-0" aria-label="Close"></a>
+                    </div>
+                    <div class="card-body px-3 px-md-5 pb-3 pb-md-5 pt-0 text-center">
+                        <h3 class="mb-4" th:text="${changeNotice.name}">Change notice name</h3>
+                        <div th:object="${changeNotice}">
+<!--                            <input type="hidden" id="changeNoticeId" th:value="*{id}">-->
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <div class="input-group mb-3">
+                                        <span class="input-group-text doc-card-field px-md-4" id="nameAddon" title="Name">Name</span>
+                                        <input type="text" id="nameInput" th:field="*{name}" class="form-control bg-light" disabled
+                                               title="Name" aria-label="Name" aria-describedby="nameAddon"/>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="input-group mb-3">
+                                        <span class="input-group-text doc-card-field d-none d-md-block" title="Release date">Release date</span>
+                                        <span class="input-group-text doc-card-field d-md-none" title="Release date">Release date</span>
+                                        <input type="text" id="releaseDateInput" th:value="${#temporals.format(changeNotice.releaseDate, 'dd.MM.yyyy')}" class="form-control bg-light" disabled
+                                               title="Release date" aria-label="Release date"/>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="input-group mb-3">
+                                        <span class="input-group-text doc-card-field" id="developerAddon" title="Developer">Developer</span>
+                                        <input type="text" id="developerInput" th:field="*{developer.name}" class="form-control bg-light" disabled
+                                               title="Developer" aria-label="Developer" aria-describedby="developerAddon"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-8">
+                                    <div class="input-group">
+                                        <span class="input-group-text doc-card-field" id="changeReasonCodeAddon" title="Change reason cod">Change reason code</span>
+                                        <input type="text" id="changeReasonCodeInput" th:value="*{changeReasonCode}" class="form-control bg-light" disabled
+                                               title="Change reason cod" aria-label="Change reason cod" aria-describedby="changeReasonCodeAddon"/>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 mt-3 mt-lg-0 text-start text-lg-center">
+                                    <div class="mt-lg-1">
+                                        <a th:href="@{/change-notices/download(fileLink=*{file.fileLink})}" th:utext="'<i class=&quot;text-danger fa-solid fa-file-pdf&quot;></i>' + ${changeNotice.file.fileName}" target="_blank">File name</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Changes block -->
+                        <div class="text-start mt-3 mb-3">
+                            <h4 class="text-secondary">Changes</h4>
+                            <span th:if="${changes.isEmpty()}">
+                                <h5 class="alert alert-warning py-2 mb-4">No changes found.</h5>
+                            </span>
+                            <div th:if="${!changes.isEmpty()}" class="table-responsive text-nowrap text-center">
+                                <table class="table table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th class="pt-0">Document</th>
+                                        <th class="pt-0">Change number</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody class="table-group-divider">
+                                    <tr th:each="change : ${changes}" class="table-row">
+                                        <td th:text="${change.document.decimalNumber}"></td>
+                                        <td th:text="${change.changeNumber}"></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </appMain>
+
+    <ownScript>
+        <script src="/js/common.js?v=1"></script>
+    </ownScript>
+</th:block>

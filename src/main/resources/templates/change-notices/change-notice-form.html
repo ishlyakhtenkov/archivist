@@ -102,10 +102,27 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-<!--                                        <tr th:each="change : ${changeNoticeTo.changes}" class="table-row">-->
-<!--                                            <td th:text="${change.document.decimalNumber}"></td>-->
-<!--                                            <td th:text="${change.changeNumber}"></td>-->
-<!--                                        </tr>-->
+                                        <tr th:each="change, itemStat : ${changes}" class="change-row" th:id="${'changeRow-' + itemStat.index}">
+                                            <td>
+                                                <input type="hidden" th:id="${'changeId-' + itemStat.index}" th:name="${'changes[' + itemStat.index + '].id'}" th:value="${change.id}">
+                                                <input type="text" th:id="${'changeDecimalNumber-' + itemStat.index}" th:name="${'changes[' + itemStat.index + '].decimalNumber'}" th:value="${change.document.decimalNumber}"
+                                                       th:class="${#fields.hasErrors('changes[__${itemStat.index}__].decimalNumber')} ? 'form-control is-invalid' : 'form-control'"
+                                                       title="Document decimal number" placeholder="Document decimal number" required />
+                                            </td>
+                                            <td>
+                                                <input type="number" th:id="${'changeChangeNumber-' + itemStat.index}" th:name="${'changes[' + itemStat.index + '].changeNumber'}" th:value="${change.changeNumber}"
+                                                       th:class="${#fields.hasErrors('changes[__${itemStat.index}__].changeNumber')} ? 'form-control is-invalid' : 'form-control'"
+                                                       title="Change number" placeholder="Change number" required />
+                                            </td>
+                                            <td class="text-end">
+                                                <a tabindex="0" type="button" class="trash-button me-3 mt-1"
+                                                   title="Delete change" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-title="Delete this change?"
+                                                   th:attr="data-bs-content='<button class=\'btn btn-sm btn-secondary ms-3\'>Cancel</button>' +
+                                                   '<button class=\'btn ms-1 btn-sm btn-danger\' onclick=\'deleteChangeRow(' + ${itemStat.index} + ')\'>Delete</button>'">
+                                                    <i class="fa-solid fa-trash"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
                                         </tbody>
                                     </table>
                                 </div>
@@ -140,8 +157,8 @@
 
     function addChangeRow() {
         let changeRowIndex = $('.change-row').length;
-        let documentTd = $('<td></td>').html(`<input type="text" name="changes[${changeRowIndex}].decimalNumber" class="form-control" title="Document decimal number" placeholder="Document decimal number" required />`);
-        let changeNumberTd = $('<td></td>').html(`<input type="number" name="changes[${changeRowIndex}].changeNumber" class="form-control" title="Change number" placeholder="Change number" required />`);
+        let documentTd = $('<td></td>').html(`<input type="text" id="${'changeDecimalNumber-' + changeRowIndex}" name="changes[${changeRowIndex}].decimalNumber" class="form-control" title="Document decimal number" placeholder="Document decimal number" required />`);
+        let changeNumberTd = $('<td></td>').html(`<input type="number" id="${'changeChangeNumber-' + changeRowIndex}" name="changes[${changeRowIndex}].changeNumber" class="form-control" title="Change number" placeholder="Change number" required />`);
         let deleteChangeSubmitHtml = `<button class='btn btn-sm btn-secondary ms-3'>Cancel</button>
                                        <button class='btn btn-sm btn-danger' onclick='deleteChangeRow(${changeRowIndex})'>Delete</button>`;
         let deleteActionTd = $('<td></td>').addClass('text-end').html(`<a tabindex="0" type="button" class="trash-button me-3 mt-1"
@@ -158,7 +175,16 @@
     }
 
     function deleteChangeRow(changeRowIndex) {
+        let changeRowMaxIndex = $('.change-row').length - 1;
         $('#changeRow-' + changeRowIndex).remove();
+        if (changeRowIndex !== changeRowMaxIndex) {
+            for (let i = changeRowIndex + 1; i <= changeRowMaxIndex; i++) {
+                $('#changeRow-' + i).attr('id', `changeRow-${i - 1}`);
+                $('#changeId-' + i).attr('name', `changes[${i - 1}].id`).attr('id', `changeId-${i - 1}`);
+                $('#changeDecimalNumber-' + i).attr('name', `changes[${i - 1}].decimalNumber`).attr('id', `changeDecimalNumber-${i - 1}`);
+                $('#changeChangeNumber-' + i).attr('name', `changes[${i - 1}].changeNumber`).attr('id', `changeChangeNumber-${i - 1}`);
+            }
+        }
         if ($('.change-row').length === 0) {
             addChangeRow();
         }

@@ -105,9 +105,7 @@
                     <input type="hidden" name="changeNoticeId" id="deleteModalChangeNoticeId" value=""/>
                     <input type="hidden" name="changeNoticeName" id="deleteModalChangeNoticeName" value=""/>
                     <div class="modal-footer">
-                        <form th:action="@{/change-notices/delete/id}" method="post" id="deleteChangeNoticeForm">
-                            <button class="btn btn-danger" type="submit">Delete change notice</button>
-                        </form>
+                        <button type="button" class="btn btn-danger" onclick="deleteChangeNotice()">Delete change notice</button>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close">Close</button>
                     </div>
                 </div>

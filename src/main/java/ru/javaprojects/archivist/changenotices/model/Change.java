@@ -39,4 +39,10 @@ public class Change extends BaseEntity implements HasId {
         this.changeNotice = changeNotice;
         this.changeNumber = changeNumber;
     }
+
+    public Change(Long id, Document document, Integer changeNumber) {
+        super(id);
+        this.document = document;
+        this.changeNumber = changeNumber;
+    }
 }

@@ -1,21 +1,36 @@
 package ru.javaprojects.archivist.changenotices;
 
-import lombok.experimental.UtilityClass;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
+import ru.javaprojects.archivist.changenotices.model.Change;
 import ru.javaprojects.archivist.changenotices.model.ChangeNotice;
 import ru.javaprojects.archivist.changenotices.to.ChangeNoticeTo;
+import ru.javaprojects.archivist.changenotices.to.ChangeTo;
 import ru.javaprojects.archivist.documents.model.ContentFile;
-import ru.javaprojects.archivist.users.User;
-import ru.javaprojects.archivist.users.UserTo;
+import ru.javaprojects.archivist.documents.model.Document;
+import ru.javaprojects.archivist.documents.repository.DocumentRepository;
 
-@UtilityClass
+import java.util.ArrayList;
+import java.util.List;
+
+@Component
+@RequiredArgsConstructor
 public class ChangeNoticeUtil {
+    private final DocumentRepository documentRepository;
 
-    public static ChangeNotice createNewFromTo(ChangeNoticeTo changeNoticeTo) {
-        return new ChangeNotice(null, changeNoticeTo.getName(), changeNoticeTo.getReleaseDate(),
+    public ChangeNotice createNewFromTo(ChangeNoticeTo changeNoticeTo) {
+        ChangeNotice changeNotice = new ChangeNotice(null, changeNoticeTo.getName(), changeNoticeTo.getReleaseDate(),
                 changeNoticeTo.getChangeReasonCode(), changeNoticeTo.getDeveloper(), createContentFile(changeNoticeTo));
+        List<ChangeTo> changeTos = changeNoticeTo.getChanges();
+        changeTos.forEach(changeTo -> {
+            Document document = documentRepository.findByDecimalNumberIgnoreCase(changeTo.getDecimalNumber())
+                    .orElseGet(() -> documentRepository.save(Document.autoGenerate(changeTo.getDecimalNumber())));
+            changeNotice.addChange(new Change(changeTo.getId(), document, changeTo.getChangeNumber()));
+        });
+        return changeNotice;
     }
 
-    public static ChangeNotice updateFromTo(ChangeNotice changeNotice, ChangeNoticeTo changeNoticeTo) {
+    public ChangeNotice updateFromTo(ChangeNotice changeNotice, ChangeNoticeTo changeNoticeTo) {
         changeNotice.setName(changeNoticeTo.getName());
         changeNotice.setReleaseDate(changeNoticeTo.getReleaseDate());
         changeNotice.setChangeReasonCode(changeNoticeTo.getChangeReasonCode());
@@ -24,15 +39,47 @@ public class ChangeNoticeUtil {
         if (changeNoticeTo.getFile() != null) {
             changeNotice.setFile(createContentFile(changeNoticeTo));
         }
+        List<ChangeTo> changeTos = changeNoticeTo.getChanges();
+
+        ArrayList<Change> changes = new ArrayList<>(changeNotice.getChanges());
+        for (Change change : changes) {
+            boolean contains = false;
+            for (ChangeTo changeTo1 : changeTos) {
+                if (change.getId().equals(changeTo1.getId())) {
+                    contains = true;
+                    break;
+                }
+            }
+            if (!contains) {
+                changeNotice.removeChange(change);
+            }
+        }
+
+        changeTos.forEach(changeTo -> {
+            Document document = documentRepository.findByDecimalNumberIgnoreCase(changeTo.getDecimalNumber())
+                    .orElseGet(() -> documentRepository.save(Document.autoGenerate(changeTo.getDecimalNumber())));
+            if (changeTo.isNew()) {
+                changeNotice.addChange(new Change(null, document, changeTo.getChangeNumber()));
+            } else {
+                changeNotice.getChanges().stream()
+                        .filter(change -> change.id() == changeTo.getId())
+                        .findFirst().ifPresentOrElse(change -> {
+                            change.setDocument(document);
+                            change.setChangeNumber(changeTo.getChangeNumber());
+                        }, () -> changeNotice.addChange(new Change(null, document, changeTo.getChangeNumber())));
+            }
+
+
+        });
         return changeNotice;
     }
 
-    public static ChangeNoticeTo asTo(ChangeNotice changeNotice) {
+    public ChangeNoticeTo asTo(ChangeNotice changeNotice) {
         return new ChangeNoticeTo(changeNotice.getId(), changeNotice.getName(), changeNotice.getReleaseDate(),
                 changeNotice.getChangeReasonCode(), changeNotice.getDeveloper());
     }
 
-    private static ContentFile createContentFile(ChangeNoticeTo changeNoticeTo) {
+    private ContentFile createContentFile(ChangeNoticeTo changeNoticeTo) {
         String filename = changeNoticeTo.getFile().getOriginalFilename();
         return new ContentFile(filename, changeNoticeTo.getName() + "/" + filename);
     }

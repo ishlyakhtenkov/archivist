@@ -1,5 +1,6 @@
 package ru.javaprojects.archivist.changenotices.web;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,9 +20,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ru.javaprojects.archivist.changenotices.ChangeNoticeService;
 import ru.javaprojects.archivist.changenotices.ChangeNoticeUtil;
-import ru.javaprojects.archivist.changenotices.to.ChangeNoticeTo;
 import ru.javaprojects.archivist.changenotices.model.ChangeNotice;
 import ru.javaprojects.archivist.changenotices.model.ChangeReasonCode;
+import ru.javaprojects.archivist.changenotices.to.ChangeNoticeTo;
 import ru.javaprojects.archivist.common.util.FileUtil;
 import ru.javaprojects.archivist.departments.DepartmentService;
 
@@ -35,6 +36,7 @@ public class ChangeNoticeUIController {
     private final ChangeNoticeService service;
     private final DepartmentService departmentService;
     private final UniqueChangeNoticeNameValidator nameValidator;
+    private final ChangeNoticeUtil changeNoticeUtil;
 
     @Value("${content-path.change-notices}")
     private String contentPath;
@@ -88,7 +90,7 @@ public class ChangeNoticeUIController {
 
     @PostMapping
     public String createOrUpdate(@Valid ChangeNoticeTo changeNoticeTo, BindingResult result, Model model,
-                                 RedirectAttributes redirectAttributes) {
+                                 RedirectAttributes redirectAttributes, HttpServletRequest httpServletRequest) {
         if (result.hasErrors()) {
             addDataForChangeNoticeCardToModel(model);
             return "change-notices/change-notice-form";
@@ -124,7 +126,8 @@ public class ChangeNoticeUIController {
     public String showEditForm(@PathVariable long id, Model model) {
         log.info("show change notice={} edit form", id);
         ChangeNotice changeNotice = service.get(id);
-        model.addAttribute("changeNoticeTo", ChangeNoticeUtil.asTo(changeNotice));
+        model.addAttribute("changeNoticeTo", changeNoticeUtil.asTo(changeNotice));
+        model.addAttribute("changes", service.getChanges(id));
         model.addAttribute("file", changeNotice.getFile());
         addDataForChangeNoticeCardToModel(model);
         return "change-notices/change-notice-form";

@@ -82,6 +82,7 @@ public class DocumentService {
 
     public void delete(long id) {
         repository.deleteExisted(id);
+        //todo delete files
     }
 
     public List<Applicability> getApplicabilities(long documentId) {

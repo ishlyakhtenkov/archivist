@@ -18,7 +18,8 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ru.javaprojects.archivist.changenotices.ChangeNoticeService;
-import ru.javaprojects.archivist.changenotices.ChangeNoticeTo;
+import ru.javaprojects.archivist.changenotices.ChangeNoticeUtil;
+import ru.javaprojects.archivist.changenotices.to.ChangeNoticeTo;
 import ru.javaprojects.archivist.changenotices.model.ChangeNotice;
 import ru.javaprojects.archivist.changenotices.model.ChangeReasonCode;
 import ru.javaprojects.archivist.common.util.FileUtil;
@@ -117,5 +118,15 @@ public class ChangeNoticeUIController {
         return ResponseEntity.ok()
                 .header("Content-Disposition", "inline; filename=" + resource.getFilename())
                 .body(resource);
+    }
+
+    @GetMapping("/edit/{id}")
+    public String showEditForm(@PathVariable long id, Model model) {
+        log.info("show change notice={} edit form", id);
+        ChangeNotice changeNotice = service.get(id);
+        model.addAttribute("changeNoticeTo", ChangeNoticeUtil.asTo(changeNotice));
+        model.addAttribute("file", changeNotice.getFile());
+        addDataForChangeNoticeCardToModel(model);
+        return "change-notices/change-notice-form";
     }
 }

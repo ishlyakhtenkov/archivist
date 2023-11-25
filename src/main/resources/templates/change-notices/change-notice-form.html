@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       th:with="activeMenuItem='Change notices'" lang="en">
-<!--/*@thymesVar id="changeNoticeTo" type="ru.javaprojects.archivist.changenotices.ChangeNoticeTo"*/-->
+<!--/*@thymesVar id="changeNoticeTo" type="ru.javaprojects.archivist.changenotices.to.ChangeNoticeTo"*/-->
 
 <th:block th:replace="~{fragments/main::page(title='Archivist - change notices',appMain=~{::appMain}, ownScript=~{::ownScript})}">
     <appMain>
@@ -70,54 +70,42 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-lg-4 mt-3 mt-lg-0 text-start text-lg-center">
-                                    <input type="file" accept="application/pdf" id="fileInput" th:field="*{file}" class="form-control" required/>
+                                <div class="col-lg-4 mt-3 mt-lg-0 text-start" id="fileInputDiv">
+                                    <div th:if="${file != null}" class="input-group">
+                                        <span class="input-group-text doc-card-field" id="fileAddon" title="File">File</span>
+                                        <div class="form-control" id="editFileInput">
+                                            <a th:href="@{/change-notices/download(fileLink=${file.fileLink})}" th:utext="'<i class=&quot;text-danger fa-solid fa-file-pdf&quot;></i>' + ${file.fileName}" target="_blank">File name</a>
+                                            <a tabindex="0" type="button" class="trash-button float-end me-3" title="Delete file"
+                                               data-bs-toggle="popover" data-bs-trigger="focus" data-bs-title="Delete file?"
+                                               data-bs-content="<button class='btn btn-sm btn-secondary ms-3'>Cancel</button>
+                                           <button class='btn btn-sm btn-danger' onclick='deleteFile()'>Delete</button>">
+                                                <i class="fa-solid fa-trash"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <input th:if="${file == null}" type="file" accept="application/pdf" id="fileInput" th:field="*{file}" class="form-control" required />
                                 </div>
                             </div>
 
                             <!-- Changes block -->
                             <div class="text-start mt-3">
-                                <div class="row">
-                                    <div class="col">
-                                        <h4 class="text-secondary">Changes</h4>
-                                    </div>
-                                    <div class="col text-end">
-                                        <button type="button" class="btn btn-sm btn-secondary" title="Add change" onclick="addChangeRow()">Add change</button>
-                                    </div>
-                                </div>
-
-<!--                                <div class="text-end" id="addChangeButtonDiv">-->
-<!--                                    <button type="button" class="btn btn-sm btn-secondary" title="Add change" onclick="addChangeRow()">Add change</button>-->
-<!--                                </div>-->
-<!--                                <div id="inputChangeDiv" hidden>-->
-<!--                                    <div class="row row-cols-2 row-cols-md-3 d-flex align-items-center">-->
-<!--                                        <div class="col-6 col-md-4">-->
-<!--                                            <input type="text" id="decimalNumberInput" form="changeForm" class="form-control" title="Document decimal number"-->
-<!--                                                   aria-label="Document decimal number" placeholder="Document decimal number" required/>-->
-<!--                                        </div>-->
-<!--                                        <div class="col-6 col-md-3">-->
-<!--                                            <input type="number" id="changeNumberInput" form="changeForm" class="form-control" title="Change number" placeholder="Change number" required/>-->
-<!--                                        </div>-->
-<!--                                        <div class="col-12 col-md-3 btn-toolbar text-start py-2">-->
-<!--                                            <button type="submit" class="btn btn-sm btn-success px-3 me-1" title="Add" onclick="addChangeRow()">Add</button>-->
-<!--                                            <button type="button" class="btn btn-sm btn-secondary" title="Cancel" onclick="cancelAddChange()">Cancel</button>-->
-<!--                                        </div>-->
-<!--                                    </div>-->
-<!--                                </div>-->
+                                <h4 class="text-secondary mb-0">Changes</h4>
                                 <div class="table-responsive text-nowrap">
-                                    <table class="table table-hover" id="changesTable" hidden>
+                                    <table class="table table-hover" id="changesTable">
                                         <thead>
                                         <tr>
-                                            <th class="w-50">Document</th>
-                                            <th class="w-25">Change number</th>
-                                            <th></th>
+                                            <th class="w-50 pt-0">Document</th>
+                                            <th class="w-25 pt-0">Change number</th>
+                                            <th class="text-end pt-0 pe-0">
+                                                <button type="button" class="btn btn-sm btn-secondary" title="Add change" onclick="addChangeRow()">Add change</button>
+                                            </th>
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr th:each="change : ${changeNoticeTo.changes}" class="table-row">
-                                            <td th:text="${change.document.decimalNumber}"></td>
-                                            <td th:text="${change.changeNumber}"></td>
-                                        </tr>
+<!--                                        <tr th:each="change : ${changeNoticeTo.changes}" class="table-row">-->
+<!--                                            <td th:text="${change.document.decimalNumber}"></td>-->
+<!--                                            <td th:text="${change.changeNumber}"></td>-->
+<!--                                        </tr>-->
                                         </tbody>
                                     </table>
                                 </div>
@@ -141,12 +129,19 @@
 </th:block>
 
 <script>
+    window.onload = () => {
+        if ($('.change-row').length === 0) {
+            addChangeRow();
+        }
+        let popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
+        let popoverList = [...popoverTriggerList].map(popoverTriggerEl =>
+            new bootstrap.Popover(popoverTriggerEl, {html : true, sanitize: false}));
+    }
+
     function addChangeRow() {
-        $('#changesTable').attr('hidden', false);
         let changeRowIndex = $('.change-row').length;
-        console.log(changeRowIndex);
-        let documentTd = $('<td></td>').html(`<input type="text" class="form-control" required />`);
-        let changeNumberTd = $('<td></td>').html(`<input type="number" class="form-control" required />`);
+        let documentTd = $('<td></td>').html(`<input type="text" name="changes[${changeRowIndex}].decimalNumber" class="form-control" title="Document decimal number" placeholder="Document decimal number" required />`);
+        let changeNumberTd = $('<td></td>').html(`<input type="number" name="changes[${changeRowIndex}].changeNumber" class="form-control" title="Change number" placeholder="Change number" required />`);
         let deleteChangeSubmitHtml = `<button class='btn btn-sm btn-secondary ms-3'>Cancel</button>
                                        <button class='btn btn-sm btn-danger' onclick='deleteChangeRow(${changeRowIndex})'>Delete</button>`;
         let deleteActionTd = $('<td></td>').addClass('text-end').html(`<a tabindex="0" type="button" class="trash-button me-3 mt-1"
@@ -157,23 +152,20 @@
         changeRow.append(changeNumberTd);
         changeRow.append(deleteActionTd);
         $('#changesTable > tbody').append(changeRow);
-        cancelAddChange();
         let popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
         let popoverList = [...popoverTriggerList].map(popoverTriggerEl =>
             new bootstrap.Popover(popoverTriggerEl, {html : true, sanitize: false}));
     }
 
-    function cancelAddChange() {
-        $('#decimalNumberInput').val('');
-        $('#changeNumberInput').val('');
-        $('#addChangeButtonDiv').attr('hidden', false);
-        $('#inputChangeDiv').attr('hidden', true);
-    }
-
     function deleteChangeRow(changeRowIndex) {
         $('#changeRow-' + changeRowIndex).remove();
         if ($('.change-row').length === 0) {
-            $('#changesTable').attr('hidden', true);
+            addChangeRow();
         }
+    }
+
+    function deleteFile() {
+        $('#editFileInput').attr('hidden', true);
+        $('#fileInputDiv').html('<input type="file" accept="application/pdf" id="fileInput" name="file" class="form-control" required />');
     }
 </script>

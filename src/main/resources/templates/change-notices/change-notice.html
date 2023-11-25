@@ -47,19 +47,23 @@
                                     <div class="input-group">
                                         <span class="input-group-text doc-card-field" id="changeReasonCodeAddon" title="Change reason cod">Change reason code</span>
                                         <input type="text" id="changeReasonCodeInput" th:value="*{changeReasonCode}" class="form-control bg-light" disabled
-                                               title="Change reason cod" aria-label="Change reason cod" aria-describedby="changeReasonCodeAddon"/>
+                                               title="Change reason cod" aria-label="Change reason code" aria-describedby="changeReasonCodeAddon"/>
                                     </div>
                                 </div>
-                                <div class="col-lg-4 mt-3 mt-lg-0 text-start text-lg-center">
-                                    <div class="mt-lg-1">
-                                        <a th:href="@{/change-notices/download(fileLink=*{file.fileLink})}" th:utext="'<i class=&quot;text-danger fa-solid fa-file-pdf&quot;></i>' + ${changeNotice.file.fileName}" target="_blank">File name</a>
+                                <div class="col-lg-4 mt-3 mt-lg-0 text-start">
+                                    <div class="input-group">
+                                        <span class="input-group-text doc-card-field" id="fileAddon" title="File">File</span>
+                                        <div class="form-control bg-light" aria-label="File" aria-describedby="fileAddon">
+                                            <a th:href="@{/change-notices/download(fileLink=*{file.fileLink})}"
+                                               th:utext="'<i class=&quot;text-danger fa-solid fa-file-pdf&quot;></i>' + ${changeNotice.file.fileName}" target="_blank" title="Show file">File name</a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Changes block -->
-                        <div class="text-start mt-3 mb-3">
+                        <div class="text-start mt-3 mb-2">
                             <h4 class="text-secondary">Changes</h4>
                             <span th:if="${changes.isEmpty()}">
                                 <h5 class="alert alert-warning py-2 mb-4">No changes found.</h5>
@@ -80,6 +84,9 @@
                                     </tbody>
                                 </table>
                             </div>
+                        </div>
+                        <div sec:authorize="hasAnyRole('ADMIN','ARCHIVIST')" class="float-end">
+                            <a th:href="@{'/change-notices/edit/' + ${changeNotice.id}}" class="btn btn-sm btn-warning" type="button">Edit card</a>
                         </div>
                     </div>
                 </div>

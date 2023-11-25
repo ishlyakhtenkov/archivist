@@ -5,7 +5,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
-import ru.javaprojects.archivist.changenotices.ChangeNoticeTo;
+import ru.javaprojects.archivist.changenotices.to.ChangeNoticeTo;
 import ru.javaprojects.archivist.changenotices.repository.ChangeNoticeRepository;
 
 import java.util.Objects;

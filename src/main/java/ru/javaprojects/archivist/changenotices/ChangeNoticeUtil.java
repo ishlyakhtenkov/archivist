@@ -2,7 +2,10 @@ package ru.javaprojects.archivist.changenotices;
 
 import lombok.experimental.UtilityClass;
 import ru.javaprojects.archivist.changenotices.model.ChangeNotice;
+import ru.javaprojects.archivist.changenotices.to.ChangeNoticeTo;
 import ru.javaprojects.archivist.documents.model.ContentFile;
+import ru.javaprojects.archivist.users.User;
+import ru.javaprojects.archivist.users.UserTo;
 
 @UtilityClass
 public class ChangeNoticeUtil {
@@ -22,6 +25,11 @@ public class ChangeNoticeUtil {
             changeNotice.setFile(createContentFile(changeNoticeTo));
         }
         return changeNotice;
+    }
+
+    public static ChangeNoticeTo asTo(ChangeNotice changeNotice) {
+        return new ChangeNoticeTo(changeNotice.getId(), changeNotice.getName(), changeNotice.getReleaseDate(),
+                changeNotice.getChangeReasonCode(), changeNotice.getDeveloper());
     }
 
     private static ContentFile createContentFile(ChangeNoticeTo changeNoticeTo) {

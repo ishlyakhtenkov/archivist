@@ -1,4 +1,4 @@
-package ru.javaprojects.archivist.changenotices;
+package ru.javaprojects.archivist.changenotices.to;
 
 import jakarta.annotation.Nullable;
 import jakarta.persistence.EnumType;
@@ -12,7 +12,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
-import ru.javaprojects.archivist.changenotices.model.Change;
 import ru.javaprojects.archivist.changenotices.model.ChangeReasonCode;
 import ru.javaprojects.archivist.common.to.BaseTo;
 import ru.javaprojects.archivist.common.util.validation.NoHtml;
@@ -29,7 +28,7 @@ public class ChangeNoticeTo extends BaseTo {
     @NotBlank
     @NoHtml
     @Size(min = 2, max = 128)
-    protected String name;
+    private String name;
 
     @NotNull
     private LocalDate releaseDate;
@@ -47,5 +46,13 @@ public class ChangeNoticeTo extends BaseTo {
 
     @Valid
     @NotEmpty
-    private List<Change> changes;
+    private List<ChangeTo> changes;
+
+    public ChangeNoticeTo(Long id, String name, LocalDate releaseDate, ChangeReasonCode changeReasonCode, Department developer) {
+        super(id);
+        this.name = name;
+        this.releaseDate = releaseDate;
+        this.changeReasonCode = changeReasonCode;
+        this.developer = developer;
+    }
 }

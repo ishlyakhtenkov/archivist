@@ -78,9 +78,4 @@ public class ChangeNotice extends NamedEntity implements HasId {
         changes.add(change);
         change.setChangeNotice(this);
     }
-
-    public void removeChange(Change change) {
-        changes.remove(change);
-        change.setChangeNotice(null);
-    }
 }

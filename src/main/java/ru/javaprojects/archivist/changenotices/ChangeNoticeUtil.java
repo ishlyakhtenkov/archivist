@@ -6,12 +6,15 @@ import ru.javaprojects.archivist.changenotices.model.Change;
 import ru.javaprojects.archivist.changenotices.model.ChangeNotice;
 import ru.javaprojects.archivist.changenotices.to.ChangeNoticeTo;
 import ru.javaprojects.archivist.changenotices.to.ChangeTo;
+import ru.javaprojects.archivist.common.to.BaseTo;
 import ru.javaprojects.archivist.documents.model.ContentFile;
 import ru.javaprojects.archivist.documents.model.Document;
 import ru.javaprojects.archivist.documents.repository.DocumentRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -39,37 +42,29 @@ public class ChangeNoticeUtil {
         if (changeNoticeTo.getFile() != null) {
             changeNotice.setFile(createContentFile(changeNoticeTo));
         }
-        List<ChangeTo> changeTos = changeNoticeTo.getChanges();
 
-        ArrayList<Change> changes = new ArrayList<>(changeNotice.getChanges());
-        for (Change change : changes) {
-            boolean contains = false;
-            for (ChangeTo changeTo1 : changeTos) {
-                if (change.getId().equals(changeTo1.getId())) {
-                    contains = true;
-                    break;
-                }
+        List<ChangeTo> newChangeTos = new ArrayList<>();
+        Map<Long, ChangeTo> notNewChangeTos = changeNoticeTo.getChanges().stream()
+                .peek(changeTo -> {
+                    if (changeTo.isNew()) {
+                        newChangeTos.add(changeTo);
+                    }
+                })
+                .filter(changeTo -> !changeTo.isNew())
+                .collect(Collectors.toMap(BaseTo::getId, changeTo -> changeTo));
+        changeNotice.getChanges().removeIf(change -> !notNewChangeTos.containsKey(change.getId()));
+        changeNotice.getChanges().forEach(change -> {
+            ChangeTo changeTo = notNewChangeTos.get(change.getId());
+            if (!change.getDocument().getDecimalNumber().equals(changeTo.getDecimalNumber())) {
+                change.setDocument(documentRepository.findByDecimalNumberIgnoreCase(changeTo.getDecimalNumber())
+                        .orElseGet(() -> documentRepository.save(Document.autoGenerate(changeTo.getDecimalNumber()))));
             }
-            if (!contains) {
-                changeNotice.removeChange(change);
-            }
-        }
-
-        changeTos.forEach(changeTo -> {
+            change.setChangeNumber(changeTo.getChangeNumber());
+        });
+        newChangeTos.forEach(changeTo -> {
             Document document = documentRepository.findByDecimalNumberIgnoreCase(changeTo.getDecimalNumber())
                     .orElseGet(() -> documentRepository.save(Document.autoGenerate(changeTo.getDecimalNumber())));
-            if (changeTo.isNew()) {
-                changeNotice.addChange(new Change(null, document, changeTo.getChangeNumber()));
-            } else {
-                changeNotice.getChanges().stream()
-                        .filter(change -> change.id() == changeTo.getId())
-                        .findFirst().ifPresentOrElse(change -> {
-                            change.setDocument(document);
-                            change.setChangeNumber(changeTo.getChangeNumber());
-                        }, () -> changeNotice.addChange(new Change(null, document, changeTo.getChangeNumber())));
-            }
-
-
+            changeNotice.addChange(new Change(null, document, changeTo.getChangeNumber()));
         });
         return changeNotice;
     }

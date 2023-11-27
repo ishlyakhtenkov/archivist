@@ -75,8 +75,7 @@ public class ChangeNoticeUIController {
     @GetMapping("/{id}")
     public String get(@PathVariable long id, Model model) {
         log.info("get {}", id);
-        model.addAttribute("changeNotice", service.get(id));
-        model.addAttribute("changes", service.getChanges(id));
+        model.addAttribute("changeNotice", service.getWithChanges(id));
         return "change-notices/change-notice";
     }
 
@@ -90,9 +89,12 @@ public class ChangeNoticeUIController {
 
     @PostMapping
     public String createOrUpdate(@Valid ChangeNoticeTo changeNoticeTo, BindingResult result, Model model,
-                                 RedirectAttributes redirectAttributes, HttpServletRequest httpServletRequest) {
+                                 RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
             addDataForChangeNoticeCardToModel(model);
+            if (!changeNoticeTo.isNew() && changeNoticeTo.getFile() == null) {
+                model.addAttribute("file", service.get(changeNoticeTo.getId()).getFile());
+            }
             return "change-notices/change-notice-form";
         }
         boolean isNew = changeNoticeTo.isNew();
@@ -125,9 +127,8 @@ public class ChangeNoticeUIController {
     @GetMapping("/edit/{id}")
     public String showEditForm(@PathVariable long id, Model model) {
         log.info("show change notice={} edit form", id);
-        ChangeNotice changeNotice = service.get(id);
+        ChangeNotice changeNotice = service.getWithChanges(id);
         model.addAttribute("changeNoticeTo", changeNoticeUtil.asTo(changeNotice));
-        model.addAttribute("changes", service.getChanges(id));
         model.addAttribute("file", changeNotice.getFile());
         addDataForChangeNoticeCardToModel(model);
         return "change-notices/change-notice-form";

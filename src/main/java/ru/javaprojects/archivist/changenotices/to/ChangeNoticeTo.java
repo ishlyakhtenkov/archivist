@@ -49,11 +49,13 @@ public class ChangeNoticeTo extends BaseTo {
     @NotEmpty
     private List<ChangeTo> changes;
 
-    public ChangeNoticeTo(Long id, String name, LocalDate releaseDate, ChangeReasonCode changeReasonCode, Department developer) {
+    public ChangeNoticeTo(Long id, String name, LocalDate releaseDate, ChangeReasonCode changeReasonCode,
+                          Department developer, List<ChangeTo> changes) {
         super(id);
         this.name = name;
         this.releaseDate = releaseDate;
         this.changeReasonCode = changeReasonCode;
         this.developer = developer;
+        this.changes = changes;
     }
 }

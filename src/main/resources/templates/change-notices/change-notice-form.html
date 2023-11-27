@@ -110,17 +110,29 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr th:each="change, itemStat : ${changes}" class="change-row" th:id="${'changeRow-' + itemStat.index}">
+                                        <tr th:each="change, itemStat : ${changeNoticeTo.changes}" class="change-row" th:id="${'changeRow-' + itemStat.index}">
                                             <td>
                                                 <input type="hidden" th:id="${'changeId-' + itemStat.index}" th:name="${'changes[' + itemStat.index + '].id'}" th:value="${change.id}">
-                                                <input type="text" th:id="${'changeDecimalNumber-' + itemStat.index}" th:name="${'changes[' + itemStat.index + '].decimalNumber'}" th:value="${change.document.decimalNumber}"
+                                                <input type="text" th:id="${'changeDecimalNumber-' + itemStat.index}" th:name="${'changes[' + itemStat.index + '].decimalNumber'}" th:value="${change.decimalNumber}"
                                                        th:class="${#fields.hasErrors('changes[__${itemStat.index}__].decimalNumber')} ? 'form-control is-invalid' : 'form-control'"
                                                        title="Document decimal number" placeholder="Document decimal number" required />
+                                                <span th:if="${#fields.hasErrors('changes[__${itemStat.index}__].decimalNumber')}">
+                                                    <ul>
+                                                        <li class="text-danger text-start"
+                                                            th:each="err : ${#fields.errors('changes[__${itemStat.index}__].decimalNumber')}" th:text="${err}"/>
+                                                    </ul>
+                                                </span>
                                             </td>
                                             <td>
                                                 <input type="number" th:id="${'changeChangeNumber-' + itemStat.index}" th:name="${'changes[' + itemStat.index + '].changeNumber'}" th:value="${change.changeNumber}"
                                                        th:class="${#fields.hasErrors('changes[__${itemStat.index}__].changeNumber')} ? 'form-control is-invalid' : 'form-control'"
                                                        title="Change number" placeholder="Change number" required />
+                                                <span th:if="${#fields.hasErrors('changes[__${itemStat.index}__].changeNumber')}">
+                                                    <ul>
+                                                        <li class="text-danger text-start"
+                                                            th:each="err : ${#fields.errors('changes[__${itemStat.index}__].changeNumber')}" th:text="${err}"/>
+                                                    </ul>
+                                                </span>
                                             </td>
                                             <td class="text-end">
                                                 <a tabindex="0" type="button" class="trash-button me-3 mt-1" th:id="${'deleteChangeBtn-' + itemStat.index}"

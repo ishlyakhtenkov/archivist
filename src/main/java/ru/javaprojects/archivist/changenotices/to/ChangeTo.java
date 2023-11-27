@@ -23,4 +23,10 @@ public class ChangeTo extends BaseTo {
     @NotNull
     @PositiveOrZero
     private Integer changeNumber;
+
+    public ChangeTo(Long id, String decimalNumber, Integer changeNumber) {
+        super(id);
+        this.decimalNumber = decimalNumber;
+        this.changeNumber = changeNumber;
+    }
 }

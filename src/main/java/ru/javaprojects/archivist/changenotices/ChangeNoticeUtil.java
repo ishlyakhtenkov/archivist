@@ -70,8 +70,11 @@ public class ChangeNoticeUtil {
     }
 
     public ChangeNoticeTo asTo(ChangeNotice changeNotice) {
+        List<ChangeTo> changeTos = changeNotice.getChanges().stream()
+                .map(change -> new ChangeTo(change.getId(), change.getDocument().getDecimalNumber(), change.getChangeNumber()))
+                .toList();
         return new ChangeNoticeTo(changeNotice.getId(), changeNotice.getName(), changeNotice.getReleaseDate(),
-                changeNotice.getChangeReasonCode(), changeNotice.getDeveloper());
+                changeNotice.getChangeReasonCode(), changeNotice.getDeveloper(), changeTos);
     }
 
     private ContentFile createContentFile(ChangeNoticeTo changeNoticeTo) {

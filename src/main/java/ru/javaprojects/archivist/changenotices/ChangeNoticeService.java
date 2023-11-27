@@ -7,22 +7,17 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
-import ru.javaprojects.archivist.changenotices.model.Change;
 import ru.javaprojects.archivist.changenotices.model.ChangeNotice;
 import ru.javaprojects.archivist.changenotices.repository.ChangeNoticeRepository;
-import ru.javaprojects.archivist.changenotices.repository.ChangeRepository;
 import ru.javaprojects.archivist.changenotices.to.ChangeNoticeTo;
 import ru.javaprojects.archivist.common.error.IllegalRequestDataException;
 import ru.javaprojects.archivist.common.error.NotFoundException;
 import ru.javaprojects.archivist.common.util.FileUtil;
 
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 public class ChangeNoticeService {
     private final ChangeNoticeRepository repository;
-    private final ChangeRepository changeRepository;
     private final ChangeNoticeUtil changeNoticeUtil;
 
     @Value("${content-path.change-notices}")
@@ -72,11 +67,12 @@ public class ChangeNoticeService {
     }
 
     public ChangeNotice get(long id) {
-        return repository.findById(id).orElseThrow(() -> new NotFoundException("Entity with id=" + id + " not found"));
+        return repository.getExisted(id);
     }
 
-    public List<Change> getChanges(long id) {
-        return changeRepository.findAllByChangeNotice(id);
+    public ChangeNotice getWithChanges(long id) {
+        return repository.findWithChangesAndDeveloperById(id)
+                .orElseThrow(() -> new NotFoundException("Entity with id=" + id + " not found"));
     }
 
     @Transactional
@@ -84,6 +80,6 @@ public class ChangeNoticeService {
         ChangeNotice changeNotice = repository.getExisted(id);
         repository.delete(changeNotice);
         FileUtil.delete(contentPath + changeNotice.getFile().getFileLink());
-        FileUtil.delete(contentPath + changeNotice.getName());
+        FileUtil.deleteDirIfEmpty(contentPath + changeNotice.getName());
     }
 }

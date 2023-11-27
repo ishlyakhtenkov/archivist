@@ -17,7 +17,6 @@
                     <div class="card-body px-3 px-md-5 pb-3 pb-md-5 pt-0 text-center">
                         <h3 class="mb-4" th:text="${changeNotice.name}">Change notice name</h3>
                         <div th:object="${changeNotice}">
-<!--                            <input type="hidden" id="changeNoticeId" th:value="*{id}">-->
                             <div class="row">
                                 <div class="col-lg-4">
                                     <div class="input-group mb-3">
@@ -65,10 +64,10 @@
                         <!-- Changes block -->
                         <div class="text-start mt-3 mb-2">
                             <h4 class="text-secondary">Changes</h4>
-                            <span th:if="${changes.isEmpty()}">
+                            <span th:if="${changeNotice.changes.isEmpty()}">
                                 <h5 class="alert alert-warning py-2 mb-4">No changes found.</h5>
                             </span>
-                            <div th:if="${!changes.isEmpty()}" class="table-responsive text-nowrap text-center">
+                            <div th:if="${!changeNotice.changes.isEmpty()}" class="table-responsive text-nowrap text-center">
                                 <table class="table table-hover">
                                     <thead>
                                     <tr>
@@ -77,7 +76,7 @@
                                     </tr>
                                     </thead>
                                     <tbody class="table-group-divider">
-                                    <tr th:each="change : ${changes}" class="table-row">
+                                    <tr th:each="change : ${changeNotice.changes}" class="table-row">
                                         <td th:text="${change.document.decimalNumber}"></td>
                                         <td th:text="${change.changeNumber}"></td>
                                     </tr>

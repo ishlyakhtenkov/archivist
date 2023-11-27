@@ -83,7 +83,15 @@
                                             </a>
                                         </div>
                                     </div>
-                                    <input th:if="${file == null}" type="file" accept="application/pdf" id="fileInput" th:field="*{file}" class="form-control" required />
+                                    <div>
+                                        <input th:if="${file == null}" type="file" accept="application/pdf" id="fileInput" th:field="*{file}" class="form-control" required />
+                                        <span th:if="${#fields.hasErrors('file')}">
+                                            <ul>
+                                                <li class="text-danger text-start"
+                                                    th:each="err : ${#fields.errors('file')}" th:text="${err}"/>
+                                            </ul>
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
 

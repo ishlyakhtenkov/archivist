@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 import ru.javaprojects.archivist.changenotices.model.ChangeReasonCode;
+import ru.javaprojects.archivist.changenotices.web.PdfFile;
 import ru.javaprojects.archivist.common.to.BaseTo;
 import ru.javaprojects.archivist.common.util.validation.NoHtml;
 import ru.javaprojects.archivist.departments.Department;
@@ -41,7 +42,7 @@ public class ChangeNoticeTo extends BaseTo {
     private Department developer;
 
     @Nullable
-    //TODO pdf validator
+    @PdfFile
     private MultipartFile file;
 
     @Valid

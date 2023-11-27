@@ -12,9 +12,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.Objects;
 
 @UtilityClass
 public class FileUtil {
@@ -29,7 +29,7 @@ public class FileUtil {
             try (OutputStream outStream = new FileOutputStream(file)) {
                 outStream.write(multipartFile.getBytes());
             } catch (IOException ex) {
-                throw new IllegalRequestDataException("Failed to upload file " + multipartFile.getOriginalFilename() +
+                throw new IllegalRequestDataException("Failed to upload file: " + multipartFile.getOriginalFilename() +
                         ": " + ex.getMessage());
             }
         }
@@ -54,7 +54,41 @@ public class FileUtil {
         try {
             Files.delete(path);
         } catch (IOException ex) {
-            throw new IllegalRequestDataException("File" + fileLink + " deletion failed.");
+            throw new IllegalRequestDataException("File " + fileLink + " deletion failed");
+        }
+    }
+
+    public static void deleteDirIfEmpty(String path) {
+        File dir = new File(path);
+        if (dir.isDirectory() && Objects.requireNonNull(dir.list()).length == 0) {
+            delete(path);
+        }
+    }
+
+    public static void deleteDir(String path) {
+        Path dirPath = Paths.get(path);
+        if (Files.isDirectory(dirPath)) {
+            try {
+                Files.walkFileTree(dirPath, new SimpleFileVisitor<>() {
+                    @Override
+                    public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                        Files.delete(file);
+                        return FileVisitResult.CONTINUE;
+                    }
+
+                    @Override
+                    public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                        if (exc == null) {
+                            Files.delete(dir);
+                            return FileVisitResult.CONTINUE;
+                        } else {
+                            throw exc;
+                        }
+                    }
+                });
+            } catch (IOException ex) {
+                throw new IllegalRequestDataException("Dir: " + path + " deletion failed");
+            }
         }
     }
 }

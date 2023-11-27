@@ -151,6 +151,8 @@ function getLatestContent() {
             } else {
                 $('#showPreviousContentButton').attr('hidden', true);
             }
+        } else {
+            $('#showPreviousContentButton').attr('hidden', true);
         }
     }).fail(function (data) {
         handleError(data, `Failed to get latest content`);

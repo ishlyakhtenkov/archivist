@@ -80,9 +80,11 @@ public class DocumentService {
         repository.save(document);
     }
 
+    @Transactional
     public void delete(long id) {
-        repository.deleteExisted(id);
-        //todo delete files
+        Document document = repository.getExisted(id);
+        repository.delete(document);
+        FileUtil.deleteDir(contentPath + document.getDecimalNumber());
     }
 
     public List<Applicability> getApplicabilities(long documentId) {
@@ -113,11 +115,15 @@ public class DocumentService {
         return contentRepository.findByDocument_IdOrderByChangeNumberDesc(documentId);
     }
 
+    @Transactional
     public void deleteContent(long id) {
-        Content content = contentRepository.getExisted(id);
+        Content content = contentRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Entity with id=" + id + " not found"));;
         contentRepository.delete(content);
         content.getFiles()
                 .forEach(file -> FileUtil.delete(contentPath + file.getFileLink()));
+        FileUtil.delete(contentPath + generateFilePath(content.getDocument(), content.getChangeNumber()));
+        FileUtil.deleteDirIfEmpty(contentPath + content.getDocument().getDecimalNumber());
     }
 
     @Transactional

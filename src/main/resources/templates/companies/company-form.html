@@ -205,9 +205,9 @@
                                         <div class="col-lg-3">
                                             <div class="mb-4">
                                                 <div class="form-floating">
-                                                    <input type="text" th:id="*{contactPersons[__${itemStat.index}__].position}" th:field="*{contactPersons[__${itemStat.index}__].position}"
+                                                    <input type="text" th:id="${'contactPersons-' + itemStat.index + '-position'}" th:field="*{contactPersons[__${itemStat.index}__].position}"
                                                            th:class="${#fields.hasErrors('contactPersons[__${itemStat.index}__].position')} ? 'form-control is-invalid' : 'form-control'" required placeholder="Position" />
-                                                    <label th:for="*{contactPersons[__${itemStat.index}__].position}" class="text-muted">Position</label>
+                                                    <label th:for="${'contactPersons-' + itemStat.index + '-position'}" class="text-muted">Position</label>
                                                 </div>
                                                 <span class="help-block" th:if="${#fields.hasErrors('contactPersons[__${itemStat.index}__].position')}">
                                                     <ul>
@@ -220,9 +220,9 @@
                                         <div class="col-lg-2">
                                             <div class="mb-4">
                                                 <div class="form-floating">
-                                                    <input type="text" th:id="*{contactPersons[__${itemStat.index}__].lastName}" th:field="*{contactPersons[__${itemStat.index}__].lastName}"
+                                                    <input type="text" th:id="${'contactPersons-' + itemStat.index + '-lastName'}" th:field="*{contactPersons[__${itemStat.index}__].lastName}"
                                                            th:class="${#fields.hasErrors('contactPersons[__${itemStat.index}__].lastName')} ? 'form-control is-invalid' : 'form-control'" required placeholder="Last name" />
-                                                    <label th:for="*{contactPersons[__${itemStat.index}__].lastName}" class="text-muted">Last name</label>
+                                                    <label th:for="${'contactPersons-' + itemStat.index + '-lastName'}" class="text-muted">Last name</label>
                                                 </div>
                                                 <span class="help-block" th:if="${#fields.hasErrors('contactPersons[__${itemStat.index}__].lastName')}">
                                                     <ul>
@@ -235,9 +235,9 @@
                                         <div class="col-lg-2">
                                             <div class="mb-4">
                                                 <div class="form-floating">
-                                                    <input type="text" th:id="*{contactPersons[__${itemStat.index}__].firstName}" th:field="*{contactPersons[__${itemStat.index}__].firstName}"
+                                                    <input type="text" th:id="${'contactPersons-' + itemStat.index + '-firstName'}" th:field="*{contactPersons[__${itemStat.index}__].firstName}"
                                                            th:class="${#fields.hasErrors('contactPersons[__${itemStat.index}__].firstName')} ? 'form-control is-invalid' : 'form-control'" required placeholder="First name" />
-                                                    <label th:for="*{contactPersons[__${itemStat.index}__].firstName}" class="text-muted">First name</label>
+                                                    <label th:for="${'contactPersons-' + itemStat.index + '-firstName'}" class="text-muted">First name</label>
                                                 </div>
                                                 <span class="help-block" th:if="${#fields.hasErrors('contactPersons[__${itemStat.index}__].firstName')}">
                                                     <ul>
@@ -250,9 +250,9 @@
                                         <div class="col-lg-2">
                                             <div class="mb-4">
                                                 <div class="form-floating">
-                                                    <input type="text" th:id="*{contactPersons[__${itemStat.index}__].middleName}" th:field="*{contactPersons[__${itemStat.index}__].middleName}"
+                                                    <input type="text" th:id="${'contactPersons-' + itemStat.index + '-middleName'}" th:field="*{contactPersons[__${itemStat.index}__].middleName}"
                                                            th:class="${#fields.hasErrors('contactPersons[__${itemStat.index}__].middleName')} ? 'form-control is-invalid' : 'form-control'" required placeholder="Middle name" />
-                                                    <label th:for="*{contactPersons[__${itemStat.index}__].middleName}" class="text-muted">Middle name</label>
+                                                    <label th:for="${'contactPersons-' + itemStat.index + '-middleName'}" class="text-muted">Middle name</label>
                                                 </div>
                                                 <span class="help-block" th:if="${#fields.hasErrors('contactPersons[__${itemStat.index}__].middleName')}">
                                                     <ul>
@@ -265,9 +265,9 @@
                                         <div class="col-lg-2">
                                             <div class="mb-4">
                                                 <div class="form-floating">
-                                                    <input type="text" th:id="*{contactPersons[__${itemStat.index}__].phone}" th:field="*{contactPersons[__${itemStat.index}__].phone}"
+                                                    <input type="text" th:id="${'contactPersons-' + itemStat.index + '-phone'}" th:field="*{contactPersons[__${itemStat.index}__].phone}"
                                                            th:class="${#fields.hasErrors('contactPersons[__${itemStat.index}__].phone')} ? 'form-control is-invalid' : 'form-control'" placeholder="Phone" />
-                                                    <label th:for="*{contactPersons[__${itemStat.index}__].phone}" class="text-muted">Phone number</label>
+                                                    <label th:for="${'contactPersons-' + itemStat.index + '-phone'}" class="text-muted">Phone number</label>
                                                 </div>
                                                 <span class="help-block" th:if="${#fields.hasErrors('contactPersons[__${itemStat.index}__].phone')}">
                                                     <ul>
@@ -280,12 +280,12 @@
                                         <div class="col-lg-1">
                                             <div class="mb-4">
                                                 <span class="d-lg-none d-grid">
-                                                   <button type="button" class="btn btn-danger btn-del-contact-person" title="Delete contact">
+                                                   <button type="button" th:id="${'deleteContactBtn-' + itemStat.index}" class="btn btn-danger btn-del-contact-person" title="Delete contact">
                                                        <i class="fa-solid fa-arrow-up"></i> Delete contact <i class="fa-solid fa-arrow-up"></i>
                                                    </button>
                                                 </span>
                                                 <span class="d-none d-lg-block py-1">
-                                                    <button type="button" class="btn btn-danger btn-del-contact-person" title="Delete contact">
+                                                    <button type="button" th:id="${'deleteContactBtn-' + itemStat.index}" class="btn btn-danger btn-del-contact-person" title="Delete contact">
                                                         Delete
                                                     </button>
                                                 </span>
@@ -312,3 +312,7 @@
         <script src="/js/company-form.js?v=1"></script>
     </ownScript>
 </th:block>
+
+<script>
+
+</script>

@@ -1,2 +1,3 @@
 content-path:
   documents: src/test/content/documents/
+  change-notices: src/test/content/change-notices/

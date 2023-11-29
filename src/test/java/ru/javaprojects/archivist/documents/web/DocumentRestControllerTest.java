@@ -13,6 +13,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import ru.javaprojects.archivist.AbstractControllerTest;
+import ru.javaprojects.archivist.ManagesContentFiles;
 import ru.javaprojects.archivist.changenotices.model.Change;
 import ru.javaprojects.archivist.changenotices.model.ChangeNotice;
 import ru.javaprojects.archivist.changenotices.repository.ChangeRepository;
@@ -28,20 +29,18 @@ import ru.javaprojects.archivist.documents.to.ApplicabilityTo;
 import ru.javaprojects.archivist.documents.to.ChangeTo;
 import ru.javaprojects.archivist.documents.to.SendingTo;
 
-import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static ru.javaprojects.archivist.CommonTestData.*;
+import static ru.javaprojects.archivist.changenotices.ChangeNoticeTestData.changeNotice2;
 import static ru.javaprojects.archivist.common.error.Constants.*;
 import static ru.javaprojects.archivist.common.util.JsonUtil.writeValue;
 import static ru.javaprojects.archivist.companies.CompanyTestData.*;
@@ -50,7 +49,7 @@ import static ru.javaprojects.archivist.documents.web.DocumentUIController.DOCUM
 import static ru.javaprojects.archivist.documents.web.DocumentUIControllerTest.DOCUMENTS_URL_SLASH;
 import static ru.javaprojects.archivist.users.web.LoginController.LOGIN_URL;
 
-class DocumentRestControllerTest extends AbstractControllerTest {
+class DocumentRestControllerTest extends AbstractControllerTest implements ManagesContentFiles {
     private static final String APPLICABILITIES_URL = DOCUMENTS_URL + "/applicabilities";
     private static final String DOCUMENT_APPLICABILITIES_URL = DOCUMENTS_URL + "/%d/applicabilities";
     private static final String APPLICABILITIES_URL_SLASH = APPLICABILITIES_URL + "/";
@@ -90,6 +89,11 @@ class DocumentRestControllerTest extends AbstractControllerTest {
     @Value("${content-path.documents}")
     private String contentPath;
 
+    @Override
+    public String getContentPath() {
+        return contentPath;
+    }
+
     @Test
     @WithUserDetails(ARCHIVIST_MAIL)
     void delete() throws Exception {
@@ -97,6 +101,7 @@ class DocumentRestControllerTest extends AbstractControllerTest {
                 .with(csrf()))
                 .andExpect(status().isNoContent());
         assertThrows(NotFoundException.class, () -> documentService.get(DOCUMENT1_ID));
+        assertTrue(Files.notExists(Paths.get(contentPath, document1.getDecimalNumber())));
     }
 
     @Test
@@ -121,6 +126,7 @@ class DocumentRestControllerTest extends AbstractControllerTest {
                 .andExpect(result ->
                         assertTrue(Objects.requireNonNull(result.getResponse().getRedirectedUrl()).endsWith(LOGIN_URL)));
         assertDoesNotThrow(() -> documentService.get(DOCUMENT1_ID));
+        assertTrue(Files.exists(Paths.get(contentPath, document1.getDecimalNumber())));
     }
 
     @Test
@@ -130,6 +136,7 @@ class DocumentRestControllerTest extends AbstractControllerTest {
                 .with(csrf()))
                 .andExpect(status().isForbidden());
         assertDoesNotThrow(() -> documentService.get(DOCUMENT1_ID));
+        assertTrue(Files.exists(Paths.get(contentPath, document1.getDecimalNumber())));
     }
 
     @Test
@@ -399,7 +406,6 @@ class DocumentRestControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(ARCHIVIST_MAIL)
     void deleteContent() throws Exception {
-        generateTestDataFiles();
         perform(MockMvcRequestBuilders.delete(CONTENT_URL_SLASH + DOCUMENT_1_CONTENT_1_ID)
                 .with(csrf()))
                 .andExpect(status().isNoContent());
@@ -410,7 +416,6 @@ class DocumentRestControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(ARCHIVIST_MAIL)
     void deleteContentNotFound() throws Exception {
-        generateTestDataFiles();
         perform(MockMvcRequestBuilders.delete(CONTENT_URL_SLASH + NOT_FOUND)
                 .with(csrf()))
                 .andExpect(status().isNotFound())
@@ -424,7 +429,6 @@ class DocumentRestControllerTest extends AbstractControllerTest {
 
     @Test
     void deleteContentUnauthorized() throws Exception {
-        generateTestDataFiles();
         perform(MockMvcRequestBuilders.delete(CONTENT_URL_SLASH + DOCUMENT_1_CONTENT_1_ID)
                 .with(csrf()))
                 .andExpect(status().isFound())
@@ -437,7 +441,6 @@ class DocumentRestControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(USER_MAIL)
     void deleteContentForbidden() throws Exception {
-        generateTestDataFiles();
         perform(MockMvcRequestBuilders.delete(CONTENT_URL_SLASH + DOCUMENT_1_CONTENT_1_ID)
                 .with(csrf()))
                 .andExpect(status().isForbidden());
@@ -484,7 +487,6 @@ class DocumentRestControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(ARCHIVIST_MAIL)
     void createContent() throws Exception {
-        generateTestDataFiles();
         Files.deleteIfExists(Paths.get(contentPath, String.format(NEW_CONTENT_FILE_LINK, NOT_EXISTED_CONTENT_CHANGE_NUMBER)));
         ResultActions action = perform(MockMvcRequestBuilders.multipart(HttpMethod.POST, CONTENT_URL)
                 .file(CONTENT_FILE)
@@ -504,7 +506,6 @@ class DocumentRestControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(ARCHIVIST_MAIL)
     void createContentWhenDocumentNotExists() throws Exception {
-        generateTestDataFiles();
         perform(MockMvcRequestBuilders.multipart(HttpMethod.POST, CONTENT_URL)
                 .file(CONTENT_FILE)
                 .param(ID_PARAM, String.valueOf(NOT_FOUND))
@@ -523,7 +524,6 @@ class DocumentRestControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(ARCHIVIST_MAIL)
     void createContentInvalid() throws Exception {
-        generateTestDataFiles();
         perform(MockMvcRequestBuilders.multipart(HttpMethod.POST, CONTENT_URL)
                 .file(CONTENT_FILE)
                 .param(ID_PARAM, String.valueOf(DOCUMENT1_ID))
@@ -541,7 +541,6 @@ class DocumentRestControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(ARCHIVIST_MAIL)
     void createContentDuplicateChangeNumber() throws Exception {
-        generateTestDataFiles();
         perform(MockMvcRequestBuilders.multipart(HttpMethod.POST, CONTENT_URL)
                 .file(CONTENT_FILE)
                 .param(ID_PARAM, String.valueOf(DOCUMENT1_ID))
@@ -559,7 +558,6 @@ class DocumentRestControllerTest extends AbstractControllerTest {
 
     @Test
     void createContentUnauthorized() throws Exception {
-        generateTestDataFiles();
         perform(MockMvcRequestBuilders.multipart(HttpMethod.POST, CONTENT_URL)
                 .file(CONTENT_FILE)
                 .param(ID_PARAM, String.valueOf(DOCUMENT1_ID))
@@ -574,7 +572,6 @@ class DocumentRestControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(USER_MAIL)
     void createContentForbidden() throws Exception {
-        generateTestDataFiles();
         perform(MockMvcRequestBuilders.multipart(HttpMethod.POST, CONTENT_URL)
                 .file(CONTENT_FILE)
                 .param(ID_PARAM, String.valueOf(DOCUMENT1_ID))
@@ -582,22 +579,6 @@ class DocumentRestControllerTest extends AbstractControllerTest {
                 .with(csrf()))
                 .andExpect(status().isForbidden());
         assertTrue(Files.notExists(Paths.get(contentPath, String.format(NEW_CONTENT_FILE_LINK, NOT_EXISTED_CONTENT_CHANGE_NUMBER))));
-    }
-
-
-    private void generateTestDataFiles() throws IOException {
-        try (Stream<Path> paths = Files.walk(Paths.get(contentPath, CONTENT_TEST_DATA_DIR_NAME))) {
-            paths.forEach(path -> {
-                try {
-                    Path newPath = Paths.get(path.toString().replaceFirst(CONTENT_TEST_DATA_DIR_NAME, ""));
-                    if (Files.notExists(newPath)) {
-                        Files.copy(path,newPath);
-                    }
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            });
-        }
     }
 
     @Test
@@ -1072,7 +1053,7 @@ class DocumentRestControllerTest extends AbstractControllerTest {
         ChangeNotice changeNotice = ChangeNotice.autoGenerate(newChangeTo.getChangeNoticeName(), newChangeTo.getChangeNoticeDate());
         changeNotice.setId(created.getChangeNotice().getId());
         Change newChange = new Change(created.getId(), document1, changeNotice, newChangeTo.getChangeNumber());
-        CHANGE_MATCHER.assertMatchWithoutFields(created, newChange, "document.developer", "document.originalHolder");
+        CHANGE_MATCHER.assertMatchIgnoreFields(created, newChange, "document.developer", "document.originalHolder");
         CHANGE_MATCHER.assertMatch(changeRepository.getExisted(created.id()), newChange);
     }
 
@@ -1087,7 +1068,7 @@ class DocumentRestControllerTest extends AbstractControllerTest {
                 .andExpect(status().isCreated());
         Change created = CHANGE_MATCHER.readFromJson(action);
         Change newChange = new Change(created.getId(), document2, changeNotice2, newChangeTo.getChangeNumber());
-        CHANGE_MATCHER.assertMatchWithoutFields(created, newChange, "document.developer", "document.originalHolder", "changeNotice.developer");
+        CHANGE_MATCHER.assertMatchIgnoreFields(created, newChange, "document.developer", "document.originalHolder", "changeNotice.developer");
         CHANGE_MATCHER.assertMatch(changeRepository.getExisted(created.id()), newChange);
     }
 

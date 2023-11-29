@@ -19,6 +19,10 @@ public interface ChangeNoticeRepository extends NamedRepository<ChangeNotice> {
     @EntityGraph(attributePaths = {"developer", "changes.document"})
     Optional<ChangeNotice> findWithChangesAndDeveloperById(long id);
 
+    @EntityGraph(attributePaths = {"developer", "changes.document"})
+    Optional<ChangeNotice> findWithChangesAndDeveloperByName(String name);
+
+
     @EntityGraph(attributePaths = "changes.document")
     Optional<ChangeNotice> findWithChangesById(long id);
 

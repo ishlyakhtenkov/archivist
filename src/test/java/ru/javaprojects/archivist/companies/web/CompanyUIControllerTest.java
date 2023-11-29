@@ -53,7 +53,7 @@ class CompanyUIControllerTest extends AbstractControllerTest {
                 .getModel().get(COMPANIES_ATTRIBUTE);
         assertEquals(3, companies.getTotalElements());
         assertEquals(2, companies.getTotalPages());
-        COMPANY_MATCHER.assertMatchWithoutFields(companies.getContent(), List.of(company2, company3), "contactPersons");
+        COMPANY_MATCHER.assertMatchIgnoreFields(companies.getContent(), List.of(company2, company3), "contactPersons");
     }
 
     @Test
@@ -69,7 +69,7 @@ class CompanyUIControllerTest extends AbstractControllerTest {
                 .getModel().get(COMPANIES_ATTRIBUTE);
         assertEquals(1, companies.getTotalElements());
         assertEquals(1, companies.getTotalPages());
-        COMPANY_MATCHER.assertMatchWithoutFields(companies.getContent(), List.of(company1), "contactPersons");
+        COMPANY_MATCHER.assertMatchIgnoreFields(companies.getContent(), List.of(company1), "contactPersons");
     }
 
     @Test

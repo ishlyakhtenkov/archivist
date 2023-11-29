@@ -50,11 +50,11 @@ public class MatcherFactory {
             assertion.accept(actual, expected);
         }
 
-        public void assertMatchWithoutFields(T actual, T expected, String... fieldsToIgnore) {
+        public void assertMatchIgnoreFields(T actual, T expected, String... fieldsToIgnore) {
             assertThat(actual).usingRecursiveComparison().ignoringFields(fieldsToIgnore).isEqualTo(expected);
         }
 
-        public void assertMatchWithoutFields(Iterable<T> actual, Iterable<T> expected, String... fieldsToIgnore) {
+        public void assertMatchIgnoreFields(Iterable<T> actual, Iterable<T> expected, String... fieldsToIgnore) {
             assertThat(actual).usingRecursiveFieldByFieldElementComparatorIgnoringFields(fieldsToIgnore).isEqualTo(expected);
         }
 

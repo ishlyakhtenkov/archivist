@@ -75,6 +75,16 @@ public class ChangeNoticeService {
                 .orElseThrow(() -> new NotFoundException("Entity with id=" + id + " not found"));
     }
 
+    public ChangeNotice getByName(String name) {
+        return repository.findByNameIgnoreCase(name)
+                .orElseThrow(() -> new NotFoundException("Change notice " + name + " not found"));
+    }
+
+    public ChangeNotice getWithChangesByName(String name) {
+        return repository.findWithChangesAndDeveloperByName(name)
+                .orElseThrow(() -> new NotFoundException("Change notice " + name + " not found"));
+    }
+
     @Transactional
     public void delete(long id) {
         ChangeNotice changeNotice = repository.getExisted(id);

@@ -93,7 +93,7 @@ class DocumentUIControllerTest extends AbstractControllerTest {
                 .andExpect(view().name(DOCUMENTS_DETAILS_VIEW));
         Document document = (Document) Objects.requireNonNull(actions.andReturn().getModelAndView()).getModel().get(DOCUMENT_ATTRIBUTE);
         DOCUMENT_MATCHER.assertMatch(document, document1);
-        COMPANY_MATCHER.assertMatchWithoutFields(document.getOriginalHolder(), company3, "contactPersons");
+        COMPANY_MATCHER.assertMatchIgnoreFields(document.getOriginalHolder(), company3, "contactPersons");
         DEPARTMENT_MATCHER.assertMatch(document.getDeveloper(), department1);
     }
 

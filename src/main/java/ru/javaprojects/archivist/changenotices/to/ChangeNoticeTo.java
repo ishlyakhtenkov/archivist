@@ -58,4 +58,10 @@ public class ChangeNoticeTo extends BaseTo {
         this.developer = developer;
         this.changes = changes;
     }
+
+    public ChangeNoticeTo(Long id, String name, LocalDate releaseDate, ChangeReasonCode changeReasonCode,
+                          Department developer, MultipartFile file, List<ChangeTo> changes) {
+        this(id, name, releaseDate, changeReasonCode, developer, changes);
+        this.file = file;
+    }
 }

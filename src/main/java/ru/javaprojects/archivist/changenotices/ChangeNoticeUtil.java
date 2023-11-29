@@ -33,6 +33,7 @@ public class ChangeNoticeUtil {
         return changeNotice;
     }
 
+    //TODO rename file folder and change fileLink when changeNotice changes name
     public ChangeNotice updateFromTo(ChangeNotice changeNotice, ChangeNoticeTo changeNoticeTo) {
         changeNotice.setName(changeNoticeTo.getName());
         changeNotice.setReleaseDate(changeNoticeTo.getReleaseDate());

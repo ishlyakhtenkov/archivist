@@ -335,6 +335,24 @@ class ChangeNoticeUIControllerTest extends AbstractControllerTest implements Man
         assertTrue(Files.exists(Paths.get(contentPath, updatedChangeNotice.getFile().getFileLink())));
     }
 
+    @Test
+    @WithUserDetails(ARCHIVIST_MAIL)
+    void updateToAutoGenerateName() throws Exception {
+        ChangeNotice updatedChangeNotice = ChangeNoticeTestData.getUpdated();
+        updatedChangeNotice.setName(changeNotice3.getName());
+        MultiValueMap<String, String> updatedParams = ChangeNoticeTestData.getUpdatedParams();
+        updatedParams.set(NAME_PARAM, changeNotice3.getName());
+        perform(MockMvcRequestBuilders.post(CHANGE_NOTICES_URL)
+                .params(updatedParams)
+                .with(csrf()))
+                .andExpect(status().isFound())
+                .andExpect(redirectedUrl(CHANGE_NOTICES_URL_SLASH + CHANGE_NOTICE_1_ID))
+                .andExpect(flash().attribute(ACTION, "Change notice " + updatedChangeNotice.getName() + " was updated"));
+        CHANGE_NOTICE_MATCHER.assertMatchIgnoreFields(service.getWithChanges(CHANGE_NOTICE_1_ID), updatedChangeNotice, "changes.id", "changes.document.id", "changes.document.originalHolder", "changes.document.developer");
+        assertTrue(Files.exists(Paths.get(contentPath, updatedChangeNotice.getFile().getFileLink())));
+        assertThrows(NotFoundException.class, () -> service.get(CHANGE_NOTICE_3_ID));
+    }
+
     //Check UniqueNameValidator works correct when update
     @Test
     @WithUserDetails(ARCHIVIST_MAIL)

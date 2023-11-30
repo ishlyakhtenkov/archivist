@@ -16,6 +16,8 @@ import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Objects;
 
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
+
 @UtilityClass
 public class FileUtil {
 
@@ -89,6 +91,20 @@ public class FileUtil {
             } catch (IOException ex) {
                 throw new IllegalRequestDataException("Dir: " + path + " deletion failed");
             }
+        }
+    }
+
+    public static void moveFile(String file, String newDir) {
+        try {
+            Path filePath = Paths.get(file);
+            Path newDirPath = Paths.get(newDir);
+            if (Files.notExists(newDirPath)) {
+                Files.createDirectory(newDirPath);
+            }
+            Files.move(filePath, newDirPath.resolve(filePath.getFileName()), REPLACE_EXISTING);
+
+        } catch (IOException ex) {
+            throw new IllegalRequestDataException("Failed to move " + file + " to " + newDir);
         }
     }
 }

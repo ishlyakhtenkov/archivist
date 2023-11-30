@@ -323,7 +323,7 @@ class ChangeNoticeUIControllerTest extends AbstractControllerTest implements Man
 
     @Test
     @WithUserDetails(ARCHIVIST_MAIL)
-    void update() throws Exception {
+    void updateWithoutChangingFile() throws Exception {
         ChangeNotice updatedChangeNotice = ChangeNoticeTestData.getUpdated();
         perform(MockMvcRequestBuilders.post(CHANGE_NOTICES_URL)
                 .params(ChangeNoticeTestData.getUpdatedParams())
@@ -333,6 +333,7 @@ class ChangeNoticeUIControllerTest extends AbstractControllerTest implements Man
                 .andExpect(flash().attribute(ACTION, "Change notice " + updatedChangeNotice.getName() + " was updated"));
         CHANGE_NOTICE_MATCHER.assertMatchIgnoreFields(service.getWithChanges(CHANGE_NOTICE_1_ID), updatedChangeNotice, "changes.id", "changes.document.id", "changes.document.originalHolder", "changes.document.developer");
         assertTrue(Files.exists(Paths.get(contentPath, updatedChangeNotice.getFile().getFileLink())));
+        assertTrue(Files.notExists(Paths.get(contentPath, changeNotice1.getFile().getFileLink())));
     }
 
     @Test
@@ -340,6 +341,7 @@ class ChangeNoticeUIControllerTest extends AbstractControllerTest implements Man
     void updateToAutoGenerateName() throws Exception {
         ChangeNotice updatedChangeNotice = ChangeNoticeTestData.getUpdated();
         updatedChangeNotice.setName(changeNotice3.getName());
+        updatedChangeNotice.getFile().setFileLink(changeNotice3.getName() + "/VUIA.SK.591.pdf");
         MultiValueMap<String, String> updatedParams = ChangeNoticeTestData.getUpdatedParams();
         updatedParams.set(NAME_PARAM, changeNotice3.getName());
         perform(MockMvcRequestBuilders.post(CHANGE_NOTICES_URL)
@@ -350,6 +352,7 @@ class ChangeNoticeUIControllerTest extends AbstractControllerTest implements Man
                 .andExpect(flash().attribute(ACTION, "Change notice " + updatedChangeNotice.getName() + " was updated"));
         CHANGE_NOTICE_MATCHER.assertMatchIgnoreFields(service.getWithChanges(CHANGE_NOTICE_1_ID), updatedChangeNotice, "changes.id", "changes.document.id", "changes.document.originalHolder", "changes.document.developer");
         assertTrue(Files.exists(Paths.get(contentPath, updatedChangeNotice.getFile().getFileLink())));
+        assertTrue(Files.notExists(Paths.get(contentPath, changeNotice1.getFile().getFileLink())));
         assertThrows(NotFoundException.class, () -> service.get(CHANGE_NOTICE_3_ID));
     }
 
@@ -359,6 +362,7 @@ class ChangeNoticeUIControllerTest extends AbstractControllerTest implements Man
     void updateNameNotChange() throws Exception {
         ChangeNotice updatedChangeNotice = ChangeNoticeTestData.getUpdated();
         updatedChangeNotice.setName(changeNotice1.getName());
+        updatedChangeNotice.getFile().setFileLink(changeNotice1.getFile().getFileLink());
         MultiValueMap<String, String> updatedParams = ChangeNoticeTestData.getUpdatedParams();
         updatedParams.set(NAME_PARAM, changeNotice1.getName());
         perform(MockMvcRequestBuilders.post(CHANGE_NOTICES_URL)

@@ -80,7 +80,7 @@ public class ChangeNoticeTestData {
         ChangeNoticeTo updatedTo = getUpdatedTo();
         ChangeNotice changeNotice = new ChangeNotice(updatedTo.getId(), updatedTo.getName(), updatedTo.getReleaseDate(),
                 updatedTo.getChangeReasonCode(), updatedTo.getDeveloper(),
-                new ContentFile("VUIA.SK.591.pdf", "VUIA.SK.591/VUIA.SK.591.pdf"));
+                new ContentFile("VUIA.SK.591.pdf", updatedTo.getName() + "/VUIA.SK.591.pdf"));
         changeNotice.addChange(new Change(CHANGE_NOTICE_1_CHANGE_1_ID, document1, 1));
         changeNotice.addChange(new Change(CHANGE_NOTICE_1_CHANGE_2_ID, document2, 1));
         changeNotice.addChange(new Change(null, Document.autoGenerate("VUIA.611222.001"), 1));

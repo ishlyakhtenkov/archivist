@@ -15,7 +15,7 @@
                         <a th:href="@{/change-notices}" type="button" class="btn-close pb-0" aria-label="Close"></a>
                     </div>
                     <div class="card-body px-3 px-md-5 pb-3 pb-md-5 pt-0 text-center">
-                        <h3 class="mb-4" th:text="${changeNoticeTo.isNew()} ? 'New change notice card' : 'Edit: ' + ${changeNoticeTo.name}">Create/Edit Change notice</h3>
+                        <h3 class="mb-4" th:text="${changeNoticeTo.isNew()} ? 'New change notice' : 'Editing: ' + ${changeNoticeTo.name}">Create/Edit Change notice</h3>
                         <form th:action="@{/change-notices}" method="post" th:object="${changeNoticeTo}" enctype="multipart/form-data">
                             <input type="hidden" id="idInput" th:field="*{id}">
                             <div class="row">
@@ -74,8 +74,8 @@
                                     <div th:if="${file != null}" class="input-group">
                                         <span class="input-group-text doc-card-field" id="fileAddon" title="File">File</span>
                                         <div class="form-control" id="editFileInput">
-                                            <a th:href="@{/change-notices/download(fileLink=${file.fileLink})}" th:utext="'<i class=&quot;text-danger fa-solid fa-file-pdf&quot;></i>' + ${file.fileName}" target="_blank">File name</a>
-                                            <a tabindex="0" type="button" class="trash-button float-end me-3" title="Delete file"
+                                            <a th:href="@{/change-notices/download(fileLink=${file.fileLink})}" th:utext="'<i class=&quot;text-danger fa-solid fa-file-pdf&quot;></i>' + ${file.fileName}" target="_blank" title="Show file">File name</a>
+                                            <a tabindex="0" type="button" class="trash-button float-end me-3"
                                                data-bs-toggle="popover" data-bs-trigger="focus" data-bs-title="Delete file?"
                                                data-bs-content="<button class='btn btn-sm btn-secondary ms-3'>Cancel</button>
                                            <button class='btn btn-sm btn-danger' onclick='deleteFile()'>Delete</button>">
@@ -97,7 +97,7 @@
 
                             <!-- Changes block -->
                             <div class="text-start mt-3">
-                                <h4 class="text-secondary mb-0">Changes</h4>
+                                <h4 class="text-secondary ms-1 mb-0">Changes</h4>
                                 <div class="table-responsive text-nowrap">
                                     <table class="table table-hover" id="changesTable">
                                         <thead>
@@ -105,17 +105,17 @@
                                             <th class="w-50 pt-0">Document</th>
                                             <th class="w-25 pt-0">Change number</th>
                                             <th class="text-end pt-0 pe-0">
-                                                <button type="button" class="btn btn-sm btn-secondary" title="Add change" onclick="addEmptyChangeRow()">Add change</button>
+                                                <button type="button" class="btn btn-sm btn-primary" title="Add change" onclick="addEmptyChangeRow()">Add change</button>
                                             </th>
                                         </tr>
                                         </thead>
-                                        <tbody>
+                                        <tbody class="table-group-divider">
                                         <tr th:each="change, itemStat : ${changeNoticeTo.changes}" class="change-row" th:id="${'changeRow-' + itemStat.index}">
                                             <td>
                                                 <input type="hidden" th:id="${'changeId-' + itemStat.index}" th:name="${'changes[' + itemStat.index + '].id'}" th:value="${change.id}">
                                                 <input type="text" th:id="${'changeDecimalNumber-' + itemStat.index}" th:name="${'changes[' + itemStat.index + '].decimalNumber'}" th:value="${change.decimalNumber}"
                                                        th:class="${#fields.hasErrors('changes[__${itemStat.index}__].decimalNumber')} ? 'form-control is-invalid' : 'form-control'"
-                                                       title="Document decimal number" placeholder="Document decimal number" required />
+                                                       title="Decimal number" placeholder="Document decimal number" required />
                                                 <span th:if="${#fields.hasErrors('changes[__${itemStat.index}__].decimalNumber')}">
                                                     <ul>
                                                         <li class="text-danger text-start"
@@ -136,7 +136,7 @@
                                             </td>
                                             <td class="text-end">
                                                 <a tabindex="0" type="button" class="trash-button me-3 mt-1" th:id="${'deleteChangeBtn-' + itemStat.index}"
-                                                   title="Delete change" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-title="Delete this change?"
+                                                   data-bs-toggle="popover" data-bs-trigger="focus" data-bs-title="Delete this change?"
                                                    th:attr="data-bs-content='<button class=\'btn btn-sm btn-secondary ms-3\'>Cancel</button>' +
                                                    '<button class=\'btn ms-1 btn-sm btn-danger\' onclick=\'deleteChangeRow(' + ${itemStat.index} + ')\'>Delete</button>'">
                                                     <i class="fa-solid fa-trash"></i>

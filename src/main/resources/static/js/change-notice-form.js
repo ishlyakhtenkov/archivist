@@ -10,12 +10,12 @@ window.onload = () => {
 function addChangeRow(id, decimalNumber, changeNumber) {
     let changeRowIndex = $('.change-row').length;
     let documentTd = $('<td></td>').html(`<input type="hidden" id="${'changeId-' + changeRowIndex}" name="changes[${changeRowIndex}].id" value="${id}">
-            <input type="text" id="${'changeDecimalNumber-' + changeRowIndex}" name="changes[${changeRowIndex}].decimalNumber" class="form-control" title="Document decimal number" placeholder="Document decimal number" value="${decimalNumber}" required />`);
+            <input type="text" id="${'changeDecimalNumber-' + changeRowIndex}" name="changes[${changeRowIndex}].decimalNumber" class="form-control" title="Decimal number" placeholder="Document decimal number" value="${decimalNumber}" required />`);
     let changeNumberTd = $('<td></td>').html(`<input type="number" id="${'changeChangeNumber-' + changeRowIndex}" name="changes[${changeRowIndex}].changeNumber" class="form-control" title="Change number" placeholder="Change number" value="${changeNumber}" required />`);
     let deleteChangeSubmitHtml = `<button class='btn btn-sm btn-secondary ms-3'>Cancel</button>
                                        <button class='btn btn-sm btn-danger' onclick='deleteChangeRow(${changeRowIndex})'>Delete</button>`;
     let deleteActionTd = $('<td></td>').addClass('text-end').html(`<a tabindex="0" type="button" class="trash-button me-3 mt-1" id="deleteChangeBtn-${changeRowIndex}"
-                title="Delete change" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-title="Delete this change?"
+                data-bs-toggle="popover" data-bs-trigger="focus" data-bs-title="Delete this change?"
                 data-bs-content="${deleteChangeSubmitHtml}"> <i class="fa-solid fa-trash"></i></a>`);
     let changeRow = $('<tr></tr>').addClass('change-row').attr('id', `changeRow-${changeRowIndex}`);
     changeRow.append(documentTd);
@@ -50,6 +50,7 @@ function deleteChangeRow(changeRowIndex) {
         new bootstrap.Popover(popoverTriggerEl, {html : true, sanitize: false}));
     if ($('.change-row').length === 0) {
         addEmptyChangeRow();
+        failToast('Change notice must have at least one change');
     }
 }
 

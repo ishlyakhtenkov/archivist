@@ -16,8 +16,8 @@
                 <div class="btn-toolbar justify-content-start justify-content-md-end">
                     <form class="d-flex" role="search" th:action="@{/change-notices}" method="get">
                         <div class="input-group">
-                            <span class="input-group-text bg-light" id="searchChangeNotices" title="Search change notices"><i class="fa-solid fa-magnifying-glass fa-fw"></i></span>
-                            <input class="form-control" th:name="keyword" th:value="${param.keyword}" type="search" placeholder="Search change notices" aria-label="Search">
+                            <span class="input-group-text bg-light" id="searchChangeNotices"><i class="fa-solid fa-magnifying-glass fa-fw"></i></span>
+                            <input class="form-control" th:name="keyword" th:value="${param.keyword}" type="search" placeholder="Search change notices" aria-label="Search" title="Search change notices">
                         </div>
                     </form>
                     <a sec:authorize="hasAnyRole('ADMIN','ARCHIVIST')" th:href="@{/change-notices/add}" type="button" class="btn btn-secondary ms-2" title="Add new change notice">

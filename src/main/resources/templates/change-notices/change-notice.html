@@ -44,7 +44,7 @@
                             <div class="row">
                                 <div class="col-lg-8">
                                     <div class="input-group">
-                                        <span class="input-group-text doc-card-field" id="changeReasonCodeAddon" title="Change reason cod">Change reason code</span>
+                                        <span class="input-group-text doc-card-field" id="changeReasonCodeAddon" title="Change reason code">Change reason code</span>
                                         <input type="text" id="changeReasonCodeInput" th:value="*{changeReasonCode}" class="form-control bg-light" disabled
                                                title="Change reason cod" aria-label="Change reason code" aria-describedby="changeReasonCodeAddon"/>
                                     </div>
@@ -62,30 +62,32 @@
                         </div>
 
                         <!-- Changes block -->
-                        <div class="text-start mt-3 mb-2">
-                            <h4 class="text-secondary">Changes</h4>
+                        <div class="text-start mt-3">
+                            <h4 class="text-secondary ms-1">Changes</h4>
                             <span th:if="${changeNotice.changes.isEmpty()}">
                                 <h5 class="alert alert-warning py-2 mb-4">No changes found.</h5>
                             </span>
-                            <div th:if="${!changeNotice.changes.isEmpty()}" class="table-responsive text-nowrap text-center">
+                            <div th:if="${!changeNotice.changes.isEmpty()}" class="table-responsive text-nowrap">
                                 <table class="table table-hover">
                                     <thead>
                                     <tr>
-                                        <th class="pt-0">Document</th>
-                                        <th class="pt-0">Change number</th>
+                                        <th class="w-25 pt-0">Document</th>
+                                        <th class="w-50 pt-0 text-center">Change number</th>
+                                        <th></th>
                                     </tr>
                                     </thead>
                                     <tbody class="table-group-divider">
                                     <tr th:each="change : ${changeNotice.changes}" class="table-row">
-                                        <td th:text="${change.document.decimalNumber}"></td>
-                                        <td th:text="${change.changeNumber}"></td>
+                                        <td th:text="${change.document.decimalNumber}" title="Decimal number"></td>
+                                        <td class="text-center" th:text="${change.changeNumber}" title="Change number"></td>
+                                        <td></td>
                                     </tr>
                                     </tbody>
                                 </table>
                             </div>
                         </div>
                         <div sec:authorize="hasAnyRole('ADMIN','ARCHIVIST')" class="float-end">
-                            <a th:href="@{'/change-notices/edit/' + ${changeNotice.id}}" class="btn btn-sm btn-warning" type="button">Edit card</a>
+                            <a th:href="@{'/change-notices/edit/' + ${changeNotice.id}}" class="btn btn-warning" type="button">Edit card</a>
                         </div>
                     </div>
                 </div>

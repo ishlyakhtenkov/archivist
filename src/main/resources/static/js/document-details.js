@@ -73,13 +73,17 @@ function fillApplicabilitiesTable(applicabilities) {
 function addApplicabilityRow(applicability) {
     let decimalNumberTd = $('<td></td>').html(`${applicability.applicability.decimalNumber} ${applicability.primal ? '<span class="badge text-bg-primary mt-0" style="font-size: 9px;">Primal</span>' : ''}`);
     let nameTd = $('<td></td>').text(`${applicability.applicability.name != null ? applicability.applicability.name : ''}`);
-    let deleteActionTd = $('<td></td>').addClass('text-end').html(`<a type="button" class="trash-button me-3"
-            title="Delete applicability" data-bs-toggle="modal" data-bs-target="#deleteApplicabilityModal"
-            data-decimalnumber=${applicability.applicability.decimalNumber} data-id=${applicability.id}> <i class="fa-solid fa-trash"></i></a>`);
     let applicabilityRow = $('<tr></tr>');
     applicabilityRow.append(decimalNumberTd);
     applicabilityRow.append(nameTd);
-    applicabilityRow.append(deleteActionTd);
+    if (hasAdminOrArchivistRole()) {
+        let deleteActionTd = $('<td></td>').addClass('text-end').html(`<a type="button" class="trash-button me-3"
+            title="Delete applicability" data-bs-toggle="modal" data-bs-target="#deleteApplicabilityModal"
+            data-decimalnumber=${applicability.applicability.decimalNumber} data-id=${applicability.id}> <i class="fa-solid fa-trash"></i></a>`);
+        applicabilityRow.append(deleteActionTd);
+    } else {
+        applicabilityRow.append(('<td></td>'));
+    }
     $('#applicabilitiesTable > tbody').append(applicabilityRow);
 }
 
@@ -185,11 +189,13 @@ function generateContentCard(content, bgColor) {
     let cardBody = $('<div></div>').addClass('card-body pt-1 pb-2');
     let infoRow = $('<div></div>').addClass('row');
     let changeNumberCol = $('<div></div>').addClass('col').html(`<span class="badge rounded-circle text-bg-${bgColor}">${content.changeNumber}</span>`);
-    let deleteButtonCol = $('<div></div>').addClass('col text-end').html(`<a type="button" class="trash-button"
+    infoRow.append(changeNumberCol);
+    if (hasAdminOrArchivistRole()) {
+        let deleteButtonCol = $('<div></div>').addClass('col text-end').html(`<a type="button" class="trash-button"
             title="Delete content" data-bs-toggle="modal" data-bs-target="#deleteContentModal"
             data-changenumber=${content.changeNumber} data-id=${content.id}> <i class="fa-solid fa-trash"></i></a>`);
-    infoRow.append(changeNumberCol);
-    infoRow.append(deleteButtonCol);
+        infoRow.append(deleteButtonCol);
+    }
     cardHeader.append(infoRow);
     content.files.forEach(file => {
         let fileRow = $('<div></div>').html(`<a href="/documents/content/download?fileLink=${file.fileLink}" target="_blank">${file.fileName}</a>`);
@@ -293,7 +299,7 @@ function generateSubscriberCard(subscriber) {
                                         <i class="fa-solid fa-circle-info"></i></a></div>`);
     cardBody.append(titleRow);
     let infoRow = $('<div></div>').addClass('row mt-2').html(`<div class="col-5 small"></div><div class="col-7 small text-end">${subscriber.status.replace('_', ' ').toLowerCase()}</div>`);
-    if (subscriber.subscribed || subscriber.unsubscribeTimestamp != null) {
+    if (hasAdminOrArchivistRole() && (subscriber.subscribed || subscriber.unsubscribeTimestamp != null)) {
         let infoRowHtml = `<a type="button" title='${subscriber.subscribed ? 'Unsubscribe' : 'Resubscribe'}' data-bs-toggle="modal"
                                 data-bs-target=${subscriber.subscribed ? '#unsubscribeModal' : '#resubscribeModal'}
                                 data-subscriberid='${subscriber.id}' data-subscribername='${subscriber.company.name}'>
@@ -443,14 +449,18 @@ function addSendingRow(sending, companyId) {
     let deleteSendingSubmitHtml = `<button class='btn btn-sm btn-secondary ms-3'>Cancel</button>
                                        <button class='btn btn-sm btn-danger' onclick='deleteSending(${sending.id}, ${companyId})'>Delete</button>`;
 
-    let deleteActionTd = $('<td></td>').addClass('text-end').html(`<a tabindex="0" type="button" class="trash-button me-3"
-                title="Delete sending" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-title="Delete this sending?"
-                data-bs-content="${deleteSendingSubmitHtml}"> <i class="fa-solid fa-trash"></i></a>`);
     let sendingRow = $('<tr></tr>');
     sendingRow.append(docStatusTd);
     sendingRow.append(invoiceTd);
     sendingRow.append(letterTd);
-    sendingRow.append(deleteActionTd);
+    if (hasAdminOrArchivistRole()) {
+        let deleteActionTd = $('<td></td>').addClass('text-end').html(`<a tabindex="0" type="button" class="trash-button me-3"
+                title="Delete sending" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-title="Delete this sending?"
+                data-bs-content="${deleteSendingSubmitHtml}"> <i class="fa-solid fa-trash"></i></a>`);
+        sendingRow.append(deleteActionTd);
+    } else {
+        sendingRow.append($('<td></td>'));
+    }
     $('#sendingsTable > tbody').append(sendingRow);
 }
 
@@ -532,16 +542,20 @@ function addChangeRow(change) {
     let changeNumberTd = $('<td></td>').text(change.changeNumber);
     let changeNoticeTd = $('<td></td>').text(change.changeNotice.name);
     let changeDateTd = $('<td></td>').text(change.changeNotice.releaseDate);
-    let deleteChangeSubmitHtml = `<button class='btn btn-sm btn-secondary ms-3'>Cancel</button>
-                                       <button class='btn btn-sm btn-danger' onclick='deleteChange(${change.id}, ${change.changeNumber})'>Delete</button>`;
-    let deleteActionTd = $('<td></td>').addClass('text-end').html(`<a tabindex="0" type="button" class="trash-button me-3"
-                title="Delete change" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-title="Delete this change?"
-                data-bs-content="${deleteChangeSubmitHtml}"> <i class="fa-solid fa-trash"></i></a>`);
     let changeRow = $('<tr></tr>');
     changeRow.append(changeNumberTd);
     changeRow.append(changeNoticeTd);
     changeRow.append(changeDateTd);
-    changeRow.append(deleteActionTd);
+    if (hasAdminOrArchivistRole()) {
+        let deleteChangeSubmitHtml = `<button class='btn btn-sm btn-secondary ms-3'>Cancel</button>
+                                       <button class='btn btn-sm btn-danger' onclick='deleteChange(${change.id}, ${change.changeNumber})'>Delete</button>`;
+        let deleteActionTd = $('<td></td>').addClass('text-end').html(`<a tabindex="0" type="button" class="trash-button me-3"
+                title="Delete change" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-title="Delete this change?"
+                data-bs-content="${deleteChangeSubmitHtml}"> <i class="fa-solid fa-trash"></i></a>`);
+        changeRow.append(deleteActionTd);
+    } else {
+        changeRow.append($('<td></td>'));
+    }
     $('#changesTable > tbody').append(changeRow);
 }
 

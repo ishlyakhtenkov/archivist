@@ -57,3 +57,7 @@ function changeFileInputColor(fileInputId) {
     let fileInput = $(`#${fileInputId}`);
     fileInput.css('color', fileInput.val().length > 0 ? 'black' : 'transparent');
 }
+
+function hasAdminOrArchivistRole() {
+    return $.inArray('ADMIN', userRoles) > -1 || $.inArray('ARCHIVIST', userRoles) > -1;
+}

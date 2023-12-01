@@ -41,5 +41,8 @@
     <script src="/webjars/bootstrap-select/1.14.0-beta3/dist/js/bootstrap-select.min.js"></script>
     <script src="/js/sidebar.js?v=1"></script>
     <th:block th:insert="${ownScript}?: ~{}"/>
+    <script th:inline="javascript">
+        const userRoles = [[${authUser != null ? authUser.user.roles : ''}]];
+    </script>
 </th:block>
 </html>

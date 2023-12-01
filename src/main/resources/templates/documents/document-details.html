@@ -128,7 +128,7 @@
 
                             <!-- Changes Tab-->
                             <div class="tab-pane fade mt-2" id="documentChangesTab" role="tabpanel" aria-labelledby="nav-changes-tab" tabindex="0">
-                                <div class="text-end" id="addChangeButtonDiv">
+                                <div sec:authorize="hasAnyRole('ADMIN','ARCHIVIST')" class="text-end" id="addChangeButtonDiv">
                                     <button class="btn btn-sm btn-secondary" title="Add change" onclick="showInputChangeDiv()">Add change</button>
                                 </div>
                                 <div id="inputChangeDiv" hidden>
@@ -169,7 +169,7 @@
 
                             <!-- Applicability Tab-->
                             <div class="tab-pane fade mt-2" id="documentApplicabilityTab" role="tabpanel" aria-labelledby="nav-applicability-tab" tabindex="0">
-                                <div class="text-end" id="addApplicabilityButtonDiv">
+                                <div sec:authorize="hasAnyRole('ADMIN','ARCHIVIST')" class="text-end" id="addApplicabilityButtonDiv">
                                     <button class="btn btn-sm btn-secondary" title="Add applicability" onclick="showInputApplicabilityDiv()">Add applicability</button>
                                 </div>
                                 <div id="inputApplicabilityDiv" hidden>
@@ -209,7 +209,7 @@
 
                             <!-- Subscribers Tab-->
                             <div class="tab-pane fade mt-2" id="documentSubscribersTab" role="tabpanel" aria-labelledby="nav-subscribers-tab" tabindex="0">
-                                <div class="text-end mb-1">
+                                <div sec:authorize="hasAnyRole('ADMIN','ARCHIVIST')" class="text-end mb-1">
                                     <button class="btn btn-sm btn-secondary" title="Add sending" data-bs-toggle="modal" data-bs-target="#addSendingModal">Add sending</button>
                                 </div>
                                 <div class="row row-cols-1 row-cols-md-2 row-cols-xxl-3">
@@ -221,7 +221,7 @@
 
                             <!-- Content Tab-->
                             <div class="tab-pane fade mt-2" id="documentContentTab" role="tabpanel" aria-labelledby="nav-content-tab" tabindex="0">
-                                <div class="text-end" id="addContentButtonDiv">
+                                <div sec:authorize="hasAnyRole('ADMIN','ARCHIVIST')" class="text-end" id="addContentButtonDiv">
                                     <button class="btn btn-sm btn-secondary" title="Add content" onclick="showInputContentDiv()">Add content</button>
                                 </div>
                                 <div id="inputContentDiv" hidden>
@@ -240,7 +240,7 @@
                                         </div>
                                     </form>
                                 </div>
-                                <div class="mt-2" id="contentArea"></div>
+                                <div th:classappend="${authUser.user.roles.size() == 1 ? 'mt-3' : 'mt-2'}" id="contentArea"></div>
                                 <button hidden class="btn btn-sm btn-light" id="showPreviousContentButton"
                                         title="Show previous content" onclick="getAllContents()">Show previous</button>
                             </div>

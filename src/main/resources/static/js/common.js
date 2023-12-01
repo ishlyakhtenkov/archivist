@@ -52,3 +52,8 @@ function handleError(data, title) {
     }
     failToast(message);
 }
+
+function changeFileInputColor(fileInputId) {
+    let fileInput = $(`#${fileInputId}`);
+    fileInput.css('color', fileInput.val().length > 0 ? 'black' : 'transparent');
+}

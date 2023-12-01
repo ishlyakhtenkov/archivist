@@ -84,7 +84,8 @@
                                         </div>
                                     </div>
                                     <div>
-                                        <input th:if="${file == null}" type="file" accept="application/pdf" id="fileInput" th:field="*{file}" class="form-control" required />
+                                        <input th:if="${file == null}" type="file" accept="application/pdf" id="fileInput" th:field="*{file}" class="form-control" required
+                                               style="color: transparent;" onchange="changeFileInputColor('fileInput')" />
                                         <span th:if="${#fields.hasErrors('file')}">
                                             <ul>
                                                 <li class="text-danger text-start"

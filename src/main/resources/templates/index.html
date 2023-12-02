@@ -5,10 +5,66 @@
 <th:block th:replace="~{fragments/main::page(title='Archivist',appMain=~{::appMain})}">
   <appMain>
     <div class="text-center">
-        <span class="badge px-3 py-2 px-md-5 py-md-3 w-50" style="background-color: #3e4145">
-          <img src="/images/logo/archivist.svg" class="w-100">
+        <span class="badge px-3 py-2 px-md-5 py-md-3 w-100" style="background-color: #3e4145">
+          <img src="/images/logo/archivist.svg">
         </span>
     </div>
-    <h6 class="display-6 text-center">Electronic accounting as easy as possible</h6>
+    <h6 class="display-6 text-center mb-5">TD accounting as easy as possible</h6>
+
+      <div sec:authorize="!isAuthenticated()" class="card mb-4">
+          <div class="card-header">
+              <div class="row">
+                  <div class="col">
+                      I.Shlyakhtenkov
+                  </div>
+                  <div class="col text-end">
+                      <a href="#" type="button" title="Edit post" class="pencil-button me-2">
+                          <i class="fa-solid fa-pencil"></i>
+                      </a>
+                      <a href="#" type="button" title="Delete post" class="trash-button">
+                          <i class="fa-solid fa-trash"></i>
+                      </a>
+                  </div>
+              </div>
+              <div class="row">
+                  <div class="col">
+                      25.11.2023 22:31:10
+                  </div>
+              </div>
+          </div>
+          <div class="card-body">
+              <h5 class="card-title">New users registration</h5>
+              <p class="card-text">To apply for an account, please call 1-134-56 or email ishlyakhtenkov@npo.lan.</p>
+          </div>
+      </div>
+      <div sec:authorize="isAuthenticated()" class="card mb-4">
+          <div class="card-header">
+              <div class="row">
+                  <div class="col">
+                      I.Shlyakhtenkov
+                  </div>
+                  <div class="col text-end">
+                      <a href="#" type="button" title="Edit post" class="pencil-button me-2">
+                          <i class="fa-solid fa-pencil"></i>
+                      </a>
+                      <a href="#" type="button" title="Delete post" class="trash-button">
+                          <i class="fa-solid fa-trash"></i>
+                      </a>
+                  </div>
+              </div>
+              <div class="row">
+                  <div class="col">
+                      02.12.2023 23:45:27
+                  </div>
+              </div>
+          </div>
+          <div class="card-body">
+              <h5 class="card-title">Account sharing</h5>
+              <p class="card-text">
+                  Dear app users, remind you that sharing your account with other users is strictly prohibited. <br>
+                  Accounts of users found to be sharing their account will be immediately blocked. <br>
+              </p>
+          </div>
+      </div>
   </appMain>
 </th:block>

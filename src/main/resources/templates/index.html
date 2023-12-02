@@ -4,9 +4,11 @@
 
 <th:block th:replace="~{fragments/main::page(title='Archivist',appMain=~{::appMain})}">
   <appMain>
-    <h1>Archivist Home page</h1>
-      <form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post">
-        <button class="btn btn-primary btn-lg mt-3" type="submit">Logout</button>
-      </form>
+    <div class="text-center">
+        <span class="badge px-3 py-2 px-md-5 py-md-3 w-50" style="background-color: #3e4145">
+          <img src="/images/logo/archivist.svg" class="w-100">
+        </span>
+    </div>
+    <h6 class="display-6 text-center">Electronic accounting as easy as possible</h6>
   </appMain>
 </th:block>

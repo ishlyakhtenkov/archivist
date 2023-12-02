@@ -59,10 +59,10 @@ public class CompanyUIController {
     }
 
     @GetMapping("/{id}")
-    public String companyDetails(@PathVariable long id, Model model) {
-        log.info("show company details {}", id);
+    public String get(@PathVariable long id, Model model) {
+        log.info("get {}", id);
         model.addAttribute("company", service.get(id));
-        return "companies/company-details";
+        return "companies/company";
     }
 
     @GetMapping("/add")
@@ -99,6 +99,6 @@ public class CompanyUIController {
         log.info("update {}", company);
         service.update(company);
         redirectAttributes.addFlashAttribute("action", "Company " + company.getName() + " was updated");
-        return "redirect:/companies";
+        return "redirect:/companies/" + company.getId();
     }
 }

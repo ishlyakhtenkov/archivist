@@ -1,9 +1,5 @@
 const deleteParam = 'delete';
 
-window.onload = function() {
-    checkActionHappened();
-};
-
 function checkActionHappened() {
     let actionSpan = $("#actionSpan");
     if (actionSpan.length) {

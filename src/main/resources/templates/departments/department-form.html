@@ -13,7 +13,7 @@
                         <a th:href="@{/departments}" type="button" class="btn-close" aria-label="Close"></a>
                     </div>
                     <div class="card-body px-3 px-md-5 pb-3 pb-md-5 pt-0 text-center">
-                        <h3 class="mb-4" th:text="${department.id == null} ? 'Create Department' : 'Edit Department: ' + ${department.name}">Create/Edit Department</h3>
+                        <h3 class="mb-4" th:text="${department.id == null} ? 'New department' : 'Editing: ' + ${department.name}">Create/Edit Department</h3>
                         <form th:action="${department.id == null} ? @{/departments/create} : @{/departments/update}" method="post" th:object="${department}">
                             <input type="hidden" th:field="*{id}">
                             <div class="mb-4">
@@ -118,10 +118,9 @@
                                     </ul>
                                 </span>
                             </div>
-                            <div class="row">
-                                <div class="d-grid gap-2">
-                                    <button class="btn btn-success btn-lg" type="submit" th:text="${department.id == null} ? 'Create Department' : 'Save Department'">Create/Save department</button>
-                                </div>
+                            <div class="text-end">
+                                <a th:if="${!department.isNew()}" th:href="@{/departments}" class="btn btn-secondary" type="button">Cancel</a>
+                                <button class="btn btn-success" th:classappend="${department.isNew() ? '' : 'px-3'}" type="submit" th:text="${department.isNew()} ? 'Create' : '&nbsp;Save&nbsp;'">Create/Save department</button>
                             </div>
                         </form>
                     </div>

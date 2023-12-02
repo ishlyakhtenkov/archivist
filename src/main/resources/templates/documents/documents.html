@@ -3,6 +3,7 @@
       xmlns:sd="http://www.thymeleaf.org/spring-data"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       th:with="activeMenuItem='Documents'" lang="en">
+<!--/*@thymesVar id="document" type="ru.javaprojects.archivist.documents.model.Document"*/-->
 
 <th:block th:replace="~{fragments/main::page(title='Archivist - documents',appMain=~{::appMain}, ownScript=~{::ownScript})}">
     <appMain>
@@ -16,11 +17,11 @@
                 <div class="btn-toolbar justify-content-start justify-content-md-end">
                     <form class="d-flex" role="search" th:action="@{/documents}" method="get">
                         <div class="input-group">
-                            <span class="input-group-text bg-light" id="searchDocuments" title="Search documents"><i class="fa-solid fa-magnifying-glass fa-fw"></i></span>
-                            <input class="form-control" th:name="keyword" th:value="${param.keyword}" type="search" placeholder="Search documents" aria-label="Search">
+                            <span class="input-group-text bg-light" id="searchDocuments"><i class="fa-solid fa-magnifying-glass fa-fw"></i></span>
+                            <input class="form-control" th:name="keyword" th:value="${param.keyword}" type="search" title="Search documents" placeholder="Search documents" aria-label="Search">
                         </div>
                     </form>
-                    <a sec:authorize="hasAnyRole('ADMIN','ARCHIVIST')" th:href="@{/documents/add}" type="button" class="btn btn-secondary ms-2" title="Add new document">
+                    <a sec:authorize="hasAnyRole('ADMIN','ARCHIVIST')" th:href="@{/documents/add}" type="button" class="btn btn-primary ms-2" title="Add new document">
                         <span class="d-none d-md-block"><i class="fa-solid fa-plus"></i> Add Document</span>
                         <span class="d-md-none"><i class="fa-solid fa-plus"></i> Add</span>
                     </a>
@@ -34,11 +35,12 @@
         </span>
 
         <div th:if="${!documents.isEmpty()}" class="table-responsive text-nowrap text-center">
-            <table class="table table-bordered">
+            <table class="table table-hover table-bordered">
                 <thead class="table-dark">
                 <tr>
                     <th>Decimal number</th>
-                    <th>Symbol</th>
+                    <th>Name</th>
+                    <th>Inv. number</th>
                     <th>Status</th>
                     <th>Type</th>
                     <th>Original holder</th>
@@ -47,9 +49,10 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="document : ${documents}" th:id="'row-' + ${document.id}" class="table-row">
-                    <td th:text="${document.decimalNumber}" th:classappend="${document.annulled ? 'text-danger' : ''}"></td>
-                    <td th:text="${document.symbol}"></td>
+                <tr th:each="document : ${documents}" th:id="'row-' + ${document.id}" class="table-row" th:classappend="${document.annulled ? 'text-danger' : ''}">
+                    <td th:utext="${document.decimalNumber + (document.isSecret() ? ' <span class=&quot;badge bg-danger rounded-circle&quot;>S</span>' : '')}"></td>
+                    <td class="text-truncate" th:text="${document.name}" style="max-width: 150px;"></td>
+                    <td th:text="${document.inventoryNumber}"></td>
                     <td th:text="${document.status}"></td>
                     <td th:text="${document.type}"></td>
                     <td th:text="${document.originalHolder.name}"></td>

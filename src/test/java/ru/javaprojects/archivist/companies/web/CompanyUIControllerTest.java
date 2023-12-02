@@ -33,8 +33,10 @@ class CompanyUIControllerTest extends AbstractControllerTest {
     private static final String COMPANIES_CREATE_URL = COMPANIES_URL + "/create";
     private static final String COMPANIES_EDIT_FORM_URL = COMPANIES_URL + "/edit/";
     private static final String COMPANIES_UPDATE_URL = COMPANIES_URL + "/update";
+    private static final String COMPANIES_URL_SLASH = COMPANIES_URL + "/";
 
     private static final String COMPANIES_VIEW = "companies/companies";
+    private static final String COMPANY_VIEW = "companies/company";
     private static final String COMPANIES_FORM_VIEW = "companies/company-form";
 
     @Autowired
@@ -76,6 +78,32 @@ class CompanyUIControllerTest extends AbstractControllerTest {
     void getAllUnAuthorized() throws Exception {
         perform(MockMvcRequestBuilders.get(COMPANIES_URL)
                 .params(getPageableParams()))
+                .andExpect(status().isFound())
+                .andExpect(result ->
+                        assertTrue(Objects.requireNonNull(result.getResponse().getRedirectedUrl()).endsWith(LOGIN_URL)));
+    }
+
+    @Test
+    @WithUserDetails(ARCHIVIST_MAIL)
+    void get() throws Exception {
+        perform(MockMvcRequestBuilders.get(COMPANIES_URL_SLASH + COMPANY1_ID))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists(COMPANY_ATTRIBUTE))
+                .andExpect(view().name(COMPANY_VIEW))
+                .andExpect(result ->
+                        COMPANY_MATCHER.assertMatch((Company) Objects.requireNonNull(result.getModelAndView()).getModel().get(COMPANY_ATTRIBUTE), company1));
+    }
+
+    @Test
+    @WithUserDetails(ARCHIVIST_MAIL)
+    void getNotFound() throws Exception {
+        perform(MockMvcRequestBuilders.get(COMPANIES_URL_SLASH + NOT_FOUND))
+                .andExpect(exception().exceptionPage(ENTITY_NOT_FOUND, NotFoundException.class));
+    }
+
+    @Test
+    void getUnAuthorized() throws Exception {
+        perform(MockMvcRequestBuilders.get(COMPANIES_URL_SLASH + COMPANY1_ID))
                 .andExpect(status().isFound())
                 .andExpect(result ->
                         assertTrue(Objects.requireNonNull(result.getResponse().getRedirectedUrl()).endsWith(LOGIN_URL)));
@@ -214,7 +242,7 @@ class CompanyUIControllerTest extends AbstractControllerTest {
                 .params(CompanyTestData.getUpdatedParams())
                 .with(csrf()))
                 .andExpect(status().isFound())
-                .andExpect(redirectedUrl(COMPANIES_URL))
+                .andExpect(redirectedUrl(COMPANIES_URL_SLASH + COMPANY1_ID))
                 .andExpect(flash().attribute(ACTION, "Company " + updatedCompany.getName() + " was updated"));
         COMPANY_MATCHER.assertMatch(service.get(COMPANY1_ID), updatedCompany);
     }
@@ -231,7 +259,7 @@ class CompanyUIControllerTest extends AbstractControllerTest {
                 .params(updatedParams)
                 .with(csrf()))
                 .andExpect(status().isFound())
-                .andExpect(redirectedUrl(COMPANIES_URL))
+                .andExpect(redirectedUrl(COMPANIES_URL_SLASH + COMPANY1_ID))
                 .andExpect(flash().attribute(ACTION, "Company " + updatedCompany.getName() + " was updated"));
         COMPANY_MATCHER.assertMatch(service.get(COMPANY1_ID), updatedCompany);
     }

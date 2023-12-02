@@ -66,15 +66,15 @@ function generateContactPersonRowHtml() {
                     </div>
                     </div>
                 </div>
-                <div class="col-lg-1">
+                <div class="col-lg-1 text-end">
                     <div class="mb-4">
                         <span class="d-lg-none d-grid">
-                           <button type="button" id="deleteContactBtn-${contactPersonRowIndex}" class="btn btn-danger btn-del-contact-person" title="Delete contact">
+                           <button type="button" id="deleteContactBtn-${contactPersonRowIndex}" class="btn btn-sm btn-danger btn-del-contact-person" title="Delete contact">
                                <i class="fa-solid fa-arrow-up"></i> Delete contact <i class="fa-solid fa-arrow-up"></i>
                            </button>
                         </span>
                         <span class="d-none d-lg-block">
-                            <button type="button" id="deleteContactBtn-${contactPersonRowIndex}" class="btn btn-danger btn-del-contact-person" title="Delete contact">
+                            <button type="button" id="deleteContactBtn-${contactPersonRowIndex}" class="btn btn-sm btn-danger btn-del-contact-person mt-1" title="Delete contact">
                                 Delete
                             </button>
                         </span>

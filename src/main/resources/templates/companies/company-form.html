@@ -12,7 +12,7 @@
                         <a th:href="@{/companies}" type="button" class="btn-close pb-0" aria-label="Close"></a>
                     </div>
                     <div class="card-body px-3 px-md-5 pb-3 pb-md-5 pt-0 text-center">
-                        <h3 class="mb-4" th:text="${company.id == null} ? 'Create Company' : 'Edit Company: ' + ${company.name}">Create/Edit Company</h3>
+                        <h3 class="mb-4" th:text="${company.id == null} ? 'New company' : 'Editing: ' + ${company.name}">Create/Edit Company</h3>
                         <form th:action="${company.id == null} ? @{/companies/create} : @{/companies/update}" method="post" th:object="${company}">
                             <input type="hidden" th:field="*{id}">
                             <div class="row">
@@ -196,11 +196,15 @@
 
                             <!-- Contact persons block -->
                             <div class="text-start mb-3">
-                                <h4 class="text-secondary">Contact persons</h4>
-                                <button type="button" class="btn btn-primary" onclick="addContactPersonRow()">
-                                    <i class="fa-solid fa-address-book"></i> Add contact
-                                </button>
-                                <div id="contactPersonBlock" class="mt-3">
+                                <div class="row">
+                                    <div class="col-7">
+                                        <h4 class="text-secondary">Contact persons</h4>
+                                    </div>
+                                    <div class="col-5 text-end">
+                                        <button type="button" class="btn btn-sm btn-primary" onclick="addContactPersonRow()">Add contact</button>
+                                    </div>
+                                </div>
+                                <div id="contactPersonBlock" class="mt-2">
                                     <div th:each="contactPerson, itemStat : *{contactPersons}" class="row contact-person-row">
                                         <div class="col-lg-3">
                                             <div class="mb-4">
@@ -277,15 +281,15 @@
                                                 </span>
                                             </div>
                                         </div>
-                                        <div class="col-lg-1">
+                                        <div class="col-lg-1 text-end">
                                             <div class="mb-4">
                                                 <span class="d-lg-none d-grid">
-                                                   <button type="button" th:id="${'deleteContactBtn-' + itemStat.index}" class="btn btn-danger btn-del-contact-person" title="Delete contact">
+                                                   <button type="button" th:id="${'deleteContactBtn-' + itemStat.index}" class="btn btn-sm btn-danger btn-del-contact-person" title="Delete contact">
                                                        <i class="fa-solid fa-arrow-up"></i> Delete contact <i class="fa-solid fa-arrow-up"></i>
                                                    </button>
                                                 </span>
                                                 <span class="d-none d-lg-block py-1">
-                                                    <button type="button" th:id="${'deleteContactBtn-' + itemStat.index}" class="btn btn-danger btn-del-contact-person" title="Delete contact">
+                                                    <button type="button" th:id="${'deleteContactBtn-' + itemStat.index}" class="btn btn-sm btn-danger btn-del-contact-person mt-1" title="Delete contact">
                                                         Delete
                                                     </button>
                                                 </span>
@@ -294,13 +298,10 @@
                                     </div>
                                 </div>
                             </div>
-
-                            <span class="d-md-none d-grid">
-                                <button class="btn btn-success btn-lg" type="submit" th:text="${company.id == null} ? 'Create Company' : 'Save Company'">Create/Save company</button>
-                            </span>
-                            <span class="d-none d-md-block">
-                                <button class="btn btn-success btn-lg" type="submit" th:text="${company.id == null} ? 'Create Company' : 'Save Company'">Create/Save company</button>
-                            </span>
+                            <div class="text-end">
+                                <a th:if="${!company.isNew()}" th:href="@{'/companies/' + ${company.id}}" class="btn btn-secondary" type="button">Cancel</a>
+                                <button class="btn btn-success" type="submit" th:text="${company.isNew()} ? 'Create company' : 'Save company'">Create/Save company</button>
+                            </div>
                         </form>
                     </div>
                 </div>

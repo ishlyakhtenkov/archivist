@@ -1,3 +1,14 @@
+window.onload = function() {
+    checkActionHappened();
+};
+
+function checkActionHappened() {
+    let actionSpan = $("#actionSpan");
+    if (actionSpan.length) {
+        successToast(`${actionSpan.data('action')}`);
+    }
+}
+
 $.ajaxSetup({
     beforeSend: function(xhr, settings) {
         if (!csrfSafeMethod(settings.type) && !this.crossDomain) {

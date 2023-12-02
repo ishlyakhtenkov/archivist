@@ -12,7 +12,7 @@
                         <a th:href="@{/users}" type="button" class="btn-close" aria-label="Close"></a>
                     </div>
                     <div class="card-body px-3 px-md-5 pb-3 pb-md-5 pt-0 text-center">
-                        <h3 class="mb-3">Create User</h3>
+                        <h3 class="mb-3">New user</h3>
                         <form th:action="@{/users/create}" method="post" th:object="${user}">
                             <div class="mb-4">
                                 <div class="input-group">
@@ -126,10 +126,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="d-grid gap-2">
-                                    <button class="btn btn-success btn-lg" type="submit" id="submitWithPassButton">Create user</button>
-                                </div>
+                            <div class="text-end">
+                                <button class="btn btn-success" type="submit" id="submitWithPassButton">Create user</button>
                             </div>
                         </form>
                     </div>

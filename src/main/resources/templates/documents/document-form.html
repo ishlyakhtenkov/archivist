@@ -13,7 +13,7 @@
                         <a th:href="@{/documents}" type="button" class="btn-close text-end" aria-label="Close"></a>
                     </div>
                     <div class="card-body px-3 px-md-5 pb-3 pb-md-5 pt-0 text-center">
-                        <h3 class="mb-4" th:text="${document.id == null} ? 'New document card' : 'Edit: ' + ${document.decimalNumber}">Create/Edit Document</h3>
+                        <h3 class="mb-4" th:text="${document.id == null} ? 'New document' : 'Editing: ' + ${document.decimalNumber}">Create/Edit Document</h3>
                         <nav>
                             <div class="nav nav-tabs" role="tablist">
                                 <button class="nav-link active" id="documentGeneralTabButton" data-bs-toggle="tab" data-bs-target="#documentGeneralTab" type="button" role="tab" aria-controls="nav-general" aria-selected="true">General</button>

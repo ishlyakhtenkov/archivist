@@ -3,8 +3,9 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       th:with="activeMenuItem='Companies'" lang="en">
 
-<th:block th:replace="~{fragments/main::page(title='Archivist - companies',appMain=~{::appMain})}">
+<th:block th:replace="~{fragments/main::page(title='Archivist - companies',appMain=~{::appMain}, ownScript=~{::ownScript})}">
     <appMain>
+        <span th:if="${action != null}" th:data-action="${action}" th:id="actionSpan"></span>
         <!-- Company details card -->
         <div class="row d-flex justify-content-center align-items-center">
             <div class="col-12">
@@ -13,7 +14,7 @@
                         <a th:href="@{/companies}" type="button" class="btn-close pb-0" aria-label="Close"></a>
                     </div>
                     <div class="card-body px-3 px-md-5 pb-3 pb-md-5 pt-0 text-center">
-                        <h3 class="mb-4" th:text="'Company details: ' + ${company.name}">Company details</h3>
+                        <h3 class="mb-4" th:text="${company.name}">Company name</h3>
                         <div th:object="${company}">
                             <div class="row">
                                 <div class="col-lg-4">
@@ -167,17 +168,17 @@
                                     </div>
                                 </div>
                             </div>
-
-                            <span sec:authorize="hasAnyRole('ADMIN','ARCHIVIST')" class="d-md-none d-grid">
-                                <a th:href="@{'/companies/edit/' + ${company.id}}" class="btn btn-success btn-lg" type="button">Edit company</a>
-                            </span>
-                            <span sec:authorize="hasAnyRole('ADMIN','ARCHIVIST')" class="d-none d-md-block">
-                                <a th:href="@{'/companies/edit/' + ${company.id}}" class="btn btn-success btn-lg" type="button">Edit company</a>
-                            </span>
+                            <div sec:authorize="hasAnyRole('ADMIN','ARCHIVIST')" class="text-end">
+                                <a th:href="@{'/companies/edit/' + ${company.id}}" class="btn btn-warning" type="button">Edit company</a>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </appMain>
+
+    <ownScript>
+        <script src="/js/common.js?v=1"></script>
+    </ownScript>
 </th:block>

@@ -90,7 +90,7 @@
                                         </div>
                                         <div class="col-xxl-4 d-none d-xxl-block">
                                             <div class="form-check mb-3 mt-xxl-2">
-                                                <input type="checkbox" th:field="*{secret}" class="form-check-input" disabled id="secretCheckbox"> Secret
+                                                <input type="checkbox" th:field="*{secret}" class="form-check-input" th:classappend="*{secret} == false ? 'bg-light' : ''" disabled id="secretCheckbox"> Secret
                                             </div>
                                         </div>
                                     </div>
@@ -121,15 +121,15 @@
                                         <textarea id="commentTextarea" th:field="*{comment}" class="form-control bg-light" disabled title="Comment"/>
                                     </div>
                                 </div>
-                                <div sec:authorize="hasAnyRole('ADMIN','ARCHIVIST')" class="float-end">
-                                    <a th:href="@{'/documents/edit/' + ${document.id}}" class="btn btn-sm btn-warning" type="button">Edit card</a>
+                                <div sec:authorize="hasAnyRole('ADMIN','ARCHIVIST')" class="text-end">
+                                    <a th:href="@{'/documents/edit/' + ${document.id}}" class="btn btn-warning" type="button">Edit card</a>
                                 </div>
                             </div>
 
                             <!-- Changes Tab-->
                             <div class="tab-pane fade mt-2" id="documentChangesTab" role="tabpanel" aria-labelledby="nav-changes-tab" tabindex="0">
                                 <div sec:authorize="hasAnyRole('ADMIN','ARCHIVIST')" class="text-end" id="addChangeButtonDiv">
-                                    <button class="btn btn-sm btn-secondary" title="Add change" onclick="showInputChangeDiv()">Add change</button>
+                                    <button class="btn btn-sm btn-primary" title="Add change" onclick="showInputChangeDiv()">Add change</button>
                                 </div>
                                 <div id="inputChangeDiv" hidden>
                                     <form onsubmit="return false;">
@@ -170,7 +170,7 @@
                             <!-- Applicability Tab-->
                             <div class="tab-pane fade mt-2" id="documentApplicabilityTab" role="tabpanel" aria-labelledby="nav-applicability-tab" tabindex="0">
                                 <div sec:authorize="hasAnyRole('ADMIN','ARCHIVIST')" class="text-end" id="addApplicabilityButtonDiv">
-                                    <button class="btn btn-sm btn-secondary" title="Add applicability" onclick="showInputApplicabilityDiv()">Add applicability</button>
+                                    <button class="btn btn-sm btn-primary" title="Add applicability" onclick="showInputApplicabilityDiv()">Add applicability</button>
                                 </div>
                                 <div id="inputApplicabilityDiv" hidden>
                                     <form onsubmit="return false;">
@@ -210,7 +210,7 @@
                             <!-- Subscribers Tab-->
                             <div class="tab-pane fade mt-2" id="documentSubscribersTab" role="tabpanel" aria-labelledby="nav-subscribers-tab" tabindex="0">
                                 <div sec:authorize="hasAnyRole('ADMIN','ARCHIVIST')" class="text-end mb-1">
-                                    <button class="btn btn-sm btn-secondary" title="Add sending" data-bs-toggle="modal" data-bs-target="#addSendingModal">Add sending</button>
+                                    <button class="btn btn-sm btn-primary" title="Add sending" data-bs-toggle="modal" data-bs-target="#addSendingModal">Add sending</button>
                                 </div>
                                 <div class="row row-cols-1 row-cols-md-2 row-cols-xxl-3">
                                     <div class="col" id="subscriberColumn1"></div>
@@ -222,7 +222,7 @@
                             <!-- Content Tab-->
                             <div class="tab-pane fade mt-2" id="documentContentTab" role="tabpanel" aria-labelledby="nav-content-tab" tabindex="0">
                                 <div sec:authorize="hasAnyRole('ADMIN','ARCHIVIST')" class="text-end" id="addContentButtonDiv">
-                                    <button class="btn btn-sm btn-secondary" title="Add content" onclick="showInputContentDiv()">Add content</button>
+                                    <button class="btn btn-sm btn-primary" title="Add content" onclick="showInputContentDiv()">Add content</button>
                                 </div>
                                 <div id="inputContentDiv" hidden>
                                     <form onsubmit="return false;">
@@ -419,10 +419,7 @@
                 </div>
             </div>
         </div>
-
-
     </appMain>
-
 
     <ownScript>
         <script src="/js/common.js?v=1"></script>

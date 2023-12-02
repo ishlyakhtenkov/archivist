@@ -8,7 +8,6 @@ const companySelector = $('#companySelector');
 $(window).on('load', () => init());
 
 function init() {
-    checkActionHappened();
     $('#documentChangesTabButton').on('shown.bs.tab', () => {
         cancelAddChange();
         getChanges();
@@ -39,13 +38,6 @@ function init() {
         $(e.currentTarget).find('#deleteContentModalContentId').val(id);
         $(e.currentTarget).find('#deleteContentModalContentChangeNumber').val(changeNumber);
     });
-}
-
-function checkActionHappened() {
-    let actionSpan = $("#actionSpan");
-    if (actionSpan.length) {
-        successToast(`${actionSpan.data('action')}`);
-    }
 }
 
 function getApplicabilities() {

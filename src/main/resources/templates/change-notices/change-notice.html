@@ -86,7 +86,7 @@
                                 </table>
                             </div>
                         </div>
-                        <div sec:authorize="hasAnyRole('ADMIN','ARCHIVIST')" class="float-end">
+                        <div sec:authorize="hasAnyRole('ADMIN','ARCHIVIST')" class="text-end">
                             <a th:href="@{'/change-notices/edit/' + ${changeNotice.id}}" class="btn btn-warning" type="button">Edit card</a>
                         </div>
                     </div>

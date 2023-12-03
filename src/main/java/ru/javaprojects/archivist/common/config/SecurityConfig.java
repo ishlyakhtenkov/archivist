@@ -40,42 +40,35 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests()
-                .requestMatchers("/users/**").hasRole(Role.ADMIN.name())
-                .requestMatchers("/companies/add", "/companies/create", "/companies/edit/**", "/companies/update")
-                .hasAnyRole(Role.ADMIN.name(), Role.ARCHIVIST.name())
-                .requestMatchers(HttpMethod.DELETE, "/companies/**").hasAnyRole(Role.ADMIN.name(), Role.ARCHIVIST.name())
-                .requestMatchers("/departments/add", "/departments/create", "/departments/edit/**", "/departments/update", "/departments/delete/**")
-                .hasAnyRole(Role.ADMIN.name(), Role.ARCHIVIST.name())
-                .requestMatchers("/documents/add", "/documents/edit/**", "/documents/delete/**").hasAnyRole(Role.ADMIN.name(), Role.ARCHIVIST.name())
-                .requestMatchers(HttpMethod.POST, "/documents").hasAnyRole(Role.ADMIN.name(), Role.ARCHIVIST.name())
-                .requestMatchers(HttpMethod.DELETE, "/documents/**").hasAnyRole(Role.ADMIN.name(), Role.ARCHIVIST.name())
-                .requestMatchers("/profile/forgotPassword", "/profile/resetPassword").anonymous()
-                .requestMatchers(HttpMethod.POST, "/documents/applicabilities").hasAnyRole(Role.ADMIN.name(), Role.ARCHIVIST.name())
-                .requestMatchers(HttpMethod.DELETE, "/documents/applicabilities/**").hasAnyRole(Role.ADMIN.name(), Role.ARCHIVIST.name())
-                .requestMatchers(HttpMethod.POST, "/documents/content").hasAnyRole(Role.ADMIN.name(), Role.ARCHIVIST.name())
-                .requestMatchers(HttpMethod.DELETE, "/documents/content/**").hasAnyRole(Role.ADMIN.name(), Role.ARCHIVIST.name())
-                .requestMatchers(HttpMethod.POST, "/documents/sendings").hasAnyRole(Role.ADMIN.name(), Role.ARCHIVIST.name())
-                .requestMatchers(HttpMethod.DELETE, "/documents/sendings/**").hasAnyRole(Role.ADMIN.name(), Role.ARCHIVIST.name())
-                .requestMatchers(HttpMethod.PATCH, "/documents/subscribers/**").hasAnyRole(Role.ADMIN.name(), Role.ARCHIVIST.name())
-                .requestMatchers(HttpMethod.POST, "/documents/changes").hasAnyRole(Role.ADMIN.name(), Role.ARCHIVIST.name())
-                .requestMatchers(HttpMethod.DELETE, "/documents/changes/**").hasAnyRole(Role.ADMIN.name(), Role.ARCHIVIST.name())
-                .requestMatchers("/change-notices/add", "/change-notices/edit/**").hasAnyRole(Role.ADMIN.name(), Role.ARCHIVIST.name())
-                .requestMatchers(HttpMethod.POST, "/change-notices").hasAnyRole(Role.ADMIN.name(), Role.ARCHIVIST.name())
-                .requestMatchers(HttpMethod.DELETE, "/change-notices/**").hasAnyRole(Role.ADMIN.name(), Role.ARCHIVIST.name())
-                .requestMatchers("/", "/webjars/**", "/css/**", "/images/**", "/js/**").permitAll()
-                .anyRequest().authenticated()
-                .and().formLogin().permitAll()
-                .loginPage("/login")
-                .defaultSuccessUrl("/", true)
-                .and().logout()
-                .logoutUrl("/logout")
-                .logoutSuccessUrl("/")
-                .invalidateHttpSession(true)
-                .clearAuthentication(true)
-                .deleteCookies("JSESSIONID")
-                .and().rememberMe().key("remember-me-key").rememberMeCookieName("archivist-remember-me");
-//                .and().csrf().disable(); //remove
+        http
+                .authorizeHttpRequests((authorizeHttpRequests) ->
+                        authorizeHttpRequests
+                                .requestMatchers("/users/**").hasRole(Role.ADMIN.name())
+                                .requestMatchers("/profile/forgotPassword", "/profile/resetPassword").anonymous()
+                                .requestMatchers(HttpMethod.POST).hasAnyRole(Role.ADMIN.name(), Role.ARCHIVIST.name())
+                                .requestMatchers(HttpMethod.PATCH, "/documents/subscribers/**").hasAnyRole(Role.ADMIN.name(), Role.ARCHIVIST.name())
+                                .requestMatchers(HttpMethod.DELETE).hasAnyRole(Role.ADMIN.name(), Role.ARCHIVIST.name())
+                                .requestMatchers(HttpMethod.GET, "*/edit/**", "*/add").hasAnyRole(Role.ADMIN.name(), Role.ARCHIVIST.name())
+                                .requestMatchers("/", "/webjars/**", "/css/**", "/images/**", "/js/**").permitAll()
+                                .anyRequest().authenticated()
+                )
+                .formLogin((formLogin) ->
+                        formLogin
+                                .permitAll()
+                                .loginPage("/login")
+                                .defaultSuccessUrl("/", true)
+                )
+                .logout((logout) ->
+                        logout
+                                .logoutUrl("/logout")
+                                .logoutSuccessUrl("/")
+                                .invalidateHttpSession(true)
+                                .clearAuthentication(true)
+                                .deleteCookies("JSESSIONID")
+                ).rememberMe((rememberMe) ->
+                        rememberMe
+                                .key("remember-me-key")
+                                .rememberMeCookieName("archivist-remember-me"));
         return http.build();
     }
 }

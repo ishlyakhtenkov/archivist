@@ -34,8 +34,8 @@ public class AdminUserUIControllerTest extends AbstractControllerTest {
     private static final String USERS_UPDATE_URL = USERS_URL + "/update";
 
     private static final String USERS_VIEW = "users/users";
-    private static final String USER_ADD_VIEW = "users/user-add";
-    private static final String USER_EDIT_VIEW = "users/user-edit";
+    private static final String USER_ADD_VIEW = "users/user-add-form";
+    private static final String USER_EDIT_VIEW = "users/user-edit-form";
 
     @Autowired
     private UserService service;

@@ -67,10 +67,10 @@ public class DocumentUIController {
     }
 
     @GetMapping("/{id}")
-    public String documentDetails(@PathVariable long id, Model model) {
-        log.info("show document details {}", id);
+    public String get(@PathVariable long id, Model model) {
+        log.info("get {}", id);
         model.addAttribute("document", service.get(id));
-        return "documents/document-details";
+        return "documents/document";
     }
 
     @GetMapping("/add")

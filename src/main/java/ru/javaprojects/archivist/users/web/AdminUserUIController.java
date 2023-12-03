@@ -63,14 +63,14 @@ public class AdminUserUIController {
         log.info("show user add form");
         model.addAttribute("roles", Role.values());
         model.addAttribute("user", new User());
-        return "users/user-add";
+        return "users/user-add-form";
     }
 
     @PostMapping("/create")
     public String create(@Valid User user, BindingResult result, Model model, RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
             model.addAttribute("roles", Role.values());
-            return "users/user-add";
+            return "users/user-add-form";
         }
         log.info("create {}", user);
         checkNew(user);
@@ -84,14 +84,14 @@ public class AdminUserUIController {
         log.info("show user={} edit form", id);
         model.addAttribute("roles", Role.values());
         model.addAttribute("userTo", asTo(service.get(id)));
-        return "users/user-edit";
+        return "users/user-edit-form";
     }
 
     @PostMapping("/update")
     public String update(@Valid UserTo userTo, BindingResult result, Model model, RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
             model.addAttribute("roles", Role.values());
-            return "users/user-edit";
+            return "users/user-edit-form";
         }
         log.info("update {}", userTo);
         service.update(userTo);

@@ -37,7 +37,7 @@ class DocumentUIControllerTest extends AbstractControllerTest {
     static final String DOCUMENTS_URL_SLASH = DOCUMENTS_URL + "/";
 
     private static final String DOCUMENTS_VIEW = "documents/documents";
-    private static final String DOCUMENTS_DETAILS_VIEW = "documents/document-details";
+    private static final String DOCUMENT_VIEW = "documents/document";
     private static final String DOCUMENTS_FORM_VIEW = "documents/document-form";
 
     @Autowired
@@ -90,7 +90,7 @@ class DocumentUIControllerTest extends AbstractControllerTest {
         ResultActions actions = perform(MockMvcRequestBuilders.get(DOCUMENTS_URL_SLASH + DOCUMENT1_ID))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists(DOCUMENT_ATTRIBUTE))
-                .andExpect(view().name(DOCUMENTS_DETAILS_VIEW));
+                .andExpect(view().name(DOCUMENT_VIEW));
         Document document = (Document) Objects.requireNonNull(actions.andReturn().getModelAndView()).getModel().get(DOCUMENT_ATTRIBUTE);
         DOCUMENT_MATCHER.assertMatch(document, document1);
         COMPANY_MATCHER.assertMatchIgnoreFields(document.getOriginalHolder(), company3, "contactPersons");

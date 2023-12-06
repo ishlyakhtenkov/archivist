@@ -17,9 +17,9 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.javaprojects.archivist.CommonTestData.*;
 import static ru.javaprojects.archivist.common.config.SecurityConfig.PASSWORD_ENCODER;
+import static ru.javaprojects.archivist.common.web.PathUIController.LOGIN_URL;
 import static ru.javaprojects.archivist.users.UserTestData.*;
 import static ru.javaprojects.archivist.users.web.AdminUserUIController.USERS_URL;
-import static ru.javaprojects.archivist.users.web.LoginController.LOGIN_URL;
 
 public class AdminUserRestControllerTest extends AbstractControllerTest {
     private static final String USERS_URL_SLASH = USERS_URL + "/";

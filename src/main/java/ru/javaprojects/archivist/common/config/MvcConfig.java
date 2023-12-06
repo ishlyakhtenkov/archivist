@@ -9,8 +9,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.handler.WebRequestHandlerInterceptorAdapter;
-import ru.javaprojects.archivist.ArchivistApplication;
-import ru.javaprojects.archivist.ArchivistApplication.AuthUser;
+import ru.javaprojects.archivist.users.AuthUser;
 
 @EnableAutoConfiguration
 @Configuration
@@ -21,7 +20,7 @@ public class MvcConfig implements WebMvcConfigurer {
         @Override
         public void postHandle(WebRequest request, ModelMap model) {
             if (model != null) {
-                AuthUser authUser = ArchivistApplication.AuthUser.safeGet();
+                AuthUser authUser = AuthUser.safeGet();
                 if (authUser != null) {
                     model.addAttribute("authUser", authUser);
                 }

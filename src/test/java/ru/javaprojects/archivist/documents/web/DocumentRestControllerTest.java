@@ -43,11 +43,11 @@ import static ru.javaprojects.archivist.CommonTestData.*;
 import static ru.javaprojects.archivist.changenotices.ChangeNoticeTestData.changeNotice2;
 import static ru.javaprojects.archivist.common.error.Constants.*;
 import static ru.javaprojects.archivist.common.util.JsonUtil.writeValue;
+import static ru.javaprojects.archivist.common.web.PathUIController.LOGIN_URL;
 import static ru.javaprojects.archivist.companies.CompanyTestData.*;
 import static ru.javaprojects.archivist.documents.DocumentTestData.*;
 import static ru.javaprojects.archivist.documents.web.DocumentUIController.DOCUMENTS_URL;
 import static ru.javaprojects.archivist.documents.web.DocumentUIControllerTest.DOCUMENTS_URL_SLASH;
-import static ru.javaprojects.archivist.users.web.LoginController.LOGIN_URL;
 
 class DocumentRestControllerTest extends AbstractControllerTest implements ManagesContentFiles {
     private static final String APPLICABILITIES_URL = DOCUMENTS_URL + "/applicabilities";

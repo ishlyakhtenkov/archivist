@@ -15,10 +15,10 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.javaprojects.archivist.CommonTestData.*;
+import static ru.javaprojects.archivist.common.web.PathUIController.LOGIN_URL;
 import static ru.javaprojects.archivist.companies.CompanyTestData.COMPANY1_ID;
 import static ru.javaprojects.archivist.companies.CompanyTestData.COMPANY2_ID;
 import static ru.javaprojects.archivist.companies.web.CompanyUIController.COMPANIES_URL;
-import static ru.javaprojects.archivist.users.web.LoginController.LOGIN_URL;
 
 public class CompanyRestControllerTest extends AbstractControllerTest {
     private static final String COMPANIES_URL_SLASH = COMPANIES_URL + "/";

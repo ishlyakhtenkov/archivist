@@ -11,7 +11,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import ru.javaprojects.archivist.ArchivistApplication;
+import ru.javaprojects.archivist.users.AuthUser;
 import ru.javaprojects.archivist.users.Role;
 import ru.javaprojects.archivist.users.User;
 import ru.javaprojects.archivist.users.UserRepository;
@@ -34,7 +34,7 @@ public class SecurityConfig {
         return email -> {
             User user = repository.findByEmailIgnoreCase(email)
                     .orElseThrow(() -> new UsernameNotFoundException("User '" + email + "' was not found"));
-            return new ArchivistApplication.AuthUser(user);
+            return new AuthUser(user);
         };
     }
 

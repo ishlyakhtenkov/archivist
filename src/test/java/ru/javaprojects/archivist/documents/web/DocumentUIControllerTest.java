@@ -23,13 +23,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static ru.javaprojects.archivist.AbstractControllerTest.ExceptionResultMatchers.exception;
 import static ru.javaprojects.archivist.CommonTestData.*;
 import static ru.javaprojects.archivist.common.error.Constants.DUPLICATE_ERROR_CODE;
+import static ru.javaprojects.archivist.common.web.PathUIController.LOGIN_URL;
 import static ru.javaprojects.archivist.companies.CompanyTestData.COMPANY_MATCHER;
 import static ru.javaprojects.archivist.companies.CompanyTestData.company3;
 import static ru.javaprojects.archivist.departments.DepartmentTestData.DEPARTMENT_MATCHER;
 import static ru.javaprojects.archivist.departments.DepartmentTestData.department1;
 import static ru.javaprojects.archivist.documents.DocumentTestData.*;
 import static ru.javaprojects.archivist.documents.web.DocumentUIController.DOCUMENTS_URL;
-import static ru.javaprojects.archivist.users.web.LoginController.LOGIN_URL;
 
 class DocumentUIControllerTest extends AbstractControllerTest {
     private static final String DOCUMENTS_ADD_FORM_URL = DOCUMENTS_URL + "/add";

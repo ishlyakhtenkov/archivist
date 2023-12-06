@@ -50,7 +50,7 @@
                 </thead>
                 <tbody>
                 <tr th:each="document : ${documents}" th:id="'row-' + ${document.id}" class="table-row" th:classappend="${document.annulled ? 'text-danger' : ''}">
-                    <td th:utext="${document.decimalNumber + (document.isSecret() ? ' <span class=&quot;badge bg-danger rounded-circle&quot;>S</span>' : '')}"></td>
+                    <td th:utext="${document.decimalNumber + (document.isSecret() ? ' <span class=&quot;badge bg-danger rounded-circle&quot; title=&quot;Secret&quot;>S</span>' : '')}"></td>
                     <td class="text-truncate" th:text="${document.name}" style="max-width: 150px;"></td>
                     <td th:text="${document.inventoryNumber}"></td>
                     <td th:text="${document.status}"></td>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<!--/*@thymesVar id="postTo" type="ru.javaprojects.archivist.posts.PostTo"*/-->
+
+<th:block th:replace="~{fragments/main::page(title='Archivist - posts',appMain=~{::appMain}, ownScript=~{::ownScript})}">
+    <appMain>
+        <!-- Create/Edit post card -->
+        <div class="row d-flex justify-content-center align-items-center">
+            <div class="col-12 col-xxl-10">
+                <div class="card shadow-2-strong" style="border-radius: 1rem;">
+                    <div class="text-end mt-3 me-3">
+                        <a th:href="@{/}" type="button" class="btn-close" aria-label="Close"></a>
+                    </div>
+                    <div class="card-body px-3 px-md-5 pb-3 pb-md-5 pt-0 text-center">
+                        <h3 class="mb-4" th:text="${postTo.isNew()} ? 'New post' : 'Editing: ' + ${postTo.title}">Create/Edit Post</h3>
+                        <form th:action="@{/posts}" method="post" th:object="${postTo}">
+                            <input type="hidden" th:field="*{id}">
+                            <div class="mb-4">
+                                <div class="form-floating">
+                                    <input type="text" id="postTitleInput" th:field="*{title}"
+                                           th:class="${#fields.hasErrors('title')} ? 'form-control is-invalid' : 'form-control'"
+                                           required placeholder="Title" title="Title" aria-label="Title" aria-describedby="titleAddon"/>
+                                    <label for="postTitleInput" class="text-muted">Title</label>
+                                </div>
+                                <span class="help-block" th:if="${#fields.hasErrors('title')}">
+                                    <ul>
+                                        <li class="text-danger text-start"
+                                            th:each="err : ${#fields.errors('title')}" th:text="${err}"/>
+                                    </ul>
+                                </span>
+                            </div>
+                            <div class="mb-3">
+                                <div class="form-floating">
+                                    <textarea id="postContentInput" th:field="*{content}" th:class="${#fields.hasErrors('content')} ? 'form-control is-invalid' : 'form-control'"
+                                              placeholder="Content" title="Content" style="height: 200px; white-space: pre-wrap;" required></textarea>
+                                    <label for="postContentInput" class="text-muted">Content</label>
+                                </div>
+                                <span class="help-block" th:if="${#fields.hasErrors('content')}">
+                                    <ul>
+                                        <li class="text-danger text-start"
+                                            th:each="err : ${#fields.errors('content')}" th:text="${err}"/>
+                                    </ul>
+                                </span>
+                            </div>
+                            <div class="form-check text-start mb-1">
+                                <input type="checkbox" th:field="*{forAuthOnly}" class="form-check-input" style="cursor: pointer;" id="forAuthOnlyCheckbox">
+                                <label class="form-check-label" for="forAuthOnlyCheckbox">For authenticated users only</label>
+                            </div>
+                            <div class="text-end">
+                                <a th:if="${!postTo.isNew()}" th:href="@{/}" class="btn btn-secondary" type="button">Cancel</a>
+                                <button class="btn btn-success" th:classappend="${postTo.isNew() ? '' : 'px-3'}" type="submit" th:text="${postTo.isNew()} ? 'Create' : '&nbsp;Save&nbsp;'">Create/Save post</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </appMain>
+</th:block>

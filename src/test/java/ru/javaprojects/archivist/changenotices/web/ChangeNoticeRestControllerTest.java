@@ -22,7 +22,7 @@ import static ru.javaprojects.archivist.CommonTestData.*;
 import static ru.javaprojects.archivist.changenotices.ChangeNoticeTestData.CHANGE_NOTICE_1_ID;
 import static ru.javaprojects.archivist.changenotices.ChangeNoticeTestData.changeNotice1;
 import static ru.javaprojects.archivist.changenotices.web.ChangeNoticeUIControllerTest.CHANGE_NOTICES_URL_SLASH;
-import static ru.javaprojects.archivist.users.web.LoginController.LOGIN_URL;
+import static ru.javaprojects.archivist.common.web.PathUIController.LOGIN_URL;
 
 class ChangeNoticeRestControllerTest extends AbstractControllerTest implements ManagesContentFiles {
 

@@ -19,9 +19,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static ru.javaprojects.archivist.AbstractControllerTest.ExceptionResultMatchers.exception;
 import static ru.javaprojects.archivist.CommonTestData.*;
 import static ru.javaprojects.archivist.common.error.Constants.DUPLICATE_ERROR_CODE;
+import static ru.javaprojects.archivist.common.web.PathUIController.LOGIN_URL;
 import static ru.javaprojects.archivist.departments.DepartmentTestData.*;
 import static ru.javaprojects.archivist.departments.DepartmentUIController.DEPARTMENTS_URL;
-import static ru.javaprojects.archivist.users.web.LoginController.LOGIN_URL;
 
 class DepartmentUIControllerTest extends AbstractControllerTest {
     private static final String DEPARTMENTS_ADD_FORM_URL = DEPARTMENTS_URL + "/add";

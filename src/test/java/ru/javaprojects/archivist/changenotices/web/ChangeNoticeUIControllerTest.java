@@ -33,8 +33,8 @@ import static ru.javaprojects.archivist.CommonTestData.*;
 import static ru.javaprojects.archivist.changenotices.ChangeNoticeTestData.*;
 import static ru.javaprojects.archivist.changenotices.web.ChangeNoticeUIController.CHANGE_NOTICES_URL;
 import static ru.javaprojects.archivist.common.error.Constants.DUPLICATE_ERROR_CODE;
+import static ru.javaprojects.archivist.common.web.PathUIController.LOGIN_URL;
 import static ru.javaprojects.archivist.documents.DocumentTestData.*;
-import static ru.javaprojects.archivist.users.web.LoginController.LOGIN_URL;
 
 class ChangeNoticeUIControllerTest extends AbstractControllerTest implements ManagesContentFiles {
     private static final String CHANGE_NOTICES_ADD_FORM_URL = CHANGE_NOTICES_URL + "/add";

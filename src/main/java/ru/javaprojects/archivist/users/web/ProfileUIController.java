@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import ru.javaprojects.archivist.ArchivistApplication;
+import ru.javaprojects.archivist.users.AuthUser;
 import ru.javaprojects.archivist.users.UserService;
 import ru.javaprojects.archivist.users.password_reset.PasswordResetService;
 import ru.javaprojects.archivist.users.password_reset.PasswordResetTo;
@@ -28,7 +28,7 @@ public class ProfileUIController {
     private final PasswordResetService passwordResetService;
 
     @GetMapping
-    public String profile(@AuthenticationPrincipal ArchivistApplication.AuthUser authUser, Model model) {
+    public String profile(@AuthenticationPrincipal AuthUser authUser, Model model) {
         log.info("show profile {}", authUser.id());
         model.addAttribute("user", userService.get(authUser.id()));
         return "users/profile";

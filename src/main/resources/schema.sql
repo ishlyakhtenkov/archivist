@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS posts;
 DROP TABLE IF EXISTS changes;
 DROP TABLE IF EXISTS change_notices;
 DROP TABLE IF EXISTS sendings;
@@ -210,3 +211,15 @@ CREATE TABLE changes
 );
 CREATE UNIQUE INDEX changes_unique_document_change_notice_idx ON changes (document_id, change_notice_id);
 CREATE UNIQUE INDEX changes_unique_document_change_number_idx ON changes (document_id, change_number);
+
+CREATE TABLE posts
+(
+    id            BIGINT  DEFAULT nextval('global_seq')  PRIMARY KEY,
+    created       TIMESTAMP            NOT NULL,
+    updated       TIMESTAMP            NOT NULL,
+    title         VARCHAR(512)         NOT NULL,
+    content       VARCHAR              NOT NULL,
+    for_auth_only BOOL    DEFAULT TRUE NOT NULL,
+    author_id     BIGINT               NOT NULL,
+    FOREIGN KEY (author_id) REFERENCES users (id) ON DELETE SET NULL
+);

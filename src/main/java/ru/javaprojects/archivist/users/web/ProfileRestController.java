@@ -8,7 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.javaprojects.archivist.ArchivistApplication;
+import ru.javaprojects.archivist.users.AuthUser;
 import ru.javaprojects.archivist.users.UserService;
 import ru.javaprojects.archivist.users.password_reset.PasswordResetService;
 
@@ -23,7 +23,7 @@ public class ProfileRestController {
 
     @PatchMapping("/password")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void changePassword(@RequestParam @Size(min = 5, max = 32) String password, @AuthenticationPrincipal ArchivistApplication.AuthUser authUser) {
+    public void changePassword(@RequestParam @Size(min = 5, max = 32) String password, @AuthenticationPrincipal AuthUser authUser) {
         long id = authUser.id();
         log.info("change password for {}", id);
         userService.changePassword(id, password);

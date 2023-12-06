@@ -26,9 +26,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static ru.javaprojects.archivist.CommonTestData.ADMIN_MAIL;
 import static ru.javaprojects.archivist.CommonTestData.USER_MAIL;
 import static ru.javaprojects.archivist.common.config.SecurityConfig.PASSWORD_ENCODER;
+import static ru.javaprojects.archivist.common.web.PathUIController.LOGIN_URL;
 import static ru.javaprojects.archivist.users.UserTestData.*;
 import static ru.javaprojects.archivist.users.password_reset.PasswordResetService.*;
-import static ru.javaprojects.archivist.users.web.LoginController.LOGIN_URL;
 import static ru.javaprojects.archivist.users.web.ProfileUIController.PROFILE_URL;
 
 public class ProfileRestControllerTest extends AbstractControllerTest {

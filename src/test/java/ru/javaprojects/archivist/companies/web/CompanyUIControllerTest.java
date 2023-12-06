@@ -24,9 +24,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static ru.javaprojects.archivist.AbstractControllerTest.ExceptionResultMatchers.exception;
 import static ru.javaprojects.archivist.CommonTestData.*;
 import static ru.javaprojects.archivist.common.error.Constants.DUPLICATE_ERROR_CODE;
+import static ru.javaprojects.archivist.common.web.PathUIController.LOGIN_URL;
 import static ru.javaprojects.archivist.companies.CompanyTestData.*;
 import static ru.javaprojects.archivist.companies.web.CompanyUIController.COMPANIES_URL;
-import static ru.javaprojects.archivist.users.web.LoginController.LOGIN_URL;
 
 class CompanyUIControllerTest extends AbstractControllerTest {
     private static final String COMPANIES_ADD_FORM_URL = COMPANIES_URL + "/add";

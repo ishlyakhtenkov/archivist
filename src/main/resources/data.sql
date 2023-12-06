@@ -119,6 +119,6 @@ VALUES (100014, 100047, 1),
        (100015, 100049, 2);
 
 INSERT INTO posts (created, updated, title, content, for_auth_only, author_id)
-VALUES ('2020-11-28 11:14:48', '2020-11-28 11:14:48', 'New users registration', 'To apply for an account, please call 1-134-56 or email ishlyakhtenkov@npo.lan.', false, 100001),
-       ('2020-11-30 15:32:25', '2020-11-30 15:32:25', 'Account sharing', STRINGDECODE('Dear users, remind you that sharing your account with other users is strictly prohibited.\nAccounts of users found to be sharing their account will be immediately blocked.'), true, 100001),
-       ('2020-12-04 09:05:34', '2020-12-04 09:05:34', 'Server maintenance', 'Dear users, 05.12.2023 from 10:00 to 12:00 AM the app will be unavailable due to technical works', true, 100001);
+VALUES ('2023-11-28 11:14:48', '2023-11-28 11:14:48', 'New users registration', 'To apply for an account, please call 1-134-56 or email ishlyakhtenkov@npo.lan.', false, 100001),
+       ('2023-11-30 15:32:25', '2023-11-30 15:32:25', 'Account sharing', 'Dear users, remind you that sharing your account with other users is strictly prohibited.', true, 100001),
+       ('2023-12-04 09:05:34', '2023-12-04 09:05:34', 'Server maintenance', 'Dear users, 05.12.2023 from 10:00 to 12:00 AM the app will be unavailable due to technical works', true, 100001);

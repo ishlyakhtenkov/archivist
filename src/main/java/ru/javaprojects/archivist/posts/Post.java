@@ -56,4 +56,14 @@ public class Post extends BaseEntity implements HasId {
         this.content = content;
         this.forAuthOnly = forAuthOnly;
     }
+
+    public Post(Long id, String title, String content, LocalDateTime created, LocalDateTime updated, boolean forAuthOnly, User author) {
+        super(id);
+        this.title = title;
+        this.content = content;
+        this.created = created;
+        this.updated = updated;
+        this.forAuthOnly = forAuthOnly;
+        this.author = author;
+    }
 }

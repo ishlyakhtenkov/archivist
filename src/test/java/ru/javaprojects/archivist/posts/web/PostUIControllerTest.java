@@ -24,7 +24,6 @@ import static ru.javaprojects.archivist.posts.web.PostUIController.POSTS_URL;
 class PostUIControllerTest extends AbstractControllerTest {
     private static final String POSTS_ADD_FORM_URL = POSTS_URL + "/add";
     private static final String POSTS_EDIT_FORM_URL = POSTS_URL + "/edit/";
-
     private static final String POSTS_FORM_VIEW = "posts/post-form";
 
     @Autowired
@@ -33,7 +32,6 @@ class PostUIControllerTest extends AbstractControllerTest {
     @Autowired
     private PostRepository repository;
 
-
     @Test
     @WithUserDetails(ADMIN_MAIL)
     void showAddForm() throws Exception {
@@ -41,9 +39,8 @@ class PostUIControllerTest extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists(POST_TO_ATTRIBUTE))
                 .andExpect(view().name(POSTS_FORM_VIEW))
-                .andExpect(result ->
-                        POST_TO_MATCHER.assertMatch((PostTo) Objects.requireNonNull(result.getModelAndView()).getModel().get(POST_TO_ATTRIBUTE),
-                                new PostTo()));
+                .andExpect(result -> POST_TO_MATCHER.assertMatch((PostTo) Objects.requireNonNull(result.getModelAndView())
+                        .getModel().get(POST_TO_ATTRIBUTE), new PostTo()));
     }
 
     @Test
@@ -76,7 +73,7 @@ class PostUIControllerTest extends AbstractControllerTest {
                 .params((PostTestData.getNewParams()))
                 .with(csrf()))
                 .andExpect(status().isFound())
-                .andExpect(redirectedUrl("/"))
+                .andExpect(redirectedUrl(HOME_URL))
                 .andExpect(flash().attribute(ACTION, "Post " + newPost.getTitle() + " was created"));
         Post created = repository.findAllByTitle(newPost.getTitle()).get(0);
         newPost.setId(created.id());
@@ -112,9 +109,9 @@ class PostUIControllerTest extends AbstractControllerTest {
                 .params(newInvalidParams)
                 .with(csrf()))
                 .andExpect(status().isOk())
-                .andExpect(model().attributeHasFieldErrors(POST_TO_ATTRIBUTE, TITLE_PARAM, CONTENT_PARAM))
+                .andExpect(model().attributeHasFieldErrors(POST_TO_ATTRIBUTE, TITLE, CONTENT))
                 .andExpect(view().name(POSTS_FORM_VIEW));
-        assertTrue(repository.findAllByTitle(newInvalidParams.get(TITLE_PARAM).get(0)).isEmpty());
+        assertTrue(repository.findAllByTitle(newInvalidParams.get(TITLE).get(0)).isEmpty());
     }
 
     @Test
@@ -124,8 +121,8 @@ class PostUIControllerTest extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists(POST_TO_ATTRIBUTE))
                 .andExpect(view().name(POSTS_FORM_VIEW))
-                .andExpect(result ->
-                        POST_TO_MATCHER.assertMatch((PostTo) Objects.requireNonNull(result.getModelAndView()).getModel().get(POST_TO_ATTRIBUTE), PostUtil.asTo(post1)));
+                .andExpect(result -> POST_TO_MATCHER.assertMatch((PostTo) Objects.requireNonNull(result.getModelAndView())
+                        .getModel().get(POST_TO_ATTRIBUTE), PostUtil.asTo(post1)));
     }
 
     @Test
@@ -158,7 +155,7 @@ class PostUIControllerTest extends AbstractControllerTest {
                 .params(PostTestData.getUpdatedParams())
                 .with(csrf()))
                 .andExpect(status().isFound())
-                .andExpect(redirectedUrl("/"))
+                .andExpect(redirectedUrl(HOME_URL))
                 .andExpect(flash().attribute(ACTION, "Post " + updatedPost.getTitle() + " was updated"));
         POST_MATCHER.assertMatch(repository.findById(POST1_ID).orElseThrow(), updatedPost);
     }
@@ -167,7 +164,7 @@ class PostUIControllerTest extends AbstractControllerTest {
     @WithUserDetails(ADMIN_MAIL)
     void updateNotFound() throws Exception {
         MultiValueMap<String, String> updatedParams = PostTestData.getUpdatedParams();
-        updatedParams.set(ID, NOT_FOUND + "");
+        updatedParams.set(ID, String.valueOf(NOT_FOUND));
         perform(MockMvcRequestBuilders.post(POSTS_URL)
                 .params(updatedParams)
                 .with(csrf()))
@@ -202,7 +199,7 @@ class PostUIControllerTest extends AbstractControllerTest {
                 .params(PostTestData.getUpdatedInvalidParams())
                 .with(csrf()))
                 .andExpect(status().isOk())
-                .andExpect(model().attributeHasFieldErrors(POST_TO_ATTRIBUTE, TITLE_PARAM, CONTENT_PARAM))
+                .andExpect(model().attributeHasFieldErrors(POST_TO_ATTRIBUTE, TITLE, CONTENT))
                 .andExpect(view().name(POSTS_FORM_VIEW));
         assertNotEquals(service.get(POST1_ID).getTitle(), PostTestData.getUpdated().getTitle());
     }

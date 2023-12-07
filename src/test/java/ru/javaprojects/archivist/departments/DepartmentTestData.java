@@ -6,7 +6,7 @@ import ru.javaprojects.archivist.MatcherFactory;
 import ru.javaprojects.archivist.common.model.Person;
 
 import static ru.javaprojects.archivist.CommonTestData.ID;
-import static ru.javaprojects.archivist.CommonTestData.NAME_PARAM;
+import static ru.javaprojects.archivist.CommonTestData.NAME;
 
 public class DepartmentTestData {
     public static final MatcherFactory.Matcher<Department> DEPARTMENT_MATCHER =
@@ -24,11 +24,11 @@ public class DepartmentTestData {
     public static final String DEPARTMENTS_ATTRIBUTE = "departments";
     public static final String DEPARTMENT_ATTRIBUTE = "department";
 
-    public static final String BOSS_LAST_NAME_PARAM = "boss.lastName";
-    public static final String BOSS_FIRST_NAME_PARAM = "boss.firstName";
-    public static final String BOSS_MIDDLE_NAME_PARAM = "boss.middleName";
-    public static final String BOSS_PHONE_PARAM = "boss.phone";
-    public static final String BOSS_EMAIL_PARAM = "boss.email";
+    public static final String BOSS_LAST_NAME = "boss.lastName";
+    public static final String BOSS_FIRST_NAME = "boss.firstName";
+    public static final String BOSS_MIDDLE_NAME = "boss.middleName";
+    public static final String BOSS_PHONE = "boss.phone";
+    public static final String BOSS_EMAIL = "boss.email";
 
 
     public static final Department department1 = new Department(DEPARTMENT1_ID, DEPARTMENT1_NAME,
@@ -49,22 +49,22 @@ public class DepartmentTestData {
     public static MultiValueMap<String, String> getNewParams() {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         Department newDepartment = getNew();
-        params.add(NAME_PARAM, newDepartment.getName());
-        params.add(BOSS_LAST_NAME_PARAM, newDepartment.getBoss().getLastName());
-        params.add(BOSS_FIRST_NAME_PARAM, newDepartment.getBoss().getFirstName());
-        params.add(BOSS_MIDDLE_NAME_PARAM, newDepartment.getBoss().getMiddleName());
-        params.add(BOSS_PHONE_PARAM, newDepartment.getBoss().getPhone());
-        params.add(BOSS_EMAIL_PARAM, newDepartment.getBoss().getEmail());
+        params.add(NAME, newDepartment.getName());
+        params.add(BOSS_LAST_NAME, newDepartment.getBoss().getLastName());
+        params.add(BOSS_FIRST_NAME, newDepartment.getBoss().getFirstName());
+        params.add(BOSS_MIDDLE_NAME, newDepartment.getBoss().getMiddleName());
+        params.add(BOSS_PHONE, newDepartment.getBoss().getPhone());
+        params.add(BOSS_EMAIL, newDepartment.getBoss().getEmail());
         return params;
     }
 
     public static MultiValueMap<String, String> getNewInvalidParams() {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add(NAME_PARAM, "A");
-        params.add(BOSS_LAST_NAME_PARAM, "B");
-        params.add(BOSS_FIRST_NAME_PARAM, "");
-        params.add(BOSS_MIDDLE_NAME_PARAM, "A");
-        params.add(BOSS_PHONE_PARAM, "<p>dsfsdf<p>");
+        params.add(NAME, "A");
+        params.add(BOSS_LAST_NAME, "B");
+        params.add(BOSS_FIRST_NAME, "");
+        params.add(BOSS_MIDDLE_NAME, "A");
+        params.add(BOSS_PHONE, "<p>dsfsdf<p>");
         return params;
     }
 
@@ -76,19 +76,19 @@ public class DepartmentTestData {
     public static MultiValueMap<String, String> getUpdatedParams() {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         Department updatedDepartment = getUpdated();
-        params.add(ID, DEPARTMENT1_ID + "");
-        params.add(NAME_PARAM, updatedDepartment.getName());
-        params.add(BOSS_LAST_NAME_PARAM, updatedDepartment.getBoss().getLastName());
-        params.add(BOSS_FIRST_NAME_PARAM, updatedDepartment.getBoss().getFirstName());
-        params.add(BOSS_MIDDLE_NAME_PARAM, updatedDepartment.getBoss().getMiddleName());
-        params.add(BOSS_PHONE_PARAM, updatedDepartment.getBoss().getPhone());
-        params.add(BOSS_EMAIL_PARAM, updatedDepartment.getBoss().getEmail());
+        params.add(ID, String.valueOf(DEPARTMENT1_ID));
+        params.add(NAME, updatedDepartment.getName());
+        params.add(BOSS_LAST_NAME, updatedDepartment.getBoss().getLastName());
+        params.add(BOSS_FIRST_NAME, updatedDepartment.getBoss().getFirstName());
+        params.add(BOSS_MIDDLE_NAME, updatedDepartment.getBoss().getMiddleName());
+        params.add(BOSS_PHONE, updatedDepartment.getBoss().getPhone());
+        params.add(BOSS_EMAIL, updatedDepartment.getBoss().getEmail());
         return params;
     }
 
     public static MultiValueMap<String, String> getUpdatedInvalidParams() {
         MultiValueMap<String, String> params = getNewInvalidParams();
-        params.add(ID, DEPARTMENT1_ID + "");
+        params.add(ID, String.valueOf(DEPARTMENT1_ID));
         return params;
     }
 }

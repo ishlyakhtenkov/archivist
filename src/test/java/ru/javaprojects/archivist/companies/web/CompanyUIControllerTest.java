@@ -34,7 +34,6 @@ class CompanyUIControllerTest extends AbstractControllerTest {
     private static final String COMPANIES_EDIT_FORM_URL = COMPANIES_URL + "/edit/";
     private static final String COMPANIES_UPDATE_URL = COMPANIES_URL + "/update";
     private static final String COMPANIES_URL_SLASH = COMPANIES_URL + "/";
-
     private static final String COMPANIES_VIEW = "companies/companies";
     private static final String COMPANY_VIEW = "companies/company";
     private static final String COMPANIES_FORM_VIEW = "companies/company-form";
@@ -90,8 +89,8 @@ class CompanyUIControllerTest extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists(COMPANY_ATTRIBUTE))
                 .andExpect(view().name(COMPANY_VIEW))
-                .andExpect(result ->
-                        COMPANY_MATCHER.assertMatch((Company) Objects.requireNonNull(result.getModelAndView()).getModel().get(COMPANY_ATTRIBUTE), company1));
+                .andExpect(result -> COMPANY_MATCHER.assertMatch((Company) Objects.requireNonNull(result
+                        .getModelAndView()).getModel().get(COMPANY_ATTRIBUTE), company1));
     }
 
     @Test
@@ -116,9 +115,9 @@ class CompanyUIControllerTest extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists(COMPANY_ATTRIBUTE))
                 .andExpect(view().name(COMPANIES_FORM_VIEW))
-                .andExpect(result ->
-                        COMPANY_MATCHER.assertMatch((Company) Objects.requireNonNull(result.getModelAndView()).getModel().get(COMPANY_ATTRIBUTE),
-                                new Company(null, null, new Address(), new Contacts(), null)));
+                .andExpect(result -> COMPANY_MATCHER.assertMatch((Company) Objects.requireNonNull(result
+                        .getModelAndView()).getModel().get(COMPANY_ATTRIBUTE),
+                        new Company(null, null, new Address(), new Contacts(), null)));
     }
 
     @Test
@@ -180,23 +179,23 @@ class CompanyUIControllerTest extends AbstractControllerTest {
                 .params(newInvalidParams)
                 .with(csrf()))
                 .andExpect(status().isOk())
-                .andExpect(model().attributeHasFieldErrors(COMPANY_ATTRIBUTE, NAME_PARAM, COUNTRY_PARAM, ZIPCODE_PARAM,
-                        CITY_PARAM, STREET_PARAM, HOUSE_PARAM, CONTACT_PERSON_POSITION_PARAM, CONTACT_PERSON_LAST_NAME_PARAM,
-                        CONTACT_PERSON_FIRST_NAME_PARAM, CONTACT_PERSON_MIDDLE_NAME_PARAM))
+                .andExpect(model().attributeHasFieldErrors(COMPANY_ATTRIBUTE, NAME, COUNTRY, ZIPCODE,
+                        CITY, STREET, HOUSE, CONTACT_PERSON_POSITION, CONTACT_PERSON_LAST_NAME,
+                        CONTACT_PERSON_FIRST_NAME, CONTACT_PERSON_MIDDLE_NAME))
                 .andExpect(view().name(COMPANIES_FORM_VIEW));
-        assertThrows(NotFoundException.class, () -> service.getByName(newInvalidParams.get(NAME_PARAM).get(0)));
+        assertThrows(NotFoundException.class, () -> service.getByName(newInvalidParams.get(NAME).get(0)));
     }
 
     @Test
     @WithUserDetails(ARCHIVIST_MAIL)
     void createDuplicateName() throws Exception {
         MultiValueMap<String, String> newParams = CompanyTestData.getNewParams();
-        newParams.set(NAME_PARAM, COMPANY1_NAME);
+        newParams.set(NAME, COMPANY1_NAME);
         perform(MockMvcRequestBuilders.post(COMPANIES_CREATE_URL)
                 .params(newParams)
                 .with(csrf()))
                 .andExpect(status().isOk())
-                .andExpect(model().attributeHasFieldErrorCode(COMPANY_ATTRIBUTE, NAME_PARAM, DUPLICATE_ERROR_CODE))
+                .andExpect(model().attributeHasFieldErrorCode(COMPANY_ATTRIBUTE, NAME, DUPLICATE_ERROR_CODE))
                 .andExpect(view().name(COMPANIES_FORM_VIEW));
         assertNotEquals(CompanyTestData.getNew().getAddress(), service.getByName(COMPANY1_NAME).getAddress());
     }
@@ -208,8 +207,8 @@ class CompanyUIControllerTest extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists(COMPANY_ATTRIBUTE))
                 .andExpect(view().name(COMPANIES_FORM_VIEW))
-                .andExpect(result ->
-                        COMPANY_MATCHER.assertMatch((Company) Objects.requireNonNull(result.getModelAndView()).getModel().get(COMPANY_ATTRIBUTE), company1));
+                .andExpect(result -> COMPANY_MATCHER.assertMatch((Company) Objects.requireNonNull(result
+                        .getModelAndView()).getModel().get(COMPANY_ATTRIBUTE), company1));
     }
 
     @Test
@@ -254,7 +253,7 @@ class CompanyUIControllerTest extends AbstractControllerTest {
         Company updatedCompany = CompanyTestData.getUpdated();
         updatedCompany.setName(COMPANY1_NAME);
         MultiValueMap<String, String> updatedParams = CompanyTestData.getUpdatedParams();
-        updatedParams.set(NAME_PARAM, COMPANY1_NAME);
+        updatedParams.set(NAME, COMPANY1_NAME);
         perform(MockMvcRequestBuilders.post(COMPANIES_UPDATE_URL)
                 .params(updatedParams)
                 .with(csrf()))
@@ -304,23 +303,23 @@ class CompanyUIControllerTest extends AbstractControllerTest {
                 .params(updatedInvalidParams)
                 .with(csrf()))
                 .andExpect(status().isOk())
-                .andExpect(model().attributeHasFieldErrors(COMPANY_ATTRIBUTE, NAME_PARAM, COUNTRY_PARAM, ZIPCODE_PARAM,
-                        CITY_PARAM, STREET_PARAM, HOUSE_PARAM, CONTACT_PERSON_POSITION_PARAM, CONTACT_PERSON_LAST_NAME_PARAM,
-                        CONTACT_PERSON_FIRST_NAME_PARAM, CONTACT_PERSON_MIDDLE_NAME_PARAM))
+                .andExpect(model().attributeHasFieldErrors(COMPANY_ATTRIBUTE, NAME, COUNTRY, ZIPCODE,
+                        CITY, STREET, HOUSE, CONTACT_PERSON_POSITION, CONTACT_PERSON_LAST_NAME,
+                        CONTACT_PERSON_FIRST_NAME, CONTACT_PERSON_MIDDLE_NAME))
                 .andExpect(view().name(COMPANIES_FORM_VIEW));
-        assertNotEquals(service.get(COMPANY1_ID).getName(), updatedInvalidParams.get(NAME_PARAM).get(0));
+        assertNotEquals(service.get(COMPANY1_ID).getName(), updatedInvalidParams.get(NAME).get(0));
     }
 
     @Test
     @WithUserDetails(ARCHIVIST_MAIL)
     void updateDuplicateName() throws Exception {
         MultiValueMap<String, String> updatedParams = CompanyTestData.getUpdatedParams();
-        updatedParams.set(NAME_PARAM, COMPANY2_NAME);
+        updatedParams.set(NAME, COMPANY2_NAME);
         perform(MockMvcRequestBuilders.post(COMPANIES_UPDATE_URL)
                 .params(updatedParams)
                 .with(csrf()))
                 .andExpect(status().isOk())
-                .andExpect(model().attributeHasFieldErrorCode(COMPANY_ATTRIBUTE, NAME_PARAM, DUPLICATE_ERROR_CODE))
+                .andExpect(model().attributeHasFieldErrorCode(COMPANY_ATTRIBUTE, NAME, DUPLICATE_ERROR_CODE))
                 .andExpect(view().name(COMPANIES_FORM_VIEW));
         assertNotEquals(service.get(COMPANY1_ID).getName(), COMPANY2_NAME);
     }

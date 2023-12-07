@@ -28,6 +28,7 @@ import static ru.javaprojects.archivist.users.web.ProfileUIController.PROFILE_UR
 
 class ProfileUIControllerTest extends AbstractControllerTest {
     private static final String PROFILE_RESET_PASSWORD_URL = PROFILE_URL + "/resetPassword";
+    private static final String PROFILE_VIEW = "users/profile";
     private static final String RESET_PASSWORD_VIEW = "users/reset-password";
 
     @Autowired
@@ -41,11 +42,10 @@ class ProfileUIControllerTest extends AbstractControllerTest {
     void showProfilePage() throws Exception {
         perform(MockMvcRequestBuilders.get(PROFILE_URL))
                 .andExpect(status().isOk())
-                .andExpect(view().name("users/profile"))
+                .andExpect(view().name(PROFILE_VIEW))
                 .andExpect(model().attributeExists(USER_ATTRIBUTE))
-                .andExpect(result ->
-                        UserTestData.USER_MATCHER.assertMatch((User)Objects.requireNonNull(
-                                result.getModelAndView()).getModel().get(USER_ATTRIBUTE), UserTestData.user));
+                .andExpect(result -> USER_MATCHER.assertMatch((User)Objects.requireNonNull(result.getModelAndView())
+                        .getModel().get(USER_ATTRIBUTE), user));
     }
 
     @Test
@@ -68,7 +68,8 @@ class ProfileUIControllerTest extends AbstractControllerTest {
                 .andExpect(model().attributeExists(PASSWORD_RESET_TO_ATTRIBUTE))
                 .andExpect(view().name(RESET_PASSWORD_VIEW))
                 .andExpect(result ->
-                        PASSWORD_RESET_TO_MATCHER.assertMatch((PasswordResetTo) Objects.requireNonNull(result.getModelAndView()).getModel().get("passwordResetTo"), new PasswordResetTo(token)));
+                        PASSWORD_RESET_TO_MATCHER.assertMatch((PasswordResetTo) Objects.requireNonNull(result.getModelAndView())
+                                .getModel().get(PASSWORD_RESET_TO_ATTRIBUTE), new PasswordResetTo(token)));
     }
 
     @Test

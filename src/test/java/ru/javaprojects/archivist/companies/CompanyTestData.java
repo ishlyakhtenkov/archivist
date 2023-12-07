@@ -11,7 +11,7 @@ import ru.javaprojects.archivist.companies.model.Contacts;
 import java.util.List;
 
 import static ru.javaprojects.archivist.CommonTestData.ID;
-import static ru.javaprojects.archivist.CommonTestData.NAME_PARAM;
+import static ru.javaprojects.archivist.CommonTestData.NAME;
 
 public class CompanyTestData {
     public static final MatcherFactory.Matcher<Company> COMPANY_MATCHER =
@@ -26,19 +26,19 @@ public class CompanyTestData {
     public static final String COMPANIES_ATTRIBUTE = "companies";
     public static final String COMPANY_ATTRIBUTE = "company";
 
-    public static final String COUNTRY_PARAM = "address.country";
-    public static final String ZIPCODE_PARAM = "address.zipcode";
-    public static final String CITY_PARAM = "address.city";
-    public static final String STREET_PARAM = "address.street";
-    public static final String HOUSE_PARAM = "address.house";
-    public static final String PHONE_PARAM = "contacts.phone";
-    public static final String FAX_PARAM = "contacts.fax";
-    public static final String EMAIL_PARAM = "contacts.email";
-    public static final String CONTACT_PERSON_POSITION_PARAM = "contactPersons[0].position";
-    public static final String CONTACT_PERSON_LAST_NAME_PARAM = "contactPersons[0].lastName";
-    public static final String CONTACT_PERSON_FIRST_NAME_PARAM = "contactPersons[0].firstName";
-    public static final String CONTACT_PERSON_MIDDLE_NAME_PARAM = "contactPersons[0].middleName";
-    public static final String CONTACT_PERSON_PHONE_PARAM = "contactPersons[0].phone";
+    public static final String COUNTRY = "address.country";
+    public static final String ZIPCODE = "address.zipcode";
+    public static final String CITY = "address.city";
+    public static final String STREET = "address.street";
+    public static final String HOUSE = "address.house";
+    public static final String PHONE = "contacts.phone";
+    public static final String FAX = "contacts.fax";
+    public static final String EMAIL = "contacts.email";
+    public static final String CONTACT_PERSON_POSITION = "contactPersons[0].position";
+    public static final String CONTACT_PERSON_LAST_NAME = "contactPersons[0].lastName";
+    public static final String CONTACT_PERSON_FIRST_NAME = "contactPersons[0].firstName";
+    public static final String CONTACT_PERSON_MIDDLE_NAME = "contactPersons[0].middleName";
+    public static final String CONTACT_PERSON_PHONE = "contactPersons[0].phone";
 
     public static final Company company1 = new Company(COMPANY1_ID, COMPANY1_NAME,
             new Address("Russia", "Moscow", "Aviamotornaya", "32", "121748"),
@@ -75,62 +75,62 @@ public class CompanyTestData {
     public static MultiValueMap<String, String> getNewParams() {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         Company newCompany = getNew();
-        params.add(NAME_PARAM, newCompany.getName());
-        params.add(COUNTRY_PARAM, newCompany.getAddress().getCountry());
-        params.add(ZIPCODE_PARAM, newCompany.getAddress().getZipcode());
-        params.add(CITY_PARAM, newCompany.getAddress().getCity());
-        params.add(STREET_PARAM, newCompany.getAddress().getStreet());
-        params.add(HOUSE_PARAM, newCompany.getAddress().getHouse());
-        params.add(PHONE_PARAM, newCompany.getContacts().getPhone());
-        params.add(FAX_PARAM, newCompany.getContacts().getFax());
-        params.add(EMAIL_PARAM, newCompany.getContacts().getEmail());
-        params.add(CONTACT_PERSON_POSITION_PARAM, newCompany.getContactPersons().get(0).getPosition());
-        params.add(CONTACT_PERSON_LAST_NAME_PARAM, newCompany.getContactPersons().get(0).getLastName());
-        params.add(CONTACT_PERSON_FIRST_NAME_PARAM, newCompany.getContactPersons().get(0).getFirstName());
-        params.add(CONTACT_PERSON_MIDDLE_NAME_PARAM, newCompany.getContactPersons().get(0).getMiddleName());
-        params.add(CONTACT_PERSON_PHONE_PARAM, newCompany.getContactPersons().get(0).getPhone());
+        params.add(NAME, newCompany.getName());
+        params.add(COUNTRY, newCompany.getAddress().getCountry());
+        params.add(ZIPCODE, newCompany.getAddress().getZipcode());
+        params.add(CITY, newCompany.getAddress().getCity());
+        params.add(STREET, newCompany.getAddress().getStreet());
+        params.add(HOUSE, newCompany.getAddress().getHouse());
+        params.add(PHONE, newCompany.getContacts().getPhone());
+        params.add(FAX, newCompany.getContacts().getFax());
+        params.add(EMAIL, newCompany.getContacts().getEmail());
+        params.add(CONTACT_PERSON_POSITION, newCompany.getContactPersons().get(0).getPosition());
+        params.add(CONTACT_PERSON_LAST_NAME, newCompany.getContactPersons().get(0).getLastName());
+        params.add(CONTACT_PERSON_FIRST_NAME, newCompany.getContactPersons().get(0).getFirstName());
+        params.add(CONTACT_PERSON_MIDDLE_NAME, newCompany.getContactPersons().get(0).getMiddleName());
+        params.add(CONTACT_PERSON_PHONE, newCompany.getContactPersons().get(0).getPhone());
         return params;
     }
 
     public static MultiValueMap<String, String> getNewInvalidParams() {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add(NAME_PARAM, "A");
-        params.add(COUNTRY_PARAM, "");
-        params.add(ZIPCODE_PARAM, "someZipcode");
-        params.add(CITY_PARAM, "C");
-        params.add(STREET_PARAM, "");
-        params.add(HOUSE_PARAM, "");
-        params.add(CONTACT_PERSON_POSITION_PARAM, "P");
-        params.add(CONTACT_PERSON_LAST_NAME_PARAM, "");
-        params.add(CONTACT_PERSON_FIRST_NAME_PARAM, "A");
-        params.add(CONTACT_PERSON_MIDDLE_NAME_PARAM, "");
+        params.add(NAME, "A");
+        params.add(COUNTRY, "");
+        params.add(ZIPCODE, "someZipcode");
+        params.add(CITY, "C");
+        params.add(STREET, "");
+        params.add(HOUSE, "");
+        params.add(CONTACT_PERSON_POSITION, "P");
+        params.add(CONTACT_PERSON_LAST_NAME, "");
+        params.add(CONTACT_PERSON_FIRST_NAME, "A");
+        params.add(CONTACT_PERSON_MIDDLE_NAME, "");
         return params;
     }
 
     public static MultiValueMap<String, String> getUpdatedParams() {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         Company updatedCompany = getUpdated();
-        params.add(ID, COMPANY1_ID + "");
-        params.add(NAME_PARAM, updatedCompany.getName());
-        params.add(COUNTRY_PARAM, updatedCompany.getAddress().getCountry());
-        params.add(ZIPCODE_PARAM, updatedCompany.getAddress().getZipcode());
-        params.add(CITY_PARAM, updatedCompany.getAddress().getCity());
-        params.add(STREET_PARAM, updatedCompany.getAddress().getStreet());
-        params.add(HOUSE_PARAM, updatedCompany.getAddress().getHouse());
-        params.add(PHONE_PARAM, updatedCompany.getContacts().getPhone());
-        params.add(FAX_PARAM, updatedCompany.getContacts().getFax());
-        params.add(EMAIL_PARAM, updatedCompany.getContacts().getEmail());
-        params.add(CONTACT_PERSON_POSITION_PARAM, updatedCompany.getContactPersons().get(0).getPosition());
-        params.add(CONTACT_PERSON_LAST_NAME_PARAM, updatedCompany.getContactPersons().get(0).getLastName());
-        params.add(CONTACT_PERSON_FIRST_NAME_PARAM, updatedCompany.getContactPersons().get(0).getFirstName());
-        params.add(CONTACT_PERSON_MIDDLE_NAME_PARAM, updatedCompany.getContactPersons().get(0).getMiddleName());
-        params.add(CONTACT_PERSON_PHONE_PARAM, updatedCompany.getContactPersons().get(0).getPhone());
+        params.add(ID, String.valueOf(COMPANY1_ID));
+        params.add(NAME, updatedCompany.getName());
+        params.add(COUNTRY, updatedCompany.getAddress().getCountry());
+        params.add(ZIPCODE, updatedCompany.getAddress().getZipcode());
+        params.add(CITY, updatedCompany.getAddress().getCity());
+        params.add(STREET, updatedCompany.getAddress().getStreet());
+        params.add(HOUSE, updatedCompany.getAddress().getHouse());
+        params.add(PHONE, updatedCompany.getContacts().getPhone());
+        params.add(FAX, updatedCompany.getContacts().getFax());
+        params.add(EMAIL, updatedCompany.getContacts().getEmail());
+        params.add(CONTACT_PERSON_POSITION, updatedCompany.getContactPersons().get(0).getPosition());
+        params.add(CONTACT_PERSON_LAST_NAME, updatedCompany.getContactPersons().get(0).getLastName());
+        params.add(CONTACT_PERSON_FIRST_NAME, updatedCompany.getContactPersons().get(0).getFirstName());
+        params.add(CONTACT_PERSON_MIDDLE_NAME, updatedCompany.getContactPersons().get(0).getMiddleName());
+        params.add(CONTACT_PERSON_PHONE, updatedCompany.getContactPersons().get(0).getPhone());
         return params;
     }
 
     public static MultiValueMap<String, String> getUpdatedInvalidParams() {
         MultiValueMap<String, String> params = getNewInvalidParams();
-        params.add(ID, COMPANY1_ID + "");
+        params.add(ID, String.valueOf(COMPANY1_ID));
         return params;
     }
 }

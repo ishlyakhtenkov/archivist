@@ -18,7 +18,7 @@ import java.util.List;
 
 import static java.time.Month.*;
 import static ru.javaprojects.archivist.CommonTestData.ID;
-import static ru.javaprojects.archivist.CommonTestData.NAME_PARAM;
+import static ru.javaprojects.archivist.CommonTestData.NAME;
 import static ru.javaprojects.archivist.changenotices.model.ChangeReasonCode.DESIGN_IMPROVEMENTS;
 import static ru.javaprojects.archivist.changenotices.model.ChangeReasonCode.QUALITY_IMPROVEMENT;
 import static ru.javaprojects.archivist.departments.DepartmentTestData.*;
@@ -41,6 +41,12 @@ public class ChangeNoticeTestData {
     public static final String CHANGE_NOTICES_ATTRIBUTE = "changeNotices";
     public static final String CHANGE_NOTICE_ATTRIBUTE = "changeNotice";
     public static final String CHANGE_NOTICE_TO_ATTRIBUTE = "changeNoticeTo";
+    public static final String DEVELOPERS_ATTRIBUTE = "developers";
+    public static final String CHANGE_REASON_CODES_ATTRIBUTE = "changeReasonCodes";
+
+    public static final String RELEASE_DATE = "releaseDate";
+    public static final String CHANGE_REASON_CODE = "changeReasonCode";
+    public static final String CHANGES = "changes";
 
     public static final ChangeNotice changeNotice1 = new ChangeNotice(CHANGE_NOTICE_1_ID, "VUIA.SK.591", LocalDate.of(2020, JUNE, 18),
             DESIGN_IMPROVEMENTS, false, department1, new ContentFile("VUIA.SK.591.pdf", "VUIA.SK.591/VUIA.SK.591.pdf"));
@@ -66,14 +72,14 @@ public class ChangeNoticeTestData {
         ChangeNotice changeNotice = new ChangeNotice(null, newTo.getName(), newTo.getReleaseDate(), newTo.getChangeReasonCode(), newTo.getDeveloper(),
                 new ContentFile(newTo.getFile().getOriginalFilename(), newTo.getName() + "/" + newTo.getFile().getOriginalFilename()));
         changeNotice.addChange(new Change(null, document1, 3));
-        changeNotice.addChange(new Change(null, Document.autoGenerate("VUIA.611222.001"), 1));
+        changeNotice.addChange(new Change(null, Document.autoGenerate(NOT_EXISTING_DECIMAL_NUMBER), 1));
         return changeNotice;
     }
 
     public static ChangeNoticeTo getUpdatedTo() {
         return new ChangeNoticeTo(CHANGE_NOTICE_1_ID, "VUIA.SK.595", LocalDate.of(2020, JUNE, 20), QUALITY_IMPROVEMENT, department2,
                 List.of(new ChangeTo(CHANGE_NOTICE_1_CHANGE_1_ID, document1.getDecimalNumber(), 1), new ChangeTo(CHANGE_NOTICE_1_CHANGE_2_ID, document2.getDecimalNumber(), 1),
-                        new ChangeTo(null, "VUIA.611222.001", 1)));
+                        new ChangeTo(null, NOT_EXISTING_DECIMAL_NUMBER, 1)));
     }
 
     public static ChangeNotice getUpdated() {
@@ -83,7 +89,7 @@ public class ChangeNoticeTestData {
                 new ContentFile("VUIA.SK.591.pdf", updatedTo.getName() + "/VUIA.SK.591.pdf"));
         changeNotice.addChange(new Change(CHANGE_NOTICE_1_CHANGE_1_ID, document1, 1));
         changeNotice.addChange(new Change(CHANGE_NOTICE_1_CHANGE_2_ID, document2, 1));
-        changeNotice.addChange(new Change(null, Document.autoGenerate("VUIA.611222.001"), 1));
+        changeNotice.addChange(new Change(null, Document.autoGenerate(NOT_EXISTING_DECIMAL_NUMBER), 1));
         return changeNotice;
     }
 
@@ -91,22 +97,22 @@ public class ChangeNoticeTestData {
     public static MultiValueMap<String, String> getNewParams() throws IOException {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         ChangeNoticeTo newChangeNoticeTo = getNewTo();
-        params.add(NAME_PARAM, newChangeNoticeTo.getName());
-        params.add("releaseDate", newChangeNoticeTo.getReleaseDate().toString());
-        params.add("changeReasonCode", newChangeNoticeTo.getChangeReasonCode().name());
-        params.add(DEVELOPER_PARAM, String.valueOf(newChangeNoticeTo.getDeveloper().getId()));
+        params.add(NAME, newChangeNoticeTo.getName());
+        params.add(RELEASE_DATE, newChangeNoticeTo.getReleaseDate().toString());
+        params.add(CHANGE_REASON_CODE, newChangeNoticeTo.getChangeReasonCode().name());
+        params.add(DEVELOPER, String.valueOf(newChangeNoticeTo.getDeveloper().getId()));
         params.add("changes[0].decimalNumber", document1.getDecimalNumber());
         params.add("changes[0].changeNumber", String.valueOf(3));
-        params.add("changes[1].decimalNumber", "VUIA.611222.001");
+        params.add("changes[1].decimalNumber", NOT_EXISTING_DECIMAL_NUMBER);
         params.add("changes[1].changeNumber", String.valueOf(1));
         return params;
     }
 
     public static MultiValueMap<String, String> getNewInvalidParams() {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add(NAME_PARAM, "A");
-        params.add("releaseDate", "");
-        params.add("changeReasonCode", QUALITY_IMPROVEMENT.name());
+        params.add(NAME, "A");
+        params.add(RELEASE_DATE, "");
+        params.add(CHANGE_REASON_CODE, QUALITY_IMPROVEMENT.name());
         return params;
     }
 
@@ -114,17 +120,17 @@ public class ChangeNoticeTestData {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         ChangeNoticeTo updatedChangeNoticeTo = getUpdatedTo();
         params.add(ID, String.valueOf(CHANGE_NOTICE_1_ID));
-        params.add(NAME_PARAM, updatedChangeNoticeTo.getName());
-        params.add("releaseDate", updatedChangeNoticeTo.getReleaseDate().toString());
-        params.add("changeReasonCode", updatedChangeNoticeTo.getChangeReasonCode().name());
-        params.add(DEVELOPER_PARAM, String.valueOf(updatedChangeNoticeTo.getDeveloper().getId()));
+        params.add(NAME, updatedChangeNoticeTo.getName());
+        params.add(RELEASE_DATE, updatedChangeNoticeTo.getReleaseDate().toString());
+        params.add(CHANGE_REASON_CODE, updatedChangeNoticeTo.getChangeReasonCode().name());
+        params.add(DEVELOPER, String.valueOf(updatedChangeNoticeTo.getDeveloper().getId()));
         params.add("changes[0].id", String.valueOf(CHANGE_NOTICE_1_CHANGE_1_ID));
         params.add("changes[0].decimalNumber", document1.getDecimalNumber());
         params.add("changes[0].changeNumber", String.valueOf(1));
         params.add("changes[1].id", String.valueOf(CHANGE_NOTICE_1_CHANGE_2_ID));
         params.add("changes[1].decimalNumber", document2.getDecimalNumber());
         params.add("changes[1].changeNumber", String.valueOf(1));
-        params.add("changes[2].decimalNumber", "VUIA.611222.001");
+        params.add("changes[2].decimalNumber", NOT_EXISTING_DECIMAL_NUMBER);
         params.add("changes[2].changeNumber", String.valueOf(1));
         return params;
     }

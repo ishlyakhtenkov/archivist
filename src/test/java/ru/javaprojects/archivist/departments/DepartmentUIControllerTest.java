@@ -29,7 +29,6 @@ class DepartmentUIControllerTest extends AbstractControllerTest {
     private static final String DEPARTMENTS_EDIT_FORM_URL = DEPARTMENTS_URL + "/edit/";
     private static final String DEPARTMENTS_UPDATE_URL = DEPARTMENTS_URL + "/update";
     private static final String DEPARTMENTS_DELETE_URL = DEPARTMENTS_URL + "/delete/";
-
     private static final String DEPARTMENTS_VIEW = "departments/departments";
     private static final String DEPARTMENTS_FORM_VIEW = "departments/department-form";
 
@@ -65,9 +64,9 @@ class DepartmentUIControllerTest extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists(DEPARTMENT_ATTRIBUTE))
                 .andExpect(view().name(DEPARTMENTS_FORM_VIEW))
-                .andExpect(result ->
-                        DEPARTMENT_MATCHER.assertMatch((Department) Objects.requireNonNull(result.getModelAndView()).getModel().get(DEPARTMENT_ATTRIBUTE),
-                                new Department(null, null, new Person())));
+                .andExpect(result -> DEPARTMENT_MATCHER.assertMatch((Department) Objects.requireNonNull(result
+                        .getModelAndView()).getModel().get(DEPARTMENT_ATTRIBUTE), new Department(null, null, new Person())));
+
     }
 
     @Test
@@ -129,22 +128,22 @@ class DepartmentUIControllerTest extends AbstractControllerTest {
                 .params(newInvalidParams)
                 .with(csrf()))
                 .andExpect(status().isOk())
-                .andExpect(model().attributeHasFieldErrors(DEPARTMENT_ATTRIBUTE, NAME_PARAM,
-                        BOSS_LAST_NAME_PARAM, BOSS_FIRST_NAME_PARAM, BOSS_MIDDLE_NAME_PARAM, BOSS_PHONE_PARAM))
+                .andExpect(model().attributeHasFieldErrors(DEPARTMENT_ATTRIBUTE, NAME,
+                        BOSS_LAST_NAME, BOSS_FIRST_NAME, BOSS_MIDDLE_NAME, BOSS_PHONE))
                 .andExpect(view().name(DEPARTMENTS_FORM_VIEW));
-        assertThrows(NotFoundException.class, () -> service.getByName(newInvalidParams.get(NAME_PARAM).get(0)));
+        assertThrows(NotFoundException.class, () -> service.getByName(newInvalidParams.get(NAME).get(0)));
     }
 
     @Test
     @WithUserDetails(ARCHIVIST_MAIL)
     void createDuplicateName() throws Exception {
         MultiValueMap<String, String> newParams = DepartmentTestData.getNewParams();
-        newParams.set(NAME_PARAM, DEPARTMENT1_NAME);
+        newParams.set(NAME, DEPARTMENT1_NAME);
         perform(MockMvcRequestBuilders.post(DEPARTMENTS_CREATE_URL)
                 .params(newParams)
                 .with(csrf()))
                 .andExpect(status().isOk())
-                .andExpect(model().attributeHasFieldErrorCode(DEPARTMENT_ATTRIBUTE, NAME_PARAM, DUPLICATE_ERROR_CODE))
+                .andExpect(model().attributeHasFieldErrorCode(DEPARTMENT_ATTRIBUTE, NAME, DUPLICATE_ERROR_CODE))
                 .andExpect(view().name(DEPARTMENTS_FORM_VIEW));
         assertNotEquals(DepartmentTestData.getNew().getBoss(), service.getByName(DEPARTMENT1_NAME).getBoss());
     }
@@ -156,8 +155,8 @@ class DepartmentUIControllerTest extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists(DEPARTMENT_ATTRIBUTE))
                 .andExpect(view().name(DEPARTMENTS_FORM_VIEW))
-                .andExpect(result ->
-                        DEPARTMENT_MATCHER.assertMatch((Department) Objects.requireNonNull(result.getModelAndView()).getModel().get(DEPARTMENT_ATTRIBUTE), department1));
+                .andExpect(result -> DEPARTMENT_MATCHER.assertMatch((Department) Objects.requireNonNull(result
+                        .getModelAndView()).getModel().get(DEPARTMENT_ATTRIBUTE), department1));
     }
 
     @Test
@@ -202,7 +201,7 @@ class DepartmentUIControllerTest extends AbstractControllerTest {
         Department updatedDepartment = DepartmentTestData.getUpdated();
         updatedDepartment.setName(DEPARTMENT1_NAME);
         MultiValueMap<String, String> updatedParams = DepartmentTestData.getUpdatedParams();
-        updatedParams.set(NAME_PARAM, DEPARTMENT1_NAME);
+        updatedParams.set(NAME, DEPARTMENT1_NAME);
         perform(MockMvcRequestBuilders.post(DEPARTMENTS_UPDATE_URL)
                 .params(updatedParams)
                 .with(csrf()))
@@ -252,22 +251,22 @@ class DepartmentUIControllerTest extends AbstractControllerTest {
                 .params(updatedInvalidParams)
                 .with(csrf()))
                 .andExpect(status().isOk())
-                .andExpect(model().attributeHasFieldErrors(DEPARTMENT_ATTRIBUTE, NAME_PARAM,
-                        BOSS_LAST_NAME_PARAM, BOSS_FIRST_NAME_PARAM, BOSS_MIDDLE_NAME_PARAM, BOSS_PHONE_PARAM))
+                .andExpect(model().attributeHasFieldErrors(DEPARTMENT_ATTRIBUTE, NAME,
+                        BOSS_LAST_NAME, BOSS_FIRST_NAME, BOSS_MIDDLE_NAME, BOSS_PHONE))
                 .andExpect(view().name(DEPARTMENTS_FORM_VIEW));
-        assertNotEquals(service.get(DEPARTMENT1_ID).getName(), updatedInvalidParams.get(NAME_PARAM).get(0));
+        assertNotEquals(service.get(DEPARTMENT1_ID).getName(), updatedInvalidParams.get(NAME).get(0));
     }
 
     @Test
     @WithUserDetails(ARCHIVIST_MAIL)
     void updateDuplicateName() throws Exception {
         MultiValueMap<String, String> updatedParams = DepartmentTestData.getUpdatedParams();
-        updatedParams.set(NAME_PARAM, DEPARTMENT2_NAME);
+        updatedParams.set(NAME, DEPARTMENT2_NAME);
         perform(MockMvcRequestBuilders.post(DEPARTMENTS_UPDATE_URL)
                 .params(updatedParams)
                 .with(csrf()))
                 .andExpect(status().isOk())
-                .andExpect(model().attributeHasFieldErrorCode(DEPARTMENT_ATTRIBUTE, NAME_PARAM, DUPLICATE_ERROR_CODE))
+                .andExpect(model().attributeHasFieldErrorCode(DEPARTMENT_ATTRIBUTE, NAME, DUPLICATE_ERROR_CODE))
                 .andExpect(view().name(DEPARTMENTS_FORM_VIEW));
         assertNotEquals(service.get(DEPARTMENT1_ID).getName(), DEPARTMENT2_NAME);
     }

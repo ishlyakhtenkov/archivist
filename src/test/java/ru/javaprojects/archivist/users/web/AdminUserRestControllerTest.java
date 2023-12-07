@@ -32,13 +32,13 @@ public class AdminUserRestControllerTest extends AbstractControllerTest {
     @WithUserDetails(ADMIN_MAIL)
     void enable() throws Exception {
         perform(MockMvcRequestBuilders.patch(USERS_URL_SLASH + USER_ID)
-                .param(ENABLED, FALSE)
+                .param(ENABLED, String.valueOf(false))
                 .with(csrf()))
                 .andExpect(status().isNoContent());
         assertFalse(service.get(USER_ID).isEnabled());
 
         perform(MockMvcRequestBuilders.patch(USERS_URL_SLASH + USER_ID)
-                .param(ENABLED, TRUE)
+                .param(ENABLED, String.valueOf(true))
                 .with(csrf()))
                 .andExpect(status().isNoContent());
         assertTrue(service.get(USER_ID).isEnabled());
@@ -48,7 +48,7 @@ public class AdminUserRestControllerTest extends AbstractControllerTest {
     @WithUserDetails(ADMIN_MAIL)
     void enableNotFound() throws Exception {
         perform(MockMvcRequestBuilders.patch(USERS_URL_SLASH + NOT_FOUND)
-                .param(ENABLED, FALSE)
+                .param(ENABLED, String.valueOf(false))
                 .with(csrf()))
                 .andExpect(status().isNotFound())
                 .andExpect(result -> assertEquals(Objects.requireNonNull(result.getResolvedException()).getClass(),
@@ -62,7 +62,7 @@ public class AdminUserRestControllerTest extends AbstractControllerTest {
     @Test
     void enableUnAuthorized() throws Exception {
         perform(MockMvcRequestBuilders.patch(USERS_URL_SLASH + USER_ID)
-                .param(ENABLED, FALSE)
+                .param(ENABLED, String.valueOf(false))
                 .with(csrf()))
                 .andExpect(status().isFound())
                 .andExpect(result ->
@@ -74,7 +74,7 @@ public class AdminUserRestControllerTest extends AbstractControllerTest {
     @WithUserDetails(USER_MAIL)
     void enableForbidden() throws Exception {
         perform(MockMvcRequestBuilders.patch(USERS_URL_SLASH + USER_ID)
-                .param(ENABLED, FALSE)
+                .param(ENABLED, String.valueOf(false))
                 .with(csrf()))
                 .andExpect(status().isForbidden());
         assertTrue(service.get(USER_ID).isEnabled());

@@ -41,8 +41,6 @@ class ChangeNoticeUIControllerTest extends AbstractControllerTest implements Man
     private static final String CHANGE_NOTICES_EDIT_FORM_URL = CHANGE_NOTICES_URL + "/edit/";
     static final String CHANGE_NOTICES_URL_SLASH = CHANGE_NOTICES_URL + "/";
     static final String CHANGE_NOTICES_FILE_DOWNLOAD_URL = CHANGE_NOTICES_URL_SLASH + "download";
-
-
     private static final String CHANGE_NOTICES_VIEW = "change-notices/change-notices";
     private static final String CHANGE_NOTICE_VIEW = "change-notices/change-notice";
     private static final String CHANGE_NOTICE_FORM_VIEW = "change-notices/change-notice-form";
@@ -70,11 +68,12 @@ class ChangeNoticeUIControllerTest extends AbstractControllerTest implements Man
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists(CHANGE_NOTICES_ATTRIBUTE))
                 .andExpect(view().name(CHANGE_NOTICES_VIEW));
-        Page<ChangeNotice> changeNotices = (Page<ChangeNotice>) Objects.requireNonNull(actions.andReturn().getModelAndView())
-                .getModel().get(CHANGE_NOTICES_ATTRIBUTE);
+        Page<ChangeNotice> changeNotices = (Page<ChangeNotice>) Objects.requireNonNull(actions.andReturn()
+                        .getModelAndView()).getModel().get(CHANGE_NOTICES_ATTRIBUTE);
         assertEquals(2, changeNotices.getTotalElements());
         assertEquals(1, changeNotices.getTotalPages());
-        CHANGE_NOTICE_MATCHER.assertMatchIgnoreFields(changeNotices.getContent(), List.of(changeNotice1, changeNotice2), "developer", "changes");
+        CHANGE_NOTICE_MATCHER.assertMatchIgnoreFields(changeNotices.getContent(), List.of(changeNotice1, changeNotice2),
+                "developer", "changes");
     }
 
     @Test
@@ -82,7 +81,7 @@ class ChangeNoticeUIControllerTest extends AbstractControllerTest implements Man
     @SuppressWarnings("unchecked")
     void getAllByKeyword() throws Exception {
         ResultActions actions = perform(MockMvcRequestBuilders.get(CHANGE_NOTICES_URL)
-                .param(KEYWORD, "vuia.sk"))
+                .param(KEYWORD, changeNotice1.getName().toLowerCase()))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists(CHANGE_NOTICES_ATTRIBUTE))
                 .andExpect(view().name(CHANGE_NOTICES_VIEW));
@@ -90,7 +89,8 @@ class ChangeNoticeUIControllerTest extends AbstractControllerTest implements Man
                 .getModel().get(CHANGE_NOTICES_ATTRIBUTE);
         assertEquals(1, changeNotices.getTotalElements());
         assertEquals(1, changeNotices.getTotalPages());
-        CHANGE_NOTICE_MATCHER.assertMatchIgnoreFields(changeNotices.getContent(), List.of(changeNotice1), "developer", "changes");
+        CHANGE_NOTICE_MATCHER.assertMatchIgnoreFields(changeNotices.getContent(), List.of(changeNotice1),
+                "developer", "changes");
     }
 
     @Test
@@ -109,8 +109,10 @@ class ChangeNoticeUIControllerTest extends AbstractControllerTest implements Man
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists(CHANGE_NOTICE_ATTRIBUTE))
                 .andExpect(view().name(CHANGE_NOTICE_VIEW));
-        ChangeNotice changeNotice = (ChangeNotice) Objects.requireNonNull(actions.andReturn().getModelAndView()).getModel().get(CHANGE_NOTICE_ATTRIBUTE);
-        CHANGE_NOTICE_MATCHER.assertMatchIgnoreFields(changeNotice, changeNotice1, "changes.document.originalHolder", "changes.document.developer");
+        ChangeNotice changeNotice = (ChangeNotice) Objects.requireNonNull(actions.andReturn()
+                .getModelAndView()).getModel().get(CHANGE_NOTICE_ATTRIBUTE);
+        CHANGE_NOTICE_MATCHER.assertMatchIgnoreFields(changeNotice, changeNotice1, "changes.document.originalHolder",
+                "changes.document.developer");
     }
 
     @Test
@@ -133,7 +135,7 @@ class ChangeNoticeUIControllerTest extends AbstractControllerTest implements Man
     void downloadContentFile() throws Exception {
         perform(MockMvcRequestBuilders.get(CHANGE_NOTICES_FILE_DOWNLOAD_URL)
                 .with(csrf())
-                .param(FILE_LINK_PARAM, changeNotice1.getFile().getFileLink()))
+                .param(FILE_LINK, changeNotice1.getFile().getFileLink()))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PDF))
                 .andExpect(header().string("Content-Disposition", "inline; filename=" + changeNotice1.getFile().getFileName()));
@@ -144,15 +146,16 @@ class ChangeNoticeUIControllerTest extends AbstractControllerTest implements Man
     void downloadContentFileNotFound() throws Exception {
         perform(MockMvcRequestBuilders.get(CHANGE_NOTICES_FILE_DOWNLOAD_URL)
                 .with(csrf())
-                .param(FILE_LINK_PARAM,  NOT_EXISTED_CONTENT_FILE_LINK))
-                .andExpect(exception().exceptionPage("Failed to download file: " + NOT_EXISTED_CONTENT_FILE, IllegalRequestDataException.class));
+                .param(FILE_LINK, NOT_EXISTING_CONTENT_FILE_LINK))
+                .andExpect(exception().exceptionPage("Failed to download file: " + NOT_EXISTING_CONTENT_FILE,
+                        IllegalRequestDataException.class));
     }
 
     @Test
     void downloadContentFileUnauthorized() throws Exception {
         perform(MockMvcRequestBuilders.get(CHANGE_NOTICES_FILE_DOWNLOAD_URL)
                 .with(csrf())
-                .param(FILE_LINK_PARAM, changeNotice1.getFile().getFileLink()))
+                .param(FILE_LINK, changeNotice1.getFile().getFileLink()))
                 .andExpect(status().isFound())
                 .andExpect(result ->
                         assertTrue(Objects.requireNonNull(result.getResponse().getRedirectedUrl()).endsWith(LOGIN_URL)));
@@ -164,8 +167,8 @@ class ChangeNoticeUIControllerTest extends AbstractControllerTest implements Man
         perform(MockMvcRequestBuilders.get(CHANGE_NOTICES_ADD_FORM_URL))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists(CHANGE_NOTICE_TO_ATTRIBUTE))
-                .andExpect(model().attributeExists("changeReasonCodes"))
-                .andExpect(model().attributeExists("developers"))
+                .andExpect(model().attributeExists(CHANGE_REASON_CODES_ATTRIBUTE))
+                .andExpect(model().attributeExists(DEVELOPERS_ATTRIBUTE))
                 .andExpect(view().name(CHANGE_NOTICE_FORM_VIEW));
     }
 
@@ -197,9 +200,11 @@ class ChangeNoticeUIControllerTest extends AbstractControllerTest implements Man
                 .andExpect(flash().attribute(ACTION, "Change notice " + newChangeNoticeTo.getName() + " was created"));
         ChangeNotice created = service.getWithChangesByName(newChangeNoticeTo.getName());
         newChangeNotice.setId(created.id());
-        CHANGE_NOTICE_MATCHER.assertMatchIgnoreFields(created, newChangeNotice, "changes.id", "changes.document.id", "changes.document.originalHolder", "changes.document.developer");
+        CHANGE_NOTICE_MATCHER.assertMatchIgnoreFields(created, newChangeNotice, "changes.id", "changes.document.id",
+                "changes.document.originalHolder", "changes.document.developer");
         actions.andExpect(redirectedUrl(CHANGE_NOTICES_URL_SLASH + created.getId()));
-        assertTrue(Files.exists(Paths.get(contentPath, newChangeNoticeTo.getName(), newChangeNoticeTo.getFile().getOriginalFilename())));
+        assertTrue(Files.exists(Paths.get(contentPath, newChangeNoticeTo.getName(),
+                newChangeNoticeTo.getFile().getOriginalFilename())));
     }
 
     @Test
@@ -213,8 +218,8 @@ class ChangeNoticeUIControllerTest extends AbstractControllerTest implements Man
         newChangeNotice.setReleaseDate(changeNotice3.getReleaseDate());
         newChangeNotice.getFile().setFileLink(changeNotice3.getName() + "/" + newChangeNoticeTo.getFile().getOriginalFilename());
         MultiValueMap<String, String> newParams = ChangeNoticeTestData.getNewParams();
-        newParams.set(NAME_PARAM, changeNotice3.getName());
-        newParams.set("releaseDate", changeNotice3.getReleaseDate().toString());
+        newParams.set(NAME, changeNotice3.getName());
+        newParams.set(RELEASE_DATE, changeNotice3.getReleaseDate().toString());
 
         ResultActions actions = perform(MockMvcRequestBuilders.multipart(HttpMethod.POST, CHANGE_NOTICES_URL)
                 .file(CHANGE_NOTICE_FILE)
@@ -224,9 +229,11 @@ class ChangeNoticeUIControllerTest extends AbstractControllerTest implements Man
                 .andExpect(flash().attribute(ACTION, "Change notice " + newChangeNoticeTo.getName() + " was created"));
         ChangeNotice created = service.getWithChangesByName(newChangeNoticeTo.getName());
         newChangeNotice.setId(created.id());
-        CHANGE_NOTICE_MATCHER.assertMatchIgnoreFields(created, newChangeNotice, "changes.id", "changes.document.id", "changes.document.originalHolder", "changes.document.developer");
+        CHANGE_NOTICE_MATCHER.assertMatchIgnoreFields(created, newChangeNotice, "changes.id", "changes.document.id",
+                "changes.document.originalHolder", "changes.document.developer");
         actions.andExpect(redirectedUrl(CHANGE_NOTICES_URL_SLASH + created.getId()));
-        assertTrue(Files.exists(Paths.get(contentPath, newChangeNoticeTo.getName(), newChangeNoticeTo.getFile().getOriginalFilename())));
+        assertTrue(Files.exists(Paths.get(contentPath, newChangeNoticeTo.getName(),
+                newChangeNoticeTo.getFile().getOriginalFilename())));
     }
 
     @Test
@@ -263,26 +270,27 @@ class ChangeNoticeUIControllerTest extends AbstractControllerTest implements Man
                 .params(newInvalidParams)
                 .with(csrf()))
                 .andExpect(status().isOk())
-                .andExpect(model().attributeHasFieldErrors(CHANGE_NOTICE_TO_ATTRIBUTE, NAME_PARAM,
-                        "releaseDate", "changes"))
+                .andExpect(model().attributeHasFieldErrors(CHANGE_NOTICE_TO_ATTRIBUTE, NAME, RELEASE_DATE, CHANGES))
                 .andExpect(view().name(CHANGE_NOTICE_FORM_VIEW));
-        assertThrows(NotFoundException.class, () -> service.getByName(newInvalidParams.get(NAME_PARAM).get(0)));
-        assertTrue(Files.notExists(Paths.get(contentPath, newInvalidParams.get(NAME_PARAM).get(0) + "/" + CHANGE_NOTICE_FILE.getOriginalFilename())));
+        assertThrows(NotFoundException.class, () -> service.getByName(newInvalidParams.get(NAME).get(0)));
+        assertTrue(Files.notExists(Paths.get(contentPath, newInvalidParams.get(NAME).get(0) + "/" +
+                CHANGE_NOTICE_FILE.getOriginalFilename())));
     }
 
     @Test
     @WithUserDetails(ARCHIVIST_MAIL)
     void createDuplicateName() throws Exception {
         MultiValueMap<String, String> newParams = ChangeNoticeTestData.getNewParams();
-        newParams.set(NAME_PARAM, changeNotice1.getName());
+        newParams.set(NAME, changeNotice1.getName());
         perform(MockMvcRequestBuilders.multipart(HttpMethod.POST, CHANGE_NOTICES_URL)
                 .file(CHANGE_NOTICE_FILE)
                 .params(newParams)
                 .with(csrf()))
                 .andExpect(status().isOk())
-                .andExpect(model().attributeHasFieldErrorCode(CHANGE_NOTICE_TO_ATTRIBUTE, NAME_PARAM, DUPLICATE_ERROR_CODE))
+                .andExpect(model().attributeHasFieldErrorCode(CHANGE_NOTICE_TO_ATTRIBUTE, NAME, DUPLICATE_ERROR_CODE))
                 .andExpect(view().name(CHANGE_NOTICE_FORM_VIEW));
-        assertNotEquals(ChangeNoticeTestData.getNew().getReleaseDate(), service.getByName(changeNotice1.getName()).getReleaseDate());
+        assertNotEquals(ChangeNoticeTestData.getNew().getReleaseDate(),
+                service.getByName(changeNotice1.getName()).getReleaseDate());
     }
 
     @Test
@@ -295,8 +303,8 @@ class ChangeNoticeUIControllerTest extends AbstractControllerTest implements Man
                 .andExpect(model().attributeExists("developers"))
                 .andExpect(model().attributeExists("file"))
                 .andExpect(view().name(CHANGE_NOTICE_FORM_VIEW))
-                .andExpect(result ->
-                        CHANGE_NOTICE_TO_MATCHER.assertMatch((ChangeNoticeTo) Objects.requireNonNull(result.getModelAndView()).getModel().get(CHANGE_NOTICE_TO_ATTRIBUTE), changeNoticeUtil.asTo(changeNotice1)));
+                .andExpect(result -> CHANGE_NOTICE_TO_MATCHER.assertMatch((ChangeNoticeTo) Objects.requireNonNull(result
+                        .getModelAndView()).getModel().get(CHANGE_NOTICE_TO_ATTRIBUTE), changeNoticeUtil.asTo(changeNotice1)));
     }
 
     @Test
@@ -331,7 +339,8 @@ class ChangeNoticeUIControllerTest extends AbstractControllerTest implements Man
                 .andExpect(status().isFound())
                 .andExpect(redirectedUrl(CHANGE_NOTICES_URL_SLASH + CHANGE_NOTICE_1_ID))
                 .andExpect(flash().attribute(ACTION, "Change notice " + updatedChangeNotice.getName() + " was updated"));
-        CHANGE_NOTICE_MATCHER.assertMatchIgnoreFields(service.getWithChanges(CHANGE_NOTICE_1_ID), updatedChangeNotice, "changes.id", "changes.document.id", "changes.document.originalHolder", "changes.document.developer");
+        CHANGE_NOTICE_MATCHER.assertMatchIgnoreFields(service.getWithChanges(CHANGE_NOTICE_1_ID), updatedChangeNotice,
+                "changes.id", "changes.document.id", "changes.document.originalHolder", "changes.document.developer");
         assertTrue(Files.exists(Paths.get(contentPath, updatedChangeNotice.getFile().getFileLink())));
         assertTrue(Files.notExists(Paths.get(contentPath, changeNotice1.getFile().getFileLink())));
     }
@@ -343,14 +352,15 @@ class ChangeNoticeUIControllerTest extends AbstractControllerTest implements Man
         updatedChangeNotice.setName(changeNotice3.getName());
         updatedChangeNotice.getFile().setFileLink(changeNotice3.getName() + "/VUIA.SK.591.pdf");
         MultiValueMap<String, String> updatedParams = ChangeNoticeTestData.getUpdatedParams();
-        updatedParams.set(NAME_PARAM, changeNotice3.getName());
+        updatedParams.set(NAME, changeNotice3.getName());
         perform(MockMvcRequestBuilders.post(CHANGE_NOTICES_URL)
                 .params(updatedParams)
                 .with(csrf()))
                 .andExpect(status().isFound())
                 .andExpect(redirectedUrl(CHANGE_NOTICES_URL_SLASH + CHANGE_NOTICE_1_ID))
                 .andExpect(flash().attribute(ACTION, "Change notice " + updatedChangeNotice.getName() + " was updated"));
-        CHANGE_NOTICE_MATCHER.assertMatchIgnoreFields(service.getWithChanges(CHANGE_NOTICE_1_ID), updatedChangeNotice, "changes.id", "changes.document.id", "changes.document.originalHolder", "changes.document.developer");
+        CHANGE_NOTICE_MATCHER.assertMatchIgnoreFields(service.getWithChanges(CHANGE_NOTICE_1_ID), updatedChangeNotice,
+                "changes.id", "changes.document.id", "changes.document.originalHolder", "changes.document.developer");
         assertTrue(Files.exists(Paths.get(contentPath, updatedChangeNotice.getFile().getFileLink())));
         assertTrue(Files.notExists(Paths.get(contentPath, changeNotice1.getFile().getFileLink())));
         assertThrows(NotFoundException.class, () -> service.get(CHANGE_NOTICE_3_ID));
@@ -364,14 +374,15 @@ class ChangeNoticeUIControllerTest extends AbstractControllerTest implements Man
         updatedChangeNotice.setName(changeNotice1.getName());
         updatedChangeNotice.getFile().setFileLink(changeNotice1.getFile().getFileLink());
         MultiValueMap<String, String> updatedParams = ChangeNoticeTestData.getUpdatedParams();
-        updatedParams.set(NAME_PARAM, changeNotice1.getName());
+        updatedParams.set(NAME, changeNotice1.getName());
         perform(MockMvcRequestBuilders.post(CHANGE_NOTICES_URL)
                 .params(updatedParams)
                 .with(csrf()))
                 .andExpect(status().isFound())
                 .andExpect(redirectedUrl(CHANGE_NOTICES_URL_SLASH + CHANGE_NOTICE_1_ID))
                 .andExpect(flash().attribute(ACTION, "Change notice " + updatedChangeNotice.getName() + " was updated"));
-        CHANGE_NOTICE_MATCHER.assertMatchIgnoreFields(service.getWithChanges(CHANGE_NOTICE_1_ID), updatedChangeNotice, "changes.id", "changes.document.id", "changes.document.originalHolder", "changes.document.developer");
+        CHANGE_NOTICE_MATCHER.assertMatchIgnoreFields(service.getWithChanges(CHANGE_NOTICE_1_ID), updatedChangeNotice,
+                "changes.id", "changes.document.id", "changes.document.originalHolder", "changes.document.developer");
         assertTrue(Files.exists(Paths.get(contentPath, updatedChangeNotice.getFile().getFileLink())));
     }
 
@@ -415,22 +426,21 @@ class ChangeNoticeUIControllerTest extends AbstractControllerTest implements Man
                 .params(updatedInvalidParams)
                 .with(csrf()))
                 .andExpect(status().isOk())
-                .andExpect(model().attributeHasFieldErrors(CHANGE_NOTICE_TO_ATTRIBUTE, NAME_PARAM,
-                        "releaseDate", "changes"))
+                .andExpect(model().attributeHasFieldErrors(CHANGE_NOTICE_TO_ATTRIBUTE, NAME, RELEASE_DATE, CHANGES))
                 .andExpect(view().name(CHANGE_NOTICE_FORM_VIEW));
-        assertNotEquals(service.get(CHANGE_NOTICE_1_ID).getName(), updatedInvalidParams.get(NAME_PARAM).get(0));
+        assertNotEquals(service.get(CHANGE_NOTICE_1_ID).getName(), updatedInvalidParams.get(NAME).get(0));
     }
 
     @Test
     @WithUserDetails(ARCHIVIST_MAIL)
     void updateDuplicateName() throws Exception {
         MultiValueMap<String, String> updatedParams = ChangeNoticeTestData.getUpdatedParams();
-        updatedParams.set(NAME_PARAM, changeNotice2.getName());
+        updatedParams.set(NAME, changeNotice2.getName());
         perform(MockMvcRequestBuilders.post(CHANGE_NOTICES_URL)
                 .params(updatedParams)
                 .with(csrf()))
                 .andExpect(status().isOk())
-                .andExpect(model().attributeHasFieldErrorCode(CHANGE_NOTICE_TO_ATTRIBUTE, NAME_PARAM, DUPLICATE_ERROR_CODE))
+                .andExpect(model().attributeHasFieldErrorCode(CHANGE_NOTICE_TO_ATTRIBUTE, NAME, DUPLICATE_ERROR_CODE))
                 .andExpect(view().name(CHANGE_NOTICE_FORM_VIEW));
         assertNotEquals(service.get(CHANGE_NOTICE_1_ID).getName(), changeNotice2.getName());
     }

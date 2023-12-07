@@ -13,7 +13,9 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import ru.javaprojects.archivist.AbstractControllerTest;
+import ru.javaprojects.archivist.CommonTestData;
 import ru.javaprojects.archivist.ManagesContentFiles;
+import ru.javaprojects.archivist.changenotices.ChangeNoticeUtil;
 import ru.javaprojects.archivist.changenotices.model.Change;
 import ru.javaprojects.archivist.changenotices.model.ChangeNotice;
 import ru.javaprojects.archivist.changenotices.repository.ChangeRepository;
@@ -40,6 +42,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static ru.javaprojects.archivist.CommonTestData.*;
+import static ru.javaprojects.archivist.changenotices.ChangeNoticeTestData.changeNotice1;
 import static ru.javaprojects.archivist.changenotices.ChangeNoticeTestData.changeNotice2;
 import static ru.javaprojects.archivist.common.error.Constants.*;
 import static ru.javaprojects.archivist.common.util.JsonUtil.writeValue;
@@ -96,7 +99,7 @@ class DocumentRestControllerTest extends AbstractControllerTest implements Manag
 
     @Test
     @WithUserDetails(ARCHIVIST_MAIL)
-    void delete() throws Exception {
+    void deleteDocument() throws Exception {
         perform(MockMvcRequestBuilders.delete(DOCUMENTS_URL_SLASH + DOCUMENT1_ID)
                 .with(csrf()))
                 .andExpect(status().isNoContent());
@@ -106,7 +109,7 @@ class DocumentRestControllerTest extends AbstractControllerTest implements Manag
 
     @Test
     @WithUserDetails(ARCHIVIST_MAIL)
-    void deleteNotFound() throws Exception {
+    void deleteDocumentNotFound() throws Exception {
         perform(MockMvcRequestBuilders.delete(DOCUMENTS_URL_SLASH + NOT_FOUND)
                 .with(csrf()))
                 .andExpect(status().isNotFound())
@@ -119,7 +122,7 @@ class DocumentRestControllerTest extends AbstractControllerTest implements Manag
     }
 
     @Test
-    void deleteUnAuthorized() throws Exception {
+    void deleteDocumentUnAuthorized() throws Exception {
         perform(MockMvcRequestBuilders.delete(DOCUMENTS_URL_SLASH + DOCUMENT1_ID)
                 .with(csrf()))
                 .andExpect(status().isFound())
@@ -131,7 +134,7 @@ class DocumentRestControllerTest extends AbstractControllerTest implements Manag
 
     @Test
     @WithUserDetails(USER_MAIL)
-    void deleteForbidden() throws Exception {
+    void deleteDocumentForbidden() throws Exception {
         perform(MockMvcRequestBuilders.delete(DOCUMENTS_URL_SLASH + DOCUMENT1_ID)
                 .with(csrf()))
                 .andExpect(status().isForbidden());
@@ -142,13 +145,14 @@ class DocumentRestControllerTest extends AbstractControllerTest implements Manag
     @Test
     @WithUserDetails(ARCHIVIST_MAIL)
     void createApplicability() throws Exception {
+        Applicability newApplicability = getNewApplicability();
         ResultActions action = perform(MockMvcRequestBuilders.post(APPLICABILITIES_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(writeValue(getNewApplicabilityTo()))
                 .with(csrf()))
                 .andExpect(status().isCreated());
         Applicability created = APPLICABILITY_MATCHER.readFromJson(action);
-        Applicability newApplicability = new Applicability(created.getId(), document3, document1, false);
+        newApplicability.setId(created.getId());
         APPLICABILITY_MATCHER.assertMatch(created, newApplicability);
         APPLICABILITY_MATCHER.assertMatch(applicabilityRepository.getExisted(created.id()), newApplicability);
     }
@@ -156,16 +160,18 @@ class DocumentRestControllerTest extends AbstractControllerTest implements Manag
     @Test
     @WithUserDetails(ARCHIVIST_MAIL)
     void createApplicabilityWhenApplicabilityNotExists() throws Exception {
+        Applicability newApplicability = getNewApplicability();
         ApplicabilityTo newApplicabilityTo = getNewApplicabilityTo();
-        newApplicabilityTo.setDecimalNumber(NOT_EXISTED_DECIMAL_NUMBER);
+        newApplicabilityTo.setDecimalNumber(NOT_EXISTING_DECIMAL_NUMBER);
         ResultActions action = perform(MockMvcRequestBuilders.post(APPLICABILITIES_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(writeValue(newApplicabilityTo))
                 .with(csrf()))
                 .andExpect(status().isCreated());
-        Document applicability = documentService.getByDecimalNumber(NOT_EXISTED_DECIMAL_NUMBER);
         Applicability created = APPLICABILITY_MATCHER.readFromJson(action);
-        Applicability newApplicability = new Applicability(created.getId(), document3, applicability, false);
+        newApplicability.setId(created.getId());
+        Document autoGeneratedDocument = documentService.getByDecimalNumber(NOT_EXISTING_DECIMAL_NUMBER);
+        newApplicability.setApplicability(autoGeneratedDocument);
         APPLICABILITY_MATCHER.assertMatch(created, newApplicability);
         APPLICABILITY_MATCHER.assertMatch(applicabilityRepository.getExisted(created.id()), newApplicability);
     }
@@ -192,7 +198,7 @@ class DocumentRestControllerTest extends AbstractControllerTest implements Manag
     @WithUserDetails(ARCHIVIST_MAIL)
     void createApplicabilityInvalid() throws Exception {
         ApplicabilityTo newApplicabilityTo = getNewApplicabilityTo();
-        newApplicabilityTo.setDecimalNumber(null);
+        newApplicabilityTo.setDecimalNumber("");
         perform(MockMvcRequestBuilders.post(APPLICABILITIES_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(writeValue(newApplicabilityTo))
@@ -225,7 +231,7 @@ class DocumentRestControllerTest extends AbstractControllerTest implements Manag
     @Test
     @WithUserDetails(ARCHIVIST_MAIL)
     void createApplicabilityDuplicatePrimal() throws Exception {
-        ApplicabilityTo newApplicabilityTo = new ApplicabilityTo(null, DOCUMENT5_ID, NOT_EXISTED_DECIMAL_NUMBER, true);
+        ApplicabilityTo newApplicabilityTo = new ApplicabilityTo(null, DOCUMENT5_ID, NOT_EXISTING_DECIMAL_NUMBER, true);
         perform(MockMvcRequestBuilders.post(APPLICABILITIES_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(writeValue(newApplicabilityTo))
@@ -453,10 +459,11 @@ class DocumentRestControllerTest extends AbstractControllerTest implements Manag
     void downloadContentFile() throws Exception {
         perform(MockMvcRequestBuilders.get(CONTENT_DOWNLOAD_URL)
                 .with(csrf())
-                .param(FILE_LINK_PARAM, content1.getFiles().get(1).getFileLink()))
+                .param(FILE_LINK, content1.getFiles().get(1).getFileLink()))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PDF))
-                .andExpect(header().string("Content-Disposition", "inline; filename=" + content1.getFiles().get(1).getFileName()));
+                .andExpect(header().string("Content-Disposition", "inline; filename=" +
+                        content1.getFiles().get(1).getFileName()));
     }
 
     @Test
@@ -464,13 +471,13 @@ class DocumentRestControllerTest extends AbstractControllerTest implements Manag
     void downloadContentFileNotFound() throws Exception {
         perform(MockMvcRequestBuilders.get(CONTENT_DOWNLOAD_URL)
                 .with(csrf())
-                .param(FILE_LINK_PARAM,  NOT_EXISTED_CONTENT_FILE_LINK))
+                .param(FILE_LINK, NOT_EXISTING_CONTENT_FILE_LINK))
                 .andExpect(status().isUnprocessableEntity())
                 .andExpect(result -> assertEquals(Objects.requireNonNull(result.getResolvedException()).getClass(),
                         IllegalRequestDataException.class))
                 .andExpect(problemTitle(HttpStatus.UNPROCESSABLE_ENTITY.getReasonPhrase()))
                 .andExpect(problemStatus(HttpStatus.UNPROCESSABLE_ENTITY.value()))
-                .andExpect(problemDetail("Failed to download file: " + NOT_EXISTED_CONTENT_FILE))
+                .andExpect(problemDetail("Failed to download file: " + NOT_EXISTING_CONTENT_FILE))
                 .andExpect(problemInstance(CONTENT_DOWNLOAD_URL));
     }
 
@@ -478,7 +485,7 @@ class DocumentRestControllerTest extends AbstractControllerTest implements Manag
     void downloadContentFileUnauthorized() throws Exception {
         perform(MockMvcRequestBuilders.get(CONTENT_DOWNLOAD_URL)
                 .with(csrf())
-                .param(FILE_LINK_PARAM, content1.getFiles().get(0).getFileLink()))
+                .param(FILE_LINK, content1.getFiles().get(0).getFileLink()))
                 .andExpect(status().isFound())
                 .andExpect(result ->
                         assertTrue(Objects.requireNonNull(result.getResponse().getRedirectedUrl()).endsWith(LOGIN_URL)));
@@ -487,20 +494,19 @@ class DocumentRestControllerTest extends AbstractControllerTest implements Manag
     @Test
     @WithUserDetails(ARCHIVIST_MAIL)
     void createContent() throws Exception {
-        Files.deleteIfExists(Paths.get(contentPath, String.format(NEW_CONTENT_FILE_LINK, NOT_EXISTED_CONTENT_CHANGE_NUMBER)));
         ResultActions action = perform(MockMvcRequestBuilders.multipart(HttpMethod.POST, CONTENT_URL)
                 .file(CONTENT_FILE)
-                .param(ID_PARAM, String.valueOf(DOCUMENT1_ID))
-                .param(CHANGE_NUMBER_PARAM, NOT_EXISTED_CONTENT_CHANGE_NUMBER)
+                .param(CommonTestData.ID, String.valueOf(DOCUMENT1_ID))
+                .param(CHANGE_NUMBER, NOT_EXISTING_CONTENT_CHANGE_NUMBER)
                 .with(csrf()))
                 .andExpect(status().isCreated());
         Content created = CONTENT_MATCHER.readFromJson(action);
         Content newContent = new Content(created.getId(), 3, created.getCreated(), document1,
-                List.of(new ContentFile(NEW_CONTENT_FILE, String.format(NEW_CONTENT_FILE_LINK, NOT_EXISTED_CONTENT_CHANGE_NUMBER))));
+                List.of(new ContentFile(NEW_CONTENT_FILE, String.format(NEW_CONTENT_FILE_LINK, NOT_EXISTING_CONTENT_CHANGE_NUMBER))));
         CONTENT_MATCHER.assertMatch(created, newContent);
         CONTENT_MATCHER.assertMatch(contentRepository.getExisted(created.id()), newContent);
-        assertTrue(Files.exists(Paths.get(contentPath, String.format(NEW_CONTENT_FILE_LINK, NOT_EXISTED_CONTENT_CHANGE_NUMBER))));
-        Files.delete(Paths.get(contentPath, String.format(NEW_CONTENT_FILE_LINK, NOT_EXISTED_CONTENT_CHANGE_NUMBER)));
+        assertTrue(Files.exists(Paths.get(contentPath, String.format(NEW_CONTENT_FILE_LINK, NOT_EXISTING_CONTENT_CHANGE_NUMBER))));
+        Files.delete(Paths.get(contentPath, String.format(NEW_CONTENT_FILE_LINK, NOT_EXISTING_CONTENT_CHANGE_NUMBER)));
     }
 
     @Test
@@ -508,8 +514,8 @@ class DocumentRestControllerTest extends AbstractControllerTest implements Manag
     void createContentWhenDocumentNotExists() throws Exception {
         perform(MockMvcRequestBuilders.multipart(HttpMethod.POST, CONTENT_URL)
                 .file(CONTENT_FILE)
-                .param(ID_PARAM, String.valueOf(NOT_FOUND))
-                .param(CHANGE_NUMBER_PARAM, NOT_EXISTED_CONTENT_CHANGE_NUMBER)
+                .param(CommonTestData.ID, String.valueOf(NOT_FOUND))
+                .param(CHANGE_NUMBER, NOT_EXISTING_CONTENT_CHANGE_NUMBER)
                 .with(csrf()))
                 .andExpect(status().isNotFound())
                 .andExpect(result -> assertEquals(Objects.requireNonNull(result.getResolvedException()).getClass(),
@@ -518,7 +524,7 @@ class DocumentRestControllerTest extends AbstractControllerTest implements Manag
                 .andExpect(problemStatus(HttpStatus.NOT_FOUND.value()))
                 .andExpect(problemDetail(ENTITY_NOT_FOUND))
                 .andExpect(problemInstance(CONTENT_URL));
-        assertTrue(Files.notExists(Paths.get(contentPath, String.format(NEW_CONTENT_FILE_LINK, NOT_EXISTED_CONTENT_CHANGE_NUMBER))));
+        assertTrue(Files.notExists(Paths.get(contentPath, String.format(NEW_CONTENT_FILE_LINK, NOT_EXISTING_CONTENT_CHANGE_NUMBER))));
     }
 
     @Test
@@ -526,8 +532,8 @@ class DocumentRestControllerTest extends AbstractControllerTest implements Manag
     void createContentInvalid() throws Exception {
         perform(MockMvcRequestBuilders.multipart(HttpMethod.POST, CONTENT_URL)
                 .file(CONTENT_FILE)
-                .param(ID_PARAM, String.valueOf(DOCUMENT1_ID))
-                .param(CHANGE_NUMBER_PARAM, "-1")
+                .param(CommonTestData.ID, String.valueOf(DOCUMENT1_ID))
+                .param(CHANGE_NUMBER, "-1")
                 .with(csrf()))
                 .andExpect(status().isUnprocessableEntity())
                 .andExpect(result -> assertEquals(Objects.requireNonNull(result.getResolvedException()).getClass(),
@@ -543,8 +549,8 @@ class DocumentRestControllerTest extends AbstractControllerTest implements Manag
     void createContentDuplicateChangeNumber() throws Exception {
         perform(MockMvcRequestBuilders.multipart(HttpMethod.POST, CONTENT_URL)
                 .file(CONTENT_FILE)
-                .param(ID_PARAM, String.valueOf(DOCUMENT1_ID))
-                .param(CHANGE_NUMBER_PARAM, String.valueOf(content3.getChangeNumber()))
+                .param(CommonTestData.ID, String.valueOf(DOCUMENT1_ID))
+                .param(CHANGE_NUMBER, String.valueOf(content3.getChangeNumber()))
                 .with(csrf()))
                 .andExpect(status().isConflict())
                 .andExpect(result -> assertEquals(Objects.requireNonNull(result.getResolvedException()).getClass(),
@@ -560,13 +566,13 @@ class DocumentRestControllerTest extends AbstractControllerTest implements Manag
     void createContentUnauthorized() throws Exception {
         perform(MockMvcRequestBuilders.multipart(HttpMethod.POST, CONTENT_URL)
                 .file(CONTENT_FILE)
-                .param(ID_PARAM, String.valueOf(DOCUMENT1_ID))
-                .param(CHANGE_NUMBER_PARAM, NOT_EXISTED_CONTENT_CHANGE_NUMBER)
+                .param(CommonTestData.ID, String.valueOf(DOCUMENT1_ID))
+                .param(CHANGE_NUMBER, NOT_EXISTING_CONTENT_CHANGE_NUMBER)
                 .with(csrf()))
                 .andExpect(status().isFound())
                 .andExpect(result ->
                         assertTrue(Objects.requireNonNull(result.getResponse().getRedirectedUrl()).endsWith(LOGIN_URL)));
-        assertTrue(Files.notExists(Paths.get(contentPath, String.format(NEW_CONTENT_FILE_LINK, NOT_EXISTED_CONTENT_CHANGE_NUMBER))));
+        assertTrue(Files.notExists(Paths.get(contentPath, String.format(NEW_CONTENT_FILE_LINK, NOT_EXISTING_CONTENT_CHANGE_NUMBER))));
     }
 
     @Test
@@ -574,11 +580,11 @@ class DocumentRestControllerTest extends AbstractControllerTest implements Manag
     void createContentForbidden() throws Exception {
         perform(MockMvcRequestBuilders.multipart(HttpMethod.POST, CONTENT_URL)
                 .file(CONTENT_FILE)
-                .param(ID_PARAM, String.valueOf(DOCUMENT1_ID))
-                .param(CHANGE_NUMBER_PARAM, NOT_EXISTED_CONTENT_CHANGE_NUMBER)
+                .param(CommonTestData.ID, String.valueOf(DOCUMENT1_ID))
+                .param(CHANGE_NUMBER, NOT_EXISTING_CONTENT_CHANGE_NUMBER)
                 .with(csrf()))
                 .andExpect(status().isForbidden());
-        assertTrue(Files.notExists(Paths.get(contentPath, String.format(NEW_CONTENT_FILE_LINK, NOT_EXISTED_CONTENT_CHANGE_NUMBER))));
+        assertTrue(Files.notExists(Paths.get(contentPath, String.format(NEW_CONTENT_FILE_LINK, NOT_EXISTING_CONTENT_CHANGE_NUMBER))));
     }
 
     @Test
@@ -618,7 +624,7 @@ class DocumentRestControllerTest extends AbstractControllerTest implements Manag
     @WithUserDetails(USER_MAIL)
     void getSendings() throws Exception {
         perform(MockMvcRequestBuilders.get(String.format(DOCUMENT_SENDINGS_BY_COMPANY_URL, DOCUMENT1_ID))
-                .param("companyId", String.valueOf(COMPANY1_ID))
+                .param(COMPANY_ID, String.valueOf(COMPANY1_ID))
                 .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -629,7 +635,7 @@ class DocumentRestControllerTest extends AbstractControllerTest implements Manag
     @WithUserDetails(USER_MAIL)
     void getSendingsWhenDocumentNotExists() throws Exception {
         perform(MockMvcRequestBuilders.get(String.format(DOCUMENT_SENDINGS_BY_COMPANY_URL, NOT_FOUND))
-                .param("companyId", String.valueOf(COMPANY1_ID))
+                .param(COMPANY_ID, String.valueOf(COMPANY1_ID))
                 .with(csrf()))
                 .andExpect(status().isNotFound())
                 .andExpect(result -> assertEquals(Objects.requireNonNull(result.getResolvedException()).getClass(),
@@ -644,7 +650,7 @@ class DocumentRestControllerTest extends AbstractControllerTest implements Manag
     @WithUserDetails(USER_MAIL)
     void getSendingsWhenCompanyNotExists() throws Exception {
         perform(MockMvcRequestBuilders.get(String.format(DOCUMENT_SENDINGS_BY_COMPANY_URL, DOCUMENT1_ID))
-                .param("companyId", String.valueOf(NOT_FOUND))
+                .param(COMPANY_ID, String.valueOf(NOT_FOUND))
                 .with(csrf()))
                 .andExpect(status().isNotFound())
                 .andExpect(result -> assertEquals(Objects.requireNonNull(result.getResolvedException()).getClass(),
@@ -667,18 +673,80 @@ class DocumentRestControllerTest extends AbstractControllerTest implements Manag
     @Test
     @WithUserDetails(ARCHIVIST_MAIL)
     void createSending() throws Exception {
+        Sending newSending = getNewSending();
+        ResultActions action = perform(MockMvcRequestBuilders.post(SENDINGS_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(writeValue(getNewSendingTo()))
+                .with(csrf()))
+                .andExpect(status().isCreated());
+        Sending created = SENDING_MATCHER.readFromJson(action);
+        assertSendingMatch(created, newSending);
+    }
+
+    @Test
+    @WithUserDetails(ARCHIVIST_MAIL)
+    void createSendingWithResubscribe() throws Exception {
         SendingTo newSendingTo = getNewSendingTo();
+        newSendingTo.setCompanyId(COMPANY3_ID);
+        Sending newSending = getNewSending();
+        newSending.getInvoice().getLetter().setCompany(company3);
         ResultActions action = perform(MockMvcRequestBuilders.post(SENDINGS_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(writeValue(newSendingTo))
                 .with(csrf()))
                 .andExpect(status().isCreated());
         Sending created = SENDING_MATCHER.readFromJson(action);
-        Sending newSending = new Sending(created.getId(), document1,
-                new Invoice(created.getInvoice().getId(), newSendingTo.getInvoiceNumber(), newSendingTo.getInvoiceDate(), newSendingTo.getStatus(),
-                        new Letter(created.getInvoice().getLetter().getId(), newSendingTo.getLetterNumber(), newSendingTo.getLetterDate(), company1)));
-        SENDING_MATCHER.assertMatch(created, newSending);
-        SENDING_MATCHER.assertMatch(sendingRepository.findByIdWithInvoice(created.id()).orElseThrow(() -> new NotFoundException("Not found sending id=" + created.getId())), newSending);
+        assertSendingMatch(created, newSending);
+        assertTrue(subscriberRepository.findByDocument_IdAndCompany_Id(newSendingTo.getDocumentId(), COMPANY3_ID)
+                .orElseThrow().isSubscribed());
+    }
+
+    @Test
+    @WithUserDetails(ARCHIVIST_MAIL)
+    void createSendingWithoutResubscribe() throws Exception {
+        SendingTo newSendingTo = getNewSendingTo();
+        newSendingTo.setCompanyId(COMPANY3_ID);
+        newSendingTo.setInvoiceDate(LocalDate.of(2020, Month.DECEMBER, 1));
+        Sending newSending = getNewSending();
+        newSending.getInvoice().getLetter().setCompany(company3);
+        newSending.getInvoice().setDate(LocalDate.of(2020, Month.DECEMBER, 1));
+        ResultActions action = perform(MockMvcRequestBuilders.post(SENDINGS_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(writeValue(newSendingTo))
+                .with(csrf()))
+                .andExpect(status().isCreated());
+        Sending created = SENDING_MATCHER.readFromJson(action);
+        assertSendingMatch(created, newSending);
+        assertFalse(subscriberRepository.findByDocument_IdAndCompany_Id(newSendingTo.getDocumentId(), COMPANY3_ID)
+                .orElseThrow().isSubscribed());
+    }
+
+    @Test
+    @WithUserDetails(ARCHIVIST_MAIL)
+    void createSendingWhenSubscriberCreates() throws Exception {
+        SendingTo newSendingTo = getNewSendingTo();
+        newSendingTo.setDocumentId(DOCUMENT3_ID);
+        Sending newSending = getNewSending();
+        newSending.setDocument(document3);
+        ResultActions action = perform(MockMvcRequestBuilders.post(SENDINGS_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(writeValue(newSendingTo))
+                .with(csrf()))
+                .andExpect(status().isCreated());
+        Sending created = SENDING_MATCHER.readFromJson(action);
+        assertSendingMatch(created, newSending);
+        Subscriber createdSubscriber = subscriberRepository
+                .findByDocument_IdAndCompany_Id(DOCUMENT3_ID, newSendingTo.getCompanyId()).orElseThrow();
+        SUBSCRIBER_MATCHER.assertMatch(createdSubscriber,
+                new Subscriber(createdSubscriber.getId(), document3, company1, true, newSendingTo.getStatus()));
+    }
+
+    private void assertSendingMatch(Sending actual, Sending expected) {
+        expected.setId(actual.getId());
+        expected.getInvoice().setId(actual.getInvoice().getId());
+        expected.getInvoice().getLetter().setId(actual.getInvoice().getLetter().getId());
+        SENDING_MATCHER.assertMatch(actual, expected);
+        SENDING_MATCHER.assertMatch(sendingRepository.findByIdWithInvoice(actual.id()).orElseThrow(), expected);
     }
 
     @Test
@@ -721,7 +789,7 @@ class DocumentRestControllerTest extends AbstractControllerTest implements Manag
     @WithUserDetails(ARCHIVIST_MAIL)
     void createSendingInvalid() throws Exception {
         SendingTo newSendingTo = getNewSendingTo();
-        newSendingTo.setInvoiceNumber(null);
+        newSendingTo.setInvoiceNumber("");
         perform(MockMvcRequestBuilders.post(SENDINGS_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(writeValue(newSendingTo))
@@ -811,65 +879,6 @@ class DocumentRestControllerTest extends AbstractControllerTest implements Manag
     }
 
     @Test
-    @WithUserDetails(ARCHIVIST_MAIL)
-    void createSendingWithResubscribe() throws Exception {
-        SendingTo newSendingTo = getNewSendingTo();
-        newSendingTo.setCompanyId(COMPANY3_ID);
-        ResultActions action = perform(MockMvcRequestBuilders.post(SENDINGS_URL)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(writeValue(newSendingTo))
-                .with(csrf()))
-                .andExpect(status().isCreated());
-        Sending created = SENDING_MATCHER.readFromJson(action);
-        Sending newSending = new Sending(created.getId(), document1,
-                new Invoice(created.getInvoice().getId(), newSendingTo.getInvoiceNumber(), newSendingTo.getInvoiceDate(), newSendingTo.getStatus(),
-                        new Letter(created.getInvoice().getLetter().getId(), newSendingTo.getLetterNumber(), newSendingTo.getLetterDate(), company3)));
-        SENDING_MATCHER.assertMatch(created, newSending);
-        SENDING_MATCHER.assertMatch(sendingRepository.findByIdWithInvoice(created.id()).orElseThrow(() -> new NotFoundException("Not found sending id=" + created.getId())), newSending);
-        assertTrue(subscriberRepository.findByDocument_IdAndCompany_Id(newSendingTo.getDocumentId(), COMPANY3_ID).orElseThrow().isSubscribed());
-    }
-
-    @Test
-    @WithUserDetails(ARCHIVIST_MAIL)
-    void createSendingWithoutResubscribe() throws Exception {
-        SendingTo newSendingTo = getNewSendingTo();
-        newSendingTo.setCompanyId(COMPANY3_ID);
-        newSendingTo.setInvoiceDate(LocalDate.of(2020, Month.DECEMBER, 1));
-        ResultActions action = perform(MockMvcRequestBuilders.post(SENDINGS_URL)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(writeValue(newSendingTo))
-                .with(csrf()))
-                .andExpect(status().isCreated());
-        Sending created = SENDING_MATCHER.readFromJson(action);
-        Sending newSending = new Sending(created.getId(), document1,
-                new Invoice(created.getInvoice().getId(), newSendingTo.getInvoiceNumber(), newSendingTo.getInvoiceDate(), newSendingTo.getStatus(),
-                        new Letter(created.getInvoice().getLetter().getId(), newSendingTo.getLetterNumber(), newSendingTo.getLetterDate(), company3)));
-        SENDING_MATCHER.assertMatch(created, newSending);
-        SENDING_MATCHER.assertMatch(sendingRepository.findByIdWithInvoice(created.id()).orElseThrow(() -> new NotFoundException("Not found sending id=" + created.getId())), newSending);
-        assertFalse(subscriberRepository.findByDocument_IdAndCompany_Id(newSendingTo.getDocumentId(), COMPANY3_ID).orElseThrow().isSubscribed());
-    }
-
-    @Test
-    @WithUserDetails(ARCHIVIST_MAIL)
-    void createSendingWhenSubscriberCreates() throws Exception {
-        SendingTo newSendingTo = getNewSendingTo();
-        newSendingTo.setDocumentId(DOCUMENT3_ID);
-        ResultActions action = perform(MockMvcRequestBuilders.post(SENDINGS_URL)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(writeValue(newSendingTo))
-                .with(csrf()))
-                .andExpect(status().isCreated());
-        Sending created = SENDING_MATCHER.readFromJson(action);
-        Sending newSending = new Sending(created.getId(), document3,
-                new Invoice(created.getInvoice().getId(), newSendingTo.getInvoiceNumber(), newSendingTo.getInvoiceDate(), newSendingTo.getStatus(),
-                        new Letter(created.getInvoice().getLetter().getId(), newSendingTo.getLetterNumber(), newSendingTo.getLetterDate(), company1)));
-        SENDING_MATCHER.assertMatch(created, newSending);
-        SENDING_MATCHER.assertMatch(sendingRepository.findByIdWithInvoice(created.id()).orElseThrow(() -> new NotFoundException("Not found sending id=" + created.getId())), newSending);
-        Subscriber createdSubscriber = subscriberRepository.findByDocument_IdAndCompany_Id(DOCUMENT3_ID, newSendingTo.getCompanyId()).orElseThrow();
-        SUBSCRIBER_MATCHER.assertMatch(createdSubscriber, new Subscriber(createdSubscriber.getId(), document3, company1, true, newSendingTo.getStatus()));
-    }
-
-    @Test
     void createSendingUnauthorized() throws Exception {
         perform(MockMvcRequestBuilders.post(SENDINGS_URL)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -934,7 +943,7 @@ class DocumentRestControllerTest extends AbstractControllerTest implements Manag
     @WithUserDetails(ARCHIVIST_MAIL)
     void unsubscribe() throws Exception {
         perform(MockMvcRequestBuilders.patch(String.format(UNSUBSCRIBE_URL, DOCUMENT_1_SUBSCRIBER_1_ID))
-                .param("unsubscribeReason", "Some reason for unsubscribe")
+                .param(UNSUBSCRIBE_REASON, REASON_FOR_UNSUBSCRIBE)
                 .with(csrf()))
                 .andExpect(status().isNoContent());
         assertFalse(subscriberRepository.getExisted(DOCUMENT_1_SUBSCRIBER_1_ID).isSubscribed());
@@ -944,7 +953,7 @@ class DocumentRestControllerTest extends AbstractControllerTest implements Manag
     @WithUserDetails(ARCHIVIST_MAIL)
     void unsubscribeInvalidReason() throws Exception {
         perform(MockMvcRequestBuilders.patch(String.format(UNSUBSCRIBE_URL, DOCUMENT_1_SUBSCRIBER_1_ID))
-                .param("unsubscribeReason", "<p>Some reason for unsubscribe</p>")
+                .param(UNSUBSCRIBE_REASON, "")
                 .with(csrf()))
                 .andExpect(status().isUnprocessableEntity())
                 .andExpect(result -> assertEquals(Objects.requireNonNull(result.getResolvedException()).getClass(),
@@ -959,7 +968,7 @@ class DocumentRestControllerTest extends AbstractControllerTest implements Manag
     @WithUserDetails(ARCHIVIST_MAIL)
     void unsubscribeNotFound() throws Exception {
         perform(MockMvcRequestBuilders.patch(String.format(UNSUBSCRIBE_URL, NOT_FOUND))
-                .param("unsubscribeReason", "Some reason for unsubscribe")
+                .param(UNSUBSCRIBE_REASON, REASON_FOR_UNSUBSCRIBE)
                 .with(csrf()))
                 .andExpect(status().isNotFound())
                 .andExpect(result -> assertEquals(Objects.requireNonNull(result.getResolvedException()).getClass(),
@@ -973,7 +982,7 @@ class DocumentRestControllerTest extends AbstractControllerTest implements Manag
     @Test
     void unsubscribeUnauthorized() throws Exception {
         perform(MockMvcRequestBuilders.patch(String.format(UNSUBSCRIBE_URL, DOCUMENT_1_SUBSCRIBER_1_ID))
-                .param("unsubscribeReason", "Some reason for unsubscribe")
+                .param(UNSUBSCRIBE_REASON, REASON_FOR_UNSUBSCRIBE)
                 .with(csrf()))
                 .andExpect(status().isFound())
                 .andExpect(result ->
@@ -984,7 +993,7 @@ class DocumentRestControllerTest extends AbstractControllerTest implements Manag
     @WithUserDetails(USER_MAIL)
     void unsubscribeForbidden() throws Exception {
         perform(MockMvcRequestBuilders.patch(String.format(UNSUBSCRIBE_URL, DOCUMENT_1_SUBSCRIBER_1_ID))
-                .param("unsubscribeReason", "Some reason for unsubscribe")
+                .param(UNSUBSCRIBE_REASON, REASON_FOR_UNSUBSCRIBE)
                 .with(csrf()))
                 .andExpect(status().isForbidden());
     }
@@ -1060,7 +1069,7 @@ class DocumentRestControllerTest extends AbstractControllerTest implements Manag
     @Test
     @WithUserDetails(ARCHIVIST_MAIL)
     void createChangeWhenChangeNoticeExists() throws Exception {
-        ChangeTo newChangeTo = new ChangeTo(null, DOCUMENT2_ID, "VUIA.TN.429", LocalDate.of(2021, Month.DECEMBER, 14), 3);
+        ChangeTo newChangeTo = getNewChangeToWithExistedChangeNotice();
         ResultActions action = perform(MockMvcRequestBuilders.post(CHANGES_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(writeValue(newChangeTo))
@@ -1075,7 +1084,8 @@ class DocumentRestControllerTest extends AbstractControllerTest implements Manag
     @Test
     @WithUserDetails(ARCHIVIST_MAIL)
     void createChangeWhenChangeNoticeExistsDifferentChangeDate() throws Exception {
-        ChangeTo newChangeTo = new ChangeTo(null, DOCUMENT2_ID, "VUIA.TN.429", LocalDate.of(2021, Month.DECEMBER, 15), 2);
+        ChangeTo newChangeTo = getNewChangeToWithExistedChangeNotice();
+        newChangeTo.setChangeNoticeDate(LocalDate.of(2021, Month.DECEMBER, 15));
         perform(MockMvcRequestBuilders.post(CHANGES_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(writeValue(newChangeTo))
@@ -1129,8 +1139,8 @@ class DocumentRestControllerTest extends AbstractControllerTest implements Manag
     @WithUserDetails(ARCHIVIST_MAIL)
     void createChangeDuplicateChangeNotice() throws Exception {
         ChangeTo newChangeTo = getNewChangeTo();
-        newChangeTo.setChangeNoticeName("VUIA.SK.591");
-        newChangeTo.setChangeNoticeDate(LocalDate.of(2020, Month.JUNE, 18));
+        newChangeTo.setChangeNoticeName(changeNotice1.getName());
+        newChangeTo.setChangeNoticeDate(changeNotice1.getReleaseDate());
         perform(MockMvcRequestBuilders.post(CHANGES_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(writeValue(newChangeTo))

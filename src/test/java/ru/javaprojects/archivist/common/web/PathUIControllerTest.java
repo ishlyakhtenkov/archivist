@@ -13,18 +13,20 @@ import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static ru.javaprojects.archivist.CommonTestData.USER_MAIL;
-import static ru.javaprojects.archivist.CommonTestData.getPageableParams;
+import static ru.javaprojects.archivist.CommonTestData.*;
 import static ru.javaprojects.archivist.common.web.PathUIController.LOGIN_URL;
 import static ru.javaprojects.archivist.posts.PostTestData.*;
 
 class PathUIControllerTest extends AbstractControllerTest {
+    private static final String POSTS_ATTRIBUTE = "posts";
+    private static final String LOGIN_PAGE_VIEW = "users/login";
+    private static final String HOME_PAGE_VIEW = "index";
 
     @Test
     void showLoginPageUnAuthorized() throws Exception {
         perform(MockMvcRequestBuilders.get(LOGIN_URL))
                 .andExpect(status().isOk())
-                .andExpect(view().name("users/login"));
+                .andExpect(view().name(LOGIN_PAGE_VIEW));
     }
 
     @Test
@@ -32,19 +34,19 @@ class PathUIControllerTest extends AbstractControllerTest {
     void showLoginPageAuthorized() throws Exception {
         perform(MockMvcRequestBuilders.get(LOGIN_URL))
                 .andExpect(status().isFound())
-                .andExpect(redirectedUrl("/"));
+                .andExpect(redirectedUrl(HOME_URL));
     }
 
     @Test
     @SuppressWarnings("unchecked")
     void showHomePageUnAuthorized() throws Exception {
-        ResultActions actions = perform(MockMvcRequestBuilders.get("/")
+        ResultActions actions = perform(MockMvcRequestBuilders.get(HOME_URL)
                 .params(getPageableParams()))
                 .andExpect(status().isOk())
-                .andExpect(model().attributeExists("posts"))
-                .andExpect(view().name("index"));
+                .andExpect(model().attributeExists(POSTS_ATTRIBUTE))
+                .andExpect(view().name(HOME_PAGE_VIEW));
         Page<Post> posts = (Page<Post>) Objects.requireNonNull(actions.andReturn().getModelAndView())
-                .getModel().get("posts");
+                .getModel().get(POSTS_ATTRIBUTE);
         assertEquals(1, posts.getTotalElements());
         assertEquals(1, posts.getTotalPages());
         POST_MATCHER.assertMatch(posts.getContent(), List.of(post1));
@@ -54,13 +56,13 @@ class PathUIControllerTest extends AbstractControllerTest {
     @SuppressWarnings("unchecked")
     @WithUserDetails(USER_MAIL)
     void showHomePage() throws Exception {
-        ResultActions actions = perform(MockMvcRequestBuilders.get("/")
+        ResultActions actions = perform(MockMvcRequestBuilders.get(HOME_URL)
                 .params(getPageableParams()))
                 .andExpect(status().isOk())
-                .andExpect(model().attributeExists("posts"))
-                .andExpect(view().name("index"));
+                .andExpect(model().attributeExists(POSTS_ATTRIBUTE))
+                .andExpect(view().name(HOME_PAGE_VIEW));
         Page<Post> posts = (Page<Post>) Objects.requireNonNull(actions.andReturn().getModelAndView())
-                .getModel().get("posts");
+                .getModel().get(POSTS_ATTRIBUTE);
         assertEquals(3, posts.getTotalElements());
         assertEquals(2, posts.getTotalPages());
         POST_MATCHER.assertMatch(posts.getContent(), List.of(post3, post2));

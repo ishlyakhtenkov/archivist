@@ -31,6 +31,7 @@ public class UserTestData {
     public static final String ADMIN_TOKEN = "5a99dd09-d23f-44bb-8d41-b6ff44275d01";
     public static final String NOT_EXISTING_TOKEN = UUID.randomUUID().toString();
     public static final String EXPIRED_TOKEN = "52bde839-9779-4005-b81c-9131c9590d79";
+    public static final String NOT_EXISTING_EMAIL = "notExisting@gmail.com";
 
     public static final String NEW_PASSWORD = "newPassword";
     public static final String INVALID_PASSWORD = "pass";
@@ -70,22 +71,24 @@ public class UserTestData {
         params.add(EMAIL, newUser.getEmail());
         params.add(ROLES, newUser.getRoles().stream().map(Enum::name).collect(Collectors.joining(",")));
         params.add(PASSWORD, newUser.getPassword());
-        params.add(ENABLED, newUser.isEnabled() + "");
+        params.add(ENABLED, String.valueOf(newUser.isEnabled()));
         return params;
     }
 
     public static MultiValueMap<String, String> getNewInvalidParams() {
-        MultiValueMap<String, String> params = getUpdatedInvalidParams();
-        params.remove(ID);
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add(FIRST_NAME, "");
+        params.add(LAST_NAME,"J");
+        params.add(EMAIL, "notEmail");
+        params.add(ROLES, "");
         params.add(PASSWORD, INVALID_PASSWORD);
-        params.add(ENABLED, TRUE);
         return params;
     }
 
     public static MultiValueMap<String, String> getUpdatedParams() {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         User updatedUser = getUpdated();
-        params.add(ID, USER_ID + "");
+        params.add(ID, String.valueOf(USER_ID));
         params.add(FIRST_NAME, updatedUser.getFirstName());
         params.add(LAST_NAME, updatedUser.getLastName());
         params.add(EMAIL, updatedUser.getEmail());
@@ -94,12 +97,8 @@ public class UserTestData {
     }
 
     public static MultiValueMap<String, String> getUpdatedInvalidParams() {
-        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add(ID, USER_ID + "");
-        params.add(FIRST_NAME, "");
-        params.add(LAST_NAME,"J");
-        params.add(EMAIL, "notEmail");
-        params.add(ROLES, "");
+        MultiValueMap<String, String> params = getNewInvalidParams();
+        params.add(ID, String.valueOf(USER_ID));
         return params;
     }
 

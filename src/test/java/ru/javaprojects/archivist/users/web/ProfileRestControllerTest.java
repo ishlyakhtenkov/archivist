@@ -92,7 +92,8 @@ public class ProfileRestControllerTest extends AbstractControllerTest {
                 .andExpect(status().isNoContent());
         PasswordResetToken passwordResetToken = passwordResetService.getByEmail(USER_MAIL);
         assertTrue(passwordResetToken.getExpiryDate().after(new Date()));
-        String text = PASSWORD_RESET_MESSAGE_TEXT_TEMPLATE + String.format(PASSWORD_RESET_MESSAGE_LINK_TEMPLATE, passwordResetUrl, passwordResetToken.getToken());
+        String text = PASSWORD_RESET_MESSAGE_TEXT_TEMPLATE +
+                String.format(PASSWORD_RESET_MESSAGE_LINK_TEMPLATE, passwordResetUrl, passwordResetToken.getToken());
         Mockito.verify(mailSender, Mockito.times(1)).sendEmail(USER_MAIL, PASSWORD_RESET_MESSAGE_SUBJECT, text);
     }
 
@@ -106,24 +107,24 @@ public class ProfileRestControllerTest extends AbstractControllerTest {
         assertTrue(passwordResetToken.getExpiryDate().after(new Date()));
         assertNotEquals(passwordResetToken.getExpiryDate(), adminPasswordResetToken.getExpiryDate());
         assertNotEquals(passwordResetToken.getToken(), adminPasswordResetToken.getToken());
-        String text = PASSWORD_RESET_MESSAGE_TEXT_TEMPLATE + String.format(PASSWORD_RESET_MESSAGE_LINK_TEMPLATE, passwordResetUrl, passwordResetToken.getToken());
+        String text = PASSWORD_RESET_MESSAGE_TEXT_TEMPLATE +
+                String.format(PASSWORD_RESET_MESSAGE_LINK_TEMPLATE, passwordResetUrl, passwordResetToken.getToken());
         Mockito.verify(mailSender, Mockito.times(1)).sendEmail(ADMIN_MAIL, PASSWORD_RESET_MESSAGE_SUBJECT, text);
     }
 
     @Test
     void forgotPasswordNotFound() throws Exception {
-        String notExistingEmail = "notExisted@gmail.com";
         perform(MockMvcRequestBuilders.post(PROFILE_FORGOT_PASSWORD_URL)
-                .param(EMAIL, notExistingEmail)
+                .param(EMAIL, NOT_EXISTING_EMAIL)
                 .with(csrf()))
                 .andExpect(status().isNotFound())
                 .andExpect(result -> assertEquals(Objects.requireNonNull(result.getResolvedException()).getClass(),
                         NotFoundException.class))
                 .andExpect(problemTitle(HttpStatus.NOT_FOUND.getReasonPhrase()))
                 .andExpect(problemStatus(HttpStatus.NOT_FOUND.value()))
-                .andExpect(problemDetail("Not found user with email=" + notExistingEmail))
+                .andExpect(problemDetail("Not found user with email=" + NOT_EXISTING_EMAIL))
                 .andExpect(problemInstance(PROFILE_FORGOT_PASSWORD_URL));
-        assertThrows(NotFoundException.class, () -> passwordResetService.getByEmail(notExistingEmail));
+        assertThrows(NotFoundException.class, () -> passwordResetService.getByEmail(NOT_EXISTING_EMAIL));
         Mockito.verify(mailSender, Mockito.times(0)).sendEmail(Mockito.anyString(), Mockito.anyString(), Mockito.anyString());
     }
 

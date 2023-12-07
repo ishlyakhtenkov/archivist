@@ -11,15 +11,12 @@ public class CommonTestData {
     public static final String KEYWORD = "keyword";
     public static final String ACTION = "action";
     public static final String ID = "id";
+    public static final String NAME = "name";
+    public static final String HOME_URL = "/";
 
     public static final long NOT_FOUND = 100;
     public static final String ENTITY_NOT_FOUND = "Entity with id=" + NOT_FOUND + " not found";
 
-    public static final String ID_PARAM = "id";
-    public static final String NAME_PARAM = "name";
-
-    public static final String FALSE = "false";
-    public static final String TRUE = "true";
 
     public static MultiValueMap<String, String> getPageableParams() {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();

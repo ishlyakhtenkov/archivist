@@ -3,32 +3,30 @@ package ru.javaprojects.archivist.posts;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import ru.javaprojects.archivist.MatcherFactory;
-import ru.javaprojects.archivist.documents.model.Document;
 
 import java.time.LocalDateTime;
 
 import static java.time.Month.DECEMBER;
 import static java.time.Month.NOVEMBER;
-import static ru.javaprojects.archivist.CommonTestData.*;
+import static ru.javaprojects.archivist.CommonTestData.ID;
 import static ru.javaprojects.archivist.users.UserTestData.admin;
 
 public class PostTestData {
     public static final MatcherFactory.Matcher<Post> POST_MATCHER =
-            MatcherFactory.usingIgnoringFieldsComparator(Post.class, "created", "updated", "author.roles", "author.password", "author.registered");
+            MatcherFactory.usingIgnoringFieldsComparator(Post.class, "created", "updated", "author.roles",
+                    "author.password", "author.registered");
 
     public static final MatcherFactory.Matcher<PostTo> POST_TO_MATCHER =
             MatcherFactory.usingIgnoringFieldsComparator(PostTo.class);
-
 
     public static final long POST1_ID = 100054;
     public static final long POST2_ID = 100055;
     public static final long POST3_ID = 100056;
 
     public static final String POST_TO_ATTRIBUTE = "postTo";
-
-    public static final String TITLE_PARAM = "title";
-    public static final String CONTENT_PARAM = "content";
-    public static final String FOR_AUTH_ONLY_PARAM = "forAuthOnly";
+    public static final String TITLE = "title";
+    public static final String CONTENT = "content";
+    public static final String FOR_AUTH_ONLY = "forAuthOnly";
 
     public static final Post post1 = new Post(POST1_ID, "New users registration",
             "To apply for an account, please call 1-134-56 or email ishlyakhtenkov@npo.lan.",
@@ -53,17 +51,17 @@ public class PostTestData {
     public static MultiValueMap<String, String> getNewParams() {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         Post newPost = getNew();
-        params.add(TITLE_PARAM, newPost.getTitle());
-        params.add(CONTENT_PARAM, newPost.getContent());
-        params.add(FOR_AUTH_ONLY_PARAM, TRUE);
+        params.add(TITLE, newPost.getTitle());
+        params.add(CONTENT, newPost.getContent());
+        params.add(FOR_AUTH_ONLY, String.valueOf(newPost.isForAuthOnly()));
         return params;
     }
 
     public static MultiValueMap<String, String> getNewInvalidParams() {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add(TITLE_PARAM, "<p>New title</p>");
-        params.add(CONTENT_PARAM, "");
-        params.add(FOR_AUTH_ONLY_PARAM, TRUE);
+        params.add(TITLE, "<p>New title</p>");
+        params.add(CONTENT, "");
+        params.add(FOR_AUTH_ONLY, String.valueOf(true));
         return params;
     }
 
@@ -71,9 +69,9 @@ public class PostTestData {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         Post updatedPost = getUpdated();
         params.add(ID, String.valueOf(POST1_ID));
-        params.add(TITLE_PARAM, updatedPost.getTitle());
-        params.add(CONTENT_PARAM, updatedPost.getContent());
-        params.add(FOR_AUTH_ONLY_PARAM, FALSE);
+        params.add(TITLE, updatedPost.getTitle());
+        params.add(CONTENT, updatedPost.getContent());
+        params.add(FOR_AUTH_ONLY, String.valueOf(updatedPost.isForAuthOnly()));
         return params;
     }
 

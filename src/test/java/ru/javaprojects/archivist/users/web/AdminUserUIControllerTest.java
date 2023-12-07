@@ -32,7 +32,6 @@ public class AdminUserUIControllerTest extends AbstractControllerTest {
     private static final String USERS_CREATE_URL = USERS_URL + "/create";
     private static final String USERS_EDIT_FORM_URL = USERS_URL + "/edit/";
     private static final String USERS_UPDATE_URL = USERS_URL + "/update";
-
     private static final String USERS_VIEW = "users/users";
     private static final String USER_ADD_VIEW = "users/user-add-form";
     private static final String USER_EDIT_VIEW = "users/user-edit-form";
@@ -61,7 +60,7 @@ public class AdminUserUIControllerTest extends AbstractControllerTest {
     @SuppressWarnings("unchecked")
     void getAllByKeyword() throws Exception {
         ResultActions actions = perform(MockMvcRequestBuilders.get(USERS_URL)
-                .param(KEYWORD, "jack"))
+                .param(KEYWORD, admin.getFirstName()))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists(USERS_ATTRIBUTE))
                 .andExpect(view().name(USERS_VIEW));
@@ -97,7 +96,8 @@ public class AdminUserUIControllerTest extends AbstractControllerTest {
                 .andExpect(model().attributeExists(USER_ATTRIBUTE))
                 .andExpect(view().name(USER_ADD_VIEW))
                 .andExpect(result ->
-                        USER_MATCHER.assertMatch((User) Objects.requireNonNull(result.getModelAndView()).getModel().get(USER_ATTRIBUTE), new User()));
+                        USER_MATCHER.assertMatch((User) Objects.requireNonNull(result.getModelAndView())
+                                .getModel().get(USER_ATTRIBUTE), new User()));
     }
 
     @Test
@@ -186,7 +186,8 @@ public class AdminUserUIControllerTest extends AbstractControllerTest {
                 .andExpect(model().attributeExists(USER_TO_ATTRIBUTE))
                 .andExpect(view().name(USER_EDIT_VIEW))
                 .andExpect(result ->
-                        USER_TO_MATCHER.assertMatch((UserTo)Objects.requireNonNull(result.getModelAndView()).getModel().get(USER_TO_ATTRIBUTE), asTo(user)));
+                        USER_TO_MATCHER.assertMatch((UserTo)Objects.requireNonNull(result.getModelAndView())
+                                .getModel().get(USER_TO_ATTRIBUTE), asTo(user)));
     }
 
     @Test

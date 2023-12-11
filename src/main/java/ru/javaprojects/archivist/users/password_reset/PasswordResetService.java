@@ -49,6 +49,14 @@ public class PasswordResetService {
         mailSender.sendEmail(to, PASSWORD_RESET_MESSAGE_SUBJECT, text);
     }
 
+    @Transactional
+    public void resetPassword(PasswordResetTo passwordResetTo) {
+        Assert.notNull(passwordResetTo, "passwordResetTo must not be null");
+        PasswordResetToken passwordResetToken = checkToken(passwordResetTo.getToken());
+        passwordResetToken.getUser().setPassword(PASSWORD_ENCODER.encode(passwordResetTo.getPassword()));
+        repository.delete(passwordResetToken);
+    }
+
     public PasswordResetToken checkToken(String token) {
         Assert.notNull(token, "token must not be null");
         PasswordResetToken passwordResetToken = repository.findByToken(token)
@@ -60,16 +68,8 @@ public class PasswordResetService {
         return passwordResetToken;
     }
 
-    @Transactional
-    public void resetPassword(PasswordResetTo passwordResetTo) {
-        Assert.notNull(passwordResetTo, "passwordResetTo must not be null");
-        PasswordResetToken passwordResetToken = checkToken(passwordResetTo.getToken());
-        passwordResetToken.getUser().setPassword(PASSWORD_ENCODER.encode(passwordResetTo.getPassword()));
-        repository.delete(passwordResetToken);
-    }
-
     public PasswordResetToken getByEmail(String email) {
         return repository.findByUserEmailIgnoreCase(email).orElseThrow(() ->
-                new NotFoundException("Not found token for email=" + email));
+                new NotFoundException("Not found password reset token for email=" + email));
     }
 }

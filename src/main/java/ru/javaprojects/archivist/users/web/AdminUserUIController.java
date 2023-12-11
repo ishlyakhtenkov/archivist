@@ -16,6 +16,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ru.javaprojects.archivist.users.*;
 
 import static ru.javaprojects.archivist.common.util.validation.ValidationUtil.checkNew;
+import static ru.javaprojects.archivist.common.util.validation.ValidationUtil.checkNotNew;
 import static ru.javaprojects.archivist.users.UserUtil.asTo;
 
 @Controller
@@ -94,6 +95,7 @@ public class AdminUserUIController {
             return "users/user-edit-form";
         }
         log.info("update {}", userTo);
+        checkNotNew(userTo);
         service.update(userTo);
         redirectAttributes.addFlashAttribute("action", "User " + userTo.getFullName() + " was updated");
         return "redirect:/users";

@@ -30,9 +30,7 @@ import static ru.javaprojects.archivist.companies.web.CompanyUIController.COMPAN
 
 class CompanyUIControllerTest extends AbstractControllerTest {
     private static final String COMPANIES_ADD_FORM_URL = COMPANIES_URL + "/add";
-    private static final String COMPANIES_CREATE_URL = COMPANIES_URL + "/create";
     private static final String COMPANIES_EDIT_FORM_URL = COMPANIES_URL + "/edit/";
-    private static final String COMPANIES_UPDATE_URL = COMPANIES_URL + "/update";
     private static final String COMPANIES_URL_SLASH = COMPANIES_URL + "/";
     private static final String COMPANIES_VIEW = "companies/companies";
     private static final String COMPANY_VIEW = "companies/company";
@@ -139,20 +137,20 @@ class CompanyUIControllerTest extends AbstractControllerTest {
     @WithUserDetails(ARCHIVIST_MAIL)
     void create() throws Exception {
         Company newCompany = CompanyTestData.getNew();
-        perform(MockMvcRequestBuilders.post(COMPANIES_CREATE_URL)
-                .params((CompanyTestData.getNewParams()))
+        ResultActions actions = perform(MockMvcRequestBuilders.post(COMPANIES_URL)
+                .params((getNewParams()))
                 .with(csrf()))
                 .andExpect(status().isFound())
-                .andExpect(redirectedUrl(COMPANIES_URL))
                 .andExpect(flash().attribute(ACTION, "Company " + newCompany.getName() + " was created"));
         Company created = service.getByName(newCompany.getName());
         newCompany.setId(created.id());
         COMPANY_MATCHER.assertMatch(created, newCompany);
+        actions.andExpect(redirectedUrl(COMPANIES_URL_SLASH + created.getId()));
     }
 
     @Test
     void createUnAuthorize() throws Exception {
-        perform(MockMvcRequestBuilders.post(COMPANIES_CREATE_URL)
+        perform(MockMvcRequestBuilders.post(COMPANIES_URL)
                 .params((CompanyTestData.getNewParams()))
                 .with(csrf()))
                 .andExpect(status().isFound())
@@ -164,7 +162,7 @@ class CompanyUIControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(USER_MAIL)
     void createForbidden() throws Exception {
-        perform(MockMvcRequestBuilders.post(COMPANIES_CREATE_URL)
+        perform(MockMvcRequestBuilders.post(COMPANIES_URL)
                 .params((CompanyTestData.getNewParams()))
                 .with(csrf()))
                 .andExpect(status().isForbidden());
@@ -175,7 +173,7 @@ class CompanyUIControllerTest extends AbstractControllerTest {
     @WithUserDetails(ARCHIVIST_MAIL)
     void createInvalid() throws Exception {
         MultiValueMap<String, String> newInvalidParams = CompanyTestData.getNewInvalidParams();
-        perform(MockMvcRequestBuilders.post(COMPANIES_CREATE_URL)
+        perform(MockMvcRequestBuilders.post(COMPANIES_URL)
                 .params(newInvalidParams)
                 .with(csrf()))
                 .andExpect(status().isOk())
@@ -191,7 +189,7 @@ class CompanyUIControllerTest extends AbstractControllerTest {
     void createDuplicateName() throws Exception {
         MultiValueMap<String, String> newParams = CompanyTestData.getNewParams();
         newParams.set(NAME, COMPANY1_NAME);
-        perform(MockMvcRequestBuilders.post(COMPANIES_CREATE_URL)
+        perform(MockMvcRequestBuilders.post(COMPANIES_URL)
                 .params(newParams)
                 .with(csrf()))
                 .andExpect(status().isOk())
@@ -237,7 +235,7 @@ class CompanyUIControllerTest extends AbstractControllerTest {
     @WithUserDetails(ARCHIVIST_MAIL)
     void update() throws Exception {
         Company updatedCompany = CompanyTestData.getUpdated();
-        perform(MockMvcRequestBuilders.post(COMPANIES_UPDATE_URL)
+        perform(MockMvcRequestBuilders.post(COMPANIES_URL)
                 .params(CompanyTestData.getUpdatedParams())
                 .with(csrf()))
                 .andExpect(status().isFound())
@@ -254,7 +252,7 @@ class CompanyUIControllerTest extends AbstractControllerTest {
         updatedCompany.setName(COMPANY1_NAME);
         MultiValueMap<String, String> updatedParams = CompanyTestData.getUpdatedParams();
         updatedParams.set(NAME, COMPANY1_NAME);
-        perform(MockMvcRequestBuilders.post(COMPANIES_UPDATE_URL)
+        perform(MockMvcRequestBuilders.post(COMPANIES_URL)
                 .params(updatedParams)
                 .with(csrf()))
                 .andExpect(status().isFound())
@@ -268,7 +266,7 @@ class CompanyUIControllerTest extends AbstractControllerTest {
     void updateNotFound() throws Exception {
         MultiValueMap<String, String> updatedParams = CompanyTestData.getUpdatedParams();
         updatedParams.set(ID, NOT_FOUND + "");
-        perform(MockMvcRequestBuilders.post(COMPANIES_UPDATE_URL)
+        perform(MockMvcRequestBuilders.post(COMPANIES_URL)
                 .params(updatedParams)
                 .with(csrf()))
                 .andExpect(exception().exceptionPage(ENTITY_NOT_FOUND, NotFoundException.class));
@@ -276,7 +274,7 @@ class CompanyUIControllerTest extends AbstractControllerTest {
 
     @Test
     void updateUnAuthorize() throws Exception {
-        perform(MockMvcRequestBuilders.post(COMPANIES_UPDATE_URL)
+        perform(MockMvcRequestBuilders.post(COMPANIES_URL)
                 .params(CompanyTestData.getUpdatedParams())
                 .with(csrf()))
                 .andExpect(status().isFound())
@@ -288,7 +286,7 @@ class CompanyUIControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(USER_MAIL)
     void updateForbidden() throws Exception {
-        perform(MockMvcRequestBuilders.post(COMPANIES_UPDATE_URL)
+        perform(MockMvcRequestBuilders.post(COMPANIES_URL)
                 .params(CompanyTestData.getUpdatedParams())
                 .with(csrf()))
                 .andExpect(status().isForbidden());
@@ -299,7 +297,7 @@ class CompanyUIControllerTest extends AbstractControllerTest {
     @WithUserDetails(ARCHIVIST_MAIL)
     void updateInvalid() throws Exception {
         MultiValueMap<String, String> updatedInvalidParams = CompanyTestData.getUpdatedInvalidParams();
-        perform(MockMvcRequestBuilders.post(COMPANIES_UPDATE_URL)
+        perform(MockMvcRequestBuilders.post(COMPANIES_URL)
                 .params(updatedInvalidParams)
                 .with(csrf()))
                 .andExpect(status().isOk())
@@ -315,7 +313,7 @@ class CompanyUIControllerTest extends AbstractControllerTest {
     void updateDuplicateName() throws Exception {
         MultiValueMap<String, String> updatedParams = CompanyTestData.getUpdatedParams();
         updatedParams.set(NAME, COMPANY2_NAME);
-        perform(MockMvcRequestBuilders.post(COMPANIES_UPDATE_URL)
+        perform(MockMvcRequestBuilders.post(COMPANIES_URL)
                 .params(updatedParams)
                 .with(csrf()))
                 .andExpect(status().isOk())

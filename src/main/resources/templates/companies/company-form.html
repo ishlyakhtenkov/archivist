@@ -12,8 +12,8 @@
                         <a th:href="@{/companies}" type="button" class="btn-close pb-0" aria-label="Close"></a>
                     </div>
                     <div class="card-body px-3 px-md-5 pb-3 pb-md-5 pt-0 text-center">
-                        <h3 class="mb-4" th:text="${company.id == null} ? 'New company' : 'Editing: ' + ${company.name}">Create/Edit Company</h3>
-                        <form th:action="${company.id == null} ? @{/companies/create} : @{/companies/update}" method="post" th:object="${company}">
+                        <h3 class="mb-4" th:text="${company.isNew()} ? 'New company' : 'Editing: ' + ${company.name}">Create/Edit Company</h3>
+                        <form th:action="@{/companies}" method="post" th:object="${company}">
                             <input type="hidden" th:field="*{id}">
                             <div class="row">
                                 <div class="col-lg-4">

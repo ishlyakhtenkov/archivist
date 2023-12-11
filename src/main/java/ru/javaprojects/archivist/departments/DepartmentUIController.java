@@ -11,8 +11,6 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import static ru.javaprojects.archivist.common.util.validation.ValidationUtil.checkNew;
-
 @Controller
 @RequestMapping(DepartmentUIController.DEPARTMENTS_URL)
 @AllArgsConstructor
@@ -43,18 +41,6 @@ public class DepartmentUIController {
         return "departments/department-form";
     }
 
-    @PostMapping("/create")
-    public String create(@Valid Department department, BindingResult result, RedirectAttributes redirectAttributes) {
-        if (result.hasErrors()) {
-            return "departments/department-form";
-        }
-        log.info("create {}", department);
-        checkNew(department);
-        service.create(department);
-        redirectAttributes.addFlashAttribute("action", "Department " + department.getName() + " was created");
-        return "redirect:/departments";
-    }
-
     @GetMapping("/edit/{id}")
     public String showEditForm(@PathVariable long id, Model model) {
         log.info("show department={} edit form", id);
@@ -62,14 +48,20 @@ public class DepartmentUIController {
         return "departments/department-form";
     }
 
-    @PostMapping("/update")
-    public String update(@Valid Department department, BindingResult result, RedirectAttributes redirectAttributes) {
+    @PostMapping
+    public String createOrUpdate(@Valid Department department, BindingResult result, RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
             return "departments/department-form";
         }
-        log.info("update {}", department);
-        service.update(department);
-        redirectAttributes.addFlashAttribute("action", "Department " + department.getName() + " was updated");
+        boolean isNew = department.isNew();
+        log.info((isNew ? "create" : "update") + " {}", department);
+        if (isNew) {
+            service.create(department);
+        } else {
+            service.update(department);
+        }
+        redirectAttributes.addFlashAttribute("action", "Department " + department.getName() +
+                (isNew ? " was created" : " was updated"));
         return "redirect:/departments";
     }
 

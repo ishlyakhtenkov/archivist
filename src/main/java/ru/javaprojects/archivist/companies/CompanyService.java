@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import ru.javaprojects.archivist.common.error.NotFoundException;
 import ru.javaprojects.archivist.companies.model.Company;
@@ -46,6 +47,7 @@ public class CompanyService {
         repository.save(company);
     }
 
+    @Transactional // just to make one select by id instead of two by Hibernate
     public void update(Company company) {
         Assert.notNull(company, "company must not be null");
         repository.getExisted(company.id());

@@ -69,6 +69,7 @@ public class DocumentService {
                 .orElseThrow(() -> new NotFoundException("Not found document with decimal number=" + decimalNumber));
     }
 
+    @Transactional
     public void createOrUpdate(@Valid Document document) {
         Assert.notNull(document, "document must not be null");
         if (!document.isNew()) {

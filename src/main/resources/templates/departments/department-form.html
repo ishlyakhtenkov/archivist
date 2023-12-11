@@ -13,8 +13,8 @@
                         <a th:href="@{/departments}" type="button" class="btn-close" aria-label="Close"></a>
                     </div>
                     <div class="card-body px-3 px-md-5 pb-3 pb-md-5 pt-0 text-center">
-                        <h3 class="mb-4" th:text="${department.id == null} ? 'New department' : 'Editing: ' + ${department.name}">Create/Edit Department</h3>
-                        <form th:action="${department.id == null} ? @{/departments/create} : @{/departments/update}" method="post" th:object="${department}">
+                        <h3 class="mb-4" th:text="${department.isNew()} ? 'New department' : 'Editing: ' + ${department.name}">Create/Edit Department</h3>
+                        <form th:action="@{/departments}" method="post" th:object="${department}">
                             <input type="hidden" th:field="*{id}">
                             <div class="mb-4">
                                 <div class="input-group">

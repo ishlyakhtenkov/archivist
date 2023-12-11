@@ -80,6 +80,10 @@ public class MatcherFactory {
             return result -> assertMatch(JsonUtil.readValues(getContent(result), clazz), expected);
         }
 
+        public ResultMatcher contentJsonIgnoreFields(Iterable<T> expected, String... fieldsToIgnore) {
+            return result -> assertMatchIgnoreFields(JsonUtil.readValues(getContent(result), clazz), expected, fieldsToIgnore);
+        }
+
         public T readFromJson(ResultActions action) throws UnsupportedEncodingException {
             return JsonUtil.readValue(getContent(action.andReturn()), clazz);
         }

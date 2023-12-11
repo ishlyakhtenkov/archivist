@@ -24,7 +24,7 @@ public class CompanyRestController {
         service.delete(id);
     }
 
-    @GetMapping("/all")
+    @GetMapping("/list")
     public List<Company> getAll() {
         log.info("get all");
         return service.getAll();

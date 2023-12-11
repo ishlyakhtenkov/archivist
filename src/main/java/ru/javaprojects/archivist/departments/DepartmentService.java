@@ -2,6 +2,7 @@ package ru.javaprojects.archivist.departments;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import ru.javaprojects.archivist.common.error.NotFoundException;
 
@@ -30,6 +31,7 @@ public class DepartmentService {
         repository.save(department);
     }
 
+    @Transactional // just to make one select by id instead of two by Hibernate
     public void update(Department department) {
         Assert.notNull(department, "department must not be null");
         repository.getExisted(department.id());

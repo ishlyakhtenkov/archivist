@@ -32,7 +32,7 @@ public class ProfileRestController {
     @PostMapping("/forgotPassword")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void forgotPassword(@RequestParam String email) {
-        log.info("forgot password {}", email);
+        log.info("forgot password for {}", email);
         passwordResetService.sendPasswordResetEmail(email);
     }
 }

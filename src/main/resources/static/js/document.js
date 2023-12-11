@@ -315,7 +315,7 @@ $('#addSendingModal').on('show.bs.modal', function(e) {
 
 function fillCompaniesSelector() {
     $.ajax({
-        url: '/companies/all'
+        url: '/companies/list'
     }).done(companies => {
         if (companies.length !== 0) {
             companies.forEach(company => {

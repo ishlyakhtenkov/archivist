@@ -15,6 +15,12 @@ public class ValidationUtil {
         }
     }
 
+    public static void checkNotNew(HasId bean) {
+        if (bean.isNew()) {
+            throw new IllegalRequestDataException(bean.getClass().getSimpleName() + " must be not new (id!=null)");
+        }
+    }
+
     //  Conservative when you reply, but accept liberally (http://stackoverflow.com/a/32728226/548473)
     public static void assureIdConsistent(HasId bean, long id) {
         if (bean.isNew()) {

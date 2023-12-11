@@ -16,8 +16,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ru.javaprojects.archivist.companies.CompanyService;
 import ru.javaprojects.archivist.companies.model.Company;
 
-import static ru.javaprojects.archivist.common.util.validation.ValidationUtil.checkNew;
-
 @Controller
 @RequestMapping(CompanyUIController.COMPANIES_URL)
 @AllArgsConstructor
@@ -72,18 +70,6 @@ public class CompanyUIController {
         return "companies/company-form";
     }
 
-    @PostMapping("/create")
-    public String create(@Valid Company company, BindingResult result, RedirectAttributes redirectAttributes) {
-        if (result.hasErrors()) {
-            return "companies/company-form";
-        }
-        log.info("create {}", company);
-        checkNew(company);
-        service.create(company);
-        redirectAttributes.addFlashAttribute("action", "Company " + company.getName() + " was created");
-        return "redirect:/companies";
-    }
-
     @GetMapping("/edit/{id}")
     public String showEditForm(@PathVariable long id, Model model) {
         log.info("show company={} edit form", id);
@@ -91,14 +77,20 @@ public class CompanyUIController {
         return "companies/company-form";
     }
 
-    @PostMapping("/update")
-    public String update(@Valid Company company, BindingResult result, RedirectAttributes redirectAttributes) {
+    @PostMapping
+    public String createOrUpdate(@Valid Company company, BindingResult result, RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
             return "companies/company-form";
         }
-        log.info("update {}", company);
-        service.update(company);
-        redirectAttributes.addFlashAttribute("action", "Company " + company.getName() + " was updated");
+        boolean isNew = company.isNew();
+        log.info((isNew ? "create" : "update") + " {}", company);
+        if (isNew) {
+            service.create(company);
+        } else {
+            service.update(company);
+        }
+        redirectAttributes.addFlashAttribute("action", "Company " + company.getName() +
+                (isNew ? " was created" : " was updated"));
         return "redirect:/companies/" + company.getId();
     }
 }

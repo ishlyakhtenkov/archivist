@@ -11,5 +11,4 @@ public interface PasswordResetTokenRepository extends BaseRepository<PasswordRes
     Optional<PasswordResetToken> findByUserEmailIgnoreCase(String email);
 
     Optional<PasswordResetToken> findByToken(String token);
-
 }

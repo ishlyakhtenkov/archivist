@@ -29,7 +29,7 @@ public class ProfileUIController {
 
     @GetMapping
     public String profile(@AuthenticationPrincipal AuthUser authUser, Model model) {
-        log.info("show profile {}", authUser.id());
+        log.info("show profile for {}", authUser.id());
         model.addAttribute("user", userService.get(authUser.id()));
         return "users/profile";
     }

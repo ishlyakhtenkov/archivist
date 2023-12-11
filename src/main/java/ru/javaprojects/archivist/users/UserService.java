@@ -18,12 +18,11 @@ public class UserService {
     private final UserRepository repository;
 
     public Page<User> getAll(Pageable pageable) {
-        return repository.findAllByOrderByLastNameAscFirstName(pageable);
+        return repository.findAllWithPagination(pageable);
     }
 
     public Page<User> getAll(Pageable pageable, String keyword) {
-        return repository.findAllByFirstNameContainsIgnoreCaseOrLastNameContainsIgnoreCaseOrEmailContainsIgnoreCaseOrderByLastNameAscFirstName(
-                keyword, keyword, keyword, pageable);
+        return repository.findAllByKeywordWithPagination(keyword, pageable);
     }
 
     public User get(long id) {

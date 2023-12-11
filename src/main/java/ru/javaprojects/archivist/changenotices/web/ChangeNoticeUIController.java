@@ -86,6 +86,16 @@ public class ChangeNoticeUIController {
         return "change-notices/change-notice-form";
     }
 
+    @GetMapping("/edit/{id}")
+    public String showEditForm(@PathVariable long id, Model model) {
+        log.info("show change notice={} edit form", id);
+        ChangeNotice changeNotice = service.getWithChanges(id);
+        model.addAttribute("changeNoticeTo", changeNoticeUtil.asTo(changeNotice));
+        model.addAttribute("file", changeNotice.getFile());
+        addDataForChangeNoticeCardToModel(model);
+        return "change-notices/change-notice-form";
+    }
+
     @PostMapping
     public String createOrUpdate(@Valid ChangeNoticeTo changeNoticeTo, BindingResult result, Model model,
                                  RedirectAttributes redirectAttributes) {
@@ -121,15 +131,5 @@ public class ChangeNoticeUIController {
         return ResponseEntity.ok()
                 .header("Content-Disposition", "inline; filename=" + resource.getFilename())
                 .body(resource);
-    }
-
-    @GetMapping("/edit/{id}")
-    public String showEditForm(@PathVariable long id, Model model) {
-        log.info("show change notice={} edit form", id);
-        ChangeNotice changeNotice = service.getWithChanges(id);
-        model.addAttribute("changeNoticeTo", changeNoticeUtil.asTo(changeNotice));
-        model.addAttribute("file", changeNotice.getFile());
-        addDataForChangeNoticeCardToModel(model);
-        return "change-notices/change-notice-form";
     }
 }

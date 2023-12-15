@@ -11,7 +11,7 @@
                         <form sec:authorize="isAuthenticated()" class="d-flex" role="search">
                             <div class="input-group" style="width: 350px; margin-left: 100px;">
                                 <span class="input-group-text bg-light" id="searchDocuments"><i class="fa-solid fa-magnifying-glass fa-fw"></i></span>
-                                <input class="form-control" type="search" title="Global search by app" placeholder="Global search" aria-label="Global search" id="globalSearch">
+                                <input class="form-control" type="search" placeholder="Global search..." aria-label="Global search" id="globalSearch">
                             </div>
                         </form>
                     </div>
@@ -22,7 +22,7 @@
                         </a>
                     </div>
                     <div>
-                        <a sec:authorize="isAuthenticated()" th:href="@{/profile}" type="button" class="btn btn-gray px-3" title="Show profile">
+                        <a sec:authorize="isAuthenticated()" th:href="@{/profile}" type="button" class="btn btn-gray px-3">
                             <i class="fa-solid fa-address-card"></i>
                             Profile
                         </a>

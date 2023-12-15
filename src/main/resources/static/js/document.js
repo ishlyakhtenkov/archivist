@@ -180,7 +180,7 @@ function generateContentCard(content, bgColor) {
     let cardHeader = $('<div></div>').addClass('card-header');
     let cardBody = $('<div></div>').addClass('card-body pt-1 pb-2');
     let infoRow = $('<div></div>').addClass('row');
-    let changeNumberCol = $('<div></div>').addClass('col').html(`<span class="badge rounded-circle text-bg-${bgColor}">${content.changeNumber}</span>`);
+    let changeNumberCol = $('<div></div>').addClass('col').html(`<span class="badge rounded-circle text-bg-${bgColor}" title="Change number">${content.changeNumber}</span>`);
     infoRow.append(changeNumberCol);
     if (hasAdminOrArchivistRole()) {
         let deleteButtonCol = $('<div></div>').addClass('col text-end').html(`<a type="button" class="trash-button"

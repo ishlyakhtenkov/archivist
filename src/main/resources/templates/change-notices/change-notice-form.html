@@ -10,22 +10,24 @@
         <!-- Create/Edit Change notice card -->
         <div class="row d-flex justify-content-center align-items-center">
             <div class="col-12 col-xxl-10">
-                <div class="card shadow-2-strong" style="border-radius: 1rem;">
-                    <div class="text-end mt-3 me-3">
-                        <a th:href="@{/change-notices}" type="button" class="btn-close pb-0" aria-label="Close"></a>
+                <div class="card shadow">
+                    <div class="card-header">
+                        <span class="float-end">
+                            <a th:href="@{/change-notices}" type="button" class="btn-close" aria-label="Close"></a>
+                        </span>
+                        <h3 class="text-center ms-4" th:text="${changeNoticeTo.isNew()} ? 'New change notice' : 'Editing: ' + ${changeNoticeTo.name}">Create/Edit change notice</h3>
                     </div>
-                    <div class="card-body px-3 px-md-5 pb-3 pb-md-5 pt-0 text-center">
-                        <h3 class="mb-4" th:text="${changeNoticeTo.isNew()} ? 'New change notice' : 'Editing: ' + ${changeNoticeTo.name}">Create/Edit Change notice</h3>
+                    <div class="card-body text-center">
                         <form th:action="@{/change-notices}" method="post" th:object="${changeNoticeTo}" enctype="multipart/form-data">
                             <input type="hidden" id="idInput" th:field="*{id}">
                             <div class="row">
                                 <div class="col-lg-4">
                                     <div class="mb-3">
                                         <div class="input-group">
-                                            <span class="input-group-text doc-card-field px-md-4" id="nameAddon" title="Name">Name</span>
+                                            <span class="input-group-text doc-card-field px-md-4" id="nameAddon">Name</span>
                                             <input type="text" id="nameInput" th:field="*{name}"
                                                    th:class="${#fields.hasErrors('name')} ? 'form-control is-invalid' : 'form-control'"
-                                                   title="Name" aria-label="Name" aria-describedby="nameAddon" required/>
+                                                   title="" aria-label="Name" aria-describedby="nameAddon" required/>
                                         </div>
                                         <span th:if="${#fields.hasErrors('name')}">
                                             <ul>
@@ -37,14 +39,14 @@
                                 </div>
                                 <div class="col-lg-4">
                                     <div class="input-group mb-3">
-                                        <span class="input-group-text doc-card-field" title="Release date">Release date</span>
+                                        <span class="input-group-text doc-card-field">Release date</span>
                                         <input type="date" id="releaseDateInput" name="releaseDate" th:value="*{releaseDate}" class="form-control" style="cursor: pointer"
-                                               title="Release date" aria-label="Release date" required/>
+                                               title="" aria-label="Release date" required/>
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
                                     <div class="input-group mb-3">
-                                        <span class="input-group-text doc-card-field" id="developerAddon" title="Developer">Developer</span>
+                                        <span class="input-group-text doc-card-field" id="developerAddon">Developer</span>
                                         <select class="form-control selectpicker border" data-style="btn-white" id="developerSelect"
                                                 name="developer" title="&nbsp" aria-label="Developer" aria-describedby="developerAddon">
                                             <option value="" selected></option>
@@ -60,7 +62,7 @@
                             <div class="row">
                                 <div class="col-lg-8">
                                     <div class="input-group">
-                                        <span class="input-group-text doc-card-field" id="changeReasonCodeAddon" title="Change reason code">Change reason code</span>
+                                        <span class="input-group-text doc-card-field" id="changeReasonCodeAddon">Change reason code</span>
                                         <select class="form-control selectpicker border" data-style="btn-white" id="changeReasonCodeSelect"
                                                 th:field="*{changeReasonCode}" title="&nbsp" required aria-label="Change reason code" aria-describedby="changeReasonCodeAddon">
                                             <option th:each="changeReasonCode : ${changeReasonCodes}"
@@ -72,7 +74,7 @@
                                 </div>
                                 <div class="col-lg-4 mt-3 mt-lg-0 text-start" id="fileInputDiv">
                                     <div th:if="${file != null}" class="input-group">
-                                        <span class="input-group-text doc-card-field" id="fileAddon" title="File">File</span>
+                                        <span class="input-group-text doc-card-field" id="fileAddon">File</span>
                                         <div class="form-control" id="editFileInput">
                                             <a th:href="@{/change-notices/download(fileLink=${file.fileLink})}" th:utext="'<i class=&quot;text-danger fa-solid fa-file-pdf&quot;></i>' + ${file.fileName}" target="_blank" title="Show file">File name</a>
                                             <a tabindex="0" type="button" class="trash-button float-end me-3"
@@ -85,7 +87,7 @@
                                     </div>
                                     <div>
                                         <input th:if="${file == null}" type="file" accept="application/pdf" id="fileInput" th:field="*{file}" class="form-control" required
-                                               style="color: transparent;" onchange="changeFileInputColor('fileInput')" />
+                                               style="color: transparent;" onchange="changeFileInputColor('fileInput')" title="" />
                                         <span th:if="${#fields.hasErrors('file')}">
                                             <ul>
                                                 <li class="text-danger text-start"
@@ -97,7 +99,7 @@
                             </div>
 
                             <!-- Changes block -->
-                            <div class="text-start mt-3">
+                            <div class="text-start mt-2">
                                 <h4 class="text-secondary ms-1 mb-0">Changes</h4>
                                 <div class="table-responsive text-nowrap">
                                     <table class="table table-hover" id="changesTable">
@@ -106,7 +108,7 @@
                                             <th class="w-50 pt-0">Document</th>
                                             <th class="w-25 pt-0">Change number</th>
                                             <th class="text-end pt-0 pe-0">
-                                                <button type="button" class="btn btn-sm btn-primary" title="Add change" onclick="addEmptyChangeRow()">Add change</button>
+                                                <button type="button" class="btn btn-sm btn-primary" onclick="addEmptyChangeRow()">Add change</button>
                                             </th>
                                         </tr>
                                         </thead>
@@ -116,7 +118,7 @@
                                                 <input type="hidden" th:id="${'changeId-' + itemStat.index}" th:name="${'changes[' + itemStat.index + '].id'}" th:value="${change.id}">
                                                 <input type="text" th:id="${'changeDecimalNumber-' + itemStat.index}" th:name="${'changes[' + itemStat.index + '].decimalNumber'}" th:value="${change.decimalNumber}"
                                                        th:class="${#fields.hasErrors('changes[__${itemStat.index}__].decimalNumber')} ? 'form-control is-invalid' : 'form-control'"
-                                                       title="Decimal number" placeholder="Document decimal number" required />
+                                                       title="" placeholder="Document decimal number" required />
                                                 <span th:if="${#fields.hasErrors('changes[__${itemStat.index}__].decimalNumber')}">
                                                     <ul>
                                                         <li class="text-danger text-start"
@@ -127,7 +129,7 @@
                                             <td>
                                                 <input type="number" th:id="${'changeChangeNumber-' + itemStat.index}" th:name="${'changes[' + itemStat.index + '].changeNumber'}" th:value="${change.changeNumber}"
                                                        th:class="${#fields.hasErrors('changes[__${itemStat.index}__].changeNumber')} ? 'form-control is-invalid' : 'form-control'"
-                                                       title="Change number" placeholder="Change number" required />
+                                                       title="" placeholder="Change number" required />
                                                 <span th:if="${#fields.hasErrors('changes[__${itemStat.index}__].changeNumber')}">
                                                     <ul>
                                                         <li class="text-danger text-start"
@@ -149,9 +151,9 @@
                                 </div>
                             </div>
 
-                            <div class="text-end mt-4">
+                            <div class="text-end">
                                 <a th:if="${!changeNoticeTo.isNew()}" th:href="@{'/change-notices/' + ${changeNoticeTo.id}}" class="btn btn-secondary" type="button">Cancel</a>
-                                <button class="btn btn-success" type="submit" th:text="${changeNoticeTo.isNew()} ? 'Create card' : 'Save card'">Create/Save card</button>
+                                <button class="btn btn-success px-3" type="submit" th:text="${changeNoticeTo.isNew()} ? 'Create' : '&nbsp;Save&nbsp;'">Create/Save</button>
                             </div>
                         </form>
                     </div>

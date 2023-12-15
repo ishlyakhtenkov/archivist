@@ -10,19 +10,15 @@
         <!-- Document details card -->
         <div class="row d-flex justify-content-center align-items-center">
             <div class="col-12 col-xxl-10">
-                <div class="card shadow-2-strong" style="border-radius: 1rem;">
-                    <div class="mt-3 me-3">
-                        <div class="row">
-                            <div class="col-6">
-                                <span th:if="${document.annulled}" class="badge bg-danger ms-3 ms-md-5">Annulled</span>
-                            </div>
-                            <div class="col-6 text-end">
-                                <a th:href="@{/documents}" type="button" class="btn-close text-end" aria-label="Close"></a>
-                            </div>
-                        </div>
+                <div class="card shadow">
+                    <div class="card-header">
+                        <span th:if="${document.annulled}" class="badge bg-danger float-start">Annulled</span>
+                        <span class="float-end">
+                            <a th:href="@{/documents}" type="button" class="btn-close" aria-label="Close"></a>
+                        </span>
+                        <h3 class="text-center ms-4" th:classappend="${document.annulled} ? 'px-5' : ''" th:text="${document.decimalNumber}">Document decimal number</h3>
                     </div>
-                    <div class="card-body px-3 px-md-5 pb-3 pb-md-5 pt-0 text-center">
-                        <h3 class="mb-4" th:text="${document.decimalNumber}">Document decimal number</h3>
+                    <div class="card-body text-center">
                         <nav>
                             <div class="nav nav-tabs" role="tablist">
                                 <button class="nav-link active" id="documentGeneralTabButton" data-bs-toggle="tab" data-bs-target="#documentGeneralTab" type="button" role="tab" aria-controls="nav-general" aria-selected="true">General</button>
@@ -38,54 +34,54 @@
                                 <div th:object="${document}">
                                     <input type="hidden" id="documentId" th:value="*{id}">
                                     <div class="input-group mb-3">
-                                        <span class="input-group-text doc-card-field px-md-5" id="nameAddon" title="Name">Name</span>
+                                        <span class="input-group-text doc-card-field px-md-5" id="nameAddon">Name</span>
                                         <input type="text" id="nameInput" th:field="*{name}" class="form-control bg-light" disabled
-                                               title="Name" aria-label="Name" aria-describedby="nameAddon"/>
+                                               aria-label="Name" aria-describedby="nameAddon"/>
                                     </div>
                                     <div class="input-group mb-3">
-                                        <span class="input-group-text doc-card-field d-none d-md-block" title="Decimal number">Decimal number</span>
-                                        <span class="input-group-text doc-card-field d-md-none" title="Decimal number">Dec. num</span>
+                                        <span class="input-group-text doc-card-field d-none d-md-block">Decimal number</span>
+                                        <span class="input-group-text doc-card-field d-md-none">Dec. num</span>
                                         <input type="text" id="decimalNumberInput" th:field="*{decimalNumber}" class="form-control bg-light" disabled
-                                               title="Decimal number" aria-label="Decimal number"/>
+                                               aria-label="Decimal number"/>
                                     </div>
                                     <div class="row">
                                         <div class="col-lg-4">
                                             <div class="input-group mb-3">
-                                                <span class="input-group-text doc-card-field" id="statusAddon" title="Status">Status</span>
+                                                <span class="input-group-text doc-card-field" id="statusAddon">Status</span>
                                                 <input type="text" id="statusInput" th:value="*{status}" class="form-control bg-light" disabled
-                                                       title="Status" aria-label="Status" aria-describedby="statusAddon"/>
+                                                       aria-label="Status" aria-describedby="statusAddon"/>
                                             </div>
                                         </div>
                                         <div class="col-lg-4">
                                             <div class="input-group mb-3">
-                                                <span class="input-group-text doc-card-field" id="symbolAddon" title="Symbol">Symbol</span>
+                                                <span class="input-group-text doc-card-field" id="symbolAddon">Symbol</span>
                                                 <input type="text" id="symbolInput" th:field="*{symbol}" class="form-control bg-light" disabled
-                                                       title="Symbol" aria-label="Symbol" aria-describedby="symbolAddon"/>
+                                                       aria-label="Symbol" aria-describedby="symbolAddon"/>
                                             </div>
                                         </div>
                                         <div class="col-lg-4">
                                             <div class="input-group mb-3">
-                                                <span class="input-group-text doc-card-field px-3" id="typeAddon" title="Type">Type</span>
+                                                <span class="input-group-text doc-card-field px-3" id="typeAddon">Type</span>
                                                 <input type="text" id="typeInput" th:value="*{type}" class="form-control bg-light" disabled
-                                                       title="Type" aria-label="Type" aria-describedby="typeAddon"/>
+                                                       aria-label="Type" aria-describedby="typeAddon"/>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-md-6 col-xxl-4">
                                             <div class="input-group mb-3">
-                                                <span class="input-group-text doc-card-field d-none d-md-block px-2" title="Inventory number">Inventory number</span>
-                                                <span class="input-group-text doc-card-field d-md-none" title="Inventory number">Inv. num</span>
+                                                <span class="input-group-text doc-card-field d-none d-md-block px-2">Inventory number</span>
+                                                <span class="input-group-text doc-card-field d-md-none">Inv. num</span>
                                                 <input type="text" id="inventoryNumberInput" th:field="*{inventoryNumber}" class="form-control bg-light" disabled
-                                                       title="Inventory number" aria-label="Inventory number"/>
+                                                       aria-label="Inventory number"/>
                                             </div>
                                         </div>
                                         <div class="col-md-6 col-xxl-4">
                                             <div class="input-group mb-3">
-                                                <span class="input-group-text doc-card-field d-none d-md-block" title="Accounting date">Accounting date</span>
-                                                <span class="input-group-text doc-card-field d-md-none" title="Accounting date">Acc. date</span>
+                                                <span class="input-group-text doc-card-field d-none d-md-block">Accounting date</span>
+                                                <span class="input-group-text doc-card-field d-md-none">Acc. date</span>
                                                 <input type="text" id="accountingDateInput" th:value="${#temporals.format(document.accountingDate, 'dd.MM.yyyy')}" class="form-control bg-light" disabled
-                                                       title="Accounting date" aria-label="Accounting date"/>
+                                                       aria-label="Accounting date"/>
                                             </div>
                                         </div>
                                         <div class="col-xxl-4 d-none d-xxl-block">
@@ -97,17 +93,17 @@
                                     <div class="row">
                                         <div class="col-lg-8">
                                             <div class="input-group mb-3">
-                                                <span class="input-group-text doc-card-field d-none d-md-block px-3" title="Original Holder">Original Holder</span>
-                                                <span class="input-group-text doc-card-field d-md-none" title="Original Holder">O. Holder</span>
+                                                <span class="input-group-text doc-card-field d-none d-md-block px-3">Original Holder</span>
+                                                <span class="input-group-text doc-card-field d-md-none">O. Holder</span>
                                                 <input type="text" id="originalHolderInput" th:field="*{originalHolder.name}" class="form-control bg-light" disabled
-                                                       title="Original Holder" aria-label="Original Holder"/>
+                                                       aria-label="Original Holder"/>
                                             </div>
                                         </div>
                                         <div class="col-lg-4">
                                             <div class="input-group mb-3">
-                                                <span class="input-group-text doc-card-field" id="developerAddon" title="Developer">Developer</span>
+                                                <span class="input-group-text doc-card-field" id="developerAddon">Developer</span>
                                                 <input type="text" id="developerInput" th:field="*{developer.name}" class="form-control bg-light" disabled
-                                                       title="Developer" aria-label="Developer" aria-describedby="developerAddon"/>
+                                                       aria-label="Developer" aria-describedby="developerAddon"/>
                                             </div>
                                         </div>
                                     </div>
@@ -116,37 +112,37 @@
                                             <input type="checkbox" th:field="*{secret}" class="form-check-input" disabled id="secretCheckbox2"> Secret
                                         </div>
                                     </div>
-                                    <div class="mb-4">
+                                    <div class="mb-3">
                                         <label for="commentTextarea" class="form-label">Comment</label>
-                                        <textarea id="commentTextarea" th:field="*{comment}" class="form-control bg-light" disabled title="Comment"/>
+                                        <textarea id="commentTextarea" th:field="*{comment}" class="form-control bg-light" disabled />
                                     </div>
                                 </div>
                                 <div sec:authorize="hasAnyRole('ADMIN','ARCHIVIST')" class="text-end">
-                                    <a th:href="@{'/documents/edit/' + ${document.id}}" class="btn btn-warning" type="button">Edit card</a>
+                                    <a th:href="@{'/documents/edit/' + ${document.id}}" class="btn btn-warning px-4" type="button">Edit</a>
                                 </div>
                             </div>
 
                             <!-- Changes Tab-->
                             <div class="tab-pane fade mt-2" id="documentChangesTab" role="tabpanel" aria-labelledby="nav-changes-tab" tabindex="0">
                                 <div sec:authorize="hasAnyRole('ADMIN','ARCHIVIST')" class="text-end" id="addChangeButtonDiv">
-                                    <button class="btn btn-sm btn-primary" title="Add change" onclick="showInputChangeDiv()">Add change</button>
+                                    <button class="btn btn-sm btn-primary" onclick="showInputChangeDiv()">Add change</button>
                                 </div>
                                 <div id="inputChangeDiv" hidden>
                                     <form onsubmit="return false;">
                                         <div class="row row-cols-3 row-cols-md-4 d-flex align-items-center">
                                             <div class="col-6 col-md-3">
-                                                <input type="number" id="changeChangeNumberInput" class="form-control" title="Change number" placeholder="Change number" required/>
+                                                <input type="number" id="changeChangeNumberInput" class="form-control" title="" placeholder="Change number" required/>
                                             </div>
                                             <div class="col-6 col-md-3">
-                                                <input type="text" id="changeChangeNoticeNameInput" class="form-control" title="Change notice"
+                                                <input type="text" id="changeChangeNoticeNameInput" class="form-control" title=""
                                                        aria-label="Change notice" placeholder="Change notice" required/>
                                             </div>
                                             <div class="col-6 col-md-3">
-                                                <input type="text" onblur="if(this.value==''){this.type='text'}" onfocus="(this.type='date')" class="form-control" id="changeChangeNoticeDateInput" placeholder="Change date" required>
+                                                <input type="text" onblur="if(this.value==''){this.type='text'}" onfocus="(this.type='date')" class="form-control" id="changeChangeNoticeDateInput" placeholder="Change date" title="" required>
                                             </div>
                                             <div class="col-6 col-md-3 btn-toolbar text-start py-2">
-                                                <button type="submit" class="btn btn-sm btn-success px-3 me-1" title="Save" onclick="createChange()">Save</button>
-                                                <button type="button" class="btn btn-sm btn-secondary" title="Cancel" onclick="cancelAddChange()">Cancel</button>
+                                                <button type="submit" class="btn btn-sm btn-success px-3 me-1" onclick="createChange()">Save</button>
+                                                <button type="button" class="btn btn-sm btn-secondary" onclick="cancelAddChange()">Cancel</button>
                                             </div>
                                         </div>
                                     </form>
@@ -170,14 +166,14 @@
                             <!-- Applicability Tab-->
                             <div class="tab-pane fade mt-2" id="documentApplicabilityTab" role="tabpanel" aria-labelledby="nav-applicability-tab" tabindex="0">
                                 <div sec:authorize="hasAnyRole('ADMIN','ARCHIVIST')" class="text-end" id="addApplicabilityButtonDiv">
-                                    <button class="btn btn-sm btn-primary" title="Add applicability" onclick="showInputApplicabilityDiv()">Add applicability</button>
+                                    <button class="btn btn-sm btn-primary" onclick="showInputApplicabilityDiv()">Add applicability</button>
                                 </div>
                                 <div id="inputApplicabilityDiv" hidden>
                                     <form onsubmit="return false;">
                                         <div class="row row-cols-2 row-cols-sm-3 d-flex align-items-center">
                                             <div class="col-8 col-sm-6">
-                                                <input type="text" id="applicabilityDecNumberInput" class="form-control" title="Decimal number"
-                                                       aria-label="Decimal number" placeholder="Applicability decimal number" required/>
+                                                <input type="text" id="applicabilityDecNumberInput" class="form-control" title=""
+                                                       aria-label="Decimal number" placeholder="Decimal number" required/>
                                             </div>
                                             <div class="col-4 col-sm-auto">
                                                 <div class="form-check">
@@ -186,8 +182,8 @@
                                                 </div>
                                             </div>
                                             <div class="col-6 col-sm-4 btn-toolbar text-start py-2">
-                                                <button type="submit" class="btn btn-sm btn-success px-3 me-1" title="Save" onclick="createApplicability()">Save</button>
-                                                <button type="button" class="btn btn-sm btn-secondary" title="Cancel" onclick="cancelAddApplicability()">Cancel</button>
+                                                <button type="submit" class="btn btn-sm btn-success px-3 me-1" onclick="createApplicability()">Save</button>
+                                                <button type="button" class="btn btn-sm btn-secondary" onclick="cancelAddApplicability()">Cancel</button>
                                             </div>
                                         </div>
                                     </form>
@@ -210,7 +206,7 @@
                             <!-- Subscribers Tab-->
                             <div class="tab-pane fade mt-2" id="documentSubscribersTab" role="tabpanel" aria-labelledby="nav-subscribers-tab" tabindex="0">
                                 <div sec:authorize="hasAnyRole('ADMIN','ARCHIVIST')" class="text-end mb-1">
-                                    <button class="btn btn-sm btn-primary" title="Add sending" data-bs-toggle="modal" data-bs-target="#addSendingModal">Add sending</button>
+                                    <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#addSendingModal">Add sending</button>
                                 </div>
                                 <div class="row row-cols-1 row-cols-md-2 row-cols-xxl-3">
                                     <div class="col" id="subscriberColumn1"></div>
@@ -222,7 +218,7 @@
                             <!-- Content Tab-->
                             <div class="tab-pane fade mt-2" id="documentContentTab" role="tabpanel" aria-labelledby="nav-content-tab" tabindex="0">
                                 <div sec:authorize="hasAnyRole('ADMIN','ARCHIVIST')" class="text-end" id="addContentButtonDiv">
-                                    <button class="btn btn-sm btn-primary" title="Add content" onclick="showInputContentDiv()">Add content</button>
+                                    <button class="btn btn-sm btn-primary" onclick="showInputContentDiv()">Add content</button>
                                 </div>
                                 <div id="inputContentDiv" hidden>
                                     <form onsubmit="return false;">
@@ -231,18 +227,18 @@
                                                 <input type="file" multiple id="contentFilesInput" class="form-control" required style="color: transparent" onchange="changeFileInputColor('contentFilesInput')"/>
                                             </div>
                                             <div class="col-6 col-md-3">
-                                                <input type="number" id="contentChangeNumberInput" class="form-control" title="Change number" placeholder="Change number" required/>
+                                                <input type="number" id="contentChangeNumberInput" class="form-control" title="" placeholder="Change number" required/>
                                             </div>
                                             <div class="col-6 col-md-3 btn-toolbar py-2">
-                                                <button type="submit" class="btn btn-sm btn-success px-3 me-1" title="Save" onclick="createContent()">Save</button>
-                                                <button type="button" class="btn btn-sm btn-secondary" title="Cancel" onclick="cancelAddContent()">Cancel</button>
+                                                <button type="submit" class="btn btn-sm btn-success px-3 me-1" onclick="createContent()">Save</button>
+                                                <button type="button" class="btn btn-sm btn-secondary" onclick="cancelAddContent()">Cancel</button>
                                             </div>
                                         </div>
                                     </form>
                                 </div>
                                 <div th:classappend="${authUser.user.roles.size() == 1 ? 'mt-3' : 'mt-2'}" id="contentArea"></div>
                                 <button hidden class="btn btn-sm btn-light" id="showPreviousContentButton"
-                                        title="Show previous content" onclick="getAllContents()">Show previous</button>
+                                        onclick="getAllContents()">Show previous</button>
                             </div>
                         </div>
                     </div>
@@ -261,8 +257,8 @@
                     <input type="hidden" name="applicabilityId" id="deleteApplicabilityModalApplicabilityId" value=""/>
                     <input type="hidden" name="applicabilityDecimalNumber" id="deleteApplicabilityModalApplicabilityDecimalNumber" value=""/>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-danger" onclick="deleteApplicability()">Delete applicability</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-danger" onclick="deleteApplicability()">Delete</button>
                     </div>
                 </div>
             </div>
@@ -279,8 +275,8 @@
                     <input type="hidden" name="contentId" id="deleteContentModalContentId" value=""/>
                     <input type="hidden" name="contentChangeNumber" id="deleteContentModalContentChangeNumber" value=""/>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-danger" onclick="deleteContent()">Delete content</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-danger" onclick="deleteContent()">Delete</button>
                     </div>
                 </div>
             </div>
@@ -291,19 +287,19 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="addSendingModalLabel">Add new sending</h1>
+                        <h1 class="modal-title fs-5" id="addSendingModalLabel">New sending</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <form id="addSendingForm" onsubmit="return false;">
                         <div class="modal-body">
                             <div class="mb-4 mt-3">
                                 <div class="input-group">
-                                    <span class="input-group-text sending-title-field" title="Company">Company</span>
-                                    <select class="form-select" id="companySelector" required></select>
+                                    <span class="input-group-text sending-title-field">Company</span>
+                                    <select class="form-select" id="companySelector" title="" required></select>
                                 </div>
                                 <div class="input-group mt-3">
-                                    <span class="input-group-text sending-title-field" title="Status">Status</span>
-                                    <select class="form-select" id="statusSelector" required>
+                                    <span class="input-group-text sending-title-field">Status</span>
+                                    <select class="form-select" id="statusSelector" title="" required>
                                         <option value="DUPLICATE">Duplicate</option>
                                         <option value="ACCOUNTED_COPY">Accounted copy</option>
                                         <option value="UNACCOUNTED_COPY">Unaccounted copy</option>
@@ -312,29 +308,29 @@
                                 <div class="row row-cols-1 row-cols-md-2">
                                     <div class="col">
                                         <div class="input-group mt-3">
-                                            <span class="input-group-text sending-title-field" title="Invoice number">Invoice num</span>
-                                            <input type="text" class="form-control" id="invoiceNumInput" required>
+                                            <span class="input-group-text sending-title-field">Invoice num</span>
+                                            <input type="text" class="form-control" title="" id="invoiceNumInput" required>
                                         </div>
                                     </div>
                                     <div class="col">
                                         <div class="input-group mt-3">
-                                            <span class="input-group-text d-none d-md-block" title="Invoice date">Date</span>
-                                            <span class="input-group-text sending-title-field d-md-none" title="Invoice date">Invoice date</span>
-                                            <input type="date" class="form-control" id="invoiceDateInput" required>
+                                            <span class="input-group-text d-none d-md-block">Date</span>
+                                            <span class="input-group-text sending-title-field d-md-none">Invoice date</span>
+                                            <input type="date" class="form-control" id="invoiceDateInput" title="" required>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row row-cols-1 row-cols-md-2">
                                     <div class="col">
                                         <div class="input-group mt-3">
-                                            <span class="input-group-text sending-title-field" title="Letter number">Letter num</span>
+                                            <span class="input-group-text sending-title-field">Letter num</span>
                                             <input type="text" class="form-control" id="letterNumInput">
                                         </div>
                                     </div>
                                     <div class="col">
                                         <div class="input-group mt-3">
-                                            <span class="input-group-text d-none d-md-block" title="Letter date">Date</span>
-                                            <span class="input-group-text sending-title-field d-md-none" title="Letter date">Letter date</span>
+                                            <span class="input-group-text d-none d-md-block">Date</span>
+                                            <span class="input-group-text sending-title-field d-md-none">Letter date</span>
                                             <input type="date" class="form-control" id="letterDateInput" onchange="$('#letterDateInput').css('color', 'black')">
                                         </div>
                                     </div>
@@ -342,8 +338,8 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-warning" onclick="createSending()">Add sending</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-success px-3" onclick="createSending()">&nbsp;Save&nbsp;</button>
                         </div>
                     </form>
                 </div>
@@ -363,10 +359,10 @@
                             <input type="hidden" name="subscriberId" id="unsubscribeModalSubscriberId" value=""/>
                             <input type="hidden" name="subscriberName" id="unsubscribeModalSubscriberName" value=""/>
                             <label for="unsubscribeModalUnsubscribeReason" class="form-label">Unsubscribe reason</label>
-                            <textarea class="form-control" id="unsubscribeModalUnsubscribeReason" required></textarea>
+                            <textarea class="form-control" id="unsubscribeModalUnsubscribeReason" title="" required></textarea>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                             <button type="submit" class="btn btn-danger" onclick="unsubscribe()">Unsubscribe</button>
                         </div>
                     </form>
@@ -385,7 +381,7 @@
                     <input type="hidden" name="subscriberId" id="resubscribeModalSubscriberId" value=""/>
                     <input type="hidden" name="subscriberName" id="resubscribeModalSubscriberName" value=""/>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                         <button type="button" class="btn btn-success" onclick="resubscribe()">Resubscribe</button>
                     </div>
                 </div>

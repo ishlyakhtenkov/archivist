@@ -10,8 +10,8 @@ window.onload = () => {
 function addChangeRow(id, decimalNumber, changeNumber) {
     let changeRowIndex = $('.change-row').length;
     let documentTd = $('<td></td>').html(`<input type="hidden" id="${'changeId-' + changeRowIndex}" name="changes[${changeRowIndex}].id" value="${id}">
-            <input type="text" id="${'changeDecimalNumber-' + changeRowIndex}" name="changes[${changeRowIndex}].decimalNumber" class="form-control" title="Decimal number" placeholder="Document decimal number" value="${decimalNumber}" required />`);
-    let changeNumberTd = $('<td></td>').html(`<input type="number" id="${'changeChangeNumber-' + changeRowIndex}" name="changes[${changeRowIndex}].changeNumber" class="form-control" title="Change number" placeholder="Change number" value="${changeNumber}" required />`);
+            <input type="text" id="${'changeDecimalNumber-' + changeRowIndex}" name="changes[${changeRowIndex}].decimalNumber" class="form-control" title="" placeholder="Document decimal number" value="${decimalNumber}" required />`);
+    let changeNumberTd = $('<td></td>').html(`<input type="number" id="${'changeChangeNumber-' + changeRowIndex}" name="changes[${changeRowIndex}].changeNumber" class="form-control" title="" placeholder="Change number" value="${changeNumber}" required />`);
     let deleteChangeSubmitHtml = `<button class='btn btn-sm btn-secondary ms-3'>Cancel</button>
                                        <button class='btn btn-sm btn-danger' onclick='deleteChangeRow(${changeRowIndex})'>Delete</button>`;
     let deleteActionTd = $('<td></td>').addClass('text-end').html(`<a tabindex="0" type="button" class="trash-button me-3 mt-1" id="deleteChangeBtn-${changeRowIndex}"

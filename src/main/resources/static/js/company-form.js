@@ -27,39 +27,39 @@ function generateContactPersonRowHtml() {
     let contactPersonRowIndex = $('.contact-person-row').length;
     return `<div class="row d-flex align-items-center contact-person-row">
                 <div class="col-lg-3">
-                    <div class="mb-4">
+                    <div class="mb-3">
                         <div class="form-floating">
-                            <input type="text" id="contactPersons-${contactPersonRowIndex}-position" name="contactPersons[${contactPersonRowIndex}].position" class="form-control" required placeholder="Position" />
+                            <input type="text" id="contactPersons-${contactPersonRowIndex}-position" name="contactPersons[${contactPersonRowIndex}].position" class="form-control" title="" required placeholder="Position" />
                             <label for="contactPersons-${contactPersonRowIndex}-position" class="text-muted">Position</label>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-2">
-                    <div class="mb-4">
+                    <div class="mb-3">
                     <div class="form-floating">
-                        <input type="text" id="contactPersons-${contactPersonRowIndex}-lastName" name="contactPersons[${contactPersonRowIndex}].lastName" class="form-control" required placeholder="Last name" />
+                        <input type="text" id="contactPersons-${contactPersonRowIndex}-lastName" name="contactPersons[${contactPersonRowIndex}].lastName" class="form-control" title="" required placeholder="Last name" />
                         <label for="contactPersons-${contactPersonRowIndex}-lastName" class="text-muted">Last name</label>
                     </div>
                     </div>
                 </div>
                 <div class="col-lg-2">
-                    <div class="mb-4">
+                    <div class="mb-3">
                         <div class="form-floating">
-                            <input type="text" id="contactPersons-${contactPersonRowIndex}-firstName" name="contactPersons[${contactPersonRowIndex}].firstName" class="form-control" required placeholder="First name" />
+                            <input type="text" id="contactPersons-${contactPersonRowIndex}-firstName" name="contactPersons[${contactPersonRowIndex}].firstName" class="form-control" title="" required placeholder="First name" />
                             <label for="contactPersons-${contactPersonRowIndex}-firstName" class="text-muted">First name</label>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-2">
-                    <div class="mb-4">
+                    <div class="mb-3">
                     <div class="form-floating">
-                        <input type="text" id="contactPersons-${contactPersonRowIndex}-middleName" name="contactPersons[${contactPersonRowIndex}].middleName" class="form-control" required placeholder="Middle name" />
+                        <input type="text" id="contactPersons-${contactPersonRowIndex}-middleName" name="contactPersons[${contactPersonRowIndex}].middleName" class="form-control" title="" required placeholder="Middle name" />
                         <label for="contactPersons-${contactPersonRowIndex}-middleName" class="text-muted">Middle name</label>
                     </div>
                     </div>
                 </div>
                 <div class="col-lg-2">
-                    <div class="mb-4">
+                    <div class="mb-3">
                     <div class="form-floating">
                         <input type="text" id="contactPersons-${contactPersonRowIndex}-phone" name="contactPersons[${contactPersonRowIndex}].phone" class="form-control" placeholder="Phone" />
                         <label for="contactPersons-${contactPersonRowIndex}-phone" class="text-muted">Phone number</label>
@@ -67,14 +67,14 @@ function generateContactPersonRowHtml() {
                     </div>
                 </div>
                 <div class="col-lg-1 text-end">
-                    <div class="mb-4">
+                    <div class="mb-3">
                         <span class="d-lg-none d-grid">
-                           <button type="button" id="deleteContactBtn-${contactPersonRowIndex}" class="btn btn-sm btn-danger btn-del-contact-person" title="Delete contact">
+                           <button type="button" id="deleteContactBtn-${contactPersonRowIndex}" class="btn btn-sm btn-danger btn-del-contact-person">
                                <i class="fa-solid fa-arrow-up"></i> Delete contact <i class="fa-solid fa-arrow-up"></i>
                            </button>
                         </span>
                         <span class="d-none d-lg-block">
-                            <button type="button" id="deleteContactBtn-${contactPersonRowIndex}" class="btn btn-sm btn-danger btn-del-contact-person mt-1" title="Delete contact">
+                            <button type="button" id="deleteContactBtn-${contactPersonRowIndex}" class="btn btn-sm btn-danger btn-del-contact-person mt-1">
                                 Delete
                             </button>
                         </span>

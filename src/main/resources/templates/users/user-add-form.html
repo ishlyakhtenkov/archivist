@@ -7,20 +7,22 @@
         <!-- Create user card -->
         <div class="row d-flex justify-content-center align-items-center">
             <div class="col-12 col-md-8 col-xl-5">
-                <div class="card shadow-2-strong" style="border-radius: 1rem;">
-                    <div class="text-end mt-3 me-3">
-                        <a th:href="@{/users}" type="button" class="btn-close" aria-label="Close"></a>
+                <div class="card shadow">
+                    <div class="card-header">
+                        <span class="float-end">
+                            <a th:href="@{/users}" type="button" class="btn-close" aria-label="Close"></a>
+                        </span>
+                        <h3 class="text-center ms-4">New user</h3>
                     </div>
-                    <div class="card-body px-3 px-md-5 pb-3 pb-md-5 pt-0 text-center">
-                        <h3 class="mb-3">New user</h3>
+                    <div class="card-body text-center">
                         <form th:action="@{/users/create}" method="post" th:object="${user}">
-                            <div class="mb-4">
+                            <div class="mb-3">
                                 <div class="input-group">
-                                    <span class="input-group-text" id="firstNameAddon" title="First name"><i class="fa-solid fa-user fa-fw"></i></span>
+                                    <span class="input-group-text" id="firstNameAddon"><i class="fa-solid fa-user fa-fw"></i></span>
                                     <div class="form-floating">
                                         <input type="text" id="firstNameInput" th:field="*{firstName}"
                                                th:class="${#fields.hasErrors('firstName')} ? 'form-control is-invalid' : 'form-control'"
-                                               required placeholder="First name" title="First name" aria-label="Firstname" aria-describedby="firstNameAddon"/>
+                                               required placeholder="First name" title="" aria-label="Firstname" aria-describedby="firstNameAddon"/>
                                         <label for="firstNameInput" class="text-muted">First name</label>
                                     </div>
                                 </div>
@@ -31,13 +33,13 @@
                                     </ul>
                                 </span>
                             </div>
-                            <div class="mb-4">
+                            <div class="mb-3">
                                 <div class="input-group">
-                                    <span class="input-group-text" id="lastNameAddon" title="Last name"><i class="fa-solid fa-user fa-fw"></i></span>
+                                    <span class="input-group-text" id="lastNameAddon"><i class="fa-solid fa-user fa-fw"></i></span>
                                     <div class="form-floating">
                                         <input type="text" id="lastNameInput" th:field="*{lastName}"
                                                th:class="${#fields.hasErrors('lastName')} ? 'form-control is-invalid' : 'form-control'"
-                                               placeholder="Last name" title="Last name" aria-label="Lastname" aria-describedby="lastNameAddon"/>
+                                               required placeholder="Last name" title="" aria-label="Lastname" aria-describedby="lastNameAddon"/>
                                         <label for="lastNameInput" class="text-muted">Last name</label>
                                     </div>
                                 </div>
@@ -48,13 +50,13 @@
                                     </ul>
                                 </span>
                             </div>
-                            <div class="mb-4">
+                            <div class="mb-3">
                                 <div class="input-group">
-                                    <span class="input-group-text" id="emailAddon" title="E=mail"><i class="fa-solid fa-envelope fa-fw"></i></span>
+                                    <span class="input-group-text" id="emailAddon"><i class="fa-solid fa-envelope fa-fw"></i></span>
                                     <div class="form-floating">
                                         <input type="text" id="emailInput" th:field="*{email}"
                                                th:class="${#fields.hasErrors('email')} ? 'form-control is-invalid' : 'form-control'"
-                                               required placeholder="E-mail" title="E-mail" aria-label="Email" aria-describedby="emailAddon"/>
+                                               required placeholder="E-mail" title="" aria-label="Email" aria-describedby="emailAddon"/>
                                         <label for="emailInput" class="text-muted">E-mail</label>
                                     </div>
                                 </div>
@@ -65,20 +67,19 @@
 									</ul>
 								</span>
                             </div>
-                            <div class="mb-4">
+                            <div class="mb-3">
                                 <div class="input-group">
-                                    <span class="input-group-text" id="rolesAddon" title="Roles"><i class="fa-solid fa-chess fa-fw"></i></span>
+                                    <span class="input-group-text" id="rolesAddon"><i class="fa-solid fa-chess fa-fw"></i></span>
                                     <div class="form-floating" id="rolesFloating">
                                         <select class="form-control selectpicker border px-0 py-3" data-style="btn-white" id="rolesSelect"
-                                                multiple th:field="*{roles}" title="Choose user roles" required aria-label="Roles" aria-describedby="rolesAddon">
+                                                multiple th:field="*{roles}" title="&nbsp;" required aria-label="Roles" aria-describedby="rolesAddon">
                                             <option th:each="role : ${roles}"
                                                     th:value="${role}"
                                                     th:text="${role}">
                                             </option>
                                         </select>
-                                        <label for="rolesSelect" class="text-muted">Roles</label>
+                                        <label for="rolesSelect" class="text-muted" id="rolesSelectLabel">Roles</label>
                                     </div>
-
                                 </div>
                                 <span class="help-block" th:if="${#fields.hasErrors('roles')}">
 									<ul>
@@ -87,13 +88,13 @@
 									</ul>
 								</span>
                             </div>
-                            <div class="mb-4">
+                            <div class="mb-3">
                                 <div class="input-group">
-                                    <span class="input-group-text" id="passwordAddon" title="Password"><i class="fa-solid fa-key fa-fw"></i></span>
+                                    <span class="input-group-text" id="passwordAddon"><i class="fa-solid fa-key fa-fw"></i></span>
                                     <div class="form-floating">
                                         <input type="password" id="newPassword" th:field="*{password}"
                                                th:class="${#fields.hasErrors('password')} ? 'form-control is-invalid' : 'form-control'"
-                                               required placeholder="Password" title="Password" aria-label="Password" aria-describedby="passwordAddon"/>
+                                               required placeholder="Password" title="" aria-label="Password" aria-describedby="passwordAddon"/>
                                         <label for="newPassword" class="text-muted">Password</label>
                                     </div>
                                 </div>
@@ -104,11 +105,11 @@
 									</ul>
 								</span>
                             </div>
-                            <div class="mb-4">
+                            <div class="mb-3">
                                 <div class="input-group">
-                                    <span class="input-group-text" id="repeatPasswordAddon" title="Repeat password"><i class="fa-solid fa-key fa-fw"></i></span>
+                                    <span class="input-group-text" id="repeatPasswordAddon"><i class="fa-solid fa-key fa-fw"></i></span>
                                     <div class="form-floating">
-                                        <input type="password" id="repeatPassword" class="form-control" required placeholder="Repeat password" title="Repeat password"
+                                        <input type="password" id="repeatPassword" class="form-control" required placeholder="Repeat password" title=""
                                                aria-label="Repeat password" aria-describedby="repeatPasswordAddon"/>
                                         <label for="repeatPassword" class="text-muted">Repeat Password</label>
                                     </div>
@@ -118,16 +119,18 @@
                                     </ul>
                                 </span>
                             </div>
-                            <div class="form-outline mb-4">
-                                <div class="form-check form-switch">
-                                    <div class="float-end">
+                            <div class="row">
+                                <div class="col text-start">
+                                    <div class="form-check form-switch">
                                         <input type="checkbox" th:field="*{enabled}" class="form-check-input" style="cursor: pointer;" checked id="flexSwitchCheckDefault">
                                         <label class="form-check-label" for="flexSwitchCheckDefault">Enabled</label>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="text-end">
-                                <button class="btn btn-success" type="submit" id="submitWithPassButton">Create user</button>
+                                <div class="col">
+                                    <div class="text-end">
+                                        <button class="btn btn-success" type="submit" id="submitWithPassButton">Create</button>
+                                    </div>
+                                </div>
                             </div>
                         </form>
                     </div>

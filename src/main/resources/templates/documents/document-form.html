@@ -8,12 +8,14 @@
         <!-- Create/Edit Document card -->
         <div class="row d-flex justify-content-center align-items-center">
             <div class="col-12 col-xxl-10">
-                <div class="card shadow-2-strong" style="border-radius: 1rem;">
-                    <div class="text-end mt-3 me-3">
-                        <a th:href="@{/documents}" type="button" class="btn-close text-end" aria-label="Close"></a>
+                <div class="card shadow">
+                    <div class="card-header">
+                        <span class="float-end">
+                            <a th:href="@{/documents}" type="button" class="btn-close" aria-label="Close"></a>
+                        </span>
+                        <h3 class="text-center ms-4" th:text="${document.isNew()} ? 'New document' : 'Editing: ' + ${document.decimalNumber}">Create/Edit document</h3>
                     </div>
-                    <div class="card-body px-3 px-md-5 pb-3 pb-md-5 pt-0 text-center">
-                        <h3 class="mb-4" th:text="${document.isNew()} ? 'New document' : 'Editing: ' + ${document.decimalNumber}">Create/Edit Document</h3>
+                    <div class="card-body text-center">
                         <nav>
                             <div class="nav nav-tabs" role="tablist">
                                 <button class="nav-link active" id="documentGeneralTabButton" data-bs-toggle="tab" data-bs-target="#documentGeneralTab" type="button" role="tab" aria-controls="nav-general" aria-selected="true">General</button>
@@ -29,10 +31,10 @@
                                     <input type="hidden" th:field="*{id}">
                                     <div class="mb-3">
                                         <div class="input-group">
-                                            <span class="input-group-text doc-card-field px-md-5" id="nameAddon" title="Name">Name</span>
+                                            <span class="input-group-text doc-card-field px-md-5" id="nameAddon">Name</span>
                                             <input type="text" id="nameInput" th:field="*{name}"
                                                    th:class="${#fields.hasErrors('name')} ? 'form-control is-invalid' : 'form-control'"
-                                                   title="Name" aria-label="Name" aria-describedby="nameAddon" required/>
+                                                   title="" aria-label="Name" aria-describedby="nameAddon" required/>
                                         </div>
                                         <span th:if="${#fields.hasErrors('name')}">
                                             <ul>
@@ -44,11 +46,11 @@
 
                                     <div class="mb-3">
                                         <div class="input-group">
-                                            <span class="input-group-text doc-card-field d-none d-md-block" title="Decimal number">Decimal number</span>
+                                            <span class="input-group-text doc-card-field d-none d-md-block">Decimal number</span>
                                             <span class="input-group-text doc-card-field d-md-none" title="Decimal number">Dec. num</span>
                                             <input type="text" id="decimalNumberInput" th:field="*{decimalNumber}"
                                                    th:class="${#fields.hasErrors('decimalNumber')} ? 'form-control is-invalid' : 'form-control'"
-                                                   title="Decimal number" aria-label="Decimal number" required/>
+                                                   title="" aria-label="Decimal number" required/>
                                         </div>
                                         <span th:if="${#fields.hasErrors('decimalNumber')}">
                                             <ul>
@@ -60,7 +62,7 @@
                                     <div class="row">
                                         <div class="col-lg-4">
                                             <div class="input-group mb-3">
-                                                <span class="input-group-text doc-card-field" id="statusAddon" title="Status">Status</span>
+                                                <span class="input-group-text doc-card-field" id="statusAddon">Status</span>
                                                 <select class="form-control selectpicker border" data-style="btn-white" id="statusSelect"
                                                         th:field="*{status}" title="&nbsp" required aria-label="Status" aria-describedby="statusAddon">
                                                     <option th:each="status : ${statuses}"
@@ -72,7 +74,7 @@
                                         </div>
                                         <div class="col-lg-4">
                                             <div class="input-group mb-3">
-                                                <span class="input-group-text doc-card-field" id="symbolAddon" title="Symbol">Symbol</span>
+                                                <span class="input-group-text doc-card-field" id="symbolAddon">Symbol</span>
                                                 <select class="form-control selectpicker border" data-style="btn-white" id="symbolSelect"
                                                         th:field="*{symbol}" title="&nbsp" aria-label="Symbol" aria-describedby="symbolAddon">
                                                     <option value="" selected></option>
@@ -85,7 +87,7 @@
                                         </div>
                                         <div class="col-lg-4">
                                             <div class="input-group mb-3">
-                                                <span class="input-group-text doc-card-field px-3" id="typeAddon" title="Type">Type</span>
+                                                <span class="input-group-text doc-card-field px-3" id="typeAddon">Type</span>
                                                 <select class="form-control selectpicker border" data-style="btn-white" id="typeSelect"
                                                         th:field="*{type}" title="&nbsp" required aria-label="Type" aria-describedby="typeAddon">
                                                     <option th:each="type : ${types}"
@@ -100,11 +102,11 @@
                                         <div class="col-md-6 col-xxl-4">
                                             <div class="mb-3">
                                                 <div class="input-group">
-                                                    <span class="input-group-text doc-card-field d-none d-md-block px-2" title="Inventory number">Inventory number</span>
-                                                    <span class="input-group-text doc-card-field d-md-none" title="Inventory number">Inv. num</span>
+                                                    <span class="input-group-text doc-card-field d-none d-md-block px-2">Inventory number</span>
+                                                    <span class="input-group-text doc-card-field d-md-none">Inv. num</span>
                                                     <input type="text" id="inventoryNumberInput" th:field="*{inventoryNumber}"
                                                            th:class="${#fields.hasErrors('inventoryNumber')} ? 'form-control is-invalid' : 'form-control'"
-                                                           title="Inventory number" aria-label="Inventory number" required/>
+                                                           title="" aria-label="Inventory number" required/>
                                                 </div>
                                                 <span th:if="${#fields.hasErrors('inventoryNumber')}">
                                                     <ul>
@@ -116,10 +118,10 @@
                                         </div>
                                         <div class="col-md-6 col-xxl-4">
                                             <div class="input-group mb-3">
-                                                <span class="input-group-text doc-card-field d-none d-md-block" title="Accounting date">Accounting date</span>
-                                                <span class="input-group-text doc-card-field d-md-none" title="Accounting date">Acc. date</span>
+                                                <span class="input-group-text doc-card-field d-none d-md-block">Accounting date</span>
+                                                <span class="input-group-text doc-card-field d-md-none">Acc. date</span>
                                                 <input type="date" id="accountingDateInput" name="accountingDate" th:value="${document.accountingDate}" class="form-control" style="cursor: pointer"
-                                                       title="Accounting date" aria-label="Accounting date" required/>
+                                                       title="" aria-label="Accounting date" required/>
                                             </div>
                                         </div>
                                         <div class="col-xxl-4 d-none d-xxl-block">
@@ -136,8 +138,8 @@
                                     <div class="row">
                                         <div class="col-lg-8">
                                             <div class="input-group mb-3">
-                                                <span class="input-group-text doc-card-field d-none d-md-block px-3" title="Original Holder">Original Holder</span>
-                                                <span class="input-group-text doc-card-field d-md-none" title="Original Holder">O. Holder</span>
+                                                <span class="input-group-text doc-card-field d-none d-md-block px-3">Original Holder</span>
+                                                <span class="input-group-text doc-card-field d-md-none">O. Holder</span>
                                                 <select class="form-control selectpicker border" data-style="btn-white" id="originalHolderSelect"
                                                         name="originalHolder" title="&nbsp" required aria-label="Original Holder">
                                                     <option th:each="company : ${companies}"
@@ -150,7 +152,7 @@
                                         </div>
                                         <div class="col-lg-4">
                                             <div class="input-group mb-3">
-                                                <span class="input-group-text doc-card-field" id="developerAddon" title="Developer">Developer</span>
+                                                <span class="input-group-text doc-card-field" id="developerAddon">Developer</span>
                                                 <select class="form-control selectpicker border" data-style="btn-white" id="developerSelect"
                                                         name="developer" title="&nbsp" aria-label="Developer" aria-describedby="developerAddon">
                                                     <option value="" selected></option>
@@ -177,9 +179,9 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="mb-4">
+                                    <div class="mb-3">
                                         <label for="commentTextarea" class="form-label">Comment</label>
-                                        <textarea id="commentTextarea" th:field="*{comment}" title="Comment"
+                                        <textarea id="commentTextarea" th:field="*{comment}"
                                                   th:class="${#fields.hasErrors('comment')} ? 'form-control is-invalid' : 'form-control'"/>
                                         <span th:if="${#fields.hasErrors('comment')}">
                                             <ul>
@@ -190,7 +192,7 @@
                                     </div>
                                     <div class="text-end">
                                         <a th:if="${!document.isNew()}" th:href="@{'/documents/' + ${document.id}}" class="btn btn-secondary" type="button">Cancel</a>
-                                        <button class="btn btn-success" type="submit" th:text="${document.isNew()} ? 'Create card' : 'Save card'">Create/Save document card</button>
+                                        <button class="btn btn-success px-3" type="submit" th:text="${document.isNew()} ? 'Create' : '&nbsp;Save&nbsp;'">Create/Save</button>
                                     </div>
                                 </form>
                             </div>

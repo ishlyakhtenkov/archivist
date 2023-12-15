@@ -10,48 +10,50 @@
         <!-- Change notice details card -->
         <div class="row d-flex justify-content-center align-items-center">
             <div class="col-12 col-xxl-10">
-                <div class="card shadow-2-strong" style="border-radius: 1rem;">
-                    <div class="text-end mt-3 me-3">
-                        <a th:href="@{/change-notices}" type="button" class="btn-close pb-0" aria-label="Close"></a>
+                <div class="card shadow">
+                    <div class="card-header">
+                        <span class="float-end">
+                            <a th:href="@{/change-notices}" type="button" class="btn-close" aria-label="Close"></a>
+                        </span>
+                        <h3 class="text-center ms-4" th:text="${changeNotice.name}">Change notice name</h3>
                     </div>
-                    <div class="card-body px-3 px-md-5 pb-3 pb-md-5 pt-0 text-center">
-                        <h3 class="mb-4" th:text="${changeNotice.name}">Change notice name</h3>
+                    <div class="card-body text-center">
                         <div th:object="${changeNotice}">
                             <div class="row">
                                 <div class="col-lg-4">
                                     <div class="input-group mb-3">
-                                        <span class="input-group-text doc-card-field px-md-4" id="nameAddon" title="Name">Name</span>
+                                        <span class="input-group-text doc-card-field px-md-4" id="nameAddon">Name</span>
                                         <input type="text" id="nameInput" th:field="*{name}" class="form-control bg-light" disabled
-                                               title="Name" aria-label="Name" aria-describedby="nameAddon"/>
+                                               aria-label="Name" aria-describedby="nameAddon"/>
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
                                     <div class="input-group mb-3">
-                                        <span class="input-group-text doc-card-field d-none d-md-block" title="Release date">Release date</span>
+                                        <span class="input-group-text doc-card-field d-none d-md-block">Release date</span>
                                         <span class="input-group-text doc-card-field d-md-none" title="Release date">Release date</span>
                                         <input type="text" id="releaseDateInput" th:value="${#temporals.format(changeNotice.releaseDate, 'dd.MM.yyyy')}" class="form-control bg-light" disabled
-                                               title="Release date" aria-label="Release date"/>
+                                               aria-label="Release date"/>
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
                                     <div class="input-group mb-3">
-                                        <span class="input-group-text doc-card-field" id="developerAddon" title="Developer">Developer</span>
+                                        <span class="input-group-text doc-card-field" id="developerAddon">Developer</span>
                                         <input type="text" id="developerInput" th:field="*{developer.name}" class="form-control bg-light" disabled
-                                               title="Developer" aria-label="Developer" aria-describedby="developerAddon"/>
+                                               aria-label="Developer" aria-describedby="developerAddon"/>
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-lg-8">
                                     <div class="input-group">
-                                        <span class="input-group-text doc-card-field" id="changeReasonCodeAddon" title="Change reason code">Change reason code</span>
+                                        <span class="input-group-text doc-card-field" id="changeReasonCodeAddon">Change reason code</span>
                                         <input type="text" id="changeReasonCodeInput" th:value="*{changeReasonCode}" class="form-control bg-light" disabled
-                                               title="Change reason cod" aria-label="Change reason code" aria-describedby="changeReasonCodeAddon"/>
+                                               aria-label="Change reason code" aria-describedby="changeReasonCodeAddon"/>
                                     </div>
                                 </div>
                                 <div class="col-lg-4 mt-3 mt-lg-0 text-start">
                                     <div class="input-group">
-                                        <span class="input-group-text doc-card-field" id="fileAddon" title="File">File</span>
+                                        <span class="input-group-text doc-card-field" id="fileAddon">File</span>
                                         <div class="form-control bg-light" aria-label="File" aria-describedby="fileAddon">
                                             <a th:href="@{/change-notices/download(fileLink=*{file.fileLink})}"
                                                th:utext="'<i class=&quot;text-danger fa-solid fa-file-pdf&quot;></i>' + ${changeNotice.file.fileName}" target="_blank" title="Show file">File name</a>
@@ -78,8 +80,8 @@
                                     </thead>
                                     <tbody class="table-group-divider">
                                     <tr th:each="change : ${changeNotice.changes}" class="table-row">
-                                        <td th:text="${change.document.decimalNumber}" title="Decimal number"></td>
-                                        <td class="text-center" th:text="${change.changeNumber}" title="Change number"></td>
+                                        <td th:text="${change.document.decimalNumber}"></td>
+                                        <td class="text-center" th:text="${change.changeNumber}"></td>
                                         <td></td>
                                     </tr>
                                     </tbody>
@@ -87,7 +89,7 @@
                             </div>
                         </div>
                         <div sec:authorize="hasAnyRole('ADMIN','ARCHIVIST')" class="text-end">
-                            <a th:href="@{'/change-notices/edit/' + ${changeNotice.id}}" class="btn btn-warning" type="button">Edit card</a>
+                            <a th:href="@{'/change-notices/edit/' + ${changeNotice.id}}" class="btn btn-warning px-4" type="button">Edit</a>
                         </div>
                     </div>
                 </div>

@@ -66,14 +66,17 @@
                     <div class="accordion-body">
                         <ul class="navbar-nav">
                             <li sec:authorize="isAuthenticated()" class="nav-item mt-1" th:classappend="${activeMenuItem == 'Companies'}? 'active' : ''" id="companiesNavLink">
-                                <a class="nav-link sidebar-nav-link" th:href="@{/companies}"><span class="ms-5"><i class="fa-brands fa-fort-awesome fa-fw me-2"></i>Companies</span></a>
+                                <a class="nav-link sidebar-nav-link" th:href="@{/companies}"><span class="ms-5"><i class="fa-solid fa-landmark fa-fw me-2"></i>Companies</span></a>
                             </li>
                             <li sec:authorize="isAuthenticated()" class="nav-item mt-1" th:classappend="${activeMenuItem == 'Departments'}? 'active' : ''" id="departmentsNavLink">
-                                <a class="nav-link sidebar-nav-link" th:href="@{/departments}"><span class="ms-5"><i class="fa-solid fa-users-rectangle fa-fw me-2"></i>Departments</span></a>
+                                <a class="nav-link sidebar-nav-link" th:href="@{/departments}"><span class="ms-5"><i class="fa-solid fa-people-group fa-fw me-2"></i>Departments</span></a>
                             </li>
                         </ul>
                     </div>
                 </div>
+                <li sec:authorize="isAuthenticated()" class="nav-item mt-0 mt-lg-3 mb-0 mb-lg-3" th:classappend="${activeMenuItem == 'Tools'}? 'active' : ''">
+                    <a class="nav-link sidebar-nav-link" th:href="@{/albums}"><span class="ms-4"><i class="fa-solid fa-lines-leaning fa-fw me-2"></i>Albums</span></a>
+                </li>
             </ul>
         </div>
     </nav>

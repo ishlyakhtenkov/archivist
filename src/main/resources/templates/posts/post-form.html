@@ -7,12 +7,14 @@
         <!-- Create/Edit post card -->
         <div class="row d-flex justify-content-center align-items-center">
             <div class="col-12 col-xxl-10">
-                <div class="card shadow-2-strong" style="border-radius: 1rem;">
-                    <div class="text-end mt-3 me-3">
-                        <a th:href="@{/}" type="button" class="btn-close" aria-label="Close"></a>
+                <div class="card shadow">
+                    <div class="card-header">
+                        <span class="float-end">
+                            <a th:href="@{/}" type="button" class="btn-close" aria-label="Close"></a>
+                        </span>
+                        <h3 class="text-center ms-4" th:text="${postTo.isNew()} ? 'New post' : 'Editing: ' + ${postTo.title}">Create/Edit post</h3>
                     </div>
-                    <div class="card-body px-3 px-md-5 pb-3 pb-md-5 pt-0 text-center">
-                        <h3 class="mb-4" th:text="${postTo.isNew()} ? 'New post' : 'Editing: ' + ${postTo.title}">Create/Edit Post</h3>
+                    <div class="card-body text-center">
                         <form th:action="@{/posts}" method="post" th:object="${postTo}">
                             <input type="hidden" th:field="*{id}">
                             <div class="mb-4">

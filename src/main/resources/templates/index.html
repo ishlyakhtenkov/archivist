@@ -10,8 +10,8 @@
               Welcome to Archivist!
           </div>
           <div sec:authorize="hasRole('ADMIN')" class="col text-end mb-2">
-              <a th:href="@{/posts/add}" type="button" class="btn btn-primary" title="Add new post">
-                  <i class="fa-solid fa-plus"></i> Add Post
+              <a th:href="@{/posts/add}" type="button" class="btn btn-primary">
+                  <i class="fa-solid fa-plus"></i> Add post
               </a>
           </div>
       </div>
@@ -77,8 +77,8 @@
                   <input type="hidden" name="postId" id="deleteModalPostId" value=""/>
                   <input type="hidden" name="postTitle" id="deleteModalPostTitle" value=""/>
                   <div class="modal-footer">
-                      <button type="button" class="btn btn-danger" onclick="deletePost()">Delete post</button>
-                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close">Close</button>
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close">Cancel</button>
+                      <button type="button" class="btn btn-danger" onclick="deletePost()">Delete</button>
                   </div>
               </div>
           </div>

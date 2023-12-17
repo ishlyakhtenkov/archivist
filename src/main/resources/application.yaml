@@ -11,8 +11,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 465
-    username: niemi.filecabinet@gmail.com
-    password: jdarcyyrnysveblq
+    username: javaprojects.test@gmail.com
+    password: puqtlmwroiyfcwrv
     protocol: smtps
 
 server.servlet:

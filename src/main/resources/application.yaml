@@ -1,6 +1,10 @@
 spring:
   profiles:
     active: dev
+  datasource:
+    url: jdbc:postgresql://localhost:5432/archivist
+    username: user
+    password: password
   jpa:
     open-in-view: false
     hibernate:

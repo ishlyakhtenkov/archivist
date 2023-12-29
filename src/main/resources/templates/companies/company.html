@@ -143,7 +143,7 @@
                                     </span>
 
                                     <div th:each="contactPerson, itemStat : *{contactPersons}" class="row contact-person-row">
-                                        <div class="col-lg-4">
+                                        <div class="col-lg-6">
                                             <div class="mb-3">
                                                 <div class="form-floating">
                                                     <input type="text" th:id="*{contactPersons[__${itemStat.index}__].position}" th:field="*{contactPersons[__${itemStat.index}__].position}" class="form-control" disabled />
@@ -159,7 +159,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-lg-4">
+                                        <div class="col-lg-2">
                                             <div class="mb-3">
                                                 <div class="form-floating">
                                                     <input type="text" th:id="*{contactPersons[__${itemStat.index}__].phone}" th:field="*{contactPersons[__${itemStat.index}__].phone}" class="form-control" disabled placeholder="Phone" />

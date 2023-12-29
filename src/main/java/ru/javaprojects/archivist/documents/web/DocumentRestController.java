@@ -86,7 +86,7 @@ public class DocumentRestController {
         log.info("download file {}", fileLink);
         Resource resource = FileUtil.download(contentPath + fileLink);
         return ResponseEntity.ok()
-                .header("Content-Disposition", "inline; filename=" + resource.getFilename())
+                .header("Content-Disposition", "inline")
                 .body(resource);
     }
 

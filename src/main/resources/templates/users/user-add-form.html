@@ -18,23 +18,6 @@
                         <form th:action="@{/users/create}" method="post" th:object="${user}">
                             <div class="mb-3">
                                 <div class="input-group">
-                                    <span class="input-group-text" id="firstNameAddon"><i class="fa-solid fa-user fa-fw"></i></span>
-                                    <div class="form-floating">
-                                        <input type="text" id="firstNameInput" th:field="*{firstName}"
-                                               th:class="${#fields.hasErrors('firstName')} ? 'form-control is-invalid' : 'form-control'"
-                                               required placeholder="First name" title="" aria-label="Firstname" aria-describedby="firstNameAddon"/>
-                                        <label for="firstNameInput" class="text-muted">First name</label>
-                                    </div>
-                                </div>
-                                <span class="help-block" th:if="${#fields.hasErrors('firstName')}">
-                                    <ul>
-                                        <li class="text-danger text-start"
-                                            th:each="err : ${#fields.errors('firstName')}" th:text="${err}"/>
-                                    </ul>
-                                </span>
-                            </div>
-                            <div class="mb-3">
-                                <div class="input-group">
                                     <span class="input-group-text" id="lastNameAddon"><i class="fa-solid fa-user fa-fw"></i></span>
                                     <div class="form-floating">
                                         <input type="text" id="lastNameInput" th:field="*{lastName}"
@@ -47,6 +30,23 @@
                                     <ul>
                                         <li class="text-danger text-start" th:each="err : ${#fields.errors('lastName')}"
                                             th:text="${err}"/>
+                                    </ul>
+                                </span>
+                            </div>
+                            <div class="mb-3">
+                                <div class="input-group">
+                                    <span class="input-group-text" id="firstNameAddon"><i class="fa-solid fa-user fa-fw"></i></span>
+                                    <div class="form-floating">
+                                        <input type="text" id="firstNameInput" th:field="*{firstName}"
+                                               th:class="${#fields.hasErrors('firstName')} ? 'form-control is-invalid' : 'form-control'"
+                                               required placeholder="First name" title="" aria-label="Firstname" aria-describedby="firstNameAddon"/>
+                                        <label for="firstNameInput" class="text-muted">First name</label>
+                                    </div>
+                                </div>
+                                <span class="help-block" th:if="${#fields.hasErrors('firstName')}">
+                                    <ul>
+                                        <li class="text-danger text-start"
+                                            th:each="err : ${#fields.errors('firstName')}" th:text="${err}"/>
                                     </ul>
                                 </span>
                             </div>

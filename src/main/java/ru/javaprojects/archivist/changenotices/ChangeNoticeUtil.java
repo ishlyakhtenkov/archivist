@@ -22,12 +22,12 @@ public class ChangeNoticeUtil {
     private final DocumentRepository documentRepository;
 
     public ChangeNotice createNewFromTo(ChangeNoticeTo changeNoticeTo) {
-        ChangeNotice changeNotice = new ChangeNotice(null, changeNoticeTo.getName(), changeNoticeTo.getReleaseDate(),
+        ChangeNotice changeNotice = new ChangeNotice(null, changeNoticeTo.getName().toUpperCase(), changeNoticeTo.getReleaseDate(),
                 changeNoticeTo.getChangeReasonCode(), changeNoticeTo.getDeveloper(), createContentFile(changeNoticeTo));
         List<ChangeTo> changeTos = changeNoticeTo.getChanges();
         changeTos.forEach(changeTo -> {
             Document document = documentRepository.findByDecimalNumberIgnoreCase(changeTo.getDecimalNumber())
-                    .orElseGet(() -> documentRepository.save(Document.autoGenerate(changeTo.getDecimalNumber())));
+                    .orElseGet(() -> documentRepository.save(Document.autoGenerate(changeTo.getDecimalNumber().toUpperCase())));
             changeNotice.addChange(new Change(changeTo.getId(), document, changeTo.getChangeNumber()));
         });
         return changeNotice;
@@ -35,7 +35,7 @@ public class ChangeNoticeUtil {
 
     public ChangeNotice updateFromTo(ChangeNotice changeNotice, ChangeNoticeTo changeNoticeTo) {
         String oldName = changeNotice.getName();
-        changeNotice.setName(changeNoticeTo.getName());
+        changeNotice.setName(changeNoticeTo.getName().toUpperCase());
         changeNotice.setReleaseDate(changeNoticeTo.getReleaseDate());
         changeNotice.setChangeReasonCode(changeNoticeTo.getChangeReasonCode());
         changeNotice.setDeveloper(changeNoticeTo.getDeveloper());
@@ -58,15 +58,15 @@ public class ChangeNoticeUtil {
         changeNotice.getChanges().removeIf(change -> !notNewChangeTos.containsKey(change.getId()));
         changeNotice.getChanges().forEach(change -> {
             ChangeTo changeTo = notNewChangeTos.get(change.getId());
-            if (!change.getDocument().getDecimalNumber().equals(changeTo.getDecimalNumber())) {
+            if (!change.getDocument().getDecimalNumber().equalsIgnoreCase(changeTo.getDecimalNumber())) {
                 change.setDocument(documentRepository.findByDecimalNumberIgnoreCase(changeTo.getDecimalNumber())
-                        .orElseGet(() -> documentRepository.save(Document.autoGenerate(changeTo.getDecimalNumber()))));
+                        .orElseGet(() -> documentRepository.save(Document.autoGenerate(changeTo.getDecimalNumber().toUpperCase()))));
             }
             change.setChangeNumber(changeTo.getChangeNumber());
         });
         newChangeTos.forEach(changeTo -> {
             Document document = documentRepository.findByDecimalNumberIgnoreCase(changeTo.getDecimalNumber())
-                    .orElseGet(() -> documentRepository.save(Document.autoGenerate(changeTo.getDecimalNumber())));
+                    .orElseGet(() -> documentRepository.save(Document.autoGenerate(changeTo.getDecimalNumber().toUpperCase())));
             changeNotice.addChange(new Change(null, document, changeTo.getChangeNumber()));
         });
         return changeNotice;

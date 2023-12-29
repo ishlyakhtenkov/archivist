@@ -27,15 +27,15 @@
             <h5 class="alert alert-warning mt-2">No departments found.</h5>
         </span>
 
-        <div th:if="${!departments.isEmpty()}" class="table-responsive text-nowrap text-center">
+        <div th:if="${!departments.isEmpty()}" class="table-responsive text-nowrap">
             <table class="table table-bordered">
                 <thead class="table-dark">
                 <tr>
-                    <th>Name</th>
-                    <th>Boss</th>
-                    <th>Boss phone</th>
-                    <th>Boss email</th>
-                    <th sec:authorize="hasAnyRole('ADMIN','ARCHIVIST')" colspan="2">Actions</th>
+                    <th class="col-3">Name</th>
+                    <th class="col-4">Boss</th>
+                    <th class="col-2">Boss phone</th>
+                    <th class="col-2">Boss email</th>
+                    <th class="col-1 text-center" sec:authorize="hasAnyRole('ADMIN','ARCHIVIST')">Actions</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -44,13 +44,11 @@
                     <td th:text="${department.boss.fullName}"></td>
                     <td th:text="${department.boss.phone}"></td>
                     <td th:text="${department.boss.email}"></td>
-                    <td sec:authorize="hasAnyRole('ADMIN','ARCHIVIST')">
+                    <td class="text-center" sec:authorize="hasAnyRole('ADMIN','ARCHIVIST')">
                         <a th:href="@{'/departments/edit/' + ${department.id}}" type="button" title="Edit department" class="pencil-button">
                             <i class="fa-solid fa-pencil"></i>
                         </a>
-                    </td>
-                    <td sec:authorize="hasAnyRole('ADMIN','ARCHIVIST')">
-                        <a type="button" class="trash-button"
+                        <a type="button" class="trash-button ms-3"
                            title="Delete department" data-bs-toggle="modal" data-bs-target="#deleteModal"
                            th:data-name="${department.name}"
                            th:data-id="${department.id}">

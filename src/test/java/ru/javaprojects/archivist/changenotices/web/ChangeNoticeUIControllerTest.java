@@ -138,7 +138,7 @@ class ChangeNoticeUIControllerTest extends AbstractControllerTest implements Man
                 .param(FILE_LINK, changeNotice1.getFile().getFileLink()))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PDF))
-                .andExpect(header().string("Content-Disposition", "inline; filename=" + changeNotice1.getFile().getFileName()));
+                .andExpect(header().string("Content-Disposition", "inline"));
     }
 
     @Test

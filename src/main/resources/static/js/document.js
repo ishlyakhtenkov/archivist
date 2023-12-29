@@ -269,7 +269,7 @@ function getSubscribers() {
             let index = 0;
             subscribers.forEach(subscriber => {
                 subscriberMap.set(subscriber.id, subscriber);
-                subscriberColumns[index].append(generateSubscriberCard(subscriber));
+                subscriberColumns[(index % subscriberColumns.length)].append(generateSubscriberCard(subscriber));
                 index++;
             });
         }
@@ -532,7 +532,7 @@ function fillChangesTable(changes) {
 
 function addChangeRow(change) {
     let changeNumberTd = $('<td></td>').text(change.changeNumber);
-    let changeNoticeTd = $('<td></td>').text(change.changeNotice.name);
+    let changeNoticeTd = $('<td></td>').addClass('text-start').text(change.changeNotice.name);
     let changeDateTd = $('<td></td>').text(change.changeNotice.releaseDate);
     let changeRow = $('<tr></tr>');
     changeRow.append(changeNumberTd);

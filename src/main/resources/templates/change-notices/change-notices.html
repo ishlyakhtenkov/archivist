@@ -33,39 +33,39 @@
             <h5 class="alert alert-warning mt-2">No change notices found.</h5>
         </span>
 
-        <div th:if="${!changeNotices.isEmpty()}" class="table-responsive text-nowrap text-center">
+        <div th:if="${!changeNotices.isEmpty()}" class="table-responsive text-nowrap">
             <table class="table table-hover table-bordered">
                 <thead class="table-dark">
                 <tr>
-                    <th>Name</th>
-                    <th>Release date</th>
-                    <th>Change reason code</th>
-                    <th sec:authorize="hasAnyRole('ADMIN','ARCHIVIST')" colspan="3">Actions</th>
-                    <th sec:authorize="!hasAnyRole('ADMIN','ARCHIVIST')">Details</th>
+                    <th class="col-4">Name</th>
+                    <th class="col-2">Release date</th>
+                    <th class="col-5">Change reason code</th>
+                    <th class="col-1 text-center">Actions</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:each="changeNotice : ${changeNotices}" th:id="'row-' + ${changeNotice.id}" class="table-row">
-                    <td th:text="${changeNotice.name}"></td>
+                    <td>
+                        <a th:href="@{'/change-notices/' + ${changeNotice.id}}" th:text="${changeNotice.name}"
+                           title="Show details" class="text-dark" style="text-decoration:none;">Change notice name</a>
+                    </td>
                     <td th:text="${#temporals.format(changeNotice.releaseDate, 'dd.MM.yyyy')}"></td>
                     <td th:text="${changeNotice.changeReasonCode}"></td>
-                    <td>
-                        <a th:href="@{'/change-notices/' + ${changeNotice.id}}" type="button" title="Change notice details" class="glass-button">
+                    <td class="text-center">
+                        <a th:href="@{'/change-notices/' + ${changeNotice.id}}" type="button" title="Show details" class="glass-button">
                             <i class="fa-solid fa-magnifying-glass"></i>
                         </a>
-                    </td>
-                    <td sec:authorize="hasAnyRole('ADMIN','ARCHIVIST')">
-                        <a th:href="@{'/change-notices/edit/' + ${changeNotice.id}}" type="button" title="Edit change notice" class="pencil-button">
-                            <i class="fa-solid fa-pencil"></i>
-                        </a>
-                    </td>
-                    <td sec:authorize="hasAnyRole('ADMIN','ARCHIVIST')">
-                        <a type="button" class="trash-button"
-                           title="Delete change notice" data-bs-toggle="modal" data-bs-target="#deleteModal"
-                           th:data-name="${changeNotice.name}"
-                           th:data-id="${changeNotice.id}">
-                            <i class="fa-solid fa-trash"></i>
-                        </a>
+                        <span sec:authorize="hasAnyRole('ADMIN','ARCHIVIST')">
+                            <a th:href="@{'/change-notices/edit/' + ${changeNotice.id}}" type="button" title="Edit change notice" class="pencil-button ms-3">
+                                <i class="fa-solid fa-pencil"></i>
+                            </a>
+                            <a type="button" class="trash-button ms-3"
+                               title="Delete change notice" data-bs-toggle="modal" data-bs-target="#deleteModal"
+                               th:data-name="${changeNotice.name}"
+                               th:data-id="${changeNotice.id}">
+                                <i class="fa-solid fa-trash"></i>
+                            </a>
+                        </span>
                     </td>
                 </tr>
                 </tbody>

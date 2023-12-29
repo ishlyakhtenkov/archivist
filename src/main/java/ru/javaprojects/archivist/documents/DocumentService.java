@@ -72,6 +72,7 @@ public class DocumentService {
     @Transactional
     public void createOrUpdate(@Valid Document document) {
         Assert.notNull(document, "document must not be null");
+        document.setDecimalNumber(document.getDecimalNumber().toUpperCase());
         if (!document.isNew()) {
             repository.getExisted(document.id());
         } else {

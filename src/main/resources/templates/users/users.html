@@ -32,49 +32,45 @@
             <h5 class="alert alert-warning mt-2">No users found.</h5>
         </span>
 
-        <div th:if="${!users.isEmpty()}" class="table-responsive text-nowrap text-center">
+        <div th:if="${!users.isEmpty()}" class="table-responsive text-nowrap">
             <table class="table table-bordered">
                 <thead class="table-dark">
                 <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Enabled</th>
-                    <th>Registered</th>
-                    <th>Roles</th>
-                    <th colspan="3">Actions</th>
+                    <th class="col-3">Name</th>
+                    <th class="col-3">Email</th>
+                    <th class="col-1 text-center">Enabled</th>
+                    <th class="col-2 text-center">Registered</th>
+                    <th class="col-2">Roles</th>
+                    <th class="col-1 text-center">Actions</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:each="user : ${users}" th:id="'row-' + ${user.id}" class="table-row">
-                    <td  th:text="${user.firstName} + ' ' + ${user.lastName}"></td>
-                    <td th:text="${user.email}"></td>
-                    <td>
+                    <td th:text="${user.fullName}"></td>
+                    <td class="text-truncate" th:text="${user.email}"></td>
+                    <td class="text-center">
                         <div class="form-switch">
                             <input type="checkbox" role="switch" class="form-check-input" style="cursor: pointer;" th:checked="${user.enabled}"
                                    th:data-name="${user.fullName}"
                                    th:onclick="|enableUser(this, '${user.id}')|" th:title="${(user.enabled ? 'Disable' : 'Enable') + ' user'}" />
                         </div>
                     </td>
-                    <td th:text="${#dates.format(user.registered, 'dd.MM.yyyy HH:mm')}"></td>
+                    <td class="text-center" th:text="${#dates.format(user.registered, 'dd.MM.yyyy HH:mm')}"></td>
                     <td th:text="${#strings.substring(user.roles, 1, #strings.length(user.roles) - 1)}"></td>
-                    <td>
+                    <td class="text-center">
                         <a th:href="@{'/users/edit/' + ${user.id}}" type="button" title="Edit user" class="pencil-button">
                             <i class="fa-solid fa-user-pen"></i>
                         </a>
-                    </td>
-                    <td>
-                        <a type="button" class="key-button"
-                                title="Change user password" data-bs-toggle="modal" data-bs-target="#changePasswordModal"
-                                th:data-name="${user.fullName}"
-                                th:data-id="${user.id}">
+                        <a type="button" class="key-button ms-3"
+                           title="Change user password" data-bs-toggle="modal" data-bs-target="#changePasswordModal"
+                           th:data-name="${user.fullName}"
+                           th:data-id="${user.id}">
                             <i class="fa-solid fa-key"></i>
                         </a>
-                    </td>
-                    <td>
-                        <a type="button" class="trash-button"
-                                title="Delete user" data-bs-toggle="modal" data-bs-target="#deleteModal"
-                                th:data-name="${user.fullName}"
-                                th:data-id="${user.id}">
+                        <a type="button" class="trash-button ms-3"
+                           title="Delete user" data-bs-toggle="modal" data-bs-target="#deleteModal"
+                           th:data-name="${user.fullName}"
+                           th:data-id="${user.id}">
                             <i class="fa-solid fa-user-xmark"></i>
                         </a>
                     </td>

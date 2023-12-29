@@ -33,17 +33,14 @@
             <h5 class="alert alert-warning mt-2">No companies found.</h5>
         </span>
 
-        <div th:if="${!companies.isEmpty()}" class="table-responsive text-nowrap text-center">
+        <div th:if="${!companies.isEmpty()}" class="table-responsive text-nowrap">
             <table class="table table-bordered">
                 <thead class="table-dark">
                 <tr>
-                    <th>Name</th>
-                    <th>Address</th>
-                    <th>Phone</th>
-                    <th>Fax</th>
-                    <th>Email</th>
-                    <th sec:authorize="hasAnyRole('ADMIN','ARCHIVIST')" colspan="3">Actions</th>
-                    <th sec:authorize="!hasAnyRole('ADMIN','ARCHIVIST')">Details</th>
+                    <th class="col-3">Name</th>
+                    <th class="col-6">Address</th>
+                    <th class="col-2">Phone</th>
+                    <th class="col-1 text-center">Actions</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -51,25 +48,21 @@
                     <td th:text="${company.name}"></td>
                     <td th:text="${company.address.formattedAddress}"></td>
                     <td th:text="${company.contacts.phone}"></td>
-                    <td th:text="${company.contacts.fax}"></td>
-                    <td th:text="${company.contacts.email}"></td>
-                    <td>
-                        <a th:href="@{'/companies/' + ${company.id}}" type="button" title="Company details" class="glass-button">
+                    <td class="text-center">
+                        <a th:href="@{'/companies/' + ${company.id}}" type="button" title="Show details" class="glass-button">
                             <i class="fa-solid fa-magnifying-glass"></i>
                         </a>
-                    </td>
-                    <td sec:authorize="hasAnyRole('ADMIN','ARCHIVIST')">
-                        <a th:href="@{'/companies/edit/' + ${company.id}}" type="button" title="Edit company" class="pencil-button">
-                            <i class="fa-solid fa-pencil"></i>
-                        </a>
-                    </td>
-                    <td sec:authorize="hasAnyRole('ADMIN','ARCHIVIST')">
-                        <a type="button" class="trash-button"
-                                title="Delete company" data-bs-toggle="modal" data-bs-target="#deleteModal"
-                                th:data-name="${company.name}"
-                                th:data-id="${company.id}">
-                            <i class="fa-solid fa-trash"></i>
-                        </a>
+                        <span sec:authorize="hasAnyRole('ADMIN','ARCHIVIST')">
+                            <a th:href="@{'/companies/edit/' + ${company.id}}" type="button" title="Edit company" class="pencil-button ms-3">
+                                <i class="fa-solid fa-pencil"></i>
+                            </a>
+                            <a type="button" class="trash-button ms-3"
+                               title="Delete company" data-bs-toggle="modal" data-bs-target="#deleteModal"
+                               th:data-name="${company.name}"
+                               th:data-id="${company.id}">
+                                <i class="fa-solid fa-trash"></i>
+                            </a>
+                        </span>
                     </td>
                 </tr>
                 </tbody>

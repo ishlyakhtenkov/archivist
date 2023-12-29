@@ -78,7 +78,7 @@ public class User extends BaseEntity implements HasIdAndEmail {
     }
 
     public String getFullName() {
-        return firstName + " " + lastName;
+        return lastName + " " + firstName;
     }
 
     @Override

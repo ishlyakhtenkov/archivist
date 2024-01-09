@@ -1,9 +1,6 @@
 spring:
-  thymeleaf:
-    cache: false
-    prefix: file:src/main/resources/templates/
   profiles:
-    active: default
+    active: dev
   datasource:
     url: jdbc:postgresql://localhost:5432/archivist
     username: user

@@ -53,12 +53,14 @@ function getApplicabilities() {
 function fillApplicabilitiesTable(applicabilities) {
     $('#applicabilitiesTable > tbody').empty();
     if (applicabilities.length !== 0) {
-        $('#applicabilitiesTable').attr('hidden', false);
+        $('#decimalNumberTh').attr('hidden', false);
+        $('#nameTh').attr('hidden', false);
         applicabilities.forEach(applicability => {
             addApplicabilityRow(applicability);
         });
     } else {
-        $('#applicabilitiesTable').attr('hidden', true);
+        $('#decimalNumberTh').attr('hidden', true);
+        $('#nameTh').attr('hidden', true);
     }
 }
 
@@ -79,16 +81,39 @@ function addApplicabilityRow(applicability) {
     $('#applicabilitiesTable > tbody').append(applicabilityRow);
 }
 
-function showInputApplicabilityDiv() {
-    $('#addApplicabilityButtonDiv').attr('hidden', true);
-    $('#inputApplicabilityDiv').attr('hidden', false);
+function showInputApplicabilityRow() {
+    $('#addApplicabilityButton').attr('hidden', true);
+    $('#decimalNumberTh').attr('hidden', false);
+    $('#nameTh').attr('hidden', false);
+    let decimalNumberTd = $('<td></td>').html(`<input type="text" id="applicabilityDecNumberInput" class="form-control" title="" aria-label="Decimal number" placeholder="Decimal number" form="inputApplicabilityForm" required/>`);
+    let buttonsTd = $('<td></td>').html(`
+            <div class="row align-items-center">
+              <div class="col-auto mt-1">
+                <div class="form-check">
+                  <input type="checkbox" id="primalCheckbox" class="form-check-input" style="cursor: pointer;">
+                  <label class="form-check-label" for="primalCheckbox">Primal</label>
+                </div>
+              </div>
+              <div class="col-auto mt-1">
+                        <button type="submit" class="btn btn-sm btn-success px-3" form="inputApplicabilityForm" onclick="createApplicability()">Save</button>
+                        <button type="button" class="btn btn-sm btn-secondary" onclick="cancelAddApplicability()">Cancel</button>
+              </div>
+            </div>`);
+    let emptyTd = $('<td></td>');
+    let inputApplicabilityRow = $('<tr></tr>').attr('id', 'inputApplicabilityRow');
+    inputApplicabilityRow.append(decimalNumberTd);
+    inputApplicabilityRow.append(buttonsTd);
+    inputApplicabilityRow.append(emptyTd);
+    $('#applicabilitiesTable > tbody').prepend(inputApplicabilityRow);
 }
 
 function cancelAddApplicability() {
-    $('#applicabilityDecNumberInput').val('');
-    $('#primalCheckbox').prop('checked', false);
-    $('#addApplicabilityButtonDiv').attr('hidden', false);
-    $('#inputApplicabilityDiv').attr('hidden', true);
+    $('#inputApplicabilityRow').remove();
+    $('#addApplicabilityButton').attr('hidden', false);
+    if ($('#applicabilitiesTable > tbody tr').length === 0) {
+        $('#decimalNumberTh').attr('hidden', true);
+        $('#nameTh').attr('hidden', true);
+    }
 }
 
 function deleteApplicability() {
@@ -333,7 +358,7 @@ function createSending() {
     let status = $('#statusSelector').val();
     let invoiceNum = $('#invoiceNumInput').val();
     let invoiceDate = $('#invoiceDateInput').val();
-    if (companyId.length && status.length && invoiceNum.length && invoiceDate.length) {
+    if (companyId !== null && status !== null && invoiceNum.length && invoiceDate.length) {
         $.ajax({
             url: '/documents/sendings',
             type: 'POST',
@@ -518,7 +543,9 @@ function getChanges() {
 function fillChangesTable(changes) {
     $('#changesTable > tbody').empty();
     if (changes.length !== 0) {
-        $('#changesTable').attr('hidden', false);
+        $('#changeNumberTh').attr('hidden', false);
+        $('#changeNoticeTh').attr('hidden', false);
+        $('#changeDateTh').attr('hidden', false);
         changes.forEach(change => {
             addChangeRow(change);
         });
@@ -526,7 +553,9 @@ function fillChangesTable(changes) {
         let popoverList = [...popoverTriggerList].map(popoverTriggerEl =>
             new bootstrap.Popover(popoverTriggerEl, {html : true, sanitize: false}));
     } else {
-        $('#changesTable').attr('hidden', true);
+        $('#changeNumberTh').attr('hidden', true);
+        $('#changeNoticeTh').attr('hidden', true);
+        $('#changeDateTh').attr('hidden', true);
     }
 }
 
@@ -551,17 +580,34 @@ function addChangeRow(change) {
     $('#changesTable > tbody').append(changeRow);
 }
 
-function showInputChangeDiv() {
-    $('#addChangeButtonDiv').attr('hidden', true);
-    $('#inputChangeDiv').attr('hidden', false);
+function showInputChangeRow() {
+    $('#addChangeButton').attr('hidden', true);
+    $('#changeNumberTh').attr('hidden', false);
+    $('#changeNoticeTh').attr('hidden', false);
+    $('#changeDateTh').attr('hidden', false);
+    let changeNumberTd = $('<td></td>').html(`<input type="number" id="changeChangeNumberInput" class="form-control" title="" placeholder="Change number" form="inputChangeForm" required/>`);
+    let changeNoticeTd = $('<td></td>').html(`<input type="text" id="changeChangeNoticeNameInput" class="form-control" title="" aria-label="Change notice" placeholder="Change notice name" form="inputChangeForm" required/>`);
+    let changeDateTd = $('<td></td>').html(`<input type="text" onblur="if(this.value==''){this.type='text'}" onfocus="(this.type='date')" class="form-control" id="changeChangeNoticeDateInput" placeholder="Change date" title="" form="inputChangeForm" required/>`);
+    let buttonsTd = $('<td></td>').html(`<div class="py-1">
+            <button type="submit" class="btn btn-sm btn-success px-3" form="inputChangeForm" onclick="createChange()">Save</button>
+            <button type="button" class="btn btn-sm btn-secondary" onclick="cancelAddChange()">Cancel</button>
+        </div>`);
+    let inputChangeRow = $('<tr></tr>').attr('id', 'inputChangeRow');
+    inputChangeRow.append(changeNumberTd);
+    inputChangeRow.append(changeNoticeTd);
+    inputChangeRow.append(changeDateTd);
+    inputChangeRow.append(buttonsTd);
+    $('#changesTable > tbody').prepend(inputChangeRow);
 }
 
 function cancelAddChange() {
-    $('#changeChangeNumberInput').val('');
-    $('#changeChangeNoticeNameInput').val('');
-    $('#changeChangeNoticeDateInput').attr('type', 'text').val('');
-    $('#addChangeButtonDiv').attr('hidden', false);
-    $('#inputChangeDiv').attr('hidden', true);
+    $('#inputChangeRow').remove();
+    $('#addChangeButton').attr('hidden', false);
+    if ($('#changesTable > tbody tr').length === 0) {
+        $('#changeNumberTh').attr('hidden', true);
+        $('#changeNoticeTh').attr('hidden', true);
+        $('#changeDateTh').attr('hidden', true);
+    }
 }
 
 function createChange() {

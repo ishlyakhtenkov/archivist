@@ -21,7 +21,7 @@ function addChangeRow(id, decimalNumber, changeNumber) {
     changeRow.append(documentTd);
     changeRow.append(changeNumberTd);
     changeRow.append(deleteActionTd);
-    $('#changesTable > tbody').append(changeRow);
+    $('#changesTable > tbody').prepend(changeRow);
     let popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
     let popoverList = [...popoverTriggerList].map(popoverTriggerEl =>
         new bootstrap.Popover(popoverTriggerEl, {html : true, sanitize: false}));

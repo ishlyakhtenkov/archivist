@@ -25,6 +25,10 @@ import ru.javaprojects.archivist.changenotices.to.ChangeNoticeTo;
 import ru.javaprojects.archivist.common.util.FileUtil;
 import ru.javaprojects.archivist.departments.DepartmentService;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.Objects;
+
 @Controller
 @RequestMapping(ChangeNoticeUIController.CHANGE_NOTICES_URL)
 @RequiredArgsConstructor
@@ -129,7 +133,8 @@ public class ChangeNoticeUIController {
         log.info("download file {}", fileLink);
         Resource resource = FileUtil.download(contentPath + fileLink);
         return ResponseEntity.ok()
-                .header("Content-Disposition", "inline")
+                .header("Content-Disposition", "inline; filename=" +
+                        URLEncoder.encode(Objects.requireNonNull(resource.getFilename()), StandardCharsets.UTF_8).replace("+", "%20"))
                 .body(resource);
     }
 }

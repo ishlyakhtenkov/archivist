@@ -28,7 +28,11 @@ import ru.javaprojects.archivist.documents.to.ApplicabilityTo;
 import ru.javaprojects.archivist.documents.to.ChangeTo;
 import ru.javaprojects.archivist.documents.to.SendingTo;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @Validated
@@ -86,7 +90,8 @@ public class DocumentRestController {
         log.info("download file {}", fileLink);
         Resource resource = FileUtil.download(contentPath + fileLink);
         return ResponseEntity.ok()
-                .header("Content-Disposition", "inline")
+                .header("Content-Disposition", "inline; filename=" +
+                        URLEncoder.encode(Objects.requireNonNull(resource.getFilename()), StandardCharsets.UTF_8).replace("+", "%20"))
                 .body(resource);
     }
 

@@ -164,12 +164,12 @@
                             <!-- Subscribers Tab-->
                             <div class="tab-pane fade mt-2" id="documentSubscribersTab" role="tabpanel" aria-labelledby="nav-subscribers-tab" tabindex="0">
                                 <div sec:authorize="hasAnyRole('ADMIN','ARCHIVIST')" class="text-end mb-1">
-                                    <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#addSendingModal">Add sending</button>
+                                    <button class="btn btn-sm btn-primary mb-1" data-bs-toggle="modal" data-bs-target="#addSendingModal">Add sending</button>
                                 </div>
                                 <div class="row row-cols-1 row-cols-md-2 row-cols-xxl-3">
-                                    <div class="col" id="subscriberColumn1"></div>
-                                    <div class="col" id="subscriberColumn2"></div>
-                                    <div class="col" id="subscriberColumn3"></div>
+                                    <div class="col pe-xxl-1" id="subscriberColumn1"></div>
+                                    <div class="col px-xxl-1" id="subscriberColumn2"></div>
+                                    <div class="col ps-xxl-1" id="subscriberColumn3"></div>
                                 </div>
                             </div>
 

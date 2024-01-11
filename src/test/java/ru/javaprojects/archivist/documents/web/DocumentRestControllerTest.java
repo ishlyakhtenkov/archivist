@@ -462,7 +462,7 @@ class DocumentRestControllerTest extends AbstractControllerTest implements Manag
                 .param(FILE_LINK, content1.getFiles().get(1).getFileLink()))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PDF))
-                .andExpect(header().string("Content-Disposition", "inline"));
+                .andExpect(header().string("Content-Disposition", "inline; filename=" +  content1.getFiles().get(1).getFileName()));
     }
 
     @Test

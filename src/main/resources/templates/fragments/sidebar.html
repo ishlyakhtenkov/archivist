@@ -46,7 +46,7 @@
                                 <a class="nav-link sidebar-nav-link" th:href="@{/documents}"><span class="ms-5"><i class="fa-solid fa-scroll fa-fw me-2"></i>Documents</span></a>
                             </li>
                             <li sec:authorize="isAuthenticated()" class="nav-item mt-1" th:classappend="${activeMenuItem == 'Change notices'}? 'active' : ''" id="changeNoticesNavLink">
-                                <a class="nav-link sidebar-nav-link" th:href="@{/change-notices}"><span class="ms-5"><i class="fa-solid fa-file-pen fa-fw me-2"></i>Change notices</span></a>
+                                <a class="nav-link sidebar-nav-link" th:href="@{/change-notices}"><span class="ms-5"><i class="fa-solid fa-file-signature fa-fw me-2"></i>Change notices</span></a>
                             </li>
                         </ul>
                     </div>

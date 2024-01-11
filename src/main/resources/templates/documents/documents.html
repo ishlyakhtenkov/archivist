@@ -34,45 +34,44 @@
             <h5 class="alert alert-warning mt-2">No documents found.</h5>
         </span>
 
-        <div th:if="${!documents.isEmpty()}" class="table-responsive text-nowrap text-center">
+        <div th:if="${!documents.isEmpty()}" class="table-responsive text-nowrap">
             <table class="table table-hover table-bordered">
                 <thead class="table-dark">
                 <tr>
-                    <th>Decimal number</th>
-                    <th>Name</th>
-                    <th>Inv. number</th>
-                    <th>Status</th>
-                    <th>Type</th>
-                    <th>Original holder</th>
-                    <th sec:authorize="hasAnyRole('ADMIN','ARCHIVIST')" colspan="3">Actions</th>
-                    <th sec:authorize="!hasAnyRole('ADMIN','ARCHIVIST')">Details</th>
+                    <th class="col-3">Decimal number</th>
+                    <th class="col-3">Name</th>
+                    <th class="col-2">Status</th>
+                    <th class="col-2">Original holder</th>
+                    <th class="col-1">Type</th>
+                    <th class="col-1 text-center">Actions</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:each="document : ${documents}" th:id="'row-' + ${document.id}" class="table-row" th:classappend="${document.annulled ? 'text-danger' : ''}">
-                    <td th:utext="${document.decimalNumber + (document.isSecret() ? ' <span class=&quot;badge bg-danger rounded-circle&quot; title=&quot;Secret&quot;>S</span>' : '')}"></td>
-                    <td class="text-truncate" th:text="${document.name}" style="max-width: 150px;"></td>
-                    <td th:text="${document.inventoryNumber}"></td>
-                    <td th:text="${document.status}"></td>
-                    <td th:text="${document.type}"></td>
-                    <td th:text="${document.originalHolder.name}"></td>
                     <td>
-                        <a th:href="@{'/documents/' + ${document.id}}" type="button" title="Document details" class="glass-button">
+                        <a th:href="@{'/documents/' + ${document.id}}" th:text="${document.decimalNumber}"
+                           title="Show details" class="text-dark" style="text-decoration:none;">Decimal number</a>
+                        <span th:utext="${(document.isSecret() ? ' <span class=&quot;badge bg-danger rounded-circle&quot; title=&quot;Secret&quot;>S</span>' : '')}"></span>
+                    </td>
+                    <td class="text-truncate" th:text="${document.name}" style="max-width: 150px;"></td>
+                    <td th:text="${document.status}"></td>
+                    <td th:text="${document.originalHolder.name}"></td>
+                    <td th:text="${document.type}"></td>
+                    <td class="text-center">
+                        <a th:href="@{'/documents/' + ${document.id}}" type="button" title="Show details" class="glass-button">
                             <i class="fa-solid fa-magnifying-glass"></i>
                         </a>
-                    </td>
-                    <td sec:authorize="hasAnyRole('ADMIN','ARCHIVIST')">
-                        <a th:href="@{'/documents/edit/' + ${document.id}}" type="button" title="Edit document" class="pencil-button">
-                            <i class="fa-solid fa-pencil"></i>
-                        </a>
-                    </td>
-                    <td sec:authorize="hasAnyRole('ADMIN','ARCHIVIST')">
-                        <a type="button" class="trash-button"
-                           title="Delete document" data-bs-toggle="modal" data-bs-target="#deleteModal"
-                           th:data-decimalnumber="${document.decimalNumber}"
-                           th:data-id="${document.id}">
-                            <i class="fa-solid fa-trash"></i>
-                        </a>
+                        <span sec:authorize="hasAnyRole('ADMIN','ARCHIVIST')">
+                            <a th:href="@{'/documents/edit/' + ${document.id}}" type="button" title="Edit document" class="pencil-button ms-3">
+                                <i class="fa-solid fa-pencil"></i>
+                            </a>
+                            <a type="button" class="trash-button ms-3"
+                               title="Delete document" data-bs-toggle="modal" data-bs-target="#deleteModal"
+                               th:data-decimalnumber="${document.decimalNumber}"
+                               th:data-id="${document.id}">
+                                <i class="fa-solid fa-trash"></i>
+                            </a>
+                        </span>
                     </td>
                 </tr>
                 </tbody>

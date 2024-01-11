@@ -9,9 +9,6 @@
             <div class="col-12 col-md-6">
                 <div class="card shadow">
                     <div class="card-body">
-                        <span class="float-end">
-                            <button type="button" class="btn-close" aria-label="Close" onclick="history.back()"></button>
-                        </span>
                         <div class="mb-2 mb-sm-0">
                             <h4 th:text="${user.firstName} + ' ' + ${user.lastName}">Name</h4>
                             <div th:text="'Email: ' + ${user.email}">Email</div>
@@ -19,15 +16,12 @@
                             <div th:text="'Registered: ' + ${#dates.format(user.registered, 'dd.MM.yyyy HH:mm')}">Registered</div>
                         </div>
                         <div class="btn-toolbar mt-2 mb-1 float-end">
-                            <form th:action="@{/logout}" method="post">
-                                <button class="btn btn-sm btn-secondary" type="submit">
-                                    <span>Logout</span>
-                                    <i class="fas fa-sign-out-alt ms-1"></i>
-                                </button>
-                            </form>
-                            <button type="button" class="btn btn-sm btn-warning ms-2" data-bs-toggle="modal" data-bs-target="#changePasswordModal">
-                                <span>Change password <i class="fas fa-key ms-1"></i></span>
+                            <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#changePasswordModal">
+                                Change password
                             </button>
+                            <form th:action="@{/logout}" method="post">
+                                <button class="btn btn-sm btn-secondary ms-2" type="submit">Logout</button>
+                            </form>
                         </div>
                     </div>
                 </div>

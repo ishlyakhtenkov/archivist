@@ -4,89 +4,30 @@
 
 <th:block th:replace="~{fragments/main::page(title='Archivist - profile',appMain=~{::appMain}, ownScript=~{::ownScript})}">
     <appMain>
-        <h2 class="text-secondary font-weight-bold text-start"><i class="fa-solid fa-address-card me-2"></i>Profile</h2>
-        <div class="row d-flex justify-content-center align-items-center">
-            <div class="col">
-                <div class="row">
-                    <div class="col col-md-8 mb-3">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="e-profile">
-                                    <div class="row">
-                                        <div class="col d-flex flex-column flex-sm-row justify-content-between mb-3">
-                                            <div class="mb-2 mb-sm-0">
-                                                <h4 class=" pb-1 mb-0 text-nowrap" th:text="${user.firstName} + ' ' + ${user.lastName}">Name</h4>
-                                            </div>
-                                            <div class="text-end">
-                                                <div class="text-muted"><small th:text="'Registered: ' + ${#dates.format(user.registered, 'dd-MM-yyyy HH:mm')}">Registered</small></div>
-                                                <div class="text-muted"><small th:text="'Roles: ' + ${#strings.substring(user.roles, 1, #strings.length(user.roles) - 1)}">Roles</small></div>
-                                                <div class="text-muted"><small>
-                                                    <input name="enabled" type="checkbox" th:checked="${user.enabled}"
-                                                           class="form-check-input mt-2" disabled>
-                                                    <label class="custom-control-label mt-1">Enabled</label></small>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="tab-content pt-2">
-                                        <div class="tab-pane active">
-                                            <div>
-                                                <div class="row row-cols-1 row-cols-md-2">
-                                                    <div class="col col-md-6 mb-2">
-                                                        <label>First name</label>
-                                                        <input type="text" th:value="${user.firstName}" disabled name="name" class="form-control" />
-                                                    </div>
-                                                    <div class="col col-md-6 mb-2">
-                                                        <label>Last name</label>
-                                                        <input type="text" th:value="${user.lastName}" disabled name="name" class="form-control" />
-                                                    </div>
-                                                </div>
-                                                <div class="row row-cols-1 row-cols-md-2">
-                                                    <div class="col col-md-6">
-                                                        <label>E-mail</label>
-                                                        <input type="text" th:value="${user.email}" disabled name="name" class="form-control" />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+        <h2 class="text-secondary font-weight-bold"><i class="fa-solid fa-address-card me-2"></i>Profile</h2>
+        <div class="row">
+            <div class="col-12 col-md-6">
+                <div class="card shadow">
+                    <div class="card-body">
+                        <span class="float-end">
+                            <button type="button" class="btn-close" aria-label="Close" onclick="history.back()"></button>
+                        </span>
+                        <div class="mb-2 mb-sm-0">
+                            <h4 th:text="${user.firstName} + ' ' + ${user.lastName}">Name</h4>
+                            <div th:text="'Email: ' + ${user.email}">Email</div>
+                            <div th:text="'Roles: ' + ${#strings.substring(user.roles, 1, #strings.length(user.roles) - 1)}">Roles</div>
+                            <div th:text="'Registered: ' + ${#dates.format(user.registered, 'dd.MM.yyyy HH:mm')}">Registered</div>
                         </div>
-                    </div>
-                    <div class="col-12 col-xl-3 col-md-4 mb-3">
-                        <div class="card mb-4">
-                            <div class="card-body">
-                                    <form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post">
-                                        <div class="d-grid gap-2 col-10 mx-auto">
-                                            <button class="btn btn-secondary" type="submit">
-                                                <span>Logout</span>
-                                                <i class="fas fa-sign-out-alt ms-1"></i>
-                                            </button>
-                                        </div>
-                                    </form>
-                            </div>
-                        </div>
-                        <div class="card mb-4">
-                            <div class="card-body">
-                                <div class="d-grid gap-2 col-10 mx-auto">
-                                    <button type="button" class="btn btn-block btn-warning"
-                                            title="Change password" data-bs-toggle="modal" data-bs-target="#changePasswordModal">
-                                        <span class="d-xl-none d-none d-md-block">Change pass <i class="fas fa-key ms-1"></i></span>
-                                        <span class="d-md-none d-xl-block">Change password <i class="fas fa-key ms-1"></i></span>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card mb-3">
-                            <div class="card-body">
-                                <div class="d-grid gap-2 col-10 mx-auto">
-                                    <button class="btn btn-block btn-light" onclick="history.back()">
-                                        <span>Close</span>
-                                        <i class="fas fa-times ms-1"></i>
-                                    </button>
-                                </div>
-                            </div>
+                        <div class="btn-toolbar mt-2 mb-1 float-end">
+                            <form th:action="@{/logout}" method="post">
+                                <button class="btn btn-sm btn-secondary" type="submit">
+                                    <span>Logout</span>
+                                    <i class="fas fa-sign-out-alt ms-1"></i>
+                                </button>
+                            </form>
+                            <button type="button" class="btn btn-sm btn-warning ms-2" data-bs-toggle="modal" data-bs-target="#changePasswordModal">
+                                <span>Change password <i class="fas fa-key ms-1"></i></span>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -107,7 +48,7 @@
                                 <div class="input-group">
                                     <span class="input-group-text" id="passwordAddon" title="New password"><i class="fa-solid fa-key"></i></span>
                                     <div class="form-floating">
-                                        <input type="password" class="form-control" id="newPassword" required placeholder="New password" title="New password"
+                                        <input type="password" class="form-control" id="newPassword" required placeholder="New password" title=""
                                                aria-label="Password" aria-describedby="passwordAddon" />
                                         <label for="newPassword" class="text-muted">New password</label>
                                     </div>
@@ -118,7 +59,7 @@
                                     <span class="input-group-text" id="repeatPasswordAddon" title="Repeat password"><i class="fa-solid fa-key"></i></span>
                                     <div class="form-floating">
                                         <input type="password" class="form-control" id="repeatPassword" required placeholder="Repeat password"
-                                               aria-label="Repeat password" title="Repeat password" aria-describedby="repeatPasswordAddon" />
+                                               aria-label="Repeat password" title="" aria-describedby="repeatPasswordAddon" />
                                         <label for="repeatPassword" class="text-muted">Repeat password</label>
                                     </div>
                                 </div>
@@ -129,8 +70,8 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-warning" onclick="changePasswordProfile()" id="submitWithPassButton">Change password</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-warning" onclick="changePasswordProfile()" id="submitWithPassButton">Change</button>
                         </div>
                     </form>
                 </div>

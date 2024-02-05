@@ -47,7 +47,7 @@
                 <tr th:each="company : ${companies}" th:id="'row-' + ${company.id}" class="table-row">
                     <td th:text="${company.name}"></td>
                     <td th:text="${company.address.formattedAddress}"></td>
-                    <td th:text="${company.contacts.phone}"></td>
+                    <td th:text="${company.contacts != null ? company.contacts.phone : ''}"></td>
                     <td class="text-center">
                         <a th:href="@{'/companies/' + ${company.id}}" type="button" title="Show details" class="glass-button">
                             <i class="fa-solid fa-magnifying-glass"></i>

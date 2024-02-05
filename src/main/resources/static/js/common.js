@@ -64,9 +64,9 @@ function handleError(data, title) {
     failToast(message);
 }
 
-function changeFileInputColor(fileInputId) {
+function changeFileInputColor(fileInputId, color) {
     let fileInput = $(`#${fileInputId}`);
-    fileInput.css('color', fileInput.val().length > 0 ? 'black' : 'transparent');
+    fileInput.css('color', fileInput.val().length > 0 ? 'black' : color);
 }
 
 function hasAdminOrArchivistRole() {

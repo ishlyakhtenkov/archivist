@@ -56,7 +56,7 @@ function deleteChangeRow(changeRowIndex) {
 
 function deleteFile() {
     $('#editFileInput').attr('hidden', true);
-    $('#fileInputDiv').html('<input type="file" accept="application/pdf" id="fileInput" name="file" class="form-control" required style="color: transparent;" onchange="changeFileInputColor(`fileInput`)" />');
+    $('#fileInputDiv').html('<input type="file" accept="application/pdf" id="fileInput" name="file" class="form-control" required style="color: transparent;" onchange="changeFileInputColor(`fileInput`, `transparent`)" />');
 }
 
 $('#nameInput').on('change', () => {

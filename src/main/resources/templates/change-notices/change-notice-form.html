@@ -152,7 +152,7 @@
                             </div>
 
                             <div class="text-end">
-                                <a th:if="${!changeNoticeTo.isNew()}" th:href="@{'/change-notices/' + ${changeNoticeTo.id}}" class="btn btn-secondary" type="button">Cancel</a>
+                                <button th:if="${!changeNoticeTo.isNew()}" class="btn btn-secondary" type="button" onclick="history.back()">Cancel</button>
                                 <button class="btn btn-success px-3" type="submit" th:text="${changeNoticeTo.isNew()} ? 'Create' : '&nbsp;Save&nbsp;'">Create/Save</button>
                             </div>
                         </form>

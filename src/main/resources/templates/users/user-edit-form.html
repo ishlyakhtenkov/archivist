@@ -9,7 +9,7 @@
                 <div class="card shadow">
                     <div class="card-header">
                         <span class="float-end">
-                            <a th:href="@{/users}" type="button" class="btn-close" aria-label="Close"></a>
+                            <button type="button" class="btn-close" aria-label="Close" onclick="history.back()"></button>
                         </span>
                         <h3 class="text-center ms-4" th:text="'Editing: ' + ${userTo.fullName}">Edit User</h3>
                     </div>
@@ -90,7 +90,7 @@
 								</span>
                             </div>
                             <div class="text-end">
-                                <a th:href="@{/users}" class="btn btn-secondary" type="button">Cancel</a>
+                                <button class="btn btn-secondary" type="button" onclick="history.back()">Cancel</button>
                                 <button class="btn btn-success px-3" type="submit">&nbsp;Save&nbsp;</button>
                             </div>
                         </form>

@@ -300,7 +300,7 @@
                                 </div>
                             </div>
                             <div class="text-end">
-                                <a th:if="${!company.isNew()}" th:href="@{'/companies/' + ${company.id}}" class="btn btn-secondary" type="button">Cancel</a>
+                                <button th:if="${!company.isNew()}" class="btn btn-secondary" type="button" onclick="history.back()">Cancel</button>
                                 <button class="btn btn-success px-3" type="submit" th:text="${company.isNew()} ? '&nbsp;Create&nbsp;' : '&nbsp;Save&nbsp;'">Create/Save</button>
                             </div>
                         </form>

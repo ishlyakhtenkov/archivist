@@ -11,7 +11,7 @@
                 <div class="card shadow">
                     <div class="card-header">
                         <span class="float-end">
-                            <a th:href="@{/departments}" type="button" class="btn-close" aria-label="Close"></a>
+                            <button type="button" class="btn-close" aria-label="Close" onclick="history.back()"></button>
                         </span>
                         <h3 class="text-center ms-4" th:text="${department.isNew()} ? 'New department' : 'Editing: ' + ${department.name}">Create/Edit Departmentr</h3>
                     </div>
@@ -124,7 +124,7 @@
                                 </div>
                             </div>
                             <div class="text-end">
-                                <a th:if="${!department.isNew()}" th:href="@{/departments}" class="btn btn-secondary" type="button">Cancel</a>
+                                <button th:if="${!department.isNew()}" class="btn btn-secondary" type="button" onclick="history.back()">Cancel</button>
                                 <button class="btn btn-success" th:classappend="${department.isNew() ? '' : 'px-3'}" type="submit" th:text="${department.isNew()} ? 'Create' : '&nbsp;Save&nbsp;'">Create/Save department</button>
                             </div>
                         </form>

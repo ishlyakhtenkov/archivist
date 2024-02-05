@@ -191,7 +191,7 @@
                                         </span>
                                     </div>
                                     <div class="text-end">
-                                        <a th:if="${!document.isNew()}" th:href="@{'/documents/' + ${document.id}}" class="btn btn-secondary" type="button">Cancel</a>
+                                        <button th:if="${!document.isNew()}" class="btn btn-secondary" type="button" onclick="history.back()">Cancel</button>
                                         <button class="btn btn-success px-3" type="submit" th:text="${document.isNew()} ? 'Create' : '&nbsp;Save&nbsp;'">Create/Save</button>
                                     </div>
                                 </form>

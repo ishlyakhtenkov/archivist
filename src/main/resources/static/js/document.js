@@ -8,22 +8,44 @@ const companySelector = $('#companySelector');
 $(window).on('load', () => init());
 
 function init() {
+    $('#documentGeneralTabButton').on('shown.bs.tab', () => {
+        window.history.replaceState(null, null, window.location.href.split('?')[0]);
+    });
     $('#documentChangesTabButton').on('shown.bs.tab', () => {
+        window.history.replaceState(null, null, "?tab=changes");
         cancelAddChange();
         getChanges();
     });
     $('#documentApplicabilityTabButton').on('shown.bs.tab', () => {
+        window.history.replaceState(null, null, "?tab=applicability");
         cancelAddApplicability();
         getApplicabilities();
     });
     $('#documentContentTabButton').on('shown.bs.tab', () => {
+        window.history.replaceState(null, null, "?tab=content");
         previousContentOpened = false;
         cancelAddContent();
         getLatestContent();
     });
     $('#documentSubscribersTabButton').on('shown.bs.tab', () => {
+        window.history.replaceState(null, null, "?tab=subscribers");
         getSubscribers();
     });
+
+    let searchParams = new URLSearchParams(window.location.search);
+    if (searchParams.has('tab')) {
+        let tabParam = searchParams.get('tab');
+        if (tabParam === 'changes') {
+            $('#documentChangesTabButton').click();
+        } else if (tabParam === 'applicability') {
+            $('#documentApplicabilityTabButton').click();
+        } else if (tabParam === 'content') {
+            $('#documentContentTabButton').click();
+        } else if (tabParam === 'subscribers') {
+            $('#documentSubscribersTabButton').click();
+        }
+    }
+
     $('#deleteApplicabilityModal').on('show.bs.modal', function(e) {
         let decimalNumber = $(e.relatedTarget).data('decimalnumber');
         let id = $(e.relatedTarget).data('id');

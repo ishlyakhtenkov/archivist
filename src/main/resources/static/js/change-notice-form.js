@@ -5,6 +5,11 @@ window.onload = () => {
     let popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
     let popoverList = [...popoverTriggerList].map(popoverTriggerEl =>
         new bootstrap.Popover(popoverTriggerEl, {html : true, sanitize: false}));
+
+    let fileInputValue = $('#fileInput').val();
+    if (fileInputValue) {
+        $('#fileInput').css('color', 'black');
+    }
 }
 
 function addChangeRow(id, decimalNumber, changeNumber) {

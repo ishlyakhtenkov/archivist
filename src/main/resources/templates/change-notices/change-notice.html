@@ -13,7 +13,7 @@
                 <div class="card shadow">
                     <div class="card-header">
                         <span class="float-end">
-                            <a th:href="@{/change-notices}" type="button" class="btn-close" aria-label="Close"></a>
+                            <button type="button" class="btn-close" aria-label="Close" onclick="closeCard()"></button>
                         </span>
                         <h3 class="text-center ms-4" th:text="${changeNotice.name}">Change notice name</h3>
                     </div>
@@ -103,5 +103,6 @@
 
     <ownScript>
         <script src="/js/common.js?v=1"></script>
+        <script src="/js/close-card-button.js?v=1"></script>
     </ownScript>
 </th:block>

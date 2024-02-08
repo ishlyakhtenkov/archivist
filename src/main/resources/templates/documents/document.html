@@ -14,7 +14,7 @@
                     <div class="card-header">
                         <span th:if="${document.annulled}" class="badge bg-danger float-start">Annulled</span>
                         <span class="float-end">
-                            <a th:href="@{/documents}" type="button" class="btn-close" aria-label="Close"></a>
+                            <button type="button" class="btn-close" aria-label="Close" onclick="closeCard()"></button>
                         </span>
                         <h3 class="text-center ms-4" th:classappend="${document.annulled} ? 'px-5' : ''" th:text="${document.decimalNumber}">Document decimal number</h3>
                     </div>
@@ -378,5 +378,6 @@
     <ownScript>
         <script src="/js/common.js?v=1"></script>
         <script src="/js/document.js?v=1"></script>
+        <script src="/js/close-card-button.js?v=1"></script>
     </ownScript>
 </th:block>

@@ -71,12 +71,12 @@ public class DocumentTestData {
             LocalDate.of(2021, MAY, 18), ORIGINAL, null, DIGITAL, false, true, null, department2, company2);
 
     public static Document getNew() {
-        return new Document(null, "newName", "newDecimalNumber", "newInvNum", LocalDate.of(2023, OCTOBER, 12),
+        return new Document(null, "newName", "NEW_DECIMAL_NUMBER", "newInvNum", LocalDate.of(2023, OCTOBER, 12),
                 ORIGINAL, O, PAPER, false, false, "newComment", department1, company3);
     }
 
     public static Document getUpdated() {
-        return new Document(DOCUMENT1_ID, "updatedName", "updatedDecimalNumber", "updInvNum", LocalDate.of(2021, JULY, 7),
+        return new Document(DOCUMENT1_ID, "updatedName", "UPDATED_DECIMAL_NUMBER", "updInvNum", LocalDate.of(2021, JULY, 7),
                 DUPLICATE, O1, DIGITAL, true, false, "updatedComment", department2, company2);
     }
 

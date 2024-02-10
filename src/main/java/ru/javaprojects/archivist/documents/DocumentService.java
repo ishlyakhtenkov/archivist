@@ -262,7 +262,7 @@ public class DocumentService {
         Assert.notNull(changeTo, "changeTo must not be null");
         Document document = repository.getExisted(changeTo.getDocumentId());
         ChangeNotice changeNotice = changeNoticeRepository.findWithChangesByNameIgnoreCase(changeTo.getChangeNoticeName())
-                .orElseGet(() -> ChangeNotice.autoGenerate(changeTo.getChangeNoticeName(), changeTo.getChangeNoticeDate()));
+                .orElseGet(() -> ChangeNotice.autoGenerate(changeTo.getChangeNoticeName().toUpperCase(), changeTo.getChangeNoticeDate()));
         if (!changeNotice.getReleaseDate().equals(changeTo.getChangeNoticeDate())) {
             throw new IllegalRequestDataException("Change notice " + changeNotice.getName() +
                     " already exists and has release date: " + changeNotice.getReleaseDate());

@@ -11,7 +11,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.util.MultiValueMap;
 import ru.javaprojects.archivist.AbstractControllerTest;
-import ru.javaprojects.archivist.ManagesContentFiles;
+import ru.javaprojects.archivist.TestContentManager;
 import ru.javaprojects.archivist.changenotices.ChangeNoticeService;
 import ru.javaprojects.archivist.changenotices.ChangeNoticeTestData;
 import ru.javaprojects.archivist.changenotices.ChangeNoticeUtil;
@@ -36,7 +36,7 @@ import static ru.javaprojects.archivist.common.error.Constants.DUPLICATE_ERROR_C
 import static ru.javaprojects.archivist.common.web.PathUIController.LOGIN_URL;
 import static ru.javaprojects.archivist.documents.DocumentTestData.*;
 
-class ChangeNoticeUIControllerTest extends AbstractControllerTest implements ManagesContentFiles {
+class ChangeNoticeUIControllerTest extends AbstractControllerTest implements TestContentManager {
     private static final String CHANGE_NOTICES_ADD_FORM_URL = CHANGE_NOTICES_URL + "/add";
     private static final String CHANGE_NOTICES_EDIT_FORM_URL = CHANGE_NOTICES_URL + "/edit/";
     static final String CHANGE_NOTICES_URL_SLASH = CHANGE_NOTICES_URL + "/";

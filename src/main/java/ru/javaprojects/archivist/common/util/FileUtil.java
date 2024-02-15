@@ -99,7 +99,7 @@ public class FileUtil {
             Path filePath = Paths.get(file);
             Path newDirPath = Paths.get(newDir);
             if (Files.notExists(newDirPath)) {
-                Files.createDirectory(newDirPath);
+                Files.createDirectories(newDirPath);
             }
             Files.move(filePath, newDirPath.resolve(filePath.getFileName()), REPLACE_EXISTING);
 

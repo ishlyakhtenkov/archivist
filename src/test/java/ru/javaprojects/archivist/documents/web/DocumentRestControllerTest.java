@@ -14,8 +14,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import ru.javaprojects.archivist.AbstractControllerTest;
 import ru.javaprojects.archivist.CommonTestData;
-import ru.javaprojects.archivist.ManagesContentFiles;
-import ru.javaprojects.archivist.changenotices.ChangeNoticeUtil;
+import ru.javaprojects.archivist.TestContentManager;
 import ru.javaprojects.archivist.changenotices.model.Change;
 import ru.javaprojects.archivist.changenotices.model.ChangeNotice;
 import ru.javaprojects.archivist.changenotices.repository.ChangeRepository;
@@ -52,7 +51,7 @@ import static ru.javaprojects.archivist.documents.DocumentTestData.*;
 import static ru.javaprojects.archivist.documents.web.DocumentUIController.DOCUMENTS_URL;
 import static ru.javaprojects.archivist.documents.web.DocumentUIControllerTest.DOCUMENTS_URL_SLASH;
 
-class DocumentRestControllerTest extends AbstractControllerTest implements ManagesContentFiles {
+class DocumentRestControllerTest extends AbstractControllerTest implements TestContentManager {
     private static final String APPLICABILITIES_URL = DOCUMENTS_URL + "/applicabilities";
     private static final String DOCUMENT_APPLICABILITIES_URL = DOCUMENTS_URL + "/%d/applicabilities";
     private static final String APPLICABILITIES_URL_SLASH = APPLICABILITIES_URL + "/";

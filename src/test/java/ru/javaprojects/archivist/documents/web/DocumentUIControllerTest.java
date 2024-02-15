@@ -3,17 +3,23 @@ package ru.javaprojects.archivist.documents.web;
 import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.util.MultiValueMap;
 import ru.javaprojects.archivist.AbstractControllerTest;
+import ru.javaprojects.archivist.TestContentManager;
 import ru.javaprojects.archivist.common.error.NotFoundException;
 import ru.javaprojects.archivist.documents.DocumentService;
 import ru.javaprojects.archivist.documents.DocumentTestData;
+import ru.javaprojects.archivist.documents.model.Content;
 import ru.javaprojects.archivist.documents.model.Document;
+import ru.javaprojects.archivist.documents.repository.ContentRepository;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Objects;
 
@@ -31,7 +37,7 @@ import static ru.javaprojects.archivist.departments.DepartmentTestData.departmen
 import static ru.javaprojects.archivist.documents.DocumentTestData.*;
 import static ru.javaprojects.archivist.documents.web.DocumentUIController.DOCUMENTS_URL;
 
-class DocumentUIControllerTest extends AbstractControllerTest {
+class DocumentUIControllerTest extends AbstractControllerTest implements TestContentManager {
     private static final String DOCUMENTS_ADD_FORM_URL = DOCUMENTS_URL + "/add";
     private static final String DOCUMENTS_EDIT_FORM_URL = DOCUMENTS_URL + "/edit/";
     static final String DOCUMENTS_URL_SLASH = DOCUMENTS_URL + "/";
@@ -41,6 +47,17 @@ class DocumentUIControllerTest extends AbstractControllerTest {
 
     @Autowired
     private DocumentService service;
+
+    @Autowired
+    private ContentRepository contentRepository;
+
+    @Value("${content-path.documents}")
+    private String contentPath;
+
+    @Override
+    public String getContentPath() {
+        return contentPath;
+    }
 
     @Test
     @WithUserDetails(USER_MAIL)
@@ -301,6 +318,26 @@ class DocumentUIControllerTest extends AbstractControllerTest {
                 .andExpect(redirectedUrl(DOCUMENTS_URL_SLASH + DOCUMENT1_ID))
                 .andExpect(flash().attribute(ACTION, "Document " + updatedDocument.getDecimalNumber() + " was updated"));
         DOCUMENT_MATCHER.assertMatch(service.get(DOCUMENT1_ID), updatedDocument);
+
+        //Check ContentFiles from all Contents have updated fileLinks
+        List<Content> contents = contentRepository.findByDocument_IdOrderByChangeNumberDesc(DOCUMENT1_ID);
+        contents.stream()
+                .flatMap(content -> content.getFiles().stream())
+                .forEach(contentFile -> assertTrue(contentFile.getFileLink()
+                        .startsWith(updatedDocument.getDecimalNumber() + "/")));
+
+        //Check all files with updated fileLinks exist
+        contents.stream()
+                .flatMap(content -> content.getFiles().stream())
+                .forEach(contentFile -> assertTrue(Files.exists(Paths.get(contentPath, contentFile.getFileLink()))));
+
+        //Check all files with old fileLinks not exist
+        content1.getFiles().forEach(contentFile -> assertTrue(Files.notExists(Paths.get(contentPath, contentFile.getFileLink()))));
+        content2.getFiles().forEach(contentFile -> assertTrue(Files.notExists(Paths.get(contentPath, contentFile.getFileLink()))));
+        content3.getFiles().forEach(contentFile -> assertTrue(Files.notExists(Paths.get(contentPath, contentFile.getFileLink()))));
+
+        //Check dir with old decimal number name not exists
+        assertTrue(Files.notExists(Paths.get(contentPath, document1.getDecimalNumber())));
     }
 
     //Check UniqueDecimalNumberValidator works correct when update

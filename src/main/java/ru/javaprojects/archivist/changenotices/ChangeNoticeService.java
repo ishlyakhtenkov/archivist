@@ -50,7 +50,7 @@ public class ChangeNoticeService {
         }
         repository.saveAndFlush(changeNotice);
         String fileName = changeNoticeTo.getFile().getOriginalFilename();
-        FileUtil.upload(changeNoticeTo.getFile(), contentPath + changeNoticeTo.getName() + "/", fileName);
+        FileUtil.upload(changeNoticeTo.getFile(), contentPath + changeNoticeTo.getName().toUpperCase() + "/", fileName);
         return changeNotice;
     }
 
@@ -69,10 +69,10 @@ public class ChangeNoticeService {
         if (changeNoticeTo.getFile() != null) {
             FileUtil.deleteDir(contentPath + oldName);
             String fileName = changeNoticeTo.getFile().getOriginalFilename();
-            FileUtil.upload(changeNoticeTo.getFile(), contentPath + changeNoticeTo.getName() + "/", fileName);
-        } else if (!changeNoticeTo.getName().equals(oldName)) {
+            FileUtil.upload(changeNoticeTo.getFile(), contentPath + changeNoticeTo.getName().toUpperCase() + "/", fileName);
+        } else if (!changeNoticeTo.getName().equalsIgnoreCase(oldName)) {
             FileUtil.moveFile(contentPath + oldName + "/" + oldFile.getFileName(),
-                    contentPath + changeNoticeTo.getName());
+                    contentPath + changeNoticeTo.getName().toUpperCase());
             FileUtil.deleteDirIfEmpty(contentPath + oldName);
         }
         return changeNotice;

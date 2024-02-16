@@ -1,4 +1,6 @@
 DROP TABLE IF EXISTS posts;
+DROP TABLE IF EXISTS issuances;
+DROP TABLE IF EXISTS albums;
 DROP TABLE IF EXISTS changes;
 DROP TABLE IF EXISTS change_notices;
 DROP TABLE IF EXISTS sendings;
@@ -8,6 +10,7 @@ DROP TABLE IF EXISTS subscribers;
 DROP TABLE IF EXISTS document_content_files;
 DROP TABLE IF EXISTS document_contents;
 DROP TABLE IF EXISTS documents;
+DROP TABLE IF EXISTS employees;
 DROP TABLE IF EXISTS departments;
 DROP TABLE IF EXISTS contact_persons;
 DROP TABLE IF EXISTS companies;
@@ -225,3 +228,41 @@ CREATE TABLE posts
     author_id     BIGINT               NOT NULL,
     FOREIGN KEY (author_id) REFERENCES users (id) ON DELETE SET NULL
 );
+
+CREATE TABLE albums
+(
+    id          BIGINT  DEFAULT nextval('global_seq')  PRIMARY KEY,
+    document_id BIGINT      NOT NULL,
+    stamp       VARCHAR(2) NOT NULL,
+    FOREIGN KEY (document_id) REFERENCES documents (id) ON DELETE CASCADE
+);
+CREATE UNIQUE INDEX albums_unique_document_stamp_idx ON albums (document_id, stamp);
+
+CREATE TABLE employees
+(
+    id            BIGINT  DEFAULT nextval('global_seq')  PRIMARY KEY,
+    department_id BIGINT                NOT NULL,
+    last_name     VARCHAR(32)           NOT NULL,
+    first_name    VARCHAR(32)           NOT NULL,
+    middle_name   VARCHAR(32)           NOT NULL,
+    phone         VARCHAR(32)           NOT NULL,
+    email         VARCHAR(128),
+    fired         BOOL    DEFAULT FALSE NOT NULL,
+    FOREIGN KEY (department_id) REFERENCES departments (id) ON DELETE RESTRICT
+);
+CREATE UNIQUE INDEX employees_unique_email_idx ON users (email);
+
+CREATE TABLE issuances
+(
+    id          BIGINT  DEFAULT nextval('global_seq')  PRIMARY KEY,
+    album_id    BIGINT    NOT NULL,
+    employee_id BIGINT    NOT NULL,
+    issued      TIMESTAMP NOT NULL,
+    returned    TIMESTAMP,
+    FOREIGN KEY (album_id) REFERENCES albums (id) ON DELETE CASCADE,
+    FOREIGN KEY (employee_id) REFERENCES employees (id) ON DELETE RESTRICT,
+    h2_extra_column VARCHAR AS CASE WHEN returned IS NULL THEN 'not returned' ELSE NULL END
+);
+-- FOR POSTGRES USE COMMAND BELOW (INSTEAD OF CREATION h2_extra_column)
+-- CREATE UNIQUE INDEX issuances_unique_simultaneous_issuance_idx ON issuances (album_id) WHERE returned IS NULL;
+CREATE UNIQUE INDEX issuances_unique_simultaneous_issuance_idx ON issuances (album_id, h2_extra_column);

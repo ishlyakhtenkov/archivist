@@ -1,4 +1,6 @@
 DELETE FROM posts;
+DELETE FROM issuances;
+DELETE FROM albums;
 DELETE FROM changes;
 DELETE FROM change_notices;
 DELETE FROM sendings;
@@ -8,6 +10,7 @@ DELETE FROM subscribers;
 DELETE FROM document_content_files;
 DELETE FROM document_contents;
 DELETE FROM documents;
+DELETE FROM employees;
 DELETE FROM departments;
 DELETE FROM contact_persons;
 DELETE FROM companies;
@@ -122,3 +125,27 @@ INSERT INTO posts (created, updated, title, content, for_auth_only, author_id)
 VALUES ('2023-11-28 11:14:48', '2023-11-28 11:14:48', 'New users registration', 'To apply for an account, please call 1-134-56 or email ishlyakhtenkov@npo.lan.', false, 100001),
        ('2023-11-30 15:32:25', '2023-11-30 15:32:25', 'Account sharing', 'Dear users, remind you that sharing your account with other users is strictly prohibited.', true, 100001),
        ('2023-12-04 09:05:34', '2023-12-04 09:05:34', 'Server maintenance', 'Dear users, 05.12.2023 from 10:00 to 12:00 AM the app will be unavailable due to technical works', true, 100001);
+
+INSERT INTO albums (document_id, stamp)
+VALUES (100014, '1'), --100057
+       (100014, '2'), --100058
+       (100015, '1'), --100059
+       (100016, '1'); --100060
+
+INSERT INTO employees (department_id, last_name, first_name, middle_name, phone, email, fired)
+VALUES (100009, 'Smirnov', 'Petr', 'Olegovich', '1-25-69', 'p.smirnov@npo.lan', false), --100061
+       (100009, 'Tuzelman', 'Boris', 'Ivanovich', '1-36-99', null, false), --100062
+       (100009, 'Bibikov', 'Andrey', 'Petrovich', '1-45-17', 'a.bibikov@npo.lan', false), --100063
+       (100009, 'Melnikov', 'Fedor', 'Vladimirovich', '1-21-66', 'f.melnikov@npo.lan', true), --100064
+       (100010, 'Kasparov', 'Iosif', 'Matveevich', '1-22-44', 'i.kasparov@npo.lan', false), --100065
+       (100010, 'Sidelnikov', 'Vasiliy', 'Kuzmich', '1-37-88', 'v.sidelnikov@npo.lan', false), --100066
+       (100011, 'Lapin', 'Ivan', 'Andreevich', '1-20-97', 'i.lapin@npo.lan', false); --100067
+
+INSERT INTO issuances (album_id, employee_id, issued, returned)
+VALUES (100057, 100061, '2021-05-28 09:30:27', '2021-05-30 11:45:18'),
+       (100057, 100061, '2021-07-14 10:05:32', '2021-07-16 11:37:12'),
+       (100059, 100061, '2021-05-27 08:45:12', '2021-05-30 15:21:34'),
+       (100057, 100063, '2021-08-17 14:15:22', '2021-08-24 16:45:17'),
+       (100057, 100064, '2021-10-11 07:55:02', '2021-10-28 13:22:41'),
+       (100058, 100061, '2021-05-28 09:32:14', '2021-05-30 11:46:24'),
+       (100057, 100065, '2022-02-14 10:11:22', null);

@@ -7,7 +7,7 @@ function enableUser(checkbox, id) {
         data: "enabled=" + enabled
     }).done(function() {
         successToast(`User ${name} was ${enabled ? 'enabled' : 'disabled'}`);
-        $(checkbox).prop('title', `${enabled ? 'Disable' : 'Enable'} user`)
+        $(checkbox).prop('title', `${enabled ? 'Disable' : 'Enable'} user`);
     }).fail(function(data) {
         $(checkbox).prop('checked', !enabled);
         handleError(data, `Failed to ${enabled ? 'enable' : 'disable'} user ${name}`);

@@ -4,6 +4,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import ru.javaprojects.archivist.MatcherFactory;
 import ru.javaprojects.archivist.common.model.Person;
+import ru.javaprojects.archivist.departments.model.Department;
 
 import static ru.javaprojects.archivist.CommonTestData.ID;
 import static ru.javaprojects.archivist.CommonTestData.NAME;

@@ -10,6 +10,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import ru.javaprojects.archivist.departments.model.Department;
+import ru.javaprojects.archivist.departments.service.DepartmentService;
 
 @Controller
 @RequestMapping(DepartmentUIController.DEPARTMENTS_URL)
@@ -32,6 +34,13 @@ public class DepartmentUIController {
         log.info("getAll");
         model.addAttribute("departments", service.getAll());
         return "departments/departments";
+    }
+
+    @GetMapping("/{id}")
+    public String get(@PathVariable long id, Model model) {
+        log.info("get {}", id);
+        model.addAttribute("department", service.getWithEmployees(id));
+        return "departments/department";
     }
 
     @GetMapping("/add")

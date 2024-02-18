@@ -8,6 +8,7 @@ import lombok.Setter;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import ru.javaprojects.archivist.common.HasIdAndEmail;
 import ru.javaprojects.archivist.common.model.BaseEntity;
 import ru.javaprojects.archivist.common.util.validation.NoHtml;
 

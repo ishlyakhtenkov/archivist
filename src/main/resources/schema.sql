@@ -260,7 +260,7 @@ CREATE TABLE issuances
     issued      TIMESTAMP NOT NULL,
     returned    TIMESTAMP,
     FOREIGN KEY (album_id) REFERENCES albums (id) ON DELETE CASCADE,
-    FOREIGN KEY (employee_id) REFERENCES employees (id) ON DELETE RESTRICT,
+    FOREIGN KEY (employee_id) REFERENCES employees (id) ON DELETE CASCADE,
     h2_extra_column VARCHAR AS CASE WHEN returned IS NULL THEN 'not returned' ELSE NULL END
 );
 -- FOR POSTGRES USE COMMAND BELOW (INSTEAD OF CREATION h2_extra_column)

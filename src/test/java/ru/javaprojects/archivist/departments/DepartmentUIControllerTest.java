@@ -9,6 +9,8 @@ import org.springframework.util.MultiValueMap;
 import ru.javaprojects.archivist.AbstractControllerTest;
 import ru.javaprojects.archivist.common.error.NotFoundException;
 import ru.javaprojects.archivist.common.model.Person;
+import ru.javaprojects.archivist.departments.model.Department;
+import ru.javaprojects.archivist.departments.service.DepartmentService;
 
 import java.util.List;
 import java.util.Objects;
@@ -43,7 +45,7 @@ class DepartmentUIControllerTest extends AbstractControllerTest {
                 .andExpect(view().name(DEPARTMENTS_VIEW));
         List<Department> departments = (List<Department>) Objects.requireNonNull(actions.andReturn().getModelAndView())
                 .getModel().get(DEPARTMENTS_ATTRIBUTE);
-        DEPARTMENT_MATCHER.assertMatch(departments, List.of(department4, department5, department1, department2, department3));
+        DEPARTMENT_MATCHER.assertMatchIgnoreFields(departments, List.of(department4, department5, department1, department2, department3), "employees");
     }
 
     @Test
@@ -94,7 +96,7 @@ class DepartmentUIControllerTest extends AbstractControllerTest {
                 .andExpect(flash().attribute(ACTION, "Department " + newDepartment.getName() + " was created"));
         Department created = service.getByName(newDepartment.getName());
         newDepartment.setId(created.id());
-        DEPARTMENT_MATCHER.assertMatch(created, newDepartment);
+        DEPARTMENT_MATCHER.assertMatchIgnoreFields(created, newDepartment, "employees");
     }
 
     @Test
@@ -153,8 +155,8 @@ class DepartmentUIControllerTest extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists(DEPARTMENT_ATTRIBUTE))
                 .andExpect(view().name(DEPARTMENTS_FORM_VIEW))
-                .andExpect(result -> DEPARTMENT_MATCHER.assertMatch((Department) Objects.requireNonNull(result
-                        .getModelAndView()).getModel().get(DEPARTMENT_ATTRIBUTE), department1));
+                .andExpect(result -> DEPARTMENT_MATCHER.assertMatchIgnoreFields((Department) Objects.requireNonNull(result
+                        .getModelAndView()).getModel().get(DEPARTMENT_ATTRIBUTE), department1, "employees"));
     }
 
     @Test
@@ -189,7 +191,7 @@ class DepartmentUIControllerTest extends AbstractControllerTest {
                 .andExpect(status().isFound())
                 .andExpect(redirectedUrl(DEPARTMENTS_URL))
                 .andExpect(flash().attribute(ACTION, "Department " + updatedDepartment.getName() + " was updated"));
-        DEPARTMENT_MATCHER.assertMatch(service.get(DEPARTMENT1_ID), updatedDepartment);
+        DEPARTMENT_MATCHER.assertMatchIgnoreFields(service.get(DEPARTMENT1_ID), updatedDepartment, "employees");
     }
 
     //Check UniqueNameValidator works correct when update
@@ -206,7 +208,7 @@ class DepartmentUIControllerTest extends AbstractControllerTest {
                 .andExpect(status().isFound())
                 .andExpect(redirectedUrl(DEPARTMENTS_URL))
                 .andExpect(flash().attribute(ACTION, "Department " + updatedDepartment.getName() + " was updated"));
-        DEPARTMENT_MATCHER.assertMatch(service.get(DEPARTMENT1_ID), updatedDepartment);
+        DEPARTMENT_MATCHER.assertMatchIgnoreFields(service.get(DEPARTMENT1_ID), updatedDepartment, "employees");
     }
 
     @Test

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:with="activeMenuItem='Departments'" lang="en">
+<!--/*@thymesVar id="employee" type="ru.javaprojects.archivist.departments.model.Employee"*/-->
+
+<th:block th:replace="~{fragments/main::page(title='Archivist - departments',appMain=~{::appMain}, ownScript=~{::ownScript})}">
+    <appMain>
+        <!-- Create/Edit employee card -->
+        <div class="row d-flex justify-content-center align-items-center">
+            <div class="col-12 col-md-8 col-xl-5">
+                <div class="card shadow">
+                    <div class="card-header">
+                        <span class="float-end">
+                            <button type="button" class="btn-close" aria-label="Close" onclick="history.back()"></button>
+                        </span>
+                        <h3 class="text-center ms-4" th:text="${employee.isNew()} ? 'New employee' : 'Editing: ' + ${employee.lastName}">Create/Edit Employee</h3>
+                    </div>
+                    <div class="card-body text-center">
+                        <form th:action="@{/employees}" method="post" th:object="${employee}">
+                            <input type="hidden" th:field="*{id}">
+                            <div class="mb-3">
+                                <div class="input-group">
+                                    <span class="input-group-text" id="lastNameAddon"><i class="fa-solid fa-user fa-fw"></i></span>
+                                    <div class="form-floating">
+                                        <input type="text" id="lastNameInput" th:field="*{lastName}"
+                                               th:class="${#fields.hasErrors('lastName')} ? 'form-control is-invalid' : 'form-control'"
+                                               required placeholder="Last name" title="" aria-label="Last name" aria-describedby="lastNameAddon"/>
+                                        <label for="lastNameInput" class="text-muted">Last name</label>
+                                    </div>
+                                </div>
+                                <span th:if="${#fields.hasErrors('lastName')}">
+                                    <ul>
+                                        <li class="text-danger text-start"
+                                            th:each="err : ${#fields.errors('lastName')}" th:text="${err}"/>
+                                    </ul>
+                                </span>
+                            </div>
+                            <div class="mb-3">
+                                <div class="input-group">
+                                    <span class="input-group-text" id="firstNameAddon"><i class="fa-solid fa-user fa-fw"></i></span>
+                                    <div class="form-floating">
+                                        <input type="text" id="firstNameInput" th:field="*{firstName}"
+                                               th:class="${#fields.hasErrors('firstName')} ? 'form-control is-invalid' : 'form-control'"
+                                               required placeholder="First name" title="" aria-label="First name" aria-describedby="firstNameAddon"/>
+                                        <label for="firstNameInput" class="text-muted">First name</label>
+                                    </div>
+                                </div>
+                                <span th:if="${#fields.hasErrors('firstName')}">
+                                    <ul>
+                                        <li class="text-danger text-start"
+                                            th:each="err : ${#fields.errors('firstName')}" th:text="${err}"/>
+                                    </ul>
+                                </span>
+                            </div>
+                            <div class="mb-3">
+                                <div class="input-group">
+                                    <span class="input-group-text" id="middleNameAddon"><i class="fa-solid fa-user fa-fw"></i></span>
+                                    <div class="form-floating">
+                                        <input type="text" id="middleNameInput" th:field="*{middleName}"
+                                               th:class="${#fields.hasErrors('middleName')} ? 'form-control is-invalid' : 'form-control'"
+                                               required placeholder="Middle name" title="" aria-label="Middle name" aria-describedby="middleNameAddon"/>
+                                        <label for="middleNameInput" class="text-muted">Middle name</label>
+                                    </div>
+                                </div>
+                                <span th:if="${#fields.hasErrors('middleName')}">
+                                    <ul>
+                                        <li class="text-danger text-start"
+                                            th:each="err : ${#fields.errors('middleName')}" th:text="${err}"/>
+                                    </ul>
+                                </span>
+                            </div>
+                            <div class="mb-3">
+                                <div class="input-group">
+                                    <span class="input-group-text" id="phoneAddon" ><i class="fa-solid fa-phone fa-fw"></i></span>
+                                    <div class="form-floating">
+                                        <input type="text" id="phoneNumberInput" th:field="*{phone}"
+                                               th:class="${#fields.hasErrors('phone')} ? 'form-control is-invalid' : 'form-control'"
+                                               required placeholder="Phone number" aria-label="Phone number" aria-describedby="phoneAddon"/>
+                                        <label for="phoneNumberInput" class="text-muted">Phone number</label>
+                                    </div>
+                                </div>
+                                <span th:if="${#fields.hasErrors('phone')}">
+                                    <ul>
+                                        <li class="text-danger text-start"
+                                            th:each="err : ${#fields.errors('phone')}" th:text="${err}"/>
+                                    </ul>
+                                </span>
+                            </div>
+                            <div class="mb-3">
+                                <div class="input-group">
+                                    <span class="input-group-text" id="emailAddon" ><i class="fa-solid fa-envelope fa-fw"></i></span>
+                                    <div class="form-floating">
+                                        <input type="text" id="emailInput" th:field="*{email}"
+                                               th:class="${#fields.hasErrors('email')} ? 'form-control is-invalid' : 'form-control'"
+                                               placeholder="Email" aria-label="Email" aria-describedby="emailAddon"/>
+                                        <label for="emailInput" class="text-muted">Email</label>
+                                    </div>
+                                </div>
+                                <span th:if="${#fields.hasErrors('email')}">
+                                    <ul>
+                                        <li class="text-danger text-start"
+                                            th:each="err : ${#fields.errors('email')}" th:text="${err}"/>
+                                    </ul>
+                                </span>
+                            </div>
+                            <div class="mb-3">
+                                <div class="input-group">
+                                    <span class="input-group-text" id="departmentAddon"><i class="fa-solid fa-users fa-fw"></i></span>
+                                    <div class="form-floating" id="selectFloating">
+                                        <select class="form-control selectpicker border px-0 py-3" data-style="btn-white" id="departmentSelect"
+                                                name="department" title="&nbsp;" required aria-label="Department" aria-describedby="departmentAddon">
+                                            <option th:each="department : ${departments}"
+                                                    th:value="${department.id}"
+                                                    th:text="${department.name}"
+                                                    th:selected="${(employee.department != null && employee.department.id == department.id) ||
+                                                                    (param.chosenDepartmentId != null && (param.chosenDepartmentId + '') == (department.id + ''))}">
+                                            </option>
+                                        </select>
+                                        <label for="departmentSelect" class="text-muted" id="departmentSelectLabel">Department</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-end">
+                                <button th:if="${!employee.isNew()}" class="btn btn-secondary" type="button" onclick="history.back()">Cancel</button>
+                                <button class="btn btn-success" th:classappend="${employee.isNew() ? '' : 'px-3'}" type="submit" th:text="${employee.isNew()} ? 'Create' : '&nbsp;Save&nbsp;'">Create/Save employee</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </appMain>
+</th:block>

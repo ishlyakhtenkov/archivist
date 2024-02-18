@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import ru.javaprojects.archivist.common.HasIdAndEmail;
 import ru.javaprojects.archivist.common.to.BaseTo;
 import ru.javaprojects.archivist.common.util.validation.NoHtml;
 

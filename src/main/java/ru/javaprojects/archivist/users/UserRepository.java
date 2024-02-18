@@ -4,14 +4,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
-import ru.javaprojects.archivist.common.BaseRepository;
-
-import java.util.Optional;
+import ru.javaprojects.archivist.common.EmailedRepository;
 
 @Transactional(readOnly = true)
-public interface UserRepository extends BaseRepository<User> {
-
-    Optional<User> findByEmailIgnoreCase(String email);
+public interface UserRepository extends EmailedRepository<User> {
 
     @Query("SELECT u FROM User u ORDER BY u.lastName, u.firstName")
     Page<User> findAllWithPagination(Pageable pageable);

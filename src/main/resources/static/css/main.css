@@ -204,7 +204,7 @@
     padding: 0.5rem 0.75rem;
 }
 
-#rolesFloating {
+#selectFloating {
     .form-control {
         height: calc(3.2rem + 2px);
         line-height: 1;

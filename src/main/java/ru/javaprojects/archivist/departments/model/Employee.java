@@ -1,4 +1,4 @@
-package ru.javaprojects.archivist.references.employees;
+package ru.javaprojects.archivist.departments.model;
 
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
@@ -9,10 +9,9 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ru.javaprojects.archivist.common.HasId;
+import ru.javaprojects.archivist.common.HasIdAndEmail;
 import ru.javaprojects.archivist.common.model.BaseEntity;
 import ru.javaprojects.archivist.common.util.validation.NoHtml;
-import ru.javaprojects.archivist.departments.Department;
 
 
 @Entity
@@ -20,7 +19,7 @@ import ru.javaprojects.archivist.departments.Department;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Employee extends BaseEntity implements HasId {
+public class Employee extends BaseEntity implements HasIdAndEmail {
     @NotBlank
     @NoHtml
     @Size(min = 2, max = 32)

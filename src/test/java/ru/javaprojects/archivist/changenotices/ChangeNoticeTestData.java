@@ -29,7 +29,7 @@ public class ChangeNoticeTestData {
             MatcherFactory.usingIgnoringFieldsComparator(ChangeNotice.class);
 
     public static final MatcherFactory.Matcher<ChangeNoticeTo> CHANGE_NOTICE_TO_MATCHER =
-            MatcherFactory.usingIgnoringFieldsComparator(ChangeNoticeTo.class);
+            MatcherFactory.usingIgnoringFieldsComparator(ChangeNoticeTo.class, "developer.employees");
 
     public static final long CHANGE_NOTICE_1_ID = 100047L;
     public static final long CHANGE_NOTICE_2_ID = 100048L;

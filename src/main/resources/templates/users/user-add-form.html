@@ -70,7 +70,7 @@
                             <div class="mb-3">
                                 <div class="input-group">
                                     <span class="input-group-text" id="rolesAddon"><i class="fa-solid fa-chess fa-fw"></i></span>
-                                    <div class="form-floating" id="rolesFloating">
+                                    <div class="form-floating" id="selectFloating">
                                         <select class="form-control selectpicker border px-0 py-3" data-style="btn-white" id="rolesSelect"
                                                 multiple th:field="*{roles}" title="&nbsp;" required aria-label="Roles" aria-describedby="rolesAddon">
                                             <option th:each="role : ${roles}"

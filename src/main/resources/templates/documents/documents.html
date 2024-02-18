@@ -50,7 +50,7 @@
                 <tr th:each="document : ${documents}" th:id="'row-' + ${document.id}" class="table-row" th:classappend="${document.annulled ? 'text-danger' : ''}">
                     <td>
                         <a th:href="@{'/documents/' + ${document.id}}" th:text="${document.decimalNumber}"
-                           title="Show details" class="text-dark" style="text-decoration:none;">Decimal number</a>
+                           title="Show details" th:class="${document.annulled ? 'text-danger' : 'text-dark'}" style="text-decoration:none;">Decimal number</a>
                         <span th:utext="${(document.isSecret() ? ' <span class=&quot;badge bg-danger rounded-circle&quot; title=&quot;Secret&quot;>S</span>' : '')}"></span>
                     </td>
                     <td class="text-truncate" th:text="${document.name}" style="max-width: 150px;"></td>

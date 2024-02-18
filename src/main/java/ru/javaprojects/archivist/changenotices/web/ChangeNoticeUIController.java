@@ -23,7 +23,7 @@ import ru.javaprojects.archivist.changenotices.model.ChangeNotice;
 import ru.javaprojects.archivist.changenotices.model.ChangeReasonCode;
 import ru.javaprojects.archivist.changenotices.to.ChangeNoticeTo;
 import ru.javaprojects.archivist.common.util.FileUtil;
-import ru.javaprojects.archivist.departments.DepartmentService;
+import ru.javaprojects.archivist.departments.service.DepartmentService;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;

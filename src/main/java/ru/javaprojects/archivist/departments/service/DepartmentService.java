@@ -1,10 +1,12 @@
-package ru.javaprojects.archivist.departments;
+package ru.javaprojects.archivist.departments.service;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import ru.javaprojects.archivist.common.error.NotFoundException;
+import ru.javaprojects.archivist.departments.model.Department;
+import ru.javaprojects.archivist.departments.repository.DepartmentRepository;
 
 import java.util.List;
 
@@ -15,6 +17,10 @@ public class DepartmentService {
 
     public List<Department> getAll() {
         return repository.findAllByOrderByName();
+    }
+
+    public Department getWithEmployees(long id) {
+        return repository.findById(id).orElseThrow(() -> new NotFoundException("Entity with id=" + id + " not found"));
     }
 
     public Department get(long id) {
@@ -34,7 +40,7 @@ public class DepartmentService {
     @Transactional // just to make one select by id instead of two by Hibernate
     public void update(Department department) {
         Assert.notNull(department, "department must not be null");
-        repository.getExisted(department.id());
+        get(department.id());
         repository.save(department);
     }
 

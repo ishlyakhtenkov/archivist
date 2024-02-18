@@ -16,7 +16,7 @@ import ru.javaprojects.archivist.changenotices.model.ChangeReasonCode;
 import ru.javaprojects.archivist.changenotices.web.PdfFile;
 import ru.javaprojects.archivist.common.to.BaseTo;
 import ru.javaprojects.archivist.common.util.validation.NoHtml;
-import ru.javaprojects.archivist.departments.Department;
+import ru.javaprojects.archivist.departments.model.Department;
 
 import java.time.LocalDate;
 import java.util.List;

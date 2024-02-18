@@ -1,10 +1,10 @@
-package ru.javaprojects.archivist.documents.web;
+package ru.javaprojects.archivist.common.web;
 
 import lombok.AllArgsConstructor;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
-import ru.javaprojects.archivist.departments.Department;
-import ru.javaprojects.archivist.departments.DepartmentRepository;
+import ru.javaprojects.archivist.departments.model.Department;
+import ru.javaprojects.archivist.departments.repository.DepartmentRepository;
 
 @Component
 @AllArgsConstructor

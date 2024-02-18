@@ -13,7 +13,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import ru.javaprojects.archivist.users.*;
+import ru.javaprojects.archivist.users.Role;
+import ru.javaprojects.archivist.users.User;
+import ru.javaprojects.archivist.users.UserService;
+import ru.javaprojects.archivist.users.UserTo;
 
 import static ru.javaprojects.archivist.common.util.validation.ValidationUtil.checkNew;
 import static ru.javaprojects.archivist.common.util.validation.ValidationUtil.checkNotNew;
@@ -27,7 +30,7 @@ public class AdminUserUIController {
     static final String USERS_URL = "/users";
 
     private final UserService service;
-    private UniqueMailValidator emailValidator;
+    private UniqueUserEmailValidator emailValidator;
 
     @InitBinder({"user", "userTo"})
     protected void initBinder(WebDataBinder binder) {

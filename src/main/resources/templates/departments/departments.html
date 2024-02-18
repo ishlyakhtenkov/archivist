@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sd="http://www.thymeleaf.org/spring-data"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       th:with="activeMenuItem='Departments'" lang="en">
 
@@ -28,14 +27,14 @@
         </span>
 
         <div th:if="${!departments.isEmpty()}" class="table-responsive text-nowrap">
-            <table class="table table-bordered">
+            <table class="table table-hover table-bordered">
                 <thead class="table-dark">
                 <tr>
                     <th class="col-3">Name</th>
                     <th class="col-4">Boss</th>
                     <th class="col-2">Boss phone</th>
                     <th class="col-2">Boss email</th>
-                    <th class="col-1 text-center" sec:authorize="hasAnyRole('ADMIN','ARCHIVIST')">Actions</th>
+                    <th class="col-1 text-center">Actions</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -44,16 +43,21 @@
                     <td th:text="${department.boss.fullName}"></td>
                     <td th:text="${department.boss.phone}"></td>
                     <td th:text="${department.boss.email}"></td>
-                    <td class="text-center" sec:authorize="hasAnyRole('ADMIN','ARCHIVIST')">
-                        <a th:href="@{'/departments/edit/' + ${department.id}}" type="button" title="Edit department" class="pencil-button">
-                            <i class="fa-solid fa-pencil"></i>
+                    <td class="text-center">
+                        <a th:href="@{'/departments/' + ${department.id}}" type="button" title="Show details" class="glass-button">
+                            <i class="fa-solid fa-magnifying-glass"></i>
                         </a>
-                        <a type="button" class="trash-button ms-3"
-                           title="Delete department" data-bs-toggle="modal" data-bs-target="#deleteModal"
-                           th:data-name="${department.name}"
-                           th:data-id="${department.id}">
-                            <i class="fa-solid fa-trash"></i>
-                        </a>
+                        <span sec:authorize="hasAnyRole('ADMIN','ARCHIVIST')">
+                            <a th:href="@{'/departments/edit/' + ${department.id}}" type="button" title="Edit department" class="pencil-button ms-3">
+                                <i class="fa-solid fa-pencil"></i>
+                            </a>
+                            <a type="button" class="trash-button ms-3"
+                               title="Delete department" data-bs-toggle="modal" data-bs-target="#deleteModal"
+                               th:data-name="${department.name}"
+                               th:data-id="${department.id}">
+                                <i class="fa-solid fa-trash"></i>
+                            </a>
+                        </span>
                     </td>
                 </tr>
                 </tbody>
@@ -84,6 +88,7 @@
     </appMain>
 
     <ownScript>
+        <script>sessionStorage.removeItem('cardPrevUrl');</script>
         <script src="/js/common.js?v=1"></script>
         <script src="/js/table-content.js?v=1"></script>
         <script src="/js/departments.js?v=1"></script>

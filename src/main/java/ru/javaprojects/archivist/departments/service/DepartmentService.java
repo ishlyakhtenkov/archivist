@@ -20,7 +20,7 @@ public class DepartmentService {
     }
 
     public Department getWithEmployees(long id) {
-        return repository.findById(id).orElseThrow(() -> new NotFoundException("Entity with id=" + id + " not found"));
+        return repository.findByIdWithEmployees(id).orElseThrow(() -> new NotFoundException("Entity with id=" + id + " not found"));
     }
 
     public Department get(long id) {

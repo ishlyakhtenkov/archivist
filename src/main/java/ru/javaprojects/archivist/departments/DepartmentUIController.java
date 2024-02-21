@@ -18,7 +18,7 @@ import ru.javaprojects.archivist.departments.service.DepartmentService;
 @AllArgsConstructor
 @Slf4j
 public class DepartmentUIController {
-    static final String DEPARTMENTS_URL = "/departments";
+    public static final String DEPARTMENTS_URL = "/departments";
 
     private final DepartmentService service;
     private final UniqueDepartmentNameValidator nameValidator;

@@ -12,4 +12,6 @@ public interface EmployeeRepository extends EmailedRepository<Employee> {
 
     @EntityGraph(attributePaths = "department")
     Optional<Employee> findById(long id);
+
+    Optional<Employee> findByEmailIgnoreCase(String email);
 }

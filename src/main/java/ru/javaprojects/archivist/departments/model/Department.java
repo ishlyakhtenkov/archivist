@@ -9,6 +9,7 @@ import ru.javaprojects.archivist.common.HasId;
 import ru.javaprojects.archivist.common.model.NamedEntity;
 import ru.javaprojects.archivist.common.model.Person;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -28,5 +29,13 @@ public class Department extends NamedEntity implements HasId {
     public Department(Long id, String name, Person boss) {
         super(id, name);
         this.boss = boss;
+    }
+
+    public void addEmployee(Employee employee) {
+        if (employees == null) {
+            employees = new ArrayList<>();
+        }
+        employees.add(employee);
+        employee.setDepartment(this);
     }
 }

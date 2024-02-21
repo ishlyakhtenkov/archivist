@@ -23,7 +23,7 @@ public class EmployeeRestController {
 
     @PatchMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void enable(@PathVariable long id, @RequestParam boolean fired) {
+    public void fire(@PathVariable long id, @RequestParam boolean fired) {
         log.info(fired ? "fire {}" : "unfire {}", id);
         service.fire(id, fired);
     }

@@ -62,4 +62,18 @@ public class Employee extends BaseEntity implements HasIdAndEmail {
     public String getFullName() {
         return String.join(" ", lastName, firstName, middleName);
     }
+
+    public Employee(Long id, String lastName, String firstName, String middleName, String phone, String email) {
+        super(id);
+        this.lastName = lastName;
+        this.firstName = firstName;
+        this.middleName = middleName;
+        this.phone = phone;
+        this.email = email;
+    }
+
+    public Employee(Long id, String lastName, String firstName, String middleName, String phone, String email, Department department) {
+        this(id, lastName, firstName, middleName, phone, email);
+        this.department = department;
+    }
 }

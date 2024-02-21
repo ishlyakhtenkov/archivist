@@ -17,6 +17,11 @@ public class EmployeeService {
         return repository.findById(id).orElseThrow(() -> new NotFoundException("Entity with id=" + id + " not found"));
     }
 
+    public Employee getByEmail(String email) {
+        return repository.findByEmailIgnoreCase(email)
+                .orElseThrow(() -> new NotFoundException("Not found employee with email=" + email));
+    }
+
     public void create(Employee employee) {
         Assert.notNull(employee, "employee must not be null");
         repository.save(employee);

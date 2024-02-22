@@ -56,10 +56,11 @@
                                     <td class="text-center">
                                         <span sec:authorize="hasAnyRole('ADMIN','ARCHIVIST')">
                                             <a th:href="@{'/employees/edit/' + ${employee.id}}" type="button"
-                                               title="Edit employee" class="pencil-button">
-                                                <i class="fa-solid fa-pencil"></i>
+                                               title="Edit employee" class="pencil-button"
+                                               th:classappend="${employee.id == department.boss.id ? 'me-4 pe-2' : ''}">
+                                                    <i class="fa-solid fa-pencil"></i>
                                             </a>
-                                            <a type="button" class="trash-button ms-3"
+                                            <a th:if="${employee.id != department.boss.id}" type="button" class="trash-button ms-3"
                                                title="Delete employee" data-bs-toggle="modal" data-bs-target="#deleteModal"
                                                th:data-name="${employee.fullName}"
                                                th:data-id="${employee.id}">

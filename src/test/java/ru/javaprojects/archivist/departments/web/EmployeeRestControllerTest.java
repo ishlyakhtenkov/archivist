@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.javaprojects.archivist.AbstractControllerTest;
+import ru.javaprojects.archivist.common.error.IllegalRequestDataException;
 import ru.javaprojects.archivist.common.error.NotFoundException;
 import ru.javaprojects.archivist.departments.service.EmployeeService;
 
@@ -16,8 +17,7 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.javaprojects.archivist.CommonTestData.*;
 import static ru.javaprojects.archivist.common.web.PathUIController.LOGIN_URL;
-import static ru.javaprojects.archivist.departments.DepartmentTestData.DEP2_EMPLOYEE1_ID;
-import static ru.javaprojects.archivist.departments.DepartmentTestData.FIRED;
+import static ru.javaprojects.archivist.departments.DepartmentTestData.*;
 import static ru.javaprojects.archivist.departments.web.EmployeeUIController.EMPLOYEES_URL;
 
 class EmployeeRestControllerTest extends AbstractControllerTest {
@@ -29,10 +29,25 @@ class EmployeeRestControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(ARCHIVIST_MAIL)
     void delete() throws Exception {
-        perform(MockMvcRequestBuilders.delete(EMPLOYEES_URL_SLASH + DEP2_EMPLOYEE1_ID)
+        perform(MockMvcRequestBuilders.delete(EMPLOYEES_URL_SLASH + DEP2_EMPLOYEE2_ID)
                 .with(csrf()))
                 .andExpect(status().isNoContent());
-        assertThrows(NotFoundException.class, () -> service.get(DEP2_EMPLOYEE1_ID));
+        assertThrows(NotFoundException.class, () -> service.get(DEP2_EMPLOYEE2_ID));
+    }
+
+    @Test
+    @WithUserDetails(ARCHIVIST_MAIL)
+    void deleteBoss() throws Exception {
+        perform(MockMvcRequestBuilders.delete(EMPLOYEES_URL_SLASH + DEP2_EMPLOYEE1_ID)
+                .with(csrf()))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(result -> assertEquals(Objects.requireNonNull(result.getResolvedException()).getClass(),
+                        IllegalRequestDataException.class))
+                .andExpect(problemTitle(HttpStatus.UNPROCESSABLE_ENTITY.getReasonPhrase()))
+                .andExpect(problemStatus(HttpStatus.UNPROCESSABLE_ENTITY.value()))
+                .andExpect(problemDetail("Cannot delete boss of the department"))
+                .andExpect(problemInstance(EMPLOYEES_URL_SLASH + DEP2_EMPLOYEE1_ID));
+        assertDoesNotThrow(() -> service.get(DEP2_EMPLOYEE1_ID));
     }
 
     @Test
@@ -51,7 +66,7 @@ class EmployeeRestControllerTest extends AbstractControllerTest {
 
     @Test
     void deleteUnAuthorized() throws Exception {
-        perform(MockMvcRequestBuilders.delete(EMPLOYEES_URL_SLASH + DEP2_EMPLOYEE1_ID)
+        perform(MockMvcRequestBuilders.delete(EMPLOYEES_URL_SLASH + DEP2_EMPLOYEE2_ID)
                 .with(csrf()))
                 .andExpect(status().isFound())
                 .andExpect(result ->
@@ -62,7 +77,7 @@ class EmployeeRestControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(USER_MAIL)
     void deleteForbidden() throws Exception {
-        perform(MockMvcRequestBuilders.delete(EMPLOYEES_URL_SLASH + DEP2_EMPLOYEE1_ID)
+        perform(MockMvcRequestBuilders.delete(EMPLOYEES_URL_SLASH + DEP2_EMPLOYEE2_ID)
                 .with(csrf()))
                 .andExpect(status().isForbidden());
         assertDoesNotThrow(() -> service.get(DEP2_EMPLOYEE1_ID));

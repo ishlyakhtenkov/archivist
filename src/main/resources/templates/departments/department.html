@@ -45,7 +45,7 @@
                                 </thead>
                                 <tbody>
                                 <tr th:each="employee : ${department.employees}" class="table-row" th:id="'row-' + ${employee.id}" th:classappend="${employee.fired ? 'text-danger' : ''}">
-                                    <td th:text="${employee.fullName}"></td>
+                                    <td th:utext="${employee.fullName + (employee.id == department.boss.id ? ' <span class=&quot;badge bg-primary rounded-circle&quot; title=&quot;Secret&quot;>Boss</span>' : '')}"></td>
                                     <td th:text="${employee.phone}"></td>
                                     <td th:text="${employee.email}"></td>
                                     <td class="text-center">

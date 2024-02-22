@@ -2,12 +2,13 @@ package ru.javaprojects.archivist.departments.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ru.javaprojects.archivist.common.HasId;
+import ru.javaprojects.archivist.common.HasIdAndName;
 import ru.javaprojects.archivist.common.model.NamedEntity;
-import ru.javaprojects.archivist.common.model.Person;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,17 +18,23 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Department extends NamedEntity implements HasId {
+public class Department extends NamedEntity implements HasId, HasIdAndName {
 
-    @Embedded
+    @NotNull
     @Valid
-    private Person boss;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "boss_id")
+    private Employee boss;
 
     @OneToMany(mappedBy = "department", fetch = FetchType.LAZY)
     private List<Employee> employees;
 
-    public Department(Long id, String name, Person boss) {
+    public Department(Long id, String name) {
         super(id, name);
+    }
+
+    public Department(Long id, String name, Employee boss) {
+        this(id, name);
         this.boss = boss;
     }
 

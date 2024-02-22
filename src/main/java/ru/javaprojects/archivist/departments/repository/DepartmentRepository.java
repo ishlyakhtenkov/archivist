@@ -1,5 +1,6 @@
 package ru.javaprojects.archivist.departments.repository;
 
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 import ru.javaprojects.archivist.common.NamedRepository;
@@ -15,4 +16,14 @@ public interface DepartmentRepository extends NamedRepository<Department> {
     Optional<Department> findByIdWithEmployees(long id);
 
     List<Department> findAllByOrderByName();
+
+    @EntityGraph(attributePaths = "boss")
+    List<Department> findAllWithBossByOrderByName();
+
+    @EntityGraph(attributePaths = "boss")
+    Optional<Department> findWithBossByNameIgnoreCase(String name);
+
+    @EntityGraph(attributePaths = "boss")
+    Optional<Department> findWithBossById(long id);
+
 }

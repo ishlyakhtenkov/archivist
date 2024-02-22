@@ -82,11 +82,7 @@ CREATE TABLE departments
 (
     id          BIGINT DEFAULT nextval('global_seq')  PRIMARY KEY,
     name        VARCHAR(128)     NOT NULL,
-    last_name   VARCHAR(32)      NOT NULL,
-    first_name  VARCHAR(32)      NOT NULL,
-    middle_name VARCHAR(32)      NOT NULL,
-    phone       VARCHAR(32),
-    email       VARCHAR(128)
+    boss_id     BIGINT
 );
 CREATE UNIQUE INDEX departments_unique_name_idx ON departments (name);
 
@@ -248,9 +244,10 @@ CREATE TABLE employees
     phone         VARCHAR(32)           NOT NULL,
     email         VARCHAR(128),
     fired         BOOL    DEFAULT FALSE NOT NULL,
-    FOREIGN KEY (department_id) REFERENCES departments (id) ON DELETE RESTRICT
+    FOREIGN KEY (department_id) REFERENCES departments (id) ON DELETE CASCADE
 );
 CREATE UNIQUE INDEX employees_unique_email_idx ON users (email);
+ALTER TABLE departments ADD FOREIGN KEY (boss_id) REFERENCES employees(id) ON DELETE SET NULL;
 
 CREATE TABLE issuances
 (

@@ -1,4 +1,4 @@
-package ru.javaprojects.archivist.departments;
+package ru.javaprojects.archivist.departments.web;
 
 import org.springframework.stereotype.Component;
 import ru.javaprojects.archivist.common.util.validation.UniqueNameValidator;

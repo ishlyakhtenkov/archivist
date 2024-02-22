@@ -21,7 +21,7 @@ import static ru.javaprojects.archivist.CommonTestData.*;
 import static ru.javaprojects.archivist.common.error.Constants.DUPLICATE_ERROR_CODE;
 import static ru.javaprojects.archivist.common.web.PathUIController.LOGIN_URL;
 import static ru.javaprojects.archivist.departments.DepartmentTestData.*;
-import static ru.javaprojects.archivist.departments.DepartmentUIController.DEPARTMENTS_URL;
+import static ru.javaprojects.archivist.departments.web.DepartmentUIController.DEPARTMENTS_URL;
 import static ru.javaprojects.archivist.departments.web.EmployeeUIController.EMPLOYEES_URL;
 
 class EmployeeUIControllerTest extends AbstractControllerTest {
@@ -166,7 +166,8 @@ class EmployeeUIControllerTest extends AbstractControllerTest {
                 .andExpect(status().isFound())
                 .andExpect(redirectedUrl(DEPARTMENTS_URL + "/" + DEPARTMENT1_ID))
                 .andExpect(flash().attribute(ACTION, "Employee " + updatedEmployee.getFullName() + " was updated"));
-        EMPLOYEE_MATCHER.assertMatchIgnoreFields(service.get(DEP2_EMPLOYEE1_ID), updatedEmployee, "department.employees");
+        EMPLOYEE_MATCHER.assertMatchIgnoreFields(service.get(DEP2_EMPLOYEE1_ID), updatedEmployee, "department.employees",
+                "department.boss");
     }
 
     //Check UniqueEmailValidator works correct when update
@@ -183,7 +184,8 @@ class EmployeeUIControllerTest extends AbstractControllerTest {
                 .andExpect(status().isFound())
                 .andExpect(redirectedUrl(DEPARTMENTS_URL + "/" + DEPARTMENT1_ID))
                 .andExpect(flash().attribute(ACTION, "Employee " + updatedEmployee.getFullName() + " was updated"));
-        EMPLOYEE_MATCHER.assertMatchIgnoreFields(service.get(DEP2_EMPLOYEE1_ID), updatedEmployee, "department.employees");
+        EMPLOYEE_MATCHER.assertMatchIgnoreFields(service.get(DEP2_EMPLOYEE1_ID), updatedEmployee, "department.employees",
+                "department.boss");
     }
 
     @Test

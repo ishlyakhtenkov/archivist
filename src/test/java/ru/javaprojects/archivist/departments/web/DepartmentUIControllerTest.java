@@ -1,4 +1,4 @@
-package ru.javaprojects.archivist.departments;
+package ru.javaprojects.archivist.departments.web;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +8,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.util.MultiValueMap;
 import ru.javaprojects.archivist.AbstractControllerTest;
 import ru.javaprojects.archivist.common.error.NotFoundException;
-import ru.javaprojects.archivist.common.model.Person;
+import ru.javaprojects.archivist.departments.DepartmentTestData;
 import ru.javaprojects.archivist.departments.model.Department;
 import ru.javaprojects.archivist.departments.service.DepartmentService;
 
@@ -23,15 +23,19 @@ import static ru.javaprojects.archivist.CommonTestData.*;
 import static ru.javaprojects.archivist.common.error.Constants.DUPLICATE_ERROR_CODE;
 import static ru.javaprojects.archivist.common.web.PathUIController.LOGIN_URL;
 import static ru.javaprojects.archivist.departments.DepartmentTestData.*;
-import static ru.javaprojects.archivist.departments.DepartmentUIController.DEPARTMENTS_URL;
+import static ru.javaprojects.archivist.departments.web.DepartmentUIController.DEPARTMENTS_URL;
 
 class DepartmentUIControllerTest extends AbstractControllerTest {
     private static final String DEPARTMENTS_ADD_FORM_URL = DEPARTMENTS_URL + "/add";
     private static final String DEPARTMENTS_EDIT_FORM_URL = DEPARTMENTS_URL + "/edit/";
     private static final String DEPARTMENTS_DELETE_URL = DEPARTMENTS_URL + "/delete/";
+    private static final String DEPARTMENTS_CREATE_URL = DEPARTMENTS_URL + "/create";
+    private static final String DEPARTMENTS_UPDATE_URL = DEPARTMENTS_URL + "/update";
+
     private static final String DEPARTMENTS_VIEW = "departments/departments";
     private static final String DEPARTMENT_VIEW = "departments/department";
-    private static final String DEPARTMENTS_FORM_VIEW = "departments/department-form";
+    private static final String DEPARTMENT_ADD_FORM_VIEW = "departments/department-add-form";
+    private static final String DEPARTMENT_EDIT_FORM_VIEW = "departments/department-edit-form";
 
     @Autowired
     private DepartmentService service;
@@ -46,7 +50,7 @@ class DepartmentUIControllerTest extends AbstractControllerTest {
                 .andExpect(view().name(DEPARTMENTS_VIEW));
         List<Department> departments = (List<Department>) Objects.requireNonNull(actions.andReturn().getModelAndView())
                 .getModel().get(DEPARTMENTS_ATTRIBUTE);
-        DEPARTMENT_MATCHER.assertMatchIgnoreFields(departments, List.of(department4, department5, department1, department2, department3), "employees");
+        DEPARTMENT_MATCHER.assertMatchIgnoreFields(departments, List.of(department4, department5, department1, department2, department3), "employees", "boss.department");
     }
 
     @Test
@@ -65,8 +69,8 @@ class DepartmentUIControllerTest extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists(DEPARTMENT_ATTRIBUTE))
                 .andExpect(view().name(DEPARTMENT_VIEW))
-                .andExpect(result -> DEPARTMENT_MATCHER.assertMatch((Department) Objects.requireNonNull(result
-                        .getModelAndView()).getModel().get(DEPARTMENT_ATTRIBUTE), department2));
+                .andExpect(result -> DEPARTMENT_MATCHER.assertMatchIgnoreFields((Department) Objects.requireNonNull(result
+                        .getModelAndView()).getModel().get(DEPARTMENT_ATTRIBUTE), department2, "employees.department", "boss"));
     }
 
     @Test
@@ -82,11 +86,8 @@ class DepartmentUIControllerTest extends AbstractControllerTest {
     void showAddForm() throws Exception {
         perform(MockMvcRequestBuilders.get(DEPARTMENTS_ADD_FORM_URL))
                 .andExpect(status().isOk())
-                .andExpect(model().attributeExists(DEPARTMENT_ATTRIBUTE))
-                .andExpect(view().name(DEPARTMENTS_FORM_VIEW))
-                .andExpect(result -> DEPARTMENT_MATCHER.assertMatch((Department) Objects.requireNonNull(result
-                        .getModelAndView()).getModel().get(DEPARTMENT_ATTRIBUTE), new Department(null, null, new Person())));
-
+                .andExpect(model().attributeExists(DEPARTMENT_CREATE_TO_ATTRIBUTE))
+                .andExpect(view().name(DEPARTMENT_ADD_FORM_VIEW));
     }
 
     @Test
@@ -108,7 +109,7 @@ class DepartmentUIControllerTest extends AbstractControllerTest {
     @WithUserDetails(ARCHIVIST_MAIL)
     void create() throws Exception {
         Department newDepartment = DepartmentTestData.getNewDepartment();
-        perform(MockMvcRequestBuilders.post(DEPARTMENTS_URL)
+        perform(MockMvcRequestBuilders.post(DEPARTMENTS_CREATE_URL)
                 .params((DepartmentTestData.getNewDepartmentParams()))
                 .with(csrf()))
                 .andExpect(status().isFound())
@@ -116,12 +117,12 @@ class DepartmentUIControllerTest extends AbstractControllerTest {
                 .andExpect(flash().attribute(ACTION, "Department " + newDepartment.getName() + " was created"));
         Department created = service.getByName(newDepartment.getName());
         newDepartment.setId(created.id());
-        DEPARTMENT_MATCHER.assertMatchIgnoreFields(created, newDepartment, "employees");
+        DEPARTMENT_MATCHER.assertMatchIgnoreFields(created, newDepartment, "employees", "boss.id", "boss.department");
     }
 
     @Test
     void createUnAuthorize() throws Exception {
-        perform(MockMvcRequestBuilders.post(DEPARTMENTS_URL)
+        perform(MockMvcRequestBuilders.post(DEPARTMENTS_CREATE_URL)
                 .params((DepartmentTestData.getNewDepartmentParams()))
                 .with(csrf()))
                 .andExpect(status().isFound())
@@ -133,7 +134,7 @@ class DepartmentUIControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(USER_MAIL)
     void createForbidden() throws Exception {
-        perform(MockMvcRequestBuilders.post(DEPARTMENTS_URL)
+        perform(MockMvcRequestBuilders.post(DEPARTMENTS_CREATE_URL)
                 .params((DepartmentTestData.getNewDepartmentParams()))
                 .with(csrf()))
                 .andExpect(status().isForbidden());
@@ -144,13 +145,13 @@ class DepartmentUIControllerTest extends AbstractControllerTest {
     @WithUserDetails(ARCHIVIST_MAIL)
     void createInvalid() throws Exception {
         MultiValueMap<String, String> newInvalidParams = DepartmentTestData.getNewDepartmentInvalidParams();
-        perform(MockMvcRequestBuilders.post(DEPARTMENTS_URL)
+        perform(MockMvcRequestBuilders.post(DEPARTMENTS_CREATE_URL)
                 .params(newInvalidParams)
                 .with(csrf()))
                 .andExpect(status().isOk())
-                .andExpect(model().attributeHasFieldErrors(DEPARTMENT_ATTRIBUTE, NAME,
+                .andExpect(model().attributeHasFieldErrors(DEPARTMENT_CREATE_TO_ATTRIBUTE, NAME,
                         BOSS_LAST_NAME, BOSS_FIRST_NAME, BOSS_MIDDLE_NAME, BOSS_PHONE))
-                .andExpect(view().name(DEPARTMENTS_FORM_VIEW));
+                .andExpect(view().name(DEPARTMENT_ADD_FORM_VIEW));
         assertThrows(NotFoundException.class, () -> service.getByName(newInvalidParams.get(NAME).get(0)));
     }
 
@@ -159,24 +160,23 @@ class DepartmentUIControllerTest extends AbstractControllerTest {
     void createDuplicateName() throws Exception {
         MultiValueMap<String, String> newParams = DepartmentTestData.getNewDepartmentParams();
         newParams.set(NAME, DEPARTMENT1_NAME);
-        perform(MockMvcRequestBuilders.post(DEPARTMENTS_URL)
+        perform(MockMvcRequestBuilders.post(DEPARTMENTS_CREATE_URL)
                 .params(newParams)
                 .with(csrf()))
                 .andExpect(status().isOk())
-                .andExpect(model().attributeHasFieldErrorCode(DEPARTMENT_ATTRIBUTE, NAME, DUPLICATE_ERROR_CODE))
-                .andExpect(view().name(DEPARTMENTS_FORM_VIEW));
+                .andExpect(model().attributeHasFieldErrorCode(DEPARTMENT_CREATE_TO_ATTRIBUTE, NAME, DUPLICATE_ERROR_CODE))
+                .andExpect(view().name(DEPARTMENT_ADD_FORM_VIEW));
         assertNotEquals(DepartmentTestData.getNewDepartment().getBoss(), service.getByName(DEPARTMENT1_NAME).getBoss());
     }
 
     @Test
     @WithUserDetails(ARCHIVIST_MAIL)
     void showEditForm() throws Exception {
-        perform(MockMvcRequestBuilders.get(DEPARTMENTS_EDIT_FORM_URL + DEPARTMENT1_ID))
+        perform(MockMvcRequestBuilders.get(DEPARTMENTS_EDIT_FORM_URL + DEPARTMENT2_ID))
                 .andExpect(status().isOk())
-                .andExpect(model().attributeExists(DEPARTMENT_ATTRIBUTE))
-                .andExpect(view().name(DEPARTMENTS_FORM_VIEW))
-                .andExpect(result -> DEPARTMENT_MATCHER.assertMatchIgnoreFields((Department) Objects.requireNonNull(result
-                        .getModelAndView()).getModel().get(DEPARTMENT_ATTRIBUTE), department1, "employees"));
+                .andExpect(model().attributeExists(DEPARTMENT_UPDATE_TO_ATTRIBUTE))
+                .andExpect(model().attributeExists(EMPLOYEES_ATTRIBUTE))
+                .andExpect(view().name(DEPARTMENT_EDIT_FORM_VIEW));
     }
 
     @Test
@@ -188,7 +188,7 @@ class DepartmentUIControllerTest extends AbstractControllerTest {
 
     @Test
     void showEditFormUnAuthorized() throws Exception {
-        perform(MockMvcRequestBuilders.get(DEPARTMENTS_EDIT_FORM_URL + DEPARTMENT1_ID))
+        perform(MockMvcRequestBuilders.get(DEPARTMENTS_EDIT_FORM_URL + DEPARTMENT2_ID))
                 .andExpect(status().isFound())
                 .andExpect(result ->
                         assertTrue(Objects.requireNonNull(result.getResponse().getRedirectedUrl()).endsWith(LOGIN_URL)));
@@ -197,7 +197,7 @@ class DepartmentUIControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(USER_MAIL)
     void showEditFormForbidden() throws Exception {
-        perform(MockMvcRequestBuilders.get(DEPARTMENTS_EDIT_FORM_URL + DEPARTMENT1_ID))
+        perform(MockMvcRequestBuilders.get(DEPARTMENTS_EDIT_FORM_URL + DEPARTMENT2_ID))
                 .andExpect(status().isForbidden());
     }
 
@@ -205,13 +205,13 @@ class DepartmentUIControllerTest extends AbstractControllerTest {
     @WithUserDetails(ARCHIVIST_MAIL)
     void update() throws Exception {
         Department updatedDepartment = DepartmentTestData.getUpdatedDepartment();
-        perform(MockMvcRequestBuilders.post(DEPARTMENTS_URL)
+        perform(MockMvcRequestBuilders.post(DEPARTMENTS_UPDATE_URL)
                 .params(DepartmentTestData.getUpdatedDepartmentParams())
                 .with(csrf()))
                 .andExpect(status().isFound())
                 .andExpect(redirectedUrl(DEPARTMENTS_URL))
                 .andExpect(flash().attribute(ACTION, "Department " + updatedDepartment.getName() + " was updated"));
-        DEPARTMENT_MATCHER.assertMatchIgnoreFields(service.get(DEPARTMENT1_ID), updatedDepartment, "employees");
+        DEPARTMENT_MATCHER.assertMatchIgnoreFields(service.getWithBoss(DEPARTMENT2_ID), updatedDepartment, "employees", "boss.department");
     }
 
     //Check UniqueNameValidator works correct when update
@@ -219,16 +219,16 @@ class DepartmentUIControllerTest extends AbstractControllerTest {
     @WithUserDetails(ARCHIVIST_MAIL)
     void updateNameNotChange() throws Exception {
         Department updatedDepartment = DepartmentTestData.getUpdatedDepartment();
-        updatedDepartment.setName(DEPARTMENT1_NAME);
+        updatedDepartment.setName(DEPARTMENT2_NAME);
         MultiValueMap<String, String> updatedParams = DepartmentTestData.getUpdatedDepartmentParams();
-        updatedParams.set(NAME, DEPARTMENT1_NAME);
-        perform(MockMvcRequestBuilders.post(DEPARTMENTS_URL)
+        updatedParams.set(NAME, DEPARTMENT2_NAME);
+        perform(MockMvcRequestBuilders.post(DEPARTMENTS_UPDATE_URL)
                 .params(updatedParams)
                 .with(csrf()))
                 .andExpect(status().isFound())
                 .andExpect(redirectedUrl(DEPARTMENTS_URL))
                 .andExpect(flash().attribute(ACTION, "Department " + updatedDepartment.getName() + " was updated"));
-        DEPARTMENT_MATCHER.assertMatchIgnoreFields(service.get(DEPARTMENT1_ID), updatedDepartment, "employees");
+        DEPARTMENT_MATCHER.assertMatchIgnoreFields(service.getWithBoss(DEPARTMENT2_ID), updatedDepartment, "employees", "boss.department");
     }
 
     @Test
@@ -236,59 +236,58 @@ class DepartmentUIControllerTest extends AbstractControllerTest {
     void updateNotFound() throws Exception {
         MultiValueMap<String, String> updatedParams = DepartmentTestData.getUpdatedDepartmentParams();
         updatedParams.set(ID, String.valueOf(NOT_FOUND));
-        perform(MockMvcRequestBuilders.post(DEPARTMENTS_URL)
+        perform(MockMvcRequestBuilders.post(DEPARTMENTS_UPDATE_URL)
                 .params(updatedParams)
                 .with(csrf()))
                 .andExpect(exception().exceptionPage(ENTITY_NOT_FOUND, NotFoundException.class));
     }
 
     @Test
-    void updateUnAuthorize() throws Exception {
-        perform(MockMvcRequestBuilders.post(DEPARTMENTS_URL)
+    void updateUnAuthorized() throws Exception {
+        perform(MockMvcRequestBuilders.post(DEPARTMENTS_UPDATE_URL)
                 .params(DepartmentTestData.getUpdatedDepartmentParams())
                 .with(csrf()))
                 .andExpect(status().isFound())
                 .andExpect(result ->
                         assertTrue(Objects.requireNonNull(result.getResponse().getRedirectedUrl()).endsWith(LOGIN_URL)));
-        assertNotEquals(service.get(DEPARTMENT1_ID).getName(), DepartmentTestData.getUpdatedDepartment().getName());
+        assertNotEquals(service.get(DEPARTMENT2_ID).getName(), DepartmentTestData.getUpdatedDepartment().getName());
     }
 
     @Test
     @WithUserDetails(USER_MAIL)
     void updateForbidden() throws Exception {
-        perform(MockMvcRequestBuilders.post(DEPARTMENTS_URL)
+        perform(MockMvcRequestBuilders.post(DEPARTMENTS_UPDATE_URL)
                 .params(DepartmentTestData.getUpdatedDepartmentParams())
                 .with(csrf()))
                 .andExpect(status().isForbidden());
-        assertNotEquals(service.get(DEPARTMENT1_ID).getName(), DepartmentTestData.getUpdatedDepartment().getName());
+        assertNotEquals(service.get(DEPARTMENT2_ID).getName(), DepartmentTestData.getUpdatedDepartment().getName());
     }
 
     @Test
     @WithUserDetails(ARCHIVIST_MAIL)
     void updateInvalid() throws Exception {
         MultiValueMap<String, String> updatedInvalidParams = DepartmentTestData.getUpdatedDepartmentInvalidParams();
-        perform(MockMvcRequestBuilders.post(DEPARTMENTS_URL)
+        perform(MockMvcRequestBuilders.post(DEPARTMENTS_UPDATE_URL)
                 .params(updatedInvalidParams)
                 .with(csrf()))
                 .andExpect(status().isOk())
-                .andExpect(model().attributeHasFieldErrors(DEPARTMENT_ATTRIBUTE, NAME,
-                        BOSS_LAST_NAME, BOSS_FIRST_NAME, BOSS_MIDDLE_NAME, BOSS_PHONE))
-                .andExpect(view().name(DEPARTMENTS_FORM_VIEW));
-        assertNotEquals(service.get(DEPARTMENT1_ID).getName(), updatedInvalidParams.get(NAME).get(0));
+                .andExpect(model().attributeHasFieldErrors(DEPARTMENT_UPDATE_TO_ATTRIBUTE, NAME))
+                .andExpect(view().name(DEPARTMENT_EDIT_FORM_VIEW));
+        assertNotEquals(service.get(DEPARTMENT2_ID).getName(), updatedInvalidParams.get(NAME).get(0));
     }
 
     @Test
     @WithUserDetails(ARCHIVIST_MAIL)
     void updateDuplicateName() throws Exception {
         MultiValueMap<String, String> updatedParams = DepartmentTestData.getUpdatedDepartmentParams();
-        updatedParams.set(NAME, DEPARTMENT2_NAME);
-        perform(MockMvcRequestBuilders.post(DEPARTMENTS_URL)
+        updatedParams.set(NAME, DEPARTMENT1_NAME);
+        perform(MockMvcRequestBuilders.post(DEPARTMENTS_UPDATE_URL)
                 .params(updatedParams)
                 .with(csrf()))
                 .andExpect(status().isOk())
-                .andExpect(model().attributeHasFieldErrorCode(DEPARTMENT_ATTRIBUTE, NAME, DUPLICATE_ERROR_CODE))
-                .andExpect(view().name(DEPARTMENTS_FORM_VIEW));
-        assertNotEquals(service.get(DEPARTMENT1_ID).getName(), DEPARTMENT2_NAME);
+                .andExpect(model().attributeHasFieldErrorCode(DEPARTMENT_UPDATE_TO_ATTRIBUTE, NAME, DUPLICATE_ERROR_CODE))
+                .andExpect(view().name(DEPARTMENT_EDIT_FORM_VIEW));
+        assertNotEquals(service.get(DEPARTMENT2_ID).getName(), DEPARTMENT1_NAME);
     }
 
     @Test

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:with="activeMenuItem='Departments'" lang="en">
+<!--/*@thymesVar id="departmentUpdateTo" type="ru.javaprojects.archivist.departments.to.DepartmentUpdateTo"*/-->
+
+<th:block th:replace="~{fragments/main::page(title='Archivist - departments',appMain=~{::appMain}, ownScript=~{::ownScript})}">
+    <appMain>
+        <!-- Edit department card -->
+        <div class="row d-flex justify-content-center align-items-center">
+            <div class="col-12 col-md-8 col-xl-5">
+                <div class="card shadow">
+                    <div class="card-header">
+                        <span class="float-end">
+                            <button type="button" class="btn-close" aria-label="Close" onclick="history.back()"></button>
+                        </span>
+                        <h3 class="text-center ms-4" th:text="'Editing: ' + ${departmentUpdateTo.name}">Editing Department</h3>
+                    </div>
+                    <div class="card-body text-center">
+                        <form th:action="@{/departments/update}" method="post" th:object="${departmentUpdateTo}">
+                            <input type="hidden" th:field="*{id}">
+                            <div class="mb-3">
+                                <div class="input-group">
+                                    <span class="input-group-text" id="nameAddon"><i class="fa-solid fa-users fa-fw"></i></span>
+                                    <div class="form-floating">
+                                        <input type="text" id="departmentNameInput" th:field="*{name}"
+                                               th:class="${#fields.hasErrors('name')} ? 'form-control is-invalid' : 'form-control'"
+                                               required placeholder="Name" title="" aria-label="Name" aria-describedby="nameAddon"/>
+                                        <label for="departmentNameInput" class="text-muted">Name</label>
+                                    </div>
+                                </div>
+                                <span class="help-block" th:if="${#fields.hasErrors('name')}">
+                                    <ul>
+                                        <li class="text-danger text-start"
+                                            th:each="err : ${#fields.errors('name')}" th:text="${err}"/>
+                                    </ul>
+                                </span>
+                            </div>
+                            <div class="mb-3">
+                                <div class="input-group">
+                                    <span class="input-group-text" id="bossAddon"><i class="fa-solid fa-user fa-fw"></i></span>
+                                    <div class="form-floating" id="selectFloating">
+                                        <select class="form-control selectpicker border px-0 py-3" data-style="btn-white" id="bossSelect"
+                                                name="boss" required aria-label="Boss" aria-describedby="bossAddon">
+                                            <option th:each="employee : ${employees}"
+                                                    th:value="${employee.id}"
+                                                    th:text="${employee.fullName}"
+                                                    th:selected="${departmentUpdateTo.boss != null && departmentUpdateTo.boss.id == employee.id}">
+                                            </option>
+                                        </select>
+                                        <label for="bossSelect" class="text-muted" id="bossSelectLabel">Boss</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-end">
+                                <button class="btn btn-secondary" type="button" onclick="history.back()">Cancel</button>
+                                <button class="btn btn-success px-3" type="submit">&nbsp;Save&nbsp;</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </appMain>
+</th:block>

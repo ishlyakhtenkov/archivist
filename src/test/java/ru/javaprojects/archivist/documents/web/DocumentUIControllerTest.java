@@ -111,7 +111,7 @@ class DocumentUIControllerTest extends AbstractControllerTest implements TestCon
                 .getModelAndView()).getModel().get(DOCUMENT_ATTRIBUTE);
         DOCUMENT_MATCHER.assertMatch(document, document1);
         COMPANY_MATCHER.assertMatchIgnoreFields(document.getOriginalHolder(), company3, "contactPersons");
-        DEPARTMENT_MATCHER.assertMatchIgnoreFields(document.getDeveloper(), department1, "employees");
+        DEPARTMENT_MATCHER.assertMatchIgnoreFields(document.getDeveloper(), department1, "employees", "boss");
     }
 
     @Test

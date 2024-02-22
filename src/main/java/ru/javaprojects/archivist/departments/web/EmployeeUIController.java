@@ -35,7 +35,7 @@ public class EmployeeUIController {
     public String showAddForm(Model model) {
         log.info("show employee add form");
         model.addAttribute("employee", new Employee());
-        model.addAttribute("departments", departmentService.getAll());
+        model.addAttribute("departments", departmentService.getAllWithBoss());
         return "departments/employees/employee-form";
     }
 
@@ -43,14 +43,14 @@ public class EmployeeUIController {
     public String showEditForm(@PathVariable long id, Model model) {
         log.info("show employee={} edit form", id);
         model.addAttribute("employee", service.get(id));
-        model.addAttribute("departments", departmentService.getAll());
+        model.addAttribute("departments", departmentService.getAllWithBoss());
         return "departments/employees/employee-form";
     }
 
     @PostMapping
     public String createOrUpdate(@Valid Employee employee, BindingResult result, Model model, RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
-            model.addAttribute("departments", departmentService.getAll());
+            model.addAttribute("departments", departmentService.getAllWithBoss());
             return "departments/employees/employee-form";
         }
         boolean isNew = employee.isNew();

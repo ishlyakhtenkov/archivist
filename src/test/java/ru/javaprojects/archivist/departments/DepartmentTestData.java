@@ -3,7 +3,6 @@ package ru.javaprojects.archivist.departments;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import ru.javaprojects.archivist.MatcherFactory;
-import ru.javaprojects.archivist.common.model.Person;
 import ru.javaprojects.archivist.departments.model.Department;
 import ru.javaprojects.archivist.departments.model.Employee;
 
@@ -28,13 +27,16 @@ public class DepartmentTestData {
 
     public static final String DEPARTMENTS_ATTRIBUTE = "departments";
     public static final String DEPARTMENT_ATTRIBUTE = "department";
+    public static final String DEPARTMENT_CREATE_TO_ATTRIBUTE = "departmentCreateTo";
+    public static final String DEPARTMENT_UPDATE_TO_ATTRIBUTE = "departmentUpdateTo";
+    public static final String EMPLOYEES_ATTRIBUTE = "employees";
     public static final String EMPLOYEE_ATTRIBUTE = "employee";
 
-    public static final String BOSS_LAST_NAME = "boss.lastName";
-    public static final String BOSS_FIRST_NAME = "boss.firstName";
-    public static final String BOSS_MIDDLE_NAME = "boss.middleName";
-    public static final String BOSS_PHONE = "boss.phone";
-    public static final String BOSS_EMAIL = "boss.email";
+    public static final String BOSS_LAST_NAME = "bossLastName";
+    public static final String BOSS_FIRST_NAME = "bossFirstName";
+    public static final String BOSS_MIDDLE_NAME = "bossMiddleName";
+    public static final String BOSS_PHONE = "bossPhone";
+    public static final String BOSS_EMAIL = "bossEmail";
 
     public static final String LAST_NAME = "lastName";
     public static final String FIRST_NAME = "firstName";
@@ -42,31 +44,42 @@ public class DepartmentTestData {
     public static final String PHONE = "phone";
     public static final String EMAIL = "email";
     public static final String FIRED = "fired";
+    public static final String BOSS = "boss";
 
-    public static final Department department1 = new Department(DEPARTMENT1_ID, DEPARTMENT1_NAME,
-            new Person("Sokolov", "Alexandr", "Ivanovich", "1-32-98", "a.sokolov@npo.lan"));
-    public static final Department department2 = new Department(DEPARTMENT2_ID, DEPARTMENT2_NAME,
-            new Person("Ivanov", "Petr", "Alexandrovich", "1-34-63", "p.ivanov@npo.lan"));
-    public static final Department department3 = new Department(DEPARTMENT3_ID, "NIO-8",
-            new Person("Kozlov", "Ivan", "Ivanovich", "1-44-12", "i.kozlov@npo.lan"));
-    public static final Department department4 = new Department(DEPARTMENT4_ID, "DEP-25",
-            new Person("Sidorov", "Alexandr", "Petrovich", "1-36-78", "a.sidorov@npo.lan"));
-    public static final Department department5 = new Department(DEPARTMENT5_ID, "DEP-33",
-            new Person("Petrov", "Vladimir", "Ivanovich", "1-45-12", "v.petrov@npo.lan"));
+    public static final Department department1 = new Department(DEPARTMENT1_ID, DEPARTMENT1_NAME);
+    public static final Department department2 = new Department(DEPARTMENT2_ID, DEPARTMENT2_NAME);
+    public static final Department department3 = new Department(DEPARTMENT3_ID, "NIO-8");
+    public static final Department department4 = new Department(DEPARTMENT4_ID, "DEP-25");
+    public static final Department department5 = new Department(DEPARTMENT5_ID, "DEP-33");
 
+    public static final long DEP1_BOSS_ID = 100061L;
+    public static final long DEP3_BOSS_ID = 100067L;
+    public static final long DEP4_BOSS_ID = 100068L;
+    public static final long DEP5_BOSS_ID = 100069L;
     public static final long DEP2_EMPLOYEE1_ID = 100065L;
     public static final long DEP2_EMPLOYEE2_ID = 100066L;
 
     public static final Employee dep2Employee1 = new Employee(DEP2_EMPLOYEE1_ID, "Kasparov", "Iosif", "Matveevich", "1-22-44", "i.kasparov@npo.lan");
     public static final Employee dep2Employee2 = new Employee(DEP2_EMPLOYEE2_ID, "Sidelnikov", "Vasiliy", "Kuzmich", "1-37-88", "v.sidelnikov@npo.lan");
+    public static final Employee dep1Boss = new Employee(DEP1_BOSS_ID, "Smirnov", "Petr", "Olegovich", "1-25-69", "p.smirnov@npo.lan");
+    public static final Employee dep2Boss = dep2Employee1;
+    public static final Employee dep3Boss = new Employee(DEP3_BOSS_ID, "Lapin", "Ivan", "Andreevich", "1-20-97", "i.lapin@npo.lan");
+    public static final Employee dep4Boss = new Employee(DEP4_BOSS_ID, "Kuleshov", "Ivan", "Petrovich", "1-77-98", "i.kuleshov@npo.lan");
+    public static final Employee dep5Boss = new Employee(DEP5_BOSS_ID, "Sidorov", "Viktor", "Pavlovich", "1-32-78", "v.sidorov@npo.lan");
 
     static {
         department2.addEmployee(dep2Employee1);
         department2.addEmployee(dep2Employee2);
+        department1.setBoss(dep1Boss);
+        department2.setBoss(dep2Boss);
+        department3.setBoss(dep3Boss);
+        department4.setBoss(dep4Boss);
+        department5.setBoss(dep5Boss);
     }
 
     public static Department getNewDepartment() {
-        return new Department(null, "newName", new Person("newLastName", "newFirstName", "newMiddleName", "newPhone", "new@gmail.com"));
+        return new Department(null, "newName",
+                new Employee(null, "newLastName", "newFirstName", "newMiddleName", "newPhone", "newEmail@gmail.com"));
     }
 
     public static MultiValueMap<String, String> getNewDepartmentParams() {
@@ -92,26 +105,21 @@ public class DepartmentTestData {
     }
 
     public static Department getUpdatedDepartment() {
-        return new Department(DEPARTMENT1_ID, "updatedName",
-                new Person("updatedLastName", "updatedFirstName", "updatedMiddleName", "updatedPhone", "updated@gmail.com"));
+        return new Department(DEPARTMENT2_ID, "updatedName", dep2Employee2);
     }
 
     public static MultiValueMap<String, String> getUpdatedDepartmentParams() {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         Department updatedDepartment = getUpdatedDepartment();
-        params.add(ID, String.valueOf(DEPARTMENT1_ID));
+        params.add(ID, String.valueOf(DEPARTMENT2_ID));
         params.add(NAME, updatedDepartment.getName());
-        params.add(BOSS_LAST_NAME, updatedDepartment.getBoss().getLastName());
-        params.add(BOSS_FIRST_NAME, updatedDepartment.getBoss().getFirstName());
-        params.add(BOSS_MIDDLE_NAME, updatedDepartment.getBoss().getMiddleName());
-        params.add(BOSS_PHONE, updatedDepartment.getBoss().getPhone());
-        params.add(BOSS_EMAIL, updatedDepartment.getBoss().getEmail());
+        params.add(BOSS, String.valueOf(updatedDepartment.getBoss().getId()));
         return params;
     }
 
     public static MultiValueMap<String, String> getUpdatedDepartmentInvalidParams() {
-        MultiValueMap<String, String> params = getNewDepartmentInvalidParams();
-        params.add(ID, String.valueOf(DEPARTMENT1_ID));
+        MultiValueMap<String, String> params = getUpdatedDepartmentParams();
+        params.set(NAME, "A");
         return params;
     }
 

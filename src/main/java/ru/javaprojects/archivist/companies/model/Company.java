@@ -8,6 +8,7 @@ import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import ru.javaprojects.archivist.common.HasId;
+import ru.javaprojects.archivist.common.HasIdAndName;
 import ru.javaprojects.archivist.common.model.NamedEntity;
 
 import java.util.List;
@@ -17,7 +18,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Company extends NamedEntity implements HasId {
+public class Company extends NamedEntity implements HasId, HasIdAndName {
 
     @Embedded
     @Valid

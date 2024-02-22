@@ -8,6 +8,8 @@ import ru.javaprojects.archivist.common.error.NotFoundException;
 import ru.javaprojects.archivist.departments.model.Employee;
 import ru.javaprojects.archivist.departments.repository.EmployeeRepository;
 
+import java.util.List;
+
 @Service
 @AllArgsConstructor
 public class EmployeeService {
@@ -22,9 +24,13 @@ public class EmployeeService {
                 .orElseThrow(() -> new NotFoundException("Not found employee with email=" + email));
     }
 
-    public void create(Employee employee) {
+    public List<Employee> getAllByDepartment(long departmentId) {
+        return repository.findAllByDepartment_IdOrderByLastNameAscFirstNameAscMiddleName(departmentId);
+    }
+
+    public Employee create(Employee employee) {
         Assert.notNull(employee, "employee must not be null");
-        repository.save(employee);
+        return repository.save(employee);
     }
 
     @Transactional // just to make one select by id instead of two by Hibernate

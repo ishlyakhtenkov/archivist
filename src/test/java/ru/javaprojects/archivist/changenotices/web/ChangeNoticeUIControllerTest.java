@@ -112,7 +112,7 @@ class ChangeNoticeUIControllerTest extends AbstractControllerTest implements Tes
         ChangeNotice changeNotice = (ChangeNotice) Objects.requireNonNull(actions.andReturn()
                 .getModelAndView()).getModel().get(CHANGE_NOTICE_ATTRIBUTE);
         CHANGE_NOTICE_MATCHER.assertMatchIgnoreFields(changeNotice, changeNotice1, "changes.document.originalHolder",
-                "changes.document.developer", "developer.employees");
+                "changes.document.developer", "developer.employees", "developer.boss");
     }
 
     @Test
@@ -208,7 +208,7 @@ class ChangeNoticeUIControllerTest extends AbstractControllerTest implements Tes
         ChangeNotice created = service.getWithChangesByName(newChangeNoticeTo.getName());
         newChangeNotice.setId(created.id());
         CHANGE_NOTICE_MATCHER.assertMatchIgnoreFields(created, newChangeNotice, "changes.id", "changes.document.id",
-                "changes.document.originalHolder", "changes.document.developer", "developer.employees");
+                "changes.document.originalHolder", "changes.document.developer", "developer.employees", "developer.boss");
         actions.andExpect(redirectedUrl(CHANGE_NOTICES_URL_SLASH + created.getId()));
         assertTrue(Files.exists(Paths.get(contentPath, newChangeNoticeTo.getName(),
                 newChangeNoticeTo.getFile().getOriginalFilename())));
@@ -237,7 +237,7 @@ class ChangeNoticeUIControllerTest extends AbstractControllerTest implements Tes
         ChangeNotice created = service.getWithChangesByName(newChangeNoticeTo.getName());
         newChangeNotice.setId(created.id());
         CHANGE_NOTICE_MATCHER.assertMatchIgnoreFields(created, newChangeNotice, "changes.id", "changes.document.id",
-                "changes.document.originalHolder", "changes.document.developer", "developer.employees");
+                "changes.document.originalHolder", "changes.document.developer", "developer.employees", "developer.boss");
         actions.andExpect(redirectedUrl(CHANGE_NOTICES_URL_SLASH + created.getId()));
         assertTrue(Files.exists(Paths.get(contentPath, newChangeNoticeTo.getName(),
                 newChangeNoticeTo.getFile().getOriginalFilename())));
@@ -310,8 +310,9 @@ class ChangeNoticeUIControllerTest extends AbstractControllerTest implements Tes
                 .andExpect(model().attributeExists("developers"))
                 .andExpect(model().attributeExists("file"))
                 .andExpect(view().name(CHANGE_NOTICE_FORM_VIEW))
-                .andExpect(result -> CHANGE_NOTICE_TO_MATCHER.assertMatch((ChangeNoticeTo) Objects.requireNonNull(result
-                        .getModelAndView()).getModel().get(CHANGE_NOTICE_TO_ATTRIBUTE), changeNoticeUtil.asTo(changeNotice1)));
+                .andExpect(result -> CHANGE_NOTICE_TO_MATCHER.assertMatchIgnoreFields((ChangeNoticeTo) Objects.requireNonNull(result
+                        .getModelAndView()).getModel().get(CHANGE_NOTICE_TO_ATTRIBUTE), changeNoticeUtil.asTo(changeNotice1),
+                        "developer.employees", "developer.boss"));
     }
 
     @Test
@@ -354,7 +355,8 @@ class ChangeNoticeUIControllerTest extends AbstractControllerTest implements Tes
                 .andExpect(redirectedUrl(CHANGE_NOTICES_URL_SLASH + CHANGE_NOTICE_1_ID))
                 .andExpect(flash().attribute(ACTION, "Change notice " + updatedChangeNotice.getName() + " was updated"));
         CHANGE_NOTICE_MATCHER.assertMatchIgnoreFields(service.getWithChanges(CHANGE_NOTICE_1_ID), updatedChangeNotice,
-                "changes.id", "changes.document.id", "changes.document.originalHolder", "changes.document.developer", "developer.employees");
+                "changes.id", "changes.document.id", "changes.document.originalHolder", "changes.document.developer",
+                "developer.employees", "developer.boss");
         assertTrue(Files.exists(Paths.get(contentPath, updatedChangeNotice.getFile().getFileLink())));
         assertTrue(Files.notExists(Paths.get(contentPath, changeNotice1.getFile().getFileLink())));
     }
@@ -374,7 +376,8 @@ class ChangeNoticeUIControllerTest extends AbstractControllerTest implements Tes
                 .andExpect(redirectedUrl(CHANGE_NOTICES_URL_SLASH + CHANGE_NOTICE_1_ID))
                 .andExpect(flash().attribute(ACTION, "Change notice " + updatedChangeNotice.getName() + " was updated"));
         CHANGE_NOTICE_MATCHER.assertMatchIgnoreFields(service.getWithChanges(CHANGE_NOTICE_1_ID), updatedChangeNotice,
-                "changes.id", "changes.document.id", "changes.document.originalHolder", "changes.document.developer", "developer.employees");
+                "changes.id", "changes.document.id", "changes.document.originalHolder", "changes.document.developer",
+                "developer.employees", "developer.boss");
         assertTrue(Files.exists(Paths.get(contentPath, updatedChangeNotice.getFile().getFileLink())));
         assertTrue(Files.notExists(Paths.get(contentPath, changeNotice1.getFile().getFileLink())));
         assertThrows(NotFoundException.class, () -> service.get(CHANGE_NOTICE_3_ID));
@@ -396,7 +399,8 @@ class ChangeNoticeUIControllerTest extends AbstractControllerTest implements Tes
                 .andExpect(redirectedUrl(CHANGE_NOTICES_URL_SLASH + CHANGE_NOTICE_1_ID))
                 .andExpect(flash().attribute(ACTION, "Change notice " + updatedChangeNotice.getName() + " was updated"));
         CHANGE_NOTICE_MATCHER.assertMatchIgnoreFields(service.getWithChanges(CHANGE_NOTICE_1_ID), updatedChangeNotice,
-                "changes.id", "changes.document.id", "changes.document.originalHolder", "changes.document.developer", "developer.employees");
+                "changes.id", "changes.document.id", "changes.document.originalHolder", "changes.document.developer",
+                "developer.employees", "developer.boss");
         assertTrue(Files.exists(Paths.get(contentPath, updatedChangeNotice.getFile().getFileLink())));
     }
 

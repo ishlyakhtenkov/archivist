@@ -48,12 +48,12 @@ VALUES (100006, 'Director', 'Ivanov', 'Pavel', 'Ivanovich', '8(495)741-25-17'),
        (100007, 'Chief engineer', 'Petrov', 'Ivan', 'Alexandrovich', '8(745)111-25-89'),
        (100007, 'Secretary', 'Belkina', 'Anna', 'Ivanovna', '8(745)111-25-89');
 
-INSERT INTO departments (name, last_name, first_name, middle_name, phone, email)
-VALUES ('KTK-40', 'Sokolov', 'Alexandr', 'Ivanovich', '1-32-98', 'a.sokolov@npo.lan'),
-       ('NIO-6', 'Ivanov', 'Petr', 'Alexandrovich', '1-34-63', 'p.ivanov@npo.lan'),
-       ('NIO-8', 'Kozlov', 'Ivan', 'Ivanovich', '1-44-12', 'i.kozlov@npo.lan'),
-       ('DEP-25', 'Sidorov', 'Alexandr', 'Petrovich', '1-36-78', 'a.sidorov@npo.lan'),
-       ('DEP-33', 'Petrov', 'Vladimir', 'Ivanovich', '1-45-12', 'v.petrov@npo.lan');
+INSERT INTO departments (name)
+VALUES ('KTK-40'),
+       ('NIO-6'),
+       ('NIO-8'),
+       ('DEP-25'),
+       ('DEP-33');
 
 INSERT INTO documents (name, decimal_number, inventory_number, accounting_date, status, type, symbol, annulled, secret, auto_generated, comment, developer_id, original_holder_id)
 VALUES ('Block M21', 'VUIA.465521.004', '926531', '2023-03-24', 'ORIGINAL', 'DIGITAL', 'O1', false, false,  false, 'some comment', 100009, 100008),
@@ -139,7 +139,15 @@ VALUES (100009, 'Smirnov', 'Petr', 'Olegovich', '1-25-69', 'p.smirnov@npo.lan', 
        (100009, 'Melnikov', 'Fedor', 'Vladimirovich', '1-21-66', 'f.melnikov@npo.lan', true), --100064
        (100010, 'Kasparov', 'Iosif', 'Matveevich', '1-22-44', 'i.kasparov@npo.lan', false), --100065
        (100010, 'Sidelnikov', 'Vasiliy', 'Kuzmich', '1-37-88', 'v.sidelnikov@npo.lan', false), --100066
-       (100011, 'Lapin', 'Ivan', 'Andreevich', '1-20-97', 'i.lapin@npo.lan', false); --100067
+       (100011, 'Lapin', 'Ivan', 'Andreevich', '1-20-97', 'i.lapin@npo.lan', false), --100067
+       (100012, 'Kuleshov', 'Ivan', 'Petrovich', '1-77-98', 'i.kuleshov@npo.lan', false), --100068
+       (100013, 'Sidorov', 'Viktor', 'Pavlovich', '1-32-78', 'v.sidorov@npo.lan', false); --100069
+
+UPDATE departments SET boss_id = 100061 WHERE id = 100009;
+UPDATE departments SET boss_id = 100065 WHERE id = 100010;
+UPDATE departments SET boss_id = 100067 WHERE id = 100011;
+UPDATE departments SET boss_id = 100068 WHERE id = 100012;
+UPDATE departments SET boss_id = 100069 WHERE id = 100013;
 
 INSERT INTO issuances (album_id, employee_id, issued, returned)
 VALUES (100057, 100061, '2021-05-28 09:30:27', '2021-05-30 11:45:18'),

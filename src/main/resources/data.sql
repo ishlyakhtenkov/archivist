@@ -127,10 +127,10 @@ VALUES ('2023-11-28 11:14:48', '2023-11-28 11:14:48', 'New users registration', 
        ('2023-12-04 09:05:34', '2023-12-04 09:05:34', 'Server maintenance', 'Dear users, 05.12.2023 from 10:00 to 12:00 AM the app will be unavailable due to technical works', true, 100001);
 
 INSERT INTO albums (document_id, stamp)
-VALUES (100014, '1'), --100057
-       (100014, '2'), --100058
-       (100015, '1'), --100059
-       (100016, '1'); --100060
+VALUES (100014, 'STAMP_1'), --100057
+       (100014, 'STAMP_2'), --100058
+       (100015, 'STAMP_1'), --100059
+       (100016, 'STAMP_1'); --100060
 
 INSERT INTO employees (department_id, last_name, first_name, middle_name, phone, email, fired)
 VALUES (100009, 'Smirnov', 'Petr', 'Olegovich', '1-25-69', 'p.smirnov@npo.lan', false), --100061

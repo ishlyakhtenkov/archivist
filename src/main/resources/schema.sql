@@ -229,7 +229,7 @@ CREATE TABLE albums
 (
     id          BIGINT  DEFAULT nextval('global_seq')  PRIMARY KEY,
     document_id BIGINT      NOT NULL,
-    stamp       VARCHAR(2) NOT NULL,
+    stamp       VARCHAR(8) NOT NULL,
     FOREIGN KEY (document_id) REFERENCES documents (id) ON DELETE CASCADE
 );
 CREATE UNIQUE INDEX albums_unique_document_stamp_idx ON albums (document_id, stamp);

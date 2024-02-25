@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sd="http://www.thymeleaf.org/spring-data"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      th:with="activeMenuItem='Albums'" lang="en">
+
+<th:block th:replace="~{fragments/main::page(title='Archivist - albums',appMain=~{::appMain}, ownScript=~{::ownScript})}">
+    <appMain>
+        <span th:if="${action != null}" th:data-action="${action}" th:id="actionSpan"></span>
+        <!-- Search field, Add button -->
+        <div class="row row-cols-1 row-cols-md-2">
+            <div class="col-md-4 text-start">
+                <h2 class="text-secondary font-weight-bold"><i class="fa-solid fa-lines-leaning me-2"></i>Albums</h2>
+            </div>
+            <div class="col-md-8 mb-2">
+                <div class="btn-toolbar justify-content-start justify-content-md-end">
+                    <form class="d-flex" role="search" th:action="@{/albums}" method="get">
+                        <div class="input-group">
+                            <span class="input-group-text bg-light" id="searchAlbums"><i class="fa-solid fa-magnifying-glass fa-fw"></i></span>
+                            <input class="form-control" th:name="keyword" th:value="${param.keyword}" type="search" placeholder="Search albums..." aria-label="Search">
+                        </div>
+                    </form>
+                    <a sec:authorize="hasAnyRole('ADMIN','ARCHIVIST')" th:href="@{/albums/add}" type="button" class="btn btn-primary ms-2">
+                        <span class="d-none d-md-block"><i class="fa-solid fa-plus"></i> Add album</span>
+                        <span class="d-md-none"><i class="fa-solid fa-plus"></i> Add</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Albums table -->
+        <span th:if="${albums.isEmpty()}">
+            <h5 class="alert alert-warning mt-2">No albums found.</h5>
+        </span>
+
+        <div th:if="${!albums.isEmpty()}" class="table-responsive text-nowrap">
+            <table class="table table-hover table-bordered">
+                <thead class="table-dark">
+                <tr>
+                    <th class="col-3">Decimal number</th>
+                    <th class="col-7">Name</th>
+                    <th class="col-1 text-center">Stamp</th>
+                    <th class="col-1 text-center">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="album : ${albums}" th:id="'row-' + ${album.id}" class="table-row">
+                    <td th:text="${album.mainDocument.decimalNumber}"></td>
+                    <td th:text="${album.mainDocument.name}"></td>
+                    <td class="text-center" th:text="${album.stamp}"></td>
+                    <td class="text-center">
+                        <a th:href="@{'/albums/' + ${album.id}}" type="button" title="Show details" class="glass-button">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </a>
+                        <span sec:authorize="hasAnyRole('ADMIN','ARCHIVIST')">
+                            <a th:href="@{'/albums/edit/' + ${album.id}}" type="button" title="Edit album" class="pencil-button ms-3">
+                                <i class="fa-solid fa-pencil"></i>
+                            </a>
+                            <a type="button" class="trash-button ms-3"
+                               title="Delete album" data-bs-toggle="modal" data-bs-target="#deleteModal"
+                               th:data-name="${album.mainDocument.decimalNumber}"
+                               th:data-id="${album.id}">
+                                <i class="fa-solid fa-trash"></i>
+                            </a>
+                        </span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        <div th:if="${!albums.isEmpty()}" class="row">
+            <div class="col-12 col-md-6 text-center text-md-start">
+                <div sd:pagination-summary="" id="paginationSummary">info</div>
+            </div>
+
+            <div class="col-12 col-md-6 mt-3 mt-md-0">
+                <nav>
+                    <ul class="pagination justify-content-center justify-content-md-end" sd:pagination-split="7" sd:pagination="full">
+                        <!-- Pagination created by SpringDataDialect, this content is just for mockup -->
+                        <li class="disabled"><a href="#" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
+                        <li class="active"><a href="#">1 <span class="sr-only">(current)</span></a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        <div th:if="${!albums.isEmpty()}" class="row">
+            <div class="col text-center text-md-end">
+                Show <span sd:page-size-selector="javascript"></span> entries
+            </div>
+        </div>
+
+        <!-- Delete modal -->
+        <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="deleteModalLabel">Are you sure want to delete album?</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <input type="hidden" name="albumId" id="deleteModalAlbumId" value=""/>
+                    <input type="hidden" name="albumName" id="deleteModalAlbumName" value=""/>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close">Cancel</button>
+                        <button type="button" class="btn btn-danger" onclick="deleteAlbum()">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </appMain>
+
+    <ownScript>
+        <script>sessionStorage.removeItem('cardPrevUrl');</script>
+        <script src="/js/common.js?v=1"></script>
+        <script src="/js/table-content.js?v=1"></script>
+        <script src="/js/albums.js?v=1"></script>
+    </ownScript>
+</th:block>

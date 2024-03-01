@@ -57,7 +57,7 @@
                 <li sec:authorize="isAuthenticated()" class="nav-item" style="cursor:pointer" id="referencesNavLink">
                     <div class="accordion-header">
                         <a class="nav-link sidebar-nav-link" data-bs-toggle="collapse" data-bs-target="#referencesAccordion" aria-expanded="true" aria-controls="referencesAccordion" onclick="useReferencesAccordion()">
-                            <span class="ms-4"><i class="fa-solid fa-book-bookmark fa-fw me-2"></i>References</span>
+                            <span class="ms-4"><i class="fa-solid fa-bookmark fa-fw me-2"></i>Reference</span>
                             <span class="float-end me-3 me-lg-1" id="referencesNavLinkIcon"><i class="fa-solid fa-chevron-down"></i></span>
                         </a>
                     </div>
@@ -75,7 +75,7 @@
                     </div>
                 </div>
                 <li sec:authorize="isAuthenticated()" class="nav-item mt-0 mt-lg-3 mb-0 mb-lg-3" th:classappend="${activeMenuItem == 'Albums'}? 'active' : ''">
-                    <a class="nav-link sidebar-nav-link" th:href="@{/albums}"><span class="ms-4"><i class="fa-solid fa-lines-leaning fa-fw me-2"></i>Albums</span></a>
+                    <a class="nav-link sidebar-nav-link" th:href="@{/albums}"><span class="ms-4"><i class="fa-solid fa-book fa-fw me-2"></i>Albums</span></a>
                 </li>
             </ul>
         </div>

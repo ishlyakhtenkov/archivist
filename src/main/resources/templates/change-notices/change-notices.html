@@ -47,7 +47,9 @@
                 <tr th:each="changeNotice : ${changeNotices}" th:id="'row-' + ${changeNotice.id}" class="table-row">
                     <td>
                         <a th:href="@{'/change-notices/' + ${changeNotice.id}}" th:text="${changeNotice.name}"
-                           title="Show details" class="text-dark" style="text-decoration:none;">Change notice name</a>
+                           title="Show details" style="text-decoration:none; color:black"
+                           onmouseover="this.style.color='#0000FF'; this.style.textDecoration='underline';"
+                           onmouseout="this.style.color='black'; this.style.textDecoration='none';">Name</a>
                     </td>
                     <td th:text="${#temporals.format(changeNotice.releaseDate, 'dd.MM.yyyy')}"></td>
                     <td th:text="${changeNotice.changeReasonCode}"></td>

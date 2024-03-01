@@ -45,7 +45,12 @@
                 </thead>
                 <tbody>
                 <tr th:each="company : ${companies}" th:id="'row-' + ${company.id}" class="table-row">
-                    <td th:text="${company.name}"></td>
+                    <td>
+                        <a th:href="@{'/companies/' + ${company.id}}" th:text="${company.name}"
+                           title="Show details" style="text-decoration:none; color:black"
+                           onmouseover="this.style.color='#0000FF'; this.style.textDecoration='underline';"
+                           onmouseout="this.style.color='black'; this.style.textDecoration='none';">Name</a>
+                    </td>
                     <td th:text="${company.address.formattedAddress}"></td>
                     <td th:text="${company.contacts != null ? company.contacts.phone : ''}"></td>
                     <td class="text-center">

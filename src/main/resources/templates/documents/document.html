@@ -12,7 +12,8 @@
             <div class="col-12 col-xxl-10">
                 <div class="card shadow">
                     <div class="card-header">
-                        <span th:if="${document.annulled}" class="badge bg-danger float-start">Annulled</span>
+                        <span th:if="${document.annulled}" class="badge bg-danger float-start me-1">Annulled</span>
+                        <span th:if="${document.secret}" class="badge bg-warning float-start">Secret</span>
                         <span class="float-end">
                             <button type="button" class="btn-close" aria-label="Close" onclick="closeCard()"></button>
                         </span>

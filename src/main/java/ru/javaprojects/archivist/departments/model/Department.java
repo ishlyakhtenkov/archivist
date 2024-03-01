@@ -1,5 +1,7 @@
 package ru.javaprojects.archivist.departments.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -24,9 +26,11 @@ public class Department extends NamedEntity implements HasId, HasIdAndName {
     @Valid
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "boss_id")
+    @JsonIgnore
     private Employee boss;
 
     @OneToMany(mappedBy = "department", fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Employee> employees;
 
     public Department(Long id, String name) {

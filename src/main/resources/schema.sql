@@ -251,11 +251,11 @@ ALTER TABLE departments ADD FOREIGN KEY (boss_id) REFERENCES employees(id) ON DE
 
 CREATE TABLE issuances
 (
-    id          BIGINT  DEFAULT nextval('global_seq')  PRIMARY KEY,
-    album_id    BIGINT    NOT NULL,
-    employee_id BIGINT    NOT NULL,
-    issued      TIMESTAMP NOT NULL,
-    returned    TIMESTAMP,
+    id          BIGINT DEFAULT nextval('global_seq')  PRIMARY KEY,
+    album_id    BIGINT NOT NULL,
+    employee_id BIGINT NOT NULL,
+    issued      DATE   NOT NULL,
+    returned    DATE,
     FOREIGN KEY (album_id) REFERENCES albums (id) ON DELETE CASCADE,
     FOREIGN KEY (employee_id) REFERENCES employees (id) ON DELETE CASCADE,
     h2_extra_column VARCHAR AS CASE WHEN returned IS NULL THEN 'not returned' ELSE NULL END

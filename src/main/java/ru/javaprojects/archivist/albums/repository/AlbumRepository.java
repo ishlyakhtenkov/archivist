@@ -9,23 +9,34 @@ import ru.javaprojects.archivist.albums.model.Album;
 import ru.javaprojects.archivist.albums.model.Stamp;
 import ru.javaprojects.archivist.common.BaseRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Transactional(readOnly = true)
 public interface AlbumRepository extends BaseRepository<Album> {
 
-    // use count query to avoid Hibernate exception when fetch
-    // https://stackoverflow.com/questions/12459779/query-specified-join-fetching-but-the-owner-of-the-fetched-association-was-not
-    @Query(value = "SELECT a FROM Album a JOIN FETCH a.mainDocument md ORDER BY md.decimalNumber",
+    // use two below queries to get Albums page, because of pagination and JOIN FETCH
+    // https://stackoverflow.com/questions/64799564/spring-data-jpa-pagination-hhh000104
+    @Query(value = "SELECT a.id FROM Album a JOIN a.mainDocument md ORDER BY md.decimalNumber",
             countQuery = "SELECT count(a) FROM Album a")
-    Page<Album> findAllWithPagination(Pageable pageable);
+    Page<Long> findAllAlbumsIdsWithPagination(Pageable pageable);
 
-    @Query(value = "SELECT a FROM Album a JOIN FETCH a.mainDocument md WHERE UPPER(md.decimalNumber) LIKE " +
-            "UPPER(CONCAT('%', :keyword, '%')) ORDER BY md.decimalNumber", countQuery = "SELECT count(a) FROM Album a")
-    Page<Album> findAllByKeywordWithPagination(Pageable pageable, String keyword);
+    @Query("SELECT a FROM Album a JOIN FETCH a.mainDocument md LEFT JOIN FETCH a.issuances i " +
+            "LEFT JOIN FETCH i.employee e LEFT JOIN FETCH e.department WHERE a.id IN :ids ORDER BY md.decimalNumber")
+    List<Album> findAllByIds(List<Long> ids);
+
+    @Query(value = "SELECT a.id FROM Album a JOIN a.mainDocument md WHERE UPPER(md.decimalNumber) LIKE " +
+            "UPPER(CONCAT('%', :keyword, '%')) ORDER BY md.decimalNumber",
+            countQuery = "SELECT count(a) FROM Album a JOIN a.mainDocument md WHERE UPPER(md.decimalNumber) LIKE " +
+                    "UPPER(CONCAT('%', :keyword, '%'))")
+    Page<Long> findAllAlbumsIdsByKeywordWithPagination(Pageable pageable, String keyword);
 
     @EntityGraph(attributePaths = "mainDocument")
     Optional<Album> findById(long id);
 
     Optional<Album> findByMainDocument_DecimalNumberIgnoreCaseAndStamp(String decimalNumber, Stamp stamp);
+
+    @Query("SELECT a FROM Album a JOIN FETCH a.mainDocument LEFT JOIN FETCH a.issuances i LEFT JOIN FETCH i.employee e " +
+            "LEFT JOIN FETCH e.department WHERE a.id =:id ORDER BY i.issued DESC, i.returned")
+    Optional<Album> findByIdWithIssuances(long id);
 }

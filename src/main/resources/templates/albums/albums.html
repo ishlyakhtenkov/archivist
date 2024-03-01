@@ -10,7 +10,7 @@
         <!-- Search field, Add button -->
         <div class="row row-cols-1 row-cols-md-2">
             <div class="col-md-4 text-start">
-                <h2 class="text-secondary font-weight-bold"><i class="fa-solid fa-lines-leaning me-2"></i>Albums</h2>
+                <h2 class="text-secondary font-weight-bold"><i class="fa-solid fa-book me-2"></i>Albums</h2>
             </div>
             <div class="col-md-8 mb-2">
                 <div class="btn-toolbar justify-content-start justify-content-md-end">
@@ -38,21 +38,46 @@
                 <thead class="table-dark">
                 <tr>
                     <th class="col-3">Decimal number</th>
-                    <th class="col-7">Name</th>
-                    <th class="col-1 text-center">Stamp</th>
+                    <th class="col-4">Name</th>
+                    <th class="col-1">Stamp</th>
+                    <th class="col-3">Holder</th>
                     <th class="col-1 text-center">Actions</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:each="album : ${albums}" th:id="'row-' + ${album.id}" class="table-row">
-                    <td th:text="${album.mainDocument.decimalNumber}"></td>
+                    <td>
+                        <a th:href="@{'/albums/' + ${album.id}}" th:text="${album.mainDocument.decimalNumber}"
+                           title="Show details" style="text-decoration:none; color:black"
+                           onmouseover="this.style.color='#0000FF'; this.style.textDecoration='underline';"
+                           onmouseout="this.style.color='black'; this.style.textDecoration='none';">Decimal number</a>
+                    </td>
                     <td th:text="${album.mainDocument.name}"></td>
-                    <td class="text-center" th:text="${album.stamp}"></td>
+                    <td th:text="${album.stamp}"></td>
+                    <td th:id="${'albumHolder-' + album.id}" th:utext="${album.issuances.isEmpty() ? 'Archive (<i class=&quot;fa-solid fa-phone-flip small text-muted&quot;></i> 1-96-88)' :
+                        album.issuances.get(0).employee.department.name + ', ' +
+                        album.issuances.get(0).employee.lastNameAndInitials +
+                        ' (<i class=&quot;fa-solid fa-phone-flip small text-muted&quot;></i> ' + album.issuances.get(0).employee.phone + ')'}"></td>
                     <td class="text-center">
                         <a th:href="@{'/albums/' + ${album.id}}" type="button" title="Show details" class="glass-button">
                             <i class="fa-solid fa-magnifying-glass"></i>
                         </a>
                         <span sec:authorize="hasAnyRole('ADMIN','ARCHIVIST')">
+                            <a th:hidden="${!album.issuances.isEmpty() && album.issuances.get(0).returned == null}"
+                                    type="button" th:id="${'issueButton-' + album.id}" class="ms-3 text-primary" title="Issue album"
+                                    data-bs-toggle="modal" data-bs-target="#issueAlbumModal"
+                                    th:data-name="${album.mainDocument.decimalNumber + ' (' + album.stamp.toString() + ')'}"
+                                    th:data-id="${album.id}">
+                               <i class="fa-solid fa-right-from-bracket"></i>
+                            </a>
+                            <a th:hidden="${album.issuances.isEmpty() || album.issuances.get(0).returned != null}"
+                                    type="button" th:id="${'returnButton-' + album.id}" class="ms-3 text-secondary" title="Return album"
+                                    data-bs-toggle="modal" data-bs-target="#returnAlbumModal"
+                                    th:data-name="${album.mainDocument.decimalNumber + ' (' + album.stamp.toString() + ')'}"
+                                    th:data-id="${album.id}">
+                                <i class="fa-solid fa-right-to-bracket"></i>
+                            </a>
+
                             <a th:href="@{'/albums/edit/' + ${album.id}}" type="button" title="Edit album" class="pencil-button ms-3">
                                 <i class="fa-solid fa-pencil"></i>
                             </a>
@@ -109,6 +134,65 @@
             </div>
         </div>
 
+        <!-- Return album modal -->
+        <div class="modal fade" id="returnAlbumModal" tabindex="-1" aria-labelledby="returnAlbumModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="returnAlbumModalLabel">Return album</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" id="returnAlbumModalCloseButton" aria-label="Close"></button>
+                    </div>
+                    <form onsubmit="return false;">
+                        <div class="modal-body">
+                            <input type="hidden" name="albumId" id="returnAlbumModalAlbumId" value=""/>
+                            <input type="hidden" name="albumName" id="returnAlbumModalAlbumName" value=""/>
+                            <div class="input-group">
+                                <span class="input-group-text">Returned date</span>
+                                <input type="date" class="form-control" id="returnedDateInput" required>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-success" onclick="returnAlbum()">Return</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Issue album modal -->
+        <div class="modal fade" id="issueAlbumModal" tabindex="-1" aria-labelledby="issueAlbumModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="issueAlbumModalLabel">Issue album</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" id="issueAlbumModalCloseButton" aria-label="Close"></button>
+                    </div>
+                    <form onsubmit="return false;">
+                        <div class="modal-body">
+                            <input type="hidden" name="albumId" id="issueAlbumModalAlbumId" value=""/>
+                            <input type="hidden" name="albumName" id="issueAlbumModalAlbumName" value=""/>
+                            <div class="input-group">
+                                <span class="input-group-text">Department</span>
+                                <select class="form-select" id="departmentSelector" title="" required></select>
+                            </div>
+                            <div class="input-group mt-3">
+                                <span class="input-group-text">Employee&nbsp;&nbsp;&nbsp;</span>
+                                <select class="form-select" id="employeeSelector" title="" required disabled></select>
+                            </div>
+                            <div class="input-group mt-3">
+                                <span class="input-group-text">Issued date&nbsp;</span>
+                                <input type="date" class="form-control" id="issueDateInput" required>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-success px-3" onclick="issueAlbum()">&nbsp;Issue&nbsp;</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </appMain>
 
     <ownScript>
@@ -118,3 +202,126 @@
         <script src="/js/albums.js?v=1"></script>
     </ownScript>
 </th:block>
+
+<script>
+    const departmentSelector = $('#departmentSelector');
+    const employeeSelector = $('#employeeSelector');
+
+    departmentSelector.on('change', () => {
+        let departmentId = departmentSelector.val();
+        fillEmployeesSelector(departmentId);
+    });
+
+    $('#returnAlbumModal').on('show.bs.modal', function(e) {
+        let id = $(e.relatedTarget).data('id');
+        let name = $(e.relatedTarget).data('name');
+        $(e.currentTarget).find('#returnAlbumModalLabel').text(`Return album: ${name}`);
+        $(e.currentTarget).find('#returnedDateInput').val('');
+        $(e.currentTarget).find('#returnAlbumModalAlbumId').val(id);
+        $(e.currentTarget).find('#returnAlbumModalAlbumName').val(name);
+    });
+
+    $('#issueAlbumModal').on('show.bs.modal', function(e) {
+        let id = $(e.relatedTarget).data('id');
+        let name = $(e.relatedTarget).data('name');
+        $(e.currentTarget).find('#issueAlbumModalLabel').text(`Issue album: ${name}`);
+        departmentSelector.empty();
+        employeeSelector.empty();
+        employeeSelector.attr('disabled', true);
+        fillDepartmentsSelector();
+        $(e.currentTarget).find('#issueDateInput').val('');
+        $(e.currentTarget).find('#issueAlbumModalAlbumId').val(id);
+        $(e.currentTarget).find('#issueAlbumModalAlbumName').val(name);
+    });
+
+    function fillDepartmentsSelector() {
+        $.ajax({
+            url: '/departments/list'
+        }).done(departments => {
+            if (departments.length !== 0) {
+                departments.forEach(department => {
+                    departmentSelector.append($('<option></option>').val(department.id).html(department.name));
+                });
+                departmentSelector.val('');
+            }
+        }).fail(function (data) {
+            handleError(data, `Failed to get departments`);
+        });
+    }
+
+    function fillEmployeesSelector(departmentId) {
+        employeeSelector.attr('disabled', false);
+        employeeSelector.empty();
+        $.ajax({
+            url: '/employees/list/by-department',
+            data: "departmentId=" + departmentId
+        }).done(employees => {
+            if (employees.length !== 0) {
+                employees.forEach(employee => {
+                    employeeSelector.append($('<option></option>').val(employee.id)
+                        .html(`${employee.lastName} ${employee.firstName} ${employee.middleName}`));
+                });
+            }
+        }).fail(function (data) {
+            handleError(data, `Failed to get employees`);
+        });
+    }
+
+    function returnAlbum() {
+        let returnAlbumModal = $('#returnAlbumModal');
+        let albumId = returnAlbumModal.find('#returnAlbumModalAlbumId').val();
+        let name = returnAlbumModal.find('#returnAlbumModalAlbumName').val();
+        let returnedDate = returnAlbumModal.find('#returnedDateInput').val();
+        if (returnedDate.length) {
+            $.ajax({
+                url: `/albums/${albumId}/return`,
+                type: "PATCH",
+                data: "returned=" + returnedDate
+            }).done(function() {
+                returnAlbumModal.modal('toggle');
+                $(`#albumHolder-${albumId}`).html(`Archive (<i class="fa-solid fa-phone-flip small text-muted"></i> 1-96-88)`);
+                $(`#returnButton-${albumId}`).attr('hidden', true);
+                $(`#issueButton-${albumId}`).attr('hidden', false);
+                successToast(`Album ${name} was returned`);
+            }).fail(function(data) {
+                handleError(data, `Failed to return album ${name}`);
+            });
+        }
+    }
+
+    function issueAlbum() {
+        let issueAlbumModal = $('#issueAlbumModal');
+        let albumId = issueAlbumModal.find('#issueAlbumModalAlbumId').val();
+        let employeeId = employeeSelector.val();
+        let issued = $('#issueDateInput').val();
+        let name = issueAlbumModal.find('#issueAlbumModalAlbumName').val();
+        let departmentName = $('#departmentSelector option:selected').text();
+        if (employeeId !== null && issued.length) {
+            $.ajax({
+                url: `/albums/${albumId}/issue`,
+                type: 'POST',
+                data: JSON.stringify(makeIssuanceToObject(albumId, employeeId, issued)),
+                contentType: 'application/json; charset=utf-8'
+            }).done((issuance) => {
+                issueAlbumModal.modal('toggle');
+                $(`#albumHolder-${albumId}`).html(`${departmentName}, ${issuance.employee.lastName}
+                ${issuance.employee.firstName.charAt(0)}.${issuance.employee.middleName.charAt(0)}.
+                (<i class="fa-solid fa-phone-flip small text-muted"></i> ${issuance.employee.phone})`);
+                $(`#issueButton-${albumId}`).attr('hidden', true);
+                $(`#returnButton-${albumId}`).attr('hidden', false);
+                successToast(`Album ${name} was issued`);
+            }).fail(function(data) {
+                handleError(data, `Failed to issue album ${name}`);
+            });
+        }
+    }
+
+    function makeIssuanceToObject(albumId, employeeId, issued) {
+        return {
+            albumId: albumId,
+            employeeId: employeeId,
+            issued: issued
+        };
+    }
+
+</script>

@@ -60,6 +60,13 @@ public class AlbumUIController {
         return "albums/albums";
     }
 
+    @GetMapping("/{id}")
+    public String get(@PathVariable long id, Model model) {
+        log.info("get {}", id);
+        model.addAttribute("album", service.getWithIssuances(id));
+        return "albums/album";
+    }
+
     @GetMapping("/add")
     public String showAddForm(Model model) {
         log.info("show album add form");

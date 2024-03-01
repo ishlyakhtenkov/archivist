@@ -11,7 +11,7 @@
                 <div class="card shadow">
                     <div class="card-header">
                         <span class="float-end">
-                            <button type="button" class="btn-close" aria-label="Close" onclick="history.back()"></button>
+                            <button type="button" class="btn-close" aria-label="Close" onclick="closeCard()"></button>
                         </span>
                         <h3 class="text-center ms-4" th:text="${albumTo.isNew()} ? 'New album' : 'Editing: ' + ${albumTo.decimalNumber}">Create/Edit album</h3>
                     </div>
@@ -61,4 +61,8 @@
             </div>
         </div>
     </appMain>
+
+    <ownScript>
+        <script src="/js/close-card-button.js?v=1"></script>
+    </ownScript>
 </th:block>

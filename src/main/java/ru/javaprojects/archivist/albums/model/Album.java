@@ -1,5 +1,6 @@
 package ru.javaprojects.archivist.albums.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -8,6 +9,8 @@ import lombok.Setter;
 import ru.javaprojects.archivist.common.HasId;
 import ru.javaprojects.archivist.common.model.BaseEntity;
 import ru.javaprojects.archivist.documents.model.Document;
+
+import java.util.List;
 
 @Entity
 @Table(name = "albums", uniqueConstraints = {@UniqueConstraint(columnNames = {"document_id", "stamp"}, name = "albums_unique_document_stamp_idx")})
@@ -25,6 +28,10 @@ public class Album extends BaseEntity implements HasId {
     @Enumerated(EnumType.STRING)
     @Column(name = "stamp")
     private Stamp stamp;
+
+    @OneToMany(mappedBy = "album", fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private List<Issuance> issuances;
 
     public Album(Long id, Document mainDocument, Stamp stamp) {
         super(id);

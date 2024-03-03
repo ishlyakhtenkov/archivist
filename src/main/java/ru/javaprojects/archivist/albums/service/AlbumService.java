@@ -41,6 +41,7 @@ public class AlbumService {
     public Page<Album> getAll(Pageable pageable, String keyword) {
         Page<Long> albumsIds = repository.findAllAlbumsIdsByKeywordWithPagination(pageable, keyword);
         List<Album> albums = repository.findAllByIds(albumsIds.getContent());
+        albums.forEach(a -> a.getIssuances().removeIf(i -> i.getReturned() != null));
         return new PageImpl<>(albums, pageable, albumsIds.getTotalElements());
     }
 

@@ -61,7 +61,50 @@ function fillEmployeesSelector(departmentId) {
     });
 }
 
-function makeIssuanceToObject(employeeId, issued) {
+function returnAlbum() {
+    let returnAlbumModal = $('#returnAlbumModal');
+    let albumId = returnAlbumModal.find('#returnAlbumModalAlbumId').val();
+    let name = returnAlbumModal.find('#returnAlbumModalAlbumName').val();
+    let returnedDate = returnAlbumModal.find('#returnedDateInput').val();
+    if (returnedDate.length) {
+        $.ajax({
+            url: `/albums/${albumId}/return`,
+            type: "PATCH",
+            data: "returned=" + returnedDate
+        }).done(function() {
+            returnAlbumModal.modal('toggle');
+            doOnSuccessReturn(albumId);
+            successToast(`Album ${name} was returned`);
+        }).fail(function(data) {
+            handleError(data, `Failed to return album ${name}`);
+        });
+    }
+}
+
+function issueAlbum() {
+    let issueAlbumModal = $('#issueAlbumModal');
+    let albumId = issueAlbumModal.find('#issueAlbumModalAlbumId').val();
+    let employeeId = employeeSelector.val();
+    let issued = $('#issueDateInput').val();
+    let name = issueAlbumModal.find('#issueAlbumModalAlbumName').val();
+    let departmentName = $('#departmentSelector option:selected').text();
+    if (employeeId !== null && issued.length) {
+        $.ajax({
+            url: `/albums/${albumId}/issue`,
+            type: 'POST',
+            data: JSON.stringify(makeIssuanceToObject(albumId, employeeId, issued)),
+            contentType: 'application/json; charset=utf-8'
+        }).done((issuance) => {
+            issueAlbumModal.modal('toggle');
+            doOnSuccessIssue(albumId, departmentName, issuance);
+            successToast(`Album ${name} was issued`);
+        }).fail(function(data) {
+            handleError(data, `Failed to issue album ${name}`);
+        });
+    }
+}
+
+function makeIssuanceToObject(albumId, employeeId, issued) {
     return {
         albumId: albumId,
         employeeId: employeeId,

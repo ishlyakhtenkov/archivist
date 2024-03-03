@@ -66,14 +66,16 @@
                                     <button th:hidden="${!album.issuances.isEmpty() && album.issuances.get(0).returned == null}"
                                             type="button" id="issueButton" class="btn btn-sm btn-primary"
                                             data-bs-toggle="modal" data-bs-target="#issueAlbumModal"
-                                            th:data-name="${album.mainDocument.decimalNumber + ' (' + album.stamp.toString() + ')'}">
+                                            th:data-name="${album.mainDocument.decimalNumber + ' (' + album.stamp.toString() + ')'}"
+                                            th:data-id="${album.id}">
                                         <span class="d-none d-md-block"><i class="fa-solid fa-right-from-bracket"></i> Issue album</span>
                                         <span class="d-md-none"><i class="fa-solid fa-right-from-bracket"></i> Issue</span>
                                     </button>
                                     <button th:hidden="${album.issuances.isEmpty() || album.issuances.get(0).returned != null}"
                                             type="button" id="returnButton" class="btn btn-sm btn-secondary"
                                             data-bs-toggle="modal" data-bs-target="#returnAlbumModal"
-                                            th:data-name="${album.mainDocument.decimalNumber + ' (' + album.stamp.toString() + ')'}">
+                                            th:data-name="${album.mainDocument.decimalNumber + ' (' + album.stamp.toString() + ')'}"
+                                            th:data-id="${album.id}">
                                         <span class="d-none d-md-block"><i class="fa-solid fa-right-to-bracket"></i> Return album</span>
                                         <span class="d-md-none"><i class="fa-solid fa-right-to-bracket"></i> Return</span>
                                     </button>
@@ -118,68 +120,13 @@
             </div>
         </div>
 
-        <!-- Return album modal -->
-        <div class="modal fade" id="returnAlbumModal" tabindex="-1" aria-labelledby="returnAlbumModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="returnAlbumModalLabel">Return album</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" id="returnAlbumModalCloseButton" aria-label="Close"></button>
-                    </div>
-                    <form onsubmit="return false;">
-                    <div class="modal-body">
-                        <input type="hidden" name="albumName" id="returnAlbumModalAlbumName" value=""/>
-                        <div class="input-group">
-                            <span class="input-group-text">Returned date</span>
-                            <input type="date" class="form-control" id="returnedDateInput" required>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-success" onclick="returnAlbum()">Return</button>
-                    </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <!-- Issue album modal -->
-        <div class="modal fade" id="issueAlbumModal" tabindex="-1" aria-labelledby="issueAlbumModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="issueAlbumModalLabel">Issue album</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" id="issueAlbumModalCloseButton" aria-label="Close"></button>
-                    </div>
-                    <form onsubmit="return false;">
-                        <div class="modal-body">
-                            <input type="hidden" name="albumName" id="issueAlbumModalAlbumName" value=""/>
-                            <div class="input-group">
-                                <span class="input-group-text">Department</span>
-                                <select class="form-select" id="departmentSelector" title="" required></select>
-                            </div>
-                            <div class="input-group mt-3">
-                                <span class="input-group-text">Employee&nbsp;&nbsp;&nbsp;</span>
-                                <select class="form-select" id="employeeSelector" title="" required disabled></select>
-                            </div>
-                            <div class="input-group mt-3">
-                                <span class="input-group-text">Issued date&nbsp;</span>
-                                <input type="date" class="form-control" id="issueDateInput" required>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                            <button type="submit" class="btn btn-success px-3" onclick="issueAlbum()">&nbsp;Issue&nbsp;</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
+        <div th:replace="~{albums/album-issue-modals :: album-issue-modals}"></div>
     </appMain>
 
     <ownScript>
         <script src="/js/common.js?v=1"></script>
         <script src="/js/album.js?v=1"></script>
+        <script src="/js/albums-common.js?v=1"></script>
         <script src="/js/close-card-button.js?v=1"></script>
     </ownScript>
 </th:block>

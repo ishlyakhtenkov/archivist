@@ -7,6 +7,7 @@ import org.springframework.util.Assert;
 import ru.javaprojects.archivist.common.error.IllegalRequestDataException;
 import ru.javaprojects.archivist.common.error.NotFoundException;
 import ru.javaprojects.archivist.departments.model.Employee;
+import ru.javaprojects.archivist.departments.repository.DepartmentRepository;
 import ru.javaprojects.archivist.departments.repository.EmployeeRepository;
 
 import java.util.List;
@@ -16,6 +17,7 @@ import java.util.Objects;
 @AllArgsConstructor
 public class EmployeeService {
     private final EmployeeRepository repository;
+    private final DepartmentRepository departmentRepository;
 
     public Employee get(long id) {
         return repository.findById(id).orElseThrow(() -> new NotFoundException("Entity with id=" + id + " not found"));
@@ -27,6 +29,7 @@ public class EmployeeService {
     }
 
     public List<Employee> getAllByDepartment(long departmentId) {
+        departmentRepository.getExisted(departmentId);
         return repository.findAllByDepartment_IdOrderByLastNameAscFirstNameAscMiddleName(departmentId);
     }
 

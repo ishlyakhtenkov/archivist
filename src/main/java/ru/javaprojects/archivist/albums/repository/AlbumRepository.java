@@ -39,4 +39,7 @@ public interface AlbumRepository extends BaseRepository<Album> {
     @Query("SELECT a FROM Album a JOIN FETCH a.mainDocument LEFT JOIN FETCH a.issuances i LEFT JOIN FETCH i.employee e " +
             "LEFT JOIN FETCH e.department WHERE a.id =:id ORDER BY i.issued DESC, i.returned")
     Optional<Album> findByIdWithIssuances(long id);
+
+    @EntityGraph(attributePaths = "mainDocument")
+    Optional<Album> findByMainDocument_DecimalNumberAndStamp(String decimalNumber, Stamp stamp);
 }

@@ -367,7 +367,7 @@ class DocumentRestControllerTest extends AbstractControllerTest implements TestC
 
     @Test
     void getLatestContentUnauthorized() throws Exception {
-        perform(MockMvcRequestBuilders.patch(String.format(DOCUMENT_CONTENT_LATEST_URL, DOCUMENT1_ID))
+        perform(MockMvcRequestBuilders.get(String.format(DOCUMENT_CONTENT_LATEST_URL, DOCUMENT1_ID))
                 .with(csrf()))
                 .andExpect(status().isFound())
                 .andExpect(result ->
@@ -401,7 +401,7 @@ class DocumentRestControllerTest extends AbstractControllerTest implements TestC
 
     @Test
     void getAllContentsUnauthorized() throws Exception {
-        perform(MockMvcRequestBuilders.patch(String.format(DOCUMENT_CONTENT_ALL_URL, DOCUMENT1_ID))
+        perform(MockMvcRequestBuilders.get(String.format(DOCUMENT_CONTENT_ALL_URL, DOCUMENT1_ID))
                 .with(csrf()))
                 .andExpect(status().isFound())
                 .andExpect(result ->
@@ -611,7 +611,7 @@ class DocumentRestControllerTest extends AbstractControllerTest implements TestC
 
     @Test
     void getSubscribersUnauthorized() throws Exception {
-        perform(MockMvcRequestBuilders.patch(String.format(DOCUMENT_SUBSCRIBERS_URL, DOCUMENT1_ID))
+        perform(MockMvcRequestBuilders.get(String.format(DOCUMENT_SUBSCRIBERS_URL, DOCUMENT1_ID))
                 .with(csrf()))
                 .andExpect(status().isFound())
                 .andExpect(result ->
@@ -661,7 +661,7 @@ class DocumentRestControllerTest extends AbstractControllerTest implements TestC
 
     @Test
     void getSendingsUnauthorized() throws Exception {
-        perform(MockMvcRequestBuilders.patch(String.format(DOCUMENT_SENDINGS_BY_COMPANY_URL, DOCUMENT1_ID))
+        perform(MockMvcRequestBuilders.get(String.format(DOCUMENT_SENDINGS_BY_COMPANY_URL, DOCUMENT1_ID))
                 .with(csrf()))
                 .andExpect(status().isFound())
                 .andExpect(result ->

@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import ru.javaprojects.archivist.albums.model.Album;
 import ru.javaprojects.archivist.albums.model.Issuance;
+import ru.javaprojects.archivist.albums.model.Stamp;
 import ru.javaprojects.archivist.albums.repository.AlbumRepository;
 import ru.javaprojects.archivist.albums.repository.IssuanceRepository;
 import ru.javaprojects.archivist.albums.to.AlbumTo;
@@ -47,6 +48,14 @@ public class AlbumService {
 
     public Album get(long id) {
         return repository.findById(id).orElseThrow(() -> new NotFoundException("Entity with id=" + id + " not found"));
+    }
+
+    public Album getByDecimalNumberAndStamp(String decimalNumber, Stamp stamp) {
+        Assert.notNull(decimalNumber, "decimalNumber must not be null");
+        Assert.notNull(stamp, "stamp must not be null");
+        return repository.findByMainDocument_DecimalNumberAndStamp(decimalNumber, stamp)
+                .orElseThrow(() -> new NotFoundException("Album with decimal number=" + decimalNumber +
+                        " and stamp=" + stamp + " not found"));
     }
 
     public Album getWithIssuances(long id) {
@@ -99,7 +108,7 @@ public class AlbumService {
             throw new IllegalRequestDataException("Return date can not be greater than today date");
         }
         Issuance issuance = issuanceRepository.findByAlbum_IdAndReturnedIsNull(id)
-                .orElseThrow(() -> new NotFoundException("Not found unreturned issuance for album with id=" + id));
+                .orElseThrow(() -> new IllegalRequestDataException("Album is already in the Archive"));
         if (issuance.getIssued().isAfter(returned)) {
             throw new IllegalRequestDataException("Return date must be greater than issue date");
         }
@@ -113,6 +122,9 @@ public class AlbumService {
         Assert.notNull(issuanceTo, "issuanceTo must not be null");
         issuanceRepository.findFirstByAlbum_IdOrderByIssuedDesc(issuanceTo.getAlbumId())
                 .ifPresent(lastIssuance -> {
+                    if (lastIssuance.getReturned() == null) {
+                        throw new IllegalRequestDataException("Album is already issued");
+                    }
                     if (issuanceTo.getIssued().isBefore(lastIssuance.getIssued())) {
                         throw new IllegalRequestDataException("Issue date must be greater than last issue date");
                     }

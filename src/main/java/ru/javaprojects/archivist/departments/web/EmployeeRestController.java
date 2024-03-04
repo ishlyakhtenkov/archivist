@@ -31,7 +31,7 @@ public class EmployeeRestController {
         service.fire(id, fired);
     }
 
-    @GetMapping("/list/by-department")
+    @GetMapping("/by-department")
     public List<Employee> getAll(@RequestParam long departmentId) {
         log.info("get all by department {}", departmentId);
         return service.getAllByDepartment(departmentId);

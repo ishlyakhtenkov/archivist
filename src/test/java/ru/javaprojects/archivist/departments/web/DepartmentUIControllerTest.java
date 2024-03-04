@@ -108,9 +108,9 @@ class DepartmentUIControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(ARCHIVIST_MAIL)
     void create() throws Exception {
-        Department newDepartment = DepartmentTestData.getNewDepartment();
+        Department newDepartment = getNewDepartment();
         perform(MockMvcRequestBuilders.post(DEPARTMENTS_CREATE_URL)
-                .params((DepartmentTestData.getNewDepartmentParams()))
+                .params(getNewDepartmentParams())
                 .with(csrf()))
                 .andExpect(status().isFound())
                 .andExpect(redirectedUrl(DEPARTMENTS_URL))
@@ -123,28 +123,28 @@ class DepartmentUIControllerTest extends AbstractControllerTest {
     @Test
     void createUnAuthorize() throws Exception {
         perform(MockMvcRequestBuilders.post(DEPARTMENTS_CREATE_URL)
-                .params((DepartmentTestData.getNewDepartmentParams()))
+                .params(getNewDepartmentParams())
                 .with(csrf()))
                 .andExpect(status().isFound())
                 .andExpect(result ->
                         assertTrue(Objects.requireNonNull(result.getResponse().getRedirectedUrl()).endsWith(LOGIN_URL)));
-        assertThrows(NotFoundException.class, () -> service.getByName(DepartmentTestData.getNewDepartment().getName()));
+        assertThrows(NotFoundException.class, () -> service.getByName(getNewDepartment().getName()));
     }
 
     @Test
     @WithUserDetails(USER_MAIL)
     void createForbidden() throws Exception {
         perform(MockMvcRequestBuilders.post(DEPARTMENTS_CREATE_URL)
-                .params((DepartmentTestData.getNewDepartmentParams()))
+                .params(getNewDepartmentParams())
                 .with(csrf()))
                 .andExpect(status().isForbidden());
-        assertThrows(NotFoundException.class, () -> service.getByName(DepartmentTestData.getNewDepartment().getName()));
+        assertThrows(NotFoundException.class, () -> service.getByName(getNewDepartment().getName()));
     }
 
     @Test
     @WithUserDetails(ARCHIVIST_MAIL)
     void createInvalid() throws Exception {
-        MultiValueMap<String, String> newInvalidParams = DepartmentTestData.getNewDepartmentInvalidParams();
+        MultiValueMap<String, String> newInvalidParams = getNewDepartmentInvalidParams();
         perform(MockMvcRequestBuilders.post(DEPARTMENTS_CREATE_URL)
                 .params(newInvalidParams)
                 .with(csrf()))
@@ -158,7 +158,7 @@ class DepartmentUIControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(ARCHIVIST_MAIL)
     void createDuplicateName() throws Exception {
-        MultiValueMap<String, String> newParams = DepartmentTestData.getNewDepartmentParams();
+        MultiValueMap<String, String> newParams = getNewDepartmentParams();
         newParams.set(NAME, DEPARTMENT1_NAME);
         perform(MockMvcRequestBuilders.post(DEPARTMENTS_CREATE_URL)
                 .params(newParams)
@@ -204,9 +204,9 @@ class DepartmentUIControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(ARCHIVIST_MAIL)
     void update() throws Exception {
-        Department updatedDepartment = DepartmentTestData.getUpdatedDepartment();
+        Department updatedDepartment = getUpdatedDepartment();
         perform(MockMvcRequestBuilders.post(DEPARTMENTS_UPDATE_URL)
-                .params(DepartmentTestData.getUpdatedDepartmentParams())
+                .params(getUpdatedDepartmentParams())
                 .with(csrf()))
                 .andExpect(status().isFound())
                 .andExpect(redirectedUrl(DEPARTMENTS_URL))
@@ -218,9 +218,9 @@ class DepartmentUIControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(ARCHIVIST_MAIL)
     void updateNameNotChange() throws Exception {
-        Department updatedDepartment = DepartmentTestData.getUpdatedDepartment();
+        Department updatedDepartment = getUpdatedDepartment();
         updatedDepartment.setName(DEPARTMENT2_NAME);
-        MultiValueMap<String, String> updatedParams = DepartmentTestData.getUpdatedDepartmentParams();
+        MultiValueMap<String, String> updatedParams = getUpdatedDepartmentParams();
         updatedParams.set(NAME, DEPARTMENT2_NAME);
         perform(MockMvcRequestBuilders.post(DEPARTMENTS_UPDATE_URL)
                 .params(updatedParams)
@@ -234,7 +234,7 @@ class DepartmentUIControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(ARCHIVIST_MAIL)
     void updateNotFound() throws Exception {
-        MultiValueMap<String, String> updatedParams = DepartmentTestData.getUpdatedDepartmentParams();
+        MultiValueMap<String, String> updatedParams = getUpdatedDepartmentParams();
         updatedParams.set(ID, String.valueOf(NOT_FOUND));
         perform(MockMvcRequestBuilders.post(DEPARTMENTS_UPDATE_URL)
                 .params(updatedParams)
@@ -245,7 +245,7 @@ class DepartmentUIControllerTest extends AbstractControllerTest {
     @Test
     void updateUnAuthorized() throws Exception {
         perform(MockMvcRequestBuilders.post(DEPARTMENTS_UPDATE_URL)
-                .params(DepartmentTestData.getUpdatedDepartmentParams())
+                .params(getUpdatedDepartmentParams())
                 .with(csrf()))
                 .andExpect(status().isFound())
                 .andExpect(result ->
@@ -257,7 +257,7 @@ class DepartmentUIControllerTest extends AbstractControllerTest {
     @WithUserDetails(USER_MAIL)
     void updateForbidden() throws Exception {
         perform(MockMvcRequestBuilders.post(DEPARTMENTS_UPDATE_URL)
-                .params(DepartmentTestData.getUpdatedDepartmentParams())
+                .params(getUpdatedDepartmentParams())
                 .with(csrf()))
                 .andExpect(status().isForbidden());
         assertNotEquals(service.get(DEPARTMENT2_ID).getName(), DepartmentTestData.getUpdatedDepartment().getName());
@@ -266,7 +266,7 @@ class DepartmentUIControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(ARCHIVIST_MAIL)
     void updateInvalid() throws Exception {
-        MultiValueMap<String, String> updatedInvalidParams = DepartmentTestData.getUpdatedDepartmentInvalidParams();
+        MultiValueMap<String, String> updatedInvalidParams = getUpdatedDepartmentInvalidParams();
         perform(MockMvcRequestBuilders.post(DEPARTMENTS_UPDATE_URL)
                 .params(updatedInvalidParams)
                 .with(csrf()))
@@ -279,7 +279,7 @@ class DepartmentUIControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(ARCHIVIST_MAIL)
     void updateDuplicateName() throws Exception {
-        MultiValueMap<String, String> updatedParams = DepartmentTestData.getUpdatedDepartmentParams();
+        MultiValueMap<String, String> updatedParams = getUpdatedDepartmentParams();
         updatedParams.set(NAME, DEPARTMENT1_NAME);
         perform(MockMvcRequestBuilders.post(DEPARTMENTS_UPDATE_URL)
                 .params(updatedParams)

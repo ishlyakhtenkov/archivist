@@ -45,12 +45,13 @@ public class DepartmentTestData {
     public static final String EMAIL = "email";
     public static final String FIRED = "fired";
     public static final String BOSS = "boss";
+    public static final String DEPARTMENT_ID = "departmentId";
 
     public static final Department department1 = new Department(DEPARTMENT1_ID, DEPARTMENT1_NAME);
     public static final Department department2 = new Department(DEPARTMENT2_ID, DEPARTMENT2_NAME);
     public static final Department department3 = new Department(DEPARTMENT3_ID, "NIO-8");
     public static final Department department4 = new Department(DEPARTMENT4_ID, "DEP-25");
-    public static final Department department5 = new Department(DEPARTMENT5_ID, "DEP-33");
+    public static final Department department5 = new Department(DEPARTMENT5_ID, DEPARTMENT5_NAME);
 
     public static final long DEP1_BOSS_ID = 100061L;
     public static final long DEP3_BOSS_ID = 100067L;

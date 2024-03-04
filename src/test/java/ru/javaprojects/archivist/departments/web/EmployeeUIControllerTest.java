@@ -246,5 +246,4 @@ class EmployeeUIControllerTest extends AbstractControllerTest {
                 .andExpect(view().name(EMPLOYEES_FORM_VIEW));
         assertNotEquals(service.get(DEP2_EMPLOYEE1_ID).getEmail(), dep2Employee2.getEmail());
     }
-
 }

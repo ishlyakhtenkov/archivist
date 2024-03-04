@@ -47,7 +47,7 @@ function fillEmployeesSelector(departmentId) {
     employeeSelector.attr('disabled', false);
     employeeSelector.empty();
     $.ajax({
-        url: '/employees/list/by-department',
+        url: '/employees/by-department',
         data: "departmentId=" + departmentId
     }).done(employees => {
         if (employees.length !== 0) {

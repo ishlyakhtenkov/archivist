@@ -241,7 +241,7 @@ class CompanyUIControllerTest extends AbstractControllerTest {
                 .andExpect(status().isFound())
                 .andExpect(redirectedUrl(COMPANIES_URL_SLASH + COMPANY1_ID))
                 .andExpect(flash().attribute(ACTION, "Company " + updatedCompany.getName() + " was updated"));
-        COMPANY_MATCHER.assertMatch(service.get(COMPANY1_ID), updatedCompany);
+        COMPANY_MATCHER.assertMatch(service.getWithContactPersons(COMPANY1_ID), updatedCompany);
     }
 
     //Check UniqueNameValidator works correct when update
@@ -258,7 +258,7 @@ class CompanyUIControllerTest extends AbstractControllerTest {
                 .andExpect(status().isFound())
                 .andExpect(redirectedUrl(COMPANIES_URL_SLASH + COMPANY1_ID))
                 .andExpect(flash().attribute(ACTION, "Company " + updatedCompany.getName() + " was updated"));
-        COMPANY_MATCHER.assertMatch(service.get(COMPANY1_ID), updatedCompany);
+        COMPANY_MATCHER.assertMatch(service.getWithContactPersons(COMPANY1_ID), updatedCompany);
     }
 
     @Test
@@ -280,7 +280,7 @@ class CompanyUIControllerTest extends AbstractControllerTest {
                 .andExpect(status().isFound())
                 .andExpect(result ->
                         assertTrue(Objects.requireNonNull(result.getResponse().getRedirectedUrl()).endsWith(LOGIN_URL)));
-        assertNotEquals(service.get(COMPANY1_ID).getName(), CompanyTestData.getUpdated().getName());
+        assertNotEquals(service.getWithContactPersons(COMPANY1_ID).getName(), CompanyTestData.getUpdated().getName());
     }
 
     @Test
@@ -290,7 +290,7 @@ class CompanyUIControllerTest extends AbstractControllerTest {
                 .params(CompanyTestData.getUpdatedParams())
                 .with(csrf()))
                 .andExpect(status().isForbidden());
-        assertNotEquals(service.get(COMPANY1_ID).getName(), CompanyTestData.getUpdated().getName());
+        assertNotEquals(service.getWithContactPersons(COMPANY1_ID).getName(), CompanyTestData.getUpdated().getName());
     }
 
     @Test
@@ -305,7 +305,7 @@ class CompanyUIControllerTest extends AbstractControllerTest {
                         CITY, STREET, HOUSE, CONTACT_PERSON_POSITION, CONTACT_PERSON_LAST_NAME,
                         CONTACT_PERSON_FIRST_NAME, CONTACT_PERSON_MIDDLE_NAME))
                 .andExpect(view().name(COMPANIES_FORM_VIEW));
-        assertNotEquals(service.get(COMPANY1_ID).getName(), updatedInvalidParams.get(NAME).get(0));
+        assertNotEquals(service.getWithContactPersons(COMPANY1_ID).getName(), updatedInvalidParams.get(NAME).get(0));
     }
 
     @Test
@@ -319,6 +319,6 @@ class CompanyUIControllerTest extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(model().attributeHasFieldErrorCode(COMPANY_ATTRIBUTE, NAME, DUPLICATE_ERROR_CODE))
                 .andExpect(view().name(COMPANIES_FORM_VIEW));
-        assertNotEquals(service.get(COMPANY1_ID).getName(), COMPANY2_NAME);
+        assertNotEquals(service.getWithContactPersons(COMPANY1_ID).getName(), COMPANY2_NAME);
     }
 }

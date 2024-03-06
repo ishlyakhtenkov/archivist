@@ -29,8 +29,12 @@ public class CompanyService {
         return repository.findAllByNameContainsIgnoreCaseOrderByName(pageable, keyword);
     }
 
-    public Company get(long id) {
+    public Company getWithContactPersons(long id) {
         return repository.findById(id).orElseThrow(() -> new NotFoundException("Entity with id=" + id + " not found"));
+    }
+
+    public Company get(long id) {
+        return repository.getExisted(id);
     }
 
     public Company getByName(String name) {

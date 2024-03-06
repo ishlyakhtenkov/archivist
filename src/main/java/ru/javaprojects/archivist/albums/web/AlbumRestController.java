@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import ru.javaprojects.archivist.albums.model.Issuance;
-import ru.javaprojects.archivist.albums.service.AlbumService;
+import ru.javaprojects.archivist.albums.AlbumService;
 import ru.javaprojects.archivist.albums.to.IssuanceTo;
 import ru.javaprojects.archivist.common.error.IllegalRequestDataException;
 

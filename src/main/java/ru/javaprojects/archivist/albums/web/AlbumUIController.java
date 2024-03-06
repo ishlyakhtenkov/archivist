@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ru.javaprojects.archivist.albums.model.Album;
 import ru.javaprojects.archivist.albums.model.Stamp;
-import ru.javaprojects.archivist.albums.service.AlbumService;
+import ru.javaprojects.archivist.albums.AlbumService;
 import ru.javaprojects.archivist.albums.to.AlbumTo;
 
 import static ru.javaprojects.archivist.albums.AlbumUtil.asTo;

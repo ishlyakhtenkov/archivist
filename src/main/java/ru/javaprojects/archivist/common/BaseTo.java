@@ -1,10 +1,9 @@
-package ru.javaprojects.archivist.common.to;
+package ru.javaprojects.archivist.common;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.javaprojects.archivist.common.HasId;
 
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PROTECTED)

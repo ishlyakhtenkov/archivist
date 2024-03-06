@@ -72,7 +72,7 @@ class EmployeeRestControllerTest extends AbstractControllerTest {
         perform(MockMvcRequestBuilders.delete(EMPLOYEES_URL_SLASH + DEP2_EMPLOYEE2_ID)
                 .with(csrf()))
                 .andExpect(status().isNoContent());
-        assertThrows(NotFoundException.class, () -> service.get(DEP2_EMPLOYEE2_ID));
+        assertThrows(NotFoundException.class, () -> service.getWithDepartment(DEP2_EMPLOYEE2_ID));
     }
 
     @Test
@@ -87,7 +87,7 @@ class EmployeeRestControllerTest extends AbstractControllerTest {
                 .andExpect(problemStatus(HttpStatus.UNPROCESSABLE_ENTITY.value()))
                 .andExpect(problemDetail("Cannot delete boss of the department"))
                 .andExpect(problemInstance(EMPLOYEES_URL_SLASH + DEP2_EMPLOYEE1_ID));
-        assertDoesNotThrow(() -> service.get(DEP2_EMPLOYEE1_ID));
+        assertDoesNotThrow(() -> service.getWithDepartment(DEP2_EMPLOYEE1_ID));
     }
 
     @Test
@@ -111,7 +111,7 @@ class EmployeeRestControllerTest extends AbstractControllerTest {
                 .andExpect(status().isFound())
                 .andExpect(result ->
                         assertTrue(Objects.requireNonNull(result.getResponse().getRedirectedUrl()).endsWith(LOGIN_URL)));
-        assertDoesNotThrow(() -> service.get(DEP2_EMPLOYEE1_ID));
+        assertDoesNotThrow(() -> service.getWithDepartment(DEP2_EMPLOYEE1_ID));
     }
 
     @Test
@@ -120,7 +120,7 @@ class EmployeeRestControllerTest extends AbstractControllerTest {
         perform(MockMvcRequestBuilders.delete(EMPLOYEES_URL_SLASH + DEP2_EMPLOYEE2_ID)
                 .with(csrf()))
                 .andExpect(status().isForbidden());
-        assertDoesNotThrow(() -> service.get(DEP2_EMPLOYEE1_ID));
+        assertDoesNotThrow(() -> service.getWithDepartment(DEP2_EMPLOYEE1_ID));
     }
 
     @Test
@@ -130,13 +130,13 @@ class EmployeeRestControllerTest extends AbstractControllerTest {
                 .param(FIRED, String.valueOf(true))
                 .with(csrf()))
                 .andExpect(status().isNoContent());
-        assertTrue(service.get(DEP2_EMPLOYEE1_ID).isFired());
+        assertTrue(service.getWithDepartment(DEP2_EMPLOYEE1_ID).isFired());
 
         perform(MockMvcRequestBuilders.patch(EMPLOYEES_URL_SLASH + DEP2_EMPLOYEE1_ID)
                 .param(FIRED, String.valueOf(false))
                 .with(csrf()))
                 .andExpect(status().isNoContent());
-        assertFalse(service.get(DEP2_EMPLOYEE1_ID).isFired());
+        assertFalse(service.getWithDepartment(DEP2_EMPLOYEE1_ID).isFired());
     }
 
     @Test
@@ -162,7 +162,7 @@ class EmployeeRestControllerTest extends AbstractControllerTest {
                 .andExpect(status().isFound())
                 .andExpect(result ->
                         assertTrue(Objects.requireNonNull(result.getResponse().getRedirectedUrl()).endsWith(LOGIN_URL)));
-        assertFalse(service.get(DEP2_EMPLOYEE1_ID).isFired());
+        assertFalse(service.getWithDepartment(DEP2_EMPLOYEE1_ID).isFired());
     }
 
     @Test
@@ -172,6 +172,6 @@ class EmployeeRestControllerTest extends AbstractControllerTest {
                 .param(FIRED, String.valueOf(true))
                 .with(csrf()))
                 .andExpect(status().isForbidden());
-        assertFalse(service.get(DEP2_EMPLOYEE1_ID).isFired());
+        assertFalse(service.getWithDepartment(DEP2_EMPLOYEE1_ID).isFired());
     }
 }

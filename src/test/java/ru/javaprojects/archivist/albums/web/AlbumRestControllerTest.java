@@ -10,7 +10,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.javaprojects.archivist.AbstractControllerTest;
 import ru.javaprojects.archivist.albums.model.Issuance;
 import ru.javaprojects.archivist.albums.repository.IssuanceRepository;
-import ru.javaprojects.archivist.albums.service.AlbumService;
+import ru.javaprojects.archivist.albums.AlbumService;
 import ru.javaprojects.archivist.albums.to.IssuanceTo;
 import ru.javaprojects.archivist.common.error.IllegalRequestDataException;
 import ru.javaprojects.archivist.common.error.NotFoundException;

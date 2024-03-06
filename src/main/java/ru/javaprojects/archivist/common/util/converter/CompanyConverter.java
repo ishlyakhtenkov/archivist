@@ -1,4 +1,4 @@
-package ru.javaprojects.archivist.documents.web;
+package ru.javaprojects.archivist.common.util.converter;
 
 import lombok.AllArgsConstructor;
 import org.springframework.core.convert.converter.Converter;

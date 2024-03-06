@@ -6,7 +6,7 @@ import ru.javaprojects.archivist.changenotices.model.Change;
 import ru.javaprojects.archivist.changenotices.model.ChangeNotice;
 import ru.javaprojects.archivist.changenotices.to.ChangeNoticeTo;
 import ru.javaprojects.archivist.changenotices.to.ChangeTo;
-import ru.javaprojects.archivist.common.to.BaseTo;
+import ru.javaprojects.archivist.common.BaseTo;
 import ru.javaprojects.archivist.documents.model.ContentFile;
 import ru.javaprojects.archivist.documents.model.Document;
 import ru.javaprojects.archivist.documents.repository.DocumentRepository;
@@ -27,7 +27,7 @@ public class ChangeNoticeUtil {
         List<ChangeTo> changeTos = changeNoticeTo.getChanges();
         changeTos.forEach(changeTo -> {
             Document document = documentRepository.findByDecimalNumberIgnoreCase(changeTo.getDecimalNumber())
-                    .orElseGet(() -> documentRepository.save(Document.autoGenerate(changeTo.getDecimalNumber().toUpperCase())));
+                    .orElseGet(() -> documentRepository.save(Document.autoGenerate(changeTo.getDecimalNumber())));
             changeNotice.addChange(new Change(changeTo.getId(), document, changeTo.getChangeNumber()));
         });
         return changeNotice;
@@ -60,13 +60,13 @@ public class ChangeNoticeUtil {
             ChangeTo changeTo = notNewChangeTos.get(change.getId());
             if (!change.getDocument().getDecimalNumber().equalsIgnoreCase(changeTo.getDecimalNumber())) {
                 change.setDocument(documentRepository.findByDecimalNumberIgnoreCase(changeTo.getDecimalNumber())
-                        .orElseGet(() -> documentRepository.save(Document.autoGenerate(changeTo.getDecimalNumber().toUpperCase()))));
+                        .orElseGet(() -> documentRepository.save(Document.autoGenerate(changeTo.getDecimalNumber()))));
             }
             change.setChangeNumber(changeTo.getChangeNumber());
         });
         newChangeTos.forEach(changeTo -> {
             Document document = documentRepository.findByDecimalNumberIgnoreCase(changeTo.getDecimalNumber())
-                    .orElseGet(() -> documentRepository.save(Document.autoGenerate(changeTo.getDecimalNumber().toUpperCase())));
+                    .orElseGet(() -> documentRepository.save(Document.autoGenerate(changeTo.getDecimalNumber())));
             changeNotice.addChange(new Change(null, document, changeTo.getChangeNumber()));
         });
         return changeNotice;

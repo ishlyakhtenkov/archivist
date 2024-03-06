@@ -59,7 +59,7 @@ public class CompanyUIController {
     @GetMapping("/{id}")
     public String get(@PathVariable long id, Model model) {
         log.info("get {}", id);
-        model.addAttribute("company", service.get(id));
+        model.addAttribute("company", service.getWithContactPersons(id));
         return "companies/company";
     }
 
@@ -73,7 +73,7 @@ public class CompanyUIController {
     @GetMapping("/edit/{id}")
     public String showEditForm(@PathVariable long id, Model model) {
         log.info("show company={} edit form", id);
-        model.addAttribute("company", service.get(id));
+        model.addAttribute("company", service.getWithContactPersons(id));
         return "companies/company-form";
     }
 

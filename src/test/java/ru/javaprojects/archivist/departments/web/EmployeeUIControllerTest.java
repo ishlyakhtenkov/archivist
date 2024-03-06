@@ -166,7 +166,7 @@ class EmployeeUIControllerTest extends AbstractControllerTest {
                 .andExpect(status().isFound())
                 .andExpect(redirectedUrl(DEPARTMENTS_URL + "/" + DEPARTMENT1_ID))
                 .andExpect(flash().attribute(ACTION, "Employee " + updatedEmployee.getFullName() + " was updated"));
-        EMPLOYEE_MATCHER.assertMatchIgnoreFields(service.get(DEP2_EMPLOYEE1_ID), updatedEmployee, "department.employees",
+        EMPLOYEE_MATCHER.assertMatchIgnoreFields(service.getWithDepartment(DEP2_EMPLOYEE1_ID), updatedEmployee, "department.employees",
                 "department.boss");
     }
 
@@ -184,7 +184,7 @@ class EmployeeUIControllerTest extends AbstractControllerTest {
                 .andExpect(status().isFound())
                 .andExpect(redirectedUrl(DEPARTMENTS_URL + "/" + DEPARTMENT1_ID))
                 .andExpect(flash().attribute(ACTION, "Employee " + updatedEmployee.getFullName() + " was updated"));
-        EMPLOYEE_MATCHER.assertMatchIgnoreFields(service.get(DEP2_EMPLOYEE1_ID), updatedEmployee, "department.employees",
+        EMPLOYEE_MATCHER.assertMatchIgnoreFields(service.getWithDepartment(DEP2_EMPLOYEE1_ID), updatedEmployee, "department.employees",
                 "department.boss");
     }
 
@@ -207,7 +207,7 @@ class EmployeeUIControllerTest extends AbstractControllerTest {
                 .andExpect(status().isFound())
                 .andExpect(result ->
                         assertTrue(Objects.requireNonNull(result.getResponse().getRedirectedUrl()).endsWith(LOGIN_URL)));
-        assertNotEquals(service.get(DEP2_EMPLOYEE1_ID).getFullName(), DepartmentTestData.getUpdatedEmployee().getFullName());
+        assertNotEquals(service.getWithDepartment(DEP2_EMPLOYEE1_ID).getFullName(), DepartmentTestData.getUpdatedEmployee().getFullName());
     }
 
     @Test
@@ -217,7 +217,7 @@ class EmployeeUIControllerTest extends AbstractControllerTest {
                 .params(DepartmentTestData.getUpdatedEmployeeParams())
                 .with(csrf()))
                 .andExpect(status().isForbidden());
-        assertNotEquals(service.get(DEP2_EMPLOYEE1_ID).getFullName(), DepartmentTestData.getUpdatedEmployee().getFullName());
+        assertNotEquals(service.getWithDepartment(DEP2_EMPLOYEE1_ID).getFullName(), DepartmentTestData.getUpdatedEmployee().getFullName());
     }
 
     @Test
@@ -230,7 +230,7 @@ class EmployeeUIControllerTest extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(model().attributeHasFieldErrors(EMPLOYEE_ATTRIBUTE, LAST_NAME, FIRST_NAME, MIDDLE_NAME, PHONE, EMAIL))
                 .andExpect(view().name(EMPLOYEES_FORM_VIEW));
-        assertNotEquals(service.get(DEP2_EMPLOYEE1_ID).getLastName(), updatedInvalidParams.get(LAST_NAME).get(0));
+        assertNotEquals(service.getWithDepartment(DEP2_EMPLOYEE1_ID).getLastName(), updatedInvalidParams.get(LAST_NAME).get(0));
     }
 
     @Test
@@ -244,6 +244,6 @@ class EmployeeUIControllerTest extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(model().attributeHasFieldErrorCode(EMPLOYEE_ATTRIBUTE, EMAIL, DUPLICATE_ERROR_CODE))
                 .andExpect(view().name(EMPLOYEES_FORM_VIEW));
-        assertNotEquals(service.get(DEP2_EMPLOYEE1_ID).getEmail(), dep2Employee2.getEmail());
+        assertNotEquals(service.getWithDepartment(DEP2_EMPLOYEE1_ID).getEmail(), dep2Employee2.getEmail());
     }
 }

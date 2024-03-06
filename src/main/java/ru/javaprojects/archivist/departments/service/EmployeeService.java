@@ -20,10 +20,15 @@ public class EmployeeService {
     private final DepartmentRepository departmentRepository;
 
     public Employee get(long id) {
+        return repository.getExisted(id);
+    }
+
+    public Employee getWithDepartment(long id) {
         return repository.findById(id).orElseThrow(() -> new NotFoundException("Entity with id=" + id + " not found"));
     }
 
     public Employee getByEmail(String email) {
+        Assert.notNull(email, "email must not be null");
         return repository.findByEmailIgnoreCase(email)
                 .orElseThrow(() -> new NotFoundException("Not found employee with email=" + email));
     }
@@ -46,7 +51,7 @@ public class EmployeeService {
     }
 
     public void delete(long id) {
-        Employee employee = get(id);
+        Employee employee = getWithDepartment(id);
         if (Objects.equals(employee.getId(), employee.getDepartment().getBoss().getId())) {
             throw new IllegalRequestDataException("Cannot delete boss of the department");
         }

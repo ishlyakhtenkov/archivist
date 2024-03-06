@@ -54,7 +54,7 @@ public class CompanyRestControllerTest extends AbstractControllerTest {
         perform(MockMvcRequestBuilders.delete(COMPANIES_URL_SLASH + COMPANY1_ID)
                 .with(csrf()))
                 .andExpect(status().isNoContent());
-        assertThrows(NotFoundException.class, () -> service.get(COMPANY1_ID));
+        assertThrows(NotFoundException.class, () -> service.getWithContactPersons(COMPANY1_ID));
     }
 
     @Test
@@ -63,7 +63,7 @@ public class CompanyRestControllerTest extends AbstractControllerTest {
         perform(MockMvcRequestBuilders.delete(COMPANIES_URL_SLASH + COMPANY2_ID)
                 .with(csrf()))
                 .andExpect(status().isConflict());
-        assertDoesNotThrow(() -> service.get(COMPANY2_ID));
+        assertDoesNotThrow(() -> service.getWithContactPersons(COMPANY2_ID));
     }
 
     @Test
@@ -87,7 +87,7 @@ public class CompanyRestControllerTest extends AbstractControllerTest {
                 .andExpect(status().isFound())
                 .andExpect(result ->
                         assertTrue(Objects.requireNonNull(result.getResponse().getRedirectedUrl()).endsWith(LOGIN_URL)));
-        assertDoesNotThrow(() -> service.get(COMPANY1_ID));
+        assertDoesNotThrow(() -> service.getWithContactPersons(COMPANY1_ID));
     }
 
     @Test
@@ -96,6 +96,6 @@ public class CompanyRestControllerTest extends AbstractControllerTest {
         perform(MockMvcRequestBuilders.delete(COMPANIES_URL_SLASH + COMPANY1_ID)
                 .with(csrf()))
                 .andExpect(status().isForbidden());
-        assertDoesNotThrow(() -> service.get(COMPANY1_ID));
+        assertDoesNotThrow(() -> service.getWithContactPersons(COMPANY1_ID));
     }
 }

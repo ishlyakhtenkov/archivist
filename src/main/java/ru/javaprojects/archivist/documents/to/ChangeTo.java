@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ru.javaprojects.archivist.common.to.BaseTo;
+import ru.javaprojects.archivist.common.BaseTo;
 import ru.javaprojects.archivist.common.util.validation.NoHtml;
 
 import java.time.LocalDate;

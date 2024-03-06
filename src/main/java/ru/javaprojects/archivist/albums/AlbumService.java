@@ -1,4 +1,4 @@
-package ru.javaprojects.archivist.albums.service;
+package ru.javaprojects.archivist.albums;
 
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -17,9 +17,9 @@ import ru.javaprojects.archivist.albums.to.IssuanceTo;
 import ru.javaprojects.archivist.common.error.IllegalRequestDataException;
 import ru.javaprojects.archivist.common.error.NotFoundException;
 import ru.javaprojects.archivist.departments.model.Employee;
-import ru.javaprojects.archivist.departments.repository.EmployeeRepository;
+import ru.javaprojects.archivist.departments.service.EmployeeService;
+import ru.javaprojects.archivist.documents.DocumentService;
 import ru.javaprojects.archivist.documents.model.Document;
-import ru.javaprojects.archivist.documents.repository.DocumentRepository;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -28,9 +28,9 @@ import java.util.List;
 @AllArgsConstructor
 public class AlbumService {
     private final AlbumRepository repository;
-    private final DocumentRepository documentRepository;
     private final IssuanceRepository issuanceRepository;
-    private final EmployeeRepository employeeRepository;
+    private final EmployeeService employeeService;
+    private final DocumentService documentService;
 
     public Page<Album> getAll(Pageable pageable) {
         Page<Long> albumsIds = repository.findAllAlbumsIdsWithPagination(pageable);
@@ -66,8 +66,7 @@ public class AlbumService {
     @Transactional
     public Album create(AlbumTo albumTo) {
         Assert.notNull(albumTo, "albumTo must not be null");
-        Document document = documentRepository.findByDecimalNumberIgnoreCase(albumTo.getDecimalNumber())
-                .orElseGet(() -> documentRepository.save(Document.autoGenerate(albumTo.getDecimalNumber().toUpperCase())));
+        Document document = documentService.getByDecimalNumberOrAutogenerate(albumTo.getDecimalNumber());
         return repository.save(new Album(null, document, albumTo.getStamp()));
     }
 
@@ -76,8 +75,7 @@ public class AlbumService {
         Assert.notNull(albumTo, "albumTo must not be null");
         Album album = get(albumTo.getId());
         if (!album.getMainDocument().getDecimalNumber().equalsIgnoreCase(albumTo.getDecimalNumber())) {
-            Document document = documentRepository.findByDecimalNumberIgnoreCase(albumTo.getDecimalNumber())
-                    .orElseGet(() -> documentRepository.save(Document.autoGenerate(albumTo.getDecimalNumber().toUpperCase())));
+            Document document = documentService.getByDecimalNumberOrAutogenerate(albumTo.getDecimalNumber());
             album.setMainDocument(document);
         }
         album.setStamp(albumTo.getStamp());
@@ -130,7 +128,7 @@ public class AlbumService {
                     }
                 });
         Album album = repository.getExisted(issuanceTo.getAlbumId());
-        Employee employee = employeeRepository.getExisted(issuanceTo.getEmployeeId());
+        Employee employee = employeeService.get(issuanceTo.getEmployeeId());
         return issuanceRepository.save(new Issuance(null, album, employee, issuanceTo.getIssued()));
     }
 }

@@ -12,10 +12,11 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.intercept.AuthorizationFilter;
+import ru.javaprojects.archivist.common.error.NotFoundException;
 import ru.javaprojects.archivist.users.AuthUser;
 import ru.javaprojects.archivist.users.Role;
 import ru.javaprojects.archivist.users.User;
-import ru.javaprojects.archivist.users.UserRepository;
+import ru.javaprojects.archivist.users.UserService;
 
 @Configuration
 @EnableWebSecurity
@@ -23,7 +24,7 @@ import ru.javaprojects.archivist.users.UserRepository;
 public class SecurityConfig {
     public static final PasswordEncoder PASSWORD_ENCODER = PasswordEncoderFactories.createDelegatingPasswordEncoder();
 
-    private final UserRepository repository;
+    private final UserService userService;
     private final UserMdcFilter userMdcFilter;
 
     @Bean
@@ -34,9 +35,12 @@ public class SecurityConfig {
     @Bean
     public UserDetailsService userDetailsService() {
         return email -> {
-            User user = repository.findByEmailIgnoreCase(email)
-                    .orElseThrow(() -> new UsernameNotFoundException("User '" + email + "' was not found"));
-            return new AuthUser(user);
+            try {
+                User user = userService.getByEmail(email);
+                return new AuthUser(user);
+            } catch (NotFoundException ex) {
+                throw new UsernameNotFoundException(ex.getMessage());
+            }
         };
     }
 

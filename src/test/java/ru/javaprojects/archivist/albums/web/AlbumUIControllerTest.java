@@ -12,7 +12,7 @@ import ru.javaprojects.archivist.AbstractControllerTest;
 import ru.javaprojects.archivist.albums.model.Album;
 import ru.javaprojects.archivist.albums.model.Issuance;
 import ru.javaprojects.archivist.albums.model.Stamp;
-import ru.javaprojects.archivist.albums.service.AlbumService;
+import ru.javaprojects.archivist.albums.AlbumService;
 import ru.javaprojects.archivist.common.error.NotFoundException;
 import ru.javaprojects.archivist.departments.model.Employee;
 

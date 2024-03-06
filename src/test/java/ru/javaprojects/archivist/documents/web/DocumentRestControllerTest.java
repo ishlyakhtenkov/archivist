@@ -15,9 +15,9 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import ru.javaprojects.archivist.AbstractControllerTest;
 import ru.javaprojects.archivist.CommonTestData;
 import ru.javaprojects.archivist.TestContentManager;
+import ru.javaprojects.archivist.changenotices.ChangeNoticeService;
 import ru.javaprojects.archivist.changenotices.model.Change;
 import ru.javaprojects.archivist.changenotices.model.ChangeNotice;
-import ru.javaprojects.archivist.changenotices.repository.ChangeRepository;
 import ru.javaprojects.archivist.common.error.IllegalRequestDataException;
 import ru.javaprojects.archivist.common.error.NotFoundException;
 import ru.javaprojects.archivist.documents.DocumentService;
@@ -83,7 +83,7 @@ class DocumentRestControllerTest extends AbstractControllerTest implements TestC
     private SubscriberRepository subscriberRepository;
 
     @Autowired
-    private ChangeRepository changeRepository;
+    private ChangeNoticeService changeNoticeService;
 
     @Autowired
     private DocumentService documentService;
@@ -1061,7 +1061,7 @@ class DocumentRestControllerTest extends AbstractControllerTest implements TestC
         changeNotice.setId(created.getChangeNotice().getId());
         Change newChange = new Change(created.getId(), document1, changeNotice, newChangeTo.getChangeNumber());
         CHANGE_MATCHER.assertMatchIgnoreFields(created, newChange, "document.developer", "document.originalHolder");
-        CHANGE_MATCHER.assertMatch(changeRepository.getExisted(created.id()), newChange);
+        CHANGE_MATCHER.assertMatch(changeNoticeService.getChange(created.id()), newChange);
     }
 
     @Test
@@ -1075,8 +1075,8 @@ class DocumentRestControllerTest extends AbstractControllerTest implements TestC
                 .andExpect(status().isCreated());
         Change created = CHANGE_MATCHER.readFromJson(action);
         Change newChange = new Change(created.getId(), document2, changeNotice2, newChangeTo.getChangeNumber());
-        CHANGE_MATCHER.assertMatchIgnoreFields(created, newChange, "document.developer", "document.originalHolder", "changeNotice.developer");
-        CHANGE_MATCHER.assertMatch(changeRepository.getExisted(created.id()), newChange);
+        CHANGE_MATCHER.assertMatchIgnoreFields(created, newChange, "document", "changeNotice.developer");
+        CHANGE_MATCHER.assertMatchIgnoreFields(changeNoticeService.getChange(created.id()), newChange,  "document", "changeNotice");
     }
 
     @Test
@@ -1230,7 +1230,7 @@ class DocumentRestControllerTest extends AbstractControllerTest implements TestC
         perform(MockMvcRequestBuilders.delete(CHANGES_URL_SLASH + DOCUMENT_1_CHANGE_2_ID)
                 .with(csrf()))
                 .andExpect(status().isNoContent());
-        assertThrows(NotFoundException.class, () -> changeRepository.getExisted(DOCUMENT_1_CHANGE_2_ID));
+        assertThrows(NotFoundException.class, () -> changeNoticeService.getChange(DOCUMENT_1_CHANGE_2_ID));
     }
 
     @Test
@@ -1254,7 +1254,7 @@ class DocumentRestControllerTest extends AbstractControllerTest implements TestC
                 .andExpect(status().isFound())
                 .andExpect(result ->
                         assertTrue(Objects.requireNonNull(result.getResponse().getRedirectedUrl()).endsWith(LOGIN_URL)));
-        assertDoesNotThrow(() -> changeRepository.getExisted(DOCUMENT_1_CHANGE_2_ID));
+        assertDoesNotThrow(() -> changeNoticeService.getChange(DOCUMENT_1_CHANGE_2_ID));
     }
 
     @Test
@@ -1263,6 +1263,6 @@ class DocumentRestControllerTest extends AbstractControllerTest implements TestC
         perform(MockMvcRequestBuilders.delete(CHANGES_URL_SLASH + DOCUMENT_1_CHANGE_2_ID)
                 .with(csrf()))
                 .andExpect(status().isForbidden());
-        assertDoesNotThrow(() -> changeRepository.getExisted(DOCUMENT_1_CHANGE_2_ID));
+        assertDoesNotThrow(() -> changeNoticeService.getChange(DOCUMENT_1_CHANGE_2_ID));
     }
 }

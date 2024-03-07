@@ -61,8 +61,8 @@ function fillIssuancesTable(issuances) {
 function addIssuanceRow(issuance) {
     let employeeTd = $('<td></td>').text(`${issuance.employee.department.name}, ${issuance.employee.lastName} 
         ${issuance.employee.firstName.charAt(0)}.${issuance.employee.middleName.charAt(0)}`);
-    let issuedTd = $('<td></td>').addClass('text-center').text(issuance.issued);
-    let returnedTd = $('<td></td>').addClass('text-center').text(issuance.returned);
+    let issuedTd = $('<td></td>').addClass('text-center').text(`${new Date(issuance.issued).toLocaleDateString('ru')}`);
+    let returnedTd = $('<td></td>').addClass('text-center').text(`${issuance.returned ? new Date(issuance.returned).toLocaleDateString('ru') : ''}`);
     let issuanceRow = $('<tr></tr>');
     issuanceRow.append(employeeTd);
     issuanceRow.append(issuedTd);

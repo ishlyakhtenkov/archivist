@@ -97,8 +97,8 @@
                                     <tbody class="table-group-divider">
                                     <tr th:each="issuance : ${album.issuances}">
                                         <td th:text="${issuance.employee.department.name + ', ' + issuance.employee.lastNameAndInitials}">Employee name</td>
-                                        <td class="text-center" th:text="${issuance.issued}">Issued</td>
-                                        <td class="text-center" th:text="${issuance.returned}">Returned</td>
+                                        <td class="text-center" th:text="${#temporals.format(issuance.issued, 'dd.MM.yyyy')}">Issued</td>
+                                        <td class="text-center" th:text="${#temporals.format(issuance.returned, 'dd.MM.yyyy')}">Issued</td>
                                         <td class="text-end">
                                             <a sec:authorize="hasAnyRole('ADMIN','ARCHIVIST')" tabindex="0" type="button" class="trash-button me-3"
                                                data-bs-toggle="popover" data-bs-trigger="focus" data-bs-title="Delete this issuance?"

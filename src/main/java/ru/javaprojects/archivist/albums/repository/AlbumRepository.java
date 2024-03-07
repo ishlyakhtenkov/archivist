@@ -37,7 +37,7 @@ public interface AlbumRepository extends BaseRepository<Album> {
     Optional<Album> findByMainDocument_DecimalNumberIgnoreCaseAndStamp(String decimalNumber, Stamp stamp);
 
     @Query("SELECT a FROM Album a JOIN FETCH a.mainDocument LEFT JOIN FETCH a.issuances i LEFT JOIN FETCH i.employee e " +
-            "LEFT JOIN FETCH e.department WHERE a.id =:id ORDER BY i.issued DESC, i.returned")
+            "LEFT JOIN FETCH e.department WHERE a.id =:id ORDER BY i.issued DESC, i.returned NULLS FIRST")
     Optional<Album> findByIdWithIssuances(long id);
 
     @EntityGraph(attributePaths = "mainDocument")

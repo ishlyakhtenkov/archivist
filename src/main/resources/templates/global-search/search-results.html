@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<th:block th:replace="~{fragments/main::page(title='Archivist',appMain=~{::appMain}, ownScript=~{::ownScript})}">
+    <appMain>
+        <div th:if="${searchResults.isEmpty()}" class="pt-3">
+            <h5 class="alert alert-warning">No results found.</h5>
+        </div>
+        <div th:if="${searchResultsLimit == searchResults.size()}" class="pt-3">
+            <h5 class="alert alert-warning" th:text="'Many matches were found for your request. Only the first ' +
+            ${searchResultsLimit} + ' results are shown. Try to clarify your request.'"></h5>
+        </div>
+
+        <div th:if="${!searchResults.isEmpty()}" class="pt-3" th:each="searchResult : ${searchResults}">
+            <div>
+                <a th:href="@{'/' + ${searchResult.groupName} + '/' + ${searchResult.entityId}}" class="h5"
+                   style="text-decoration:none;" onmouseover="this.style.textDecoration='underline';"
+                   onmouseout="this.style.textDecoration='none';" th:text="${searchResult.header}">Search result header</a>
+                <p class="match-area" th:text="'Match found: ' + ${searchResult.matchValue}">Match value</p>
+            </div>
+        </div>
+    </appMain>
+
+    <ownScript>
+        <script src="/js/search-results.js?v=1"></script>
+    </ownScript>
+</th:block>

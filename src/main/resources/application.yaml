@@ -40,6 +40,8 @@ content-path:
   documents: ./content/documents/
   change-notices: ./content/change-notices/
 
+search-results-limit: 50
+
 logging:
   charset:
     console: UTF-8

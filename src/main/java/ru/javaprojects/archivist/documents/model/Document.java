@@ -114,6 +114,6 @@ public class Document extends BaseEntity implements HasId {
 
     @Override
     public String toString() {
-        return super.toString() + '[' + decimalNumber + ']';
+        return String.format("Document[id=%d, decimalNumber=%s]", id, decimalNumber);
     }
 }

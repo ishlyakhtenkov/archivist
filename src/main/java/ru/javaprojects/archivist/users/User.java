@@ -84,6 +84,6 @@ public class User extends BaseEntity implements HasIdAndEmail {
 
     @Override
     public String toString() {
-        return "User:" + id + '[' + email + ']';
+        return String.format("User[id=%d, email=%s]", id, email);
     }
 }

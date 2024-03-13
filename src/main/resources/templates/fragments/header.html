@@ -11,7 +11,7 @@
                         <form sec:authorize="isAuthenticated()" class="d-flex" role="search" th:action="@{/search}" method="get">
                             <div class="input-group" style="width: 350px; margin-left: 100px;">
                                 <span class="input-group-text bg-light" id="searchDocuments"><i class="fa-solid fa-magnifying-glass fa-fw"></i></span>
-                                <input class="form-control" th:name="keyword" th:value="${param.keyword}" type="search" placeholder="Global search..." aria-label="Global search" id="globalSearch">
+                                <input class="form-control" th:name="gsKeyword" th:value="${param.gsKeyword}" type="search" placeholder="Global search..." aria-label="Global search" id="globalSearch">
                             </div>
                         </form>
                     </div>

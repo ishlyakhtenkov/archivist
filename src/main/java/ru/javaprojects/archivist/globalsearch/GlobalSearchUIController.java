@@ -22,12 +22,12 @@ public class GlobalSearchUIController {
     private Integer searchResultsLimit;
 
     @GetMapping
-    public String getSearchResults(@RequestParam String keyword, Model model) {
-        log.info("getSearchResults with keyword={}", keyword);
-        if (keyword.isBlank()) {
+    public String getSearchResults(@RequestParam String gsKeyword, Model model) {
+        log.info("get search results by keyword={}", gsKeyword);
+        if (gsKeyword.isBlank()) {
             return "redirect:/";
         }
-        model.addAttribute("searchResults", service.getSearchResults(keyword.trim()));
+        model.addAttribute("searchResults", service.getSearchResults(gsKeyword.trim()));
         model.addAttribute("searchResultsLimit", searchResultsLimit);
         return "global-search/search-results";
     }

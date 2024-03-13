@@ -59,10 +59,11 @@ public class ChangeNoticeUIController {
             if (keyword.isBlank()) {
                 return "redirect:/change-notices";
             }
-            log.info("getAll(pageNumber={}, pageSize={}, keyword={})", pageable.getPageNumber(), pageable.getPageSize(), keyword);
+            log.info("get change notices (pageNumber={}, pageSize={}, keyword={})", pageable.getPageNumber(),
+                    pageable.getPageSize(), keyword);
             changeNotices = service.getAll(pageable, keyword.trim());
         } else  {
-            log.info("getAll(pageNumber={}, pageSize={})", pageable.getPageNumber(), pageable.getPageSize());
+            log.info("get change notices (pageNumber={}, pageSize={})", pageable.getPageNumber(), pageable.getPageSize());
             changeNotices = service.getAll(pageable);
         }
         if (changeNotices.getContent().isEmpty() && changeNotices.getTotalElements() != 0) {
@@ -77,7 +78,7 @@ public class ChangeNoticeUIController {
 
     @GetMapping("/{id}")
     public String get(@PathVariable long id, Model model) {
-        log.info("get {}", id);
+        log.info("get change notice with id={}", id);
         model.addAttribute("changeNotice", service.getWithChanges(id));
         return "change-notices/change-notice";
     }
@@ -92,7 +93,7 @@ public class ChangeNoticeUIController {
 
     @GetMapping("/edit/{id}")
     public String showEditForm(@PathVariable long id, Model model) {
-        log.info("show change notice={} edit form", id);
+        log.info("show edit form for change notice with id={}", id);
         ChangeNotice changeNotice = service.getWithChanges(id);
         model.addAttribute("changeNoticeTo", changeNoticeUtil.asTo(changeNotice));
         model.addAttribute("file", changeNotice.getFile());
@@ -130,7 +131,7 @@ public class ChangeNoticeUIController {
 
     @GetMapping(value = "/download", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public ResponseEntity<Resource> downloadFile(@RequestParam String fileLink) {
-        log.info("download file {}", fileLink);
+        log.info("download change notice file={}", fileLink);
         Resource resource = FileUtil.download(contentPath + fileLink);
         return ResponseEntity.ok()
                 .header("Content-Disposition", "inline; filename=" +

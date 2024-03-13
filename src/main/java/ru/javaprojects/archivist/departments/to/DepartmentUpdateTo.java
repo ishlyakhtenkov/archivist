@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ru.javaprojects.archivist.common.HasIdAndName;
-import ru.javaprojects.archivist.common.BaseTo;
+import ru.javaprojects.archivist.common.to.BaseTo;
 import ru.javaprojects.archivist.common.util.validation.NoHtml;
 import ru.javaprojects.archivist.departments.model.Employee;
 
@@ -28,5 +28,10 @@ public class DepartmentUpdateTo extends BaseTo implements HasIdAndName {
         super(id);
         this.name = name;
         this.boss = boss;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("DepartmentUpdateTo[id=%d, name=%s]", id, name);
     }
 }

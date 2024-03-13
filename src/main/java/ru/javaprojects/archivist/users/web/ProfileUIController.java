@@ -29,14 +29,14 @@ public class ProfileUIController {
 
     @GetMapping
     public String profile(@AuthenticationPrincipal AuthUser authUser, Model model) {
-        log.info("show profile for {}", authUser.id());
+        log.info("show profile for user with id={}", authUser.id());
         model.addAttribute("user", userService.get(authUser.id()));
         return "users/profile";
     }
 
     @GetMapping("/resetPassword")
     public String showResetPasswordForm(@RequestParam String token, Model model) {
-        log.info("show reset password form token={}", token);
+        log.info("show reset password form by token={}", token);
         passwordResetService.checkToken(token);
         model.addAttribute("passwordResetTo",  new PasswordResetTo(token));
         return "users/reset-password";
@@ -47,7 +47,7 @@ public class ProfileUIController {
         if (result.hasErrors()) {
             return "users/reset-password";
         }
-        log.info("reset password token={}", passwordResetTo.getToken());
+        log.info("reset password by token={}", passwordResetTo.getToken());
         passwordResetService.resetPassword(passwordResetTo);
         redirectAttributes.addFlashAttribute("action", "Password has been successfully reset");
         return "redirect:/login";

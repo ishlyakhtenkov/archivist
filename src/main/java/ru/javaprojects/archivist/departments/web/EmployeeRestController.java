@@ -20,20 +20,20 @@ public class EmployeeRestController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable long id) {
-        log.info("delete {}", id);
+        log.info("delete employee with id={}", id);
         service.delete(id);
     }
 
     @PatchMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void fire(@PathVariable long id, @RequestParam boolean fired) {
-        log.info(fired ? "fire {}" : "unfire {}", id);
+        log.info((fired ? "fire" : "unfire") + " employee with id={}", id);
         service.fire(id, fired);
     }
 
     @GetMapping("/by-department")
     public List<Employee> getAll(@RequestParam long departmentId) {
-        log.info("get all by department {}", departmentId);
+        log.info("get employees by department with id={}", departmentId);
         return service.getAllByDepartment(departmentId);
     }
 }

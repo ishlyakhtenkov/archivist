@@ -46,10 +46,11 @@ public class AdminUserUIController {
             if (keyword.isBlank()) {
                 return "redirect:/users";
             }
-            log.info("getAll(pageNumber={}, pageSize={}, keyword={})", pageable.getPageNumber(), pageable.getPageSize(), keyword);
+            log.info("get users (pageNumber={}, pageSize={}, keyword={})", pageable.getPageNumber(),
+                    pageable.getPageSize(), keyword);
             users = service.getAll(pageable, keyword.trim());
         } else  {
-            log.info("getAll(pageNumber={}, pageSize={})", pageable.getPageNumber(), pageable.getPageSize());
+            log.info("get users (pageNumber={}, pageSize={})", pageable.getPageNumber(), pageable.getPageSize());
             users = service.getAll(pageable);
         }
         if (users.getContent().isEmpty() && users.getTotalElements() != 0) {
@@ -85,7 +86,7 @@ public class AdminUserUIController {
 
     @GetMapping("/edit/{id}")
     public String showEditForm(@PathVariable long id, Model model) {
-        log.info("show user={} edit form", id);
+        log.info("show edit form for user with id={}", id);
         model.addAttribute("roles", Role.values());
         model.addAttribute("userTo", asTo(service.get(id)));
         return "users/user-edit-form";

@@ -1,7 +1,5 @@
-package ru.javaprojects.archivist.common.model;
+package ru.javaprojects.archivist.common.to;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.MappedSuperclass;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
@@ -10,19 +8,17 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ru.javaprojects.archivist.common.util.validation.NoHtml;
 
-@MappedSuperclass
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public abstract class NamedEntity extends BaseEntity {
+public class NamedTo extends BaseTo {
 
     @NotBlank
     @NoHtml
     @Size(min = 2, max = 128)
-    @Column(name = "name", nullable = false)
     protected String name;
 
-    protected NamedEntity(Long id, String name) {
+    protected NamedTo(Long id, String name) {
         super(id);
         this.name = name;
     }

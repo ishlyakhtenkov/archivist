@@ -5,7 +5,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ru.javaprojects.archivist.common.BaseTo;
+import ru.javaprojects.archivist.common.to.BaseTo;
 import ru.javaprojects.archivist.common.util.validation.NoHtml;
 
 @Getter
@@ -33,6 +33,6 @@ public class PostTo extends BaseTo {
 
     @Override
     public String toString() {
-        return super.toString() + '[' + title + ']';
+        return String.format("PostTo[id=%d, title=%s]", id, title);
     }
 }

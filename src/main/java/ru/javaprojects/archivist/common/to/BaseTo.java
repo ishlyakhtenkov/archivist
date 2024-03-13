@@ -1,9 +1,10 @@
-package ru.javaprojects.archivist.common;
+package ru.javaprojects.archivist.common.to;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.javaprojects.archivist.common.HasId;
 
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
@@ -27,6 +28,6 @@ public abstract class BaseTo implements HasId {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + ":" + id;
+        return getClass().getSimpleName() + "[id=" + id + "]";
     }
 }

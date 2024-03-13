@@ -8,7 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ru.javaprojects.archivist.common.HasIdAndName;
-import ru.javaprojects.archivist.common.BaseTo;
+import ru.javaprojects.archivist.common.to.BaseTo;
 import ru.javaprojects.archivist.common.util.validation.NoHtml;
 
 @Getter
@@ -49,6 +49,6 @@ public class DepartmentCreateTo extends BaseTo implements HasIdAndName {
 
     @Override
     public String toString() {
-        return "Department: " + name;
+        return String.format("DepartmentCreateTo[id=%d, name=%s]", id, name);
     }
 }

@@ -19,7 +19,7 @@ public class PostRestController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable long id) {
-        log.info("delete {}", id);
+        log.info("delete post with id={}", id);
         service.delete(id);
     }
 }

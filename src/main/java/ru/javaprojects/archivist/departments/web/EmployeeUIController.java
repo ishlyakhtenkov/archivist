@@ -41,7 +41,7 @@ public class EmployeeUIController {
 
     @GetMapping("/edit/{id}")
     public String showEditForm(@PathVariable long id, Model model) {
-        log.info("show employee={} edit form", id);
+        log.info("show edit form for employee with id={}", id);
         model.addAttribute("employee", service.getWithDepartment(id));
         model.addAttribute("departments", departmentService.getAllWithBoss());
         return "departments/employees/employee-form";

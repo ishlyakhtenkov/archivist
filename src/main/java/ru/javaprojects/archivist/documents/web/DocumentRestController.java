@@ -48,20 +48,20 @@ public class DocumentRestController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable long id) {
-        log.info("delete {}", id);
+        log.info("delete document with id={}", id);
         service.delete(id);
     }
 
     @GetMapping("/{id}/applicabilities")
     public List<Applicability> getApplicabilities(@PathVariable long id) {
-        log.info("get applicabilities for document {}", id);
+        log.info("get applicabilities for document with id={}", id);
         return service.getApplicabilities(id);
     }
 
     @DeleteMapping("/applicabilities/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteApplicability(@PathVariable long id) {
-        log.info("delete applicability {}", id);
+        log.info("delete applicability with id={}", id);
         service.deleteApplicability(id);
     }
 
@@ -75,19 +75,19 @@ public class DocumentRestController {
 
     @GetMapping("/{id}/content/latest")
     public Content getLatestContent(@PathVariable long id) {
-        log.info("get latest content for document {}", id);
+        log.info("get latest content for document with id={}", id);
         return service.getLatestContent(id);
     }
 
     @GetMapping("/{id}/content/all")
     public List<Content> getAllContents(@PathVariable long id) {
-        log.info("get all contents for document {}", id);
+        log.info("get all contents for document with id={}", id);
         return service.getAllContents(id);
     }
 
     @GetMapping(value = "/content/download", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public ResponseEntity<Resource> downloadContentFile(@RequestParam String fileLink) {
-        log.info("download file {}", fileLink);
+        log.info("download document file={}", fileLink);
         Resource resource = FileUtil.download(contentPath + fileLink);
         return ResponseEntity.ok()
                 .header("Content-Disposition", "inline; filename=" +
@@ -98,7 +98,7 @@ public class DocumentRestController {
     @DeleteMapping("/content/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteContent(@PathVariable long id) {
-        log.info("delete content {}", id);
+        log.info("delete content with id={}", id);
         service.deleteContent(id);
     }
 
@@ -106,19 +106,19 @@ public class DocumentRestController {
     @ResponseStatus(HttpStatus.CREATED)
     public Content createContent(@RequestParam long id, @RequestParam @PositiveOrZero int changeNumber,
                                  @RequestPart @NotEmpty MultipartFile[] files) {
-        log.info("create content change number={} for document {}", changeNumber, id);
+        log.info("create content with change number={} for document with id={}", changeNumber, id);
         return service.createContent(id, changeNumber, files);
     }
 
     @GetMapping("/{id}/subscribers")
     public List<Subscriber> getSubscribers(@PathVariable long id) {
-        log.info("get subscribers for document {}", id);
+        log.info("get subscribers for document with id={}", id);
         return service.getSubscribers(id);
     }
 
     @GetMapping("/{id}/sendings/by-company")
     public List<Sending> getSendings(@PathVariable long id, @RequestParam long companyId) {
-        log.info("get sendings to company {} for document {}", companyId, id);
+        log.info("get sendings by company with id={} for document with id={}", companyId, id);
         return service.getSendings(id, companyId);
     }
 
@@ -134,27 +134,27 @@ public class DocumentRestController {
     @PatchMapping("/subscribers/{id}/unsubscribe")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void unsubscribe(@PathVariable long id, @RequestParam @NotBlank @NoHtml @Size(max = 256) String unsubscribeReason) {
-        log.info("unsubscribe {}", id);
+        log.info("unsubscribe subscriber with id={}", id);
         service.unsubscribe(id, unsubscribeReason);
     }
 
     @PatchMapping("/subscribers/{id}/resubscribe")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void resubscribe(@PathVariable long id) {
-        log.info("resubscribe {}", id);
+        log.info("resubscribe subscriber with id={}", id);
         service.resubscribe(id);
     }
 
     @DeleteMapping("/sendings/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteSending(@PathVariable long id) {
-        log.info("delete sending {}", id);
+        log.info("delete sending with id={}", id);
         service.deleteSending(id);
     }
 
     @GetMapping("/{id}/changes")
     public List<Change> getChanges(@PathVariable long id) {
-        log.info("get changes for document {}", id);
+        log.info("get changes for document with id={}", id);
         return service.getChanges(id);
     }
 
@@ -169,7 +169,7 @@ public class DocumentRestController {
     @DeleteMapping("/changes/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteChange(@PathVariable long id) {
-        log.info("delete change {}", id);
+        log.info("delete change with id={}", id);
         service.deleteChange(id);
     }
 }

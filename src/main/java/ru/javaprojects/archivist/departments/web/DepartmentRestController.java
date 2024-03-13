@@ -20,7 +20,7 @@ public class DepartmentRestController {
 
     @GetMapping("/list")
     public List<Department> getAll() {
-        log.info("get all");
+        log.info("get departments list");
         return service.getAll();
     }
 }

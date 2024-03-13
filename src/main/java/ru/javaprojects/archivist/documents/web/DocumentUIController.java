@@ -50,10 +50,11 @@ public class DocumentUIController {
             if (keyword.isBlank()) {
                 return "redirect:/documents";
             }
-            log.info("getAll(pageNumber={}, pageSize={}, keyword={})", pageable.getPageNumber(), pageable.getPageSize(), keyword);
+            log.info("get documents (pageNumber={}, pageSize={}, keyword={})", pageable.getPageNumber(),
+                    pageable.getPageSize(), keyword);
             documents = service.getAll(pageable, keyword.trim());
         } else  {
-            log.info("getAll(pageNumber={}, pageSize={})", pageable.getPageNumber(), pageable.getPageSize());
+            log.info("get documents (pageNumber={}, pageSize={})", pageable.getPageNumber(), pageable.getPageSize());
             documents = service.getAll(pageable);
         }
         if (documents.getContent().isEmpty() && documents.getTotalElements() != 0) {
@@ -68,7 +69,7 @@ public class DocumentUIController {
 
     @GetMapping("/{id}")
     public String get(@PathVariable long id, Model model) {
-        log.info("get {}", id);
+        log.info("get document with id={}", id);
         model.addAttribute("document", service.get(id));
         return "documents/document";
     }
@@ -106,7 +107,7 @@ public class DocumentUIController {
 
     @GetMapping("/edit/{id}")
     public String showEditForm(@PathVariable long id, Model model) {
-        log.info("show document={} edit form", id);
+        log.info("show edit form for document with id={}", id);
         model.addAttribute("document", service.get(id));
         addDataForDocumentCardToModel(model);
         return "documents/document-form";

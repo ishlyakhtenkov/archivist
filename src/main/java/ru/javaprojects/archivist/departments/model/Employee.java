@@ -80,4 +80,9 @@ public class Employee extends BaseEntity implements HasIdAndEmail {
         this(id, lastName, firstName, middleName, phone, email);
         this.department = department;
     }
+
+    @Override
+    public String toString() {
+        return String.format("Employee[id=%d, name=%s]", id, getFullName());
+    }
 }

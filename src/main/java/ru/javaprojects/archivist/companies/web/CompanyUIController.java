@@ -40,10 +40,11 @@ public class CompanyUIController {
             if (keyword.isBlank()) {
                 return "redirect:/companies";
             }
-            log.info("getAll(pageNumber={}, pageSize={}, keyword={})", pageable.getPageNumber(), pageable.getPageSize(), keyword);
+            log.info("get companies (pageNumber={}, pageSize={}, keyword={})", pageable.getPageNumber(),
+                    pageable.getPageSize(), keyword);
             companies = service.getAll(pageable, keyword.trim());
         } else  {
-            log.info("getAll(pageNumber={}, pageSize={})", pageable.getPageNumber(), pageable.getPageSize());
+            log.info("get companies (pageNumber={}, pageSize={})", pageable.getPageNumber(), pageable.getPageSize());
             companies = service.getAll(pageable);
         }
         if (companies.getContent().isEmpty() && companies.getTotalElements() != 0) {
@@ -58,7 +59,7 @@ public class CompanyUIController {
 
     @GetMapping("/{id}")
     public String get(@PathVariable long id, Model model) {
-        log.info("get {}", id);
+        log.info("get company with id={}", id);
         model.addAttribute("company", service.getWithContactPersons(id));
         return "companies/company";
     }
@@ -72,7 +73,7 @@ public class CompanyUIController {
 
     @GetMapping("/edit/{id}")
     public String showEditForm(@PathVariable long id, Model model) {
-        log.info("show company={} edit form", id);
+        log.info("show edit form for company with id={}", id);
         model.addAttribute("company", service.getWithContactPersons(id));
         return "companies/company-form";
     }

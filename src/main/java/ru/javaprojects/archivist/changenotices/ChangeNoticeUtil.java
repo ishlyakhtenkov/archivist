@@ -6,7 +6,7 @@ import ru.javaprojects.archivist.changenotices.model.Change;
 import ru.javaprojects.archivist.changenotices.model.ChangeNotice;
 import ru.javaprojects.archivist.changenotices.to.ChangeNoticeTo;
 import ru.javaprojects.archivist.changenotices.to.ChangeTo;
-import ru.javaprojects.archivist.common.BaseTo;
+import ru.javaprojects.archivist.common.to.BaseTo;
 import ru.javaprojects.archivist.documents.model.ContentFile;
 import ru.javaprojects.archivist.documents.model.Document;
 import ru.javaprojects.archivist.documents.repository.DocumentRepository;

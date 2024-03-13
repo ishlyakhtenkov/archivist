@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ru.javaprojects.archivist.common.BaseTo;
+import ru.javaprojects.archivist.common.to.BaseTo;
 import ru.javaprojects.archivist.common.util.validation.NoHtml;
 
 import java.time.LocalDate;
@@ -38,5 +38,11 @@ public class ChangeTo extends BaseTo {
         this.changeNoticeName = changeNoticeName;
         this.changeNoticeDate = changeNoticeDate;
         this.changeNumber = changeNumber;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("ChangeTo[id=%d, documentId=%d, changeNoticeName=%s, changeNumber=%d]", id, documentId,
+                changeNoticeName, changeNumber);
     }
 }

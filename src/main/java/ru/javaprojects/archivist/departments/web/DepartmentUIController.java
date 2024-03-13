@@ -37,14 +37,14 @@ public class DepartmentUIController {
 
     @GetMapping
     public String getAll(Model model) {
-        log.info("getAll");
+        log.info("get departments");
         model.addAttribute("departments", service.getAllWithBoss());
         return "departments/departments";
     }
 
     @GetMapping("/{id}")
     public String get(@PathVariable long id, Model model) {
-        log.info("get {}", id);
+        log.info("get department with id={}", id);
         model.addAttribute("department", service.getWithEmployees(id));
         return "departments/department";
     }
@@ -58,7 +58,7 @@ public class DepartmentUIController {
 
     @GetMapping("/edit/{id}")
     public String showEditForm(@PathVariable long id, Model model) {
-        log.info("show department={} edit form", id);
+        log.info("show edit form for department with id={}", id);
         Department department = service.getWithEmployees(id);
         model.addAttribute("departmentUpdateTo", asUpdateTo(department));
         model.addAttribute("employees", department.getEmployees());
@@ -92,7 +92,7 @@ public class DepartmentUIController {
 
     @PostMapping("/delete/{id}")
     public String delete(@PathVariable long id, RedirectAttributes redirectAttributes) {
-        log.info("delete department={}", id);
+        log.info("delete department with id={}", id);
         Department department = service.get(id);
         service.delete(id);
         redirectAttributes.addFlashAttribute("action", "Department " + department.getName() + " was deleted");

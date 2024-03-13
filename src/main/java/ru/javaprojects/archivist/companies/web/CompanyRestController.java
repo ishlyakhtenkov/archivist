@@ -20,13 +20,13 @@ public class CompanyRestController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable long id) {
-        log.info("delete {}", id);
+        log.info("delete company with id={}", id);
         service.delete(id);
     }
 
     @GetMapping("/list")
     public List<Company> getAll() {
-        log.info("get all");
+        log.info("get companies list");
         return service.getAll();
     }
 }

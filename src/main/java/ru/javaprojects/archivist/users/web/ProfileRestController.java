@@ -25,14 +25,14 @@ public class ProfileRestController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void changePassword(@RequestParam @Size(min = 5, max = 32) String password, @AuthenticationPrincipal AuthUser authUser) {
         long id = authUser.id();
-        log.info("change password for {}", id);
+        log.info("change password for user with id={}", id);
         userService.changePassword(id, password);
     }
 
     @PostMapping("/forgotPassword")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void forgotPassword(@RequestParam String email) {
-        log.info("forgot password for {}", email);
+        log.info("forgot password for user with email={}", email);
         passwordResetService.sendPasswordResetEmail(email);
     }
 }

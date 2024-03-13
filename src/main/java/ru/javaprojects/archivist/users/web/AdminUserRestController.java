@@ -20,21 +20,21 @@ public class AdminUserRestController {
     @PatchMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void enable(@PathVariable long id, @RequestParam boolean enabled) {
-        log.info(enabled ? "enable {}" : "disable {}", id);
+        log.info((enabled ? "enable" : "disable") + " user with id={}", id);
         service.enable(id, enabled);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable long id) {
-        log.info("delete {}", id);
+        log.info("delete user with id={}", id);
         service.delete(id);
     }
 
     @PatchMapping("/password/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void changePassword(@PathVariable long id, @RequestParam @Size(min = 5, max = 32) String password) {
-        log.info("change password for {}", id);
+        log.info("change password for user with id={}", id);
         service.changePassword(id, password);
     }
 }

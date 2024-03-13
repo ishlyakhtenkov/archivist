@@ -65,7 +65,6 @@
                                         <span class="input-group-text doc-card-field" id="changeReasonCodeAddon">Change reason code</span>
                                         <select class="form-control selectpicker border" data-style="btn-white" id="changeReasonCodeSelect"
                                                 th:field="*{changeReasonCode}" title="&nbsp" required aria-label="Change reason code" aria-describedby="changeReasonCodeAddon">
-                                            <option value="" selected></option>
                                             <option th:each="changeReasonCode : ${changeReasonCodes}"
                                                     th:value="${changeReasonCode.name}"
                                                     th:text="${changeReasonCode}">

@@ -24,35 +24,34 @@ public class AlbumRestController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable long id) {
-        log.info("delete {}", id);
+        log.info("delete album with id={}", id);
         service.delete(id);
     }
 
     @GetMapping("/{id}/issuances")
     public List<Issuance> getIssuances(@PathVariable long id) {
-        log.info("get issuances for album {}", id);
-        List<Issuance> issuances = service.getIssuances(id);
-        return issuances;
+        log.info("get issuances for album with id={}", id);
+        return service.getIssuances(id);
     }
 
     @DeleteMapping("/issuances/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteIssuance(@PathVariable long id) {
-        log.info("delete issuance {}", id);
+        log.info("delete issuance with id={}", id);
         service.deleteIssuance(id);
     }
 
     @PatchMapping("/{id}/return")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void returnAlbum(@PathVariable long id, @RequestParam LocalDate returned) {
-        log.info("return album {} with returned date {}", id, returned);
+        log.info("return album with id={}, returned date={}", id, returned);
         service.returnAlbum(id, returned);
     }
 
     @PostMapping("/{id}/issue")
     @ResponseStatus(HttpStatus.CREATED)
     public Issuance issueAlbum(@PathVariable long id, @Valid @RequestBody IssuanceTo issuanceTo) {
-        log.info("issue album {} to employee {} with issued date {}", id, issuanceTo.getEmployeeId(), issuanceTo.getIssued());
+        log.info("issue album ({})", issuanceTo);
         if (id != issuanceTo.getAlbumId()) {
             throw new IllegalRequestDataException("IssuanceTo must has albumId=" + id);
         }

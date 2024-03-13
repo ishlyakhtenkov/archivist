@@ -20,4 +20,9 @@ public class IssuanceTo {
 
     @NotNull
     private LocalDate issued;
+
+    @Override
+    public String toString() {
+        return String.format("IssuanceTo[albumId=%d, employeeId=%d, issued=%s]", albumId, employeeId, issued);
+    }
 }

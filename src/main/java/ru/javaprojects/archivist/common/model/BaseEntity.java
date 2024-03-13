@@ -41,6 +41,6 @@ public abstract class BaseEntity implements Persistable<Long>, HasId {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + ":" + id;
+        return getClass().getSimpleName() + "[id=" + id + "]";
     }
 }

@@ -44,10 +44,11 @@ public class AlbumUIController {
             if (keyword.isBlank()) {
                 return "redirect:/albums";
             }
-            log.info("getAll(pageNumber={}, pageSize={}, keyword={})", pageable.getPageNumber(), pageable.getPageSize(), keyword);
+            log.info("get albums (pageNumber={}, pageSize={}, keyword={})", pageable.getPageNumber(),
+                    pageable.getPageSize(), keyword);
             albums = service.getAll(pageable, keyword.trim());
         } else  {
-            log.info("getAll(pageNumber={}, pageSize={})", pageable.getPageNumber(), pageable.getPageSize());
+            log.info("get albums (pageNumber={}, pageSize={})", pageable.getPageNumber(), pageable.getPageSize());
             albums = service.getAll(pageable);
         }
         if (albums.getContent().isEmpty() && albums.getTotalElements() != 0) {
@@ -62,7 +63,7 @@ public class AlbumUIController {
 
     @GetMapping("/{id}")
     public String get(@PathVariable long id, Model model) {
-        log.info("get {}", id);
+        log.info("get album with id={}", id);
         model.addAttribute("album", service.getWithIssuances(id));
         return "albums/album";
     }
@@ -77,7 +78,7 @@ public class AlbumUIController {
 
     @GetMapping("/edit/{id}")
     public String showEditForm(@PathVariable long id, Model model) {
-        log.info("show album={} edit form", id);
+        log.info("show edit form for album with id={}", id);
         model.addAttribute("albumTo", asTo(service.get(id)));
         model.addAttribute("stamps", Stamp.values());
         return "albums/album-form";

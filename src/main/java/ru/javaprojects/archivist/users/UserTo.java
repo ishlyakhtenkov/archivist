@@ -8,7 +8,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import ru.javaprojects.archivist.common.HasIdAndEmail;
-import ru.javaprojects.archivist.common.BaseTo;
+import ru.javaprojects.archivist.common.to.BaseTo;
 import ru.javaprojects.archivist.common.util.validation.NoHtml;
 
 import java.util.Set;
@@ -51,6 +51,6 @@ public class UserTo extends BaseTo implements HasIdAndEmail {
 
     @Override
     public String toString() {
-        return "UserTo:" + id + '[' + email + ']';
+        return String.format("UserTo[id=%d, email=%s]", id, email);
     }
 }

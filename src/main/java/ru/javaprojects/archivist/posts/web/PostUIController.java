@@ -34,7 +34,7 @@ public class PostUIController {
 
     @GetMapping("/edit/{id}")
     public String showEditForm(@PathVariable long id, Model model) {
-        log.info("show post={} edit form", id);
+        log.info("show edit form for post with id={}", id);
         model.addAttribute("postTo", asTo(service.get(id)));
         return "posts/post-form";
     }

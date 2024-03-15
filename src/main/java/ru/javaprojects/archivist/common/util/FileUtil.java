@@ -7,13 +7,11 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.javaprojects.archivist.common.error.IllegalRequestDataException;
 import ru.javaprojects.archivist.common.error.NotFoundException;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.List;
 import java.util.Objects;
 
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
@@ -105,6 +103,14 @@ public class FileUtil {
 
         } catch (IOException ex) {
             throw new IllegalRequestDataException("Failed to move " + file + " to " + newDir);
+        }
+    }
+
+    public static List<String> readAllLines(MultipartFile file, boolean toUpperCase) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
+            return reader.lines().map(line -> toUpperCase ? line.toUpperCase() : line).toList();
+        } catch (IOException e) {
+            throw new IllegalRequestDataException("Failed to read file for groupSendingTo: " + e.getMessage());
         }
     }
 }

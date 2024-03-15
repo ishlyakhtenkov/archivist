@@ -52,7 +52,7 @@ public class JacksonObjectMapper extends ObjectMapper {
                 @Override
                 public String deserialize(JsonParser jsonParser, DeserializationContext context) throws IOException {
                     String value = jsonParser.getValueAsString();
-                    return value != null ? value.strip() : null;
+                    return value != null ? (value.isBlank() ? null : value.strip()) : null;
                 }
             });
         }

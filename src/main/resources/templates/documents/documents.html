@@ -55,10 +55,6 @@
                            onmouseout="this.style.color='black'; this.style.textDecoration='none';">Decimal number</a>
                         <span th:utext="${(document.secret ? ' <span class=&quot;badge bg-warning rounded-circle&quot; title=&quot;Secret&quot;>S</span>' : '')}"></span>
                         <span th:utext="${(document.annulled ? ' <span class=&quot;badge bg-danger rounded-circle&quot; title=&quot;Annulled&quot;>A</span>' : '')}"></span>
-
-<!--                        <a th:href="@{'/documents/' + ${document.id}}" th:text="${document.decimalNumber}"-->
-<!--                           title="Show details" th:class="${document.annulled ? 'text-danger' : 'text-dark'}" style="text-decoration:none;">Decimal number</a>-->
-<!--                        <span th:utext="${(document.isSecret() ? ' <span class=&quot;badge bg-danger rounded-circle&quot; title=&quot;Secret&quot;>S</span>' : '')}"></span>-->
                     </td>
                     <td class="text-truncate" th:text="${document.name}" style="max-width: 150px;"></td>
                     <td th:text="${document.status}"></td>

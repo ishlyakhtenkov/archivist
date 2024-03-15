@@ -28,7 +28,6 @@ import ru.javaprojects.archivist.documents.to.ApplicabilityTo;
 import ru.javaprojects.archivist.documents.to.ChangeTo;
 import ru.javaprojects.archivist.documents.to.SendingTo;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -126,7 +125,6 @@ public class DocumentRestController {
     @ResponseStatus(HttpStatus.CREATED)
     public Sending createSending(@Valid @RequestBody SendingTo sendingTo) {
         log.info("create {}", sendingTo);
-        ValidationUtil.checkNew(sendingTo);
         return service.createSending(sendingTo);
     }
 

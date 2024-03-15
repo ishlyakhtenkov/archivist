@@ -7,6 +7,7 @@ import ru.javaprojects.archivist.documents.model.Sending;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Transactional(readOnly = true)
 public interface SendingRepository extends BaseRepository<Sending> {
@@ -21,5 +22,6 @@ public interface SendingRepository extends BaseRepository<Sending> {
 
     long countAllByInvoice_Id(long invoiceId);
 
-    long countAllByDocument_IdAndInvoice_Letter_Company_Id(long documentId, long companyId);
+    @Query("SELECT s.document.id FROM Sending s WHERE s.invoice.id =:invoiceId")
+    Set<Long> findDocumentsIdsByInvoice(long invoiceId);
 }

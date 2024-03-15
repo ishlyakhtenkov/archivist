@@ -1,5 +1,6 @@
 package ru.javaprojects.archivist.documents.repository;
 
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 import ru.javaprojects.archivist.common.BaseRepository;
@@ -17,4 +18,7 @@ public interface SubscriberRepository extends BaseRepository<Subscriber> {
     Optional<Subscriber> findByDocument_IdAndCompany_Id(long documentId, long companyId);
 
     void deleteByDocument_IdAndCompany_Id(long documentId, long companyId);
+
+    @EntityGraph(attributePaths = "document")
+    List<Subscriber> findAllByCompany_IdAndDocument_IdIn(long companyId, List<Long> documentsIds);
 }

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      th:with="activeMenuItem='Tools'" lang="en">
+
+<th:block th:replace="~{fragments/main::page(title='Archivist - tools',appMain=~{::appMain}, ownScript=~{::ownScript})}">
+    <appMain>
+        <h2 class="text-secondary font-weight-bold"><i class="fa-solid fa-screwdriver-wrench me-2"></i>Tools</h2>
+        <div>
+            <a href="#" sec:authorize="hasAnyRole('ADMIN','ARCHIVIST')" data-bs-toggle="modal" data-bs-target="#groupAddSendingModal">
+                Group adding data about sending
+            </a>
+        </div>
+        <div>
+            <a sec:authorize="hasAnyRole('ADMIN','ARCHIVIST')" th:href="@{/tools/group/sending/delete}">
+                Group deleting data about sending
+            </a>
+        </div>
+        <div>
+            <a sec:authorize="hasAnyRole('ADMIN','ARCHIVIST')" th:href="@{/tools/group/subscribers/unsubscribe}">
+                Group unsubscribe
+            </a>
+        </div>
+        <div>
+            <a sec:authorize="hasAnyRole('ADMIN','ARCHIVIST')" th:href="@{/tools/group/subscribers/resubscribe}">
+                Group resubscribe
+            </a>
+        </div>
+        <div>
+            <a sec:authorize="hasAnyRole('ADMIN','ARCHIVIST')" th:href="@{/tools/group/subscribers/delete}">
+                Group deleting data about subscriber
+            </a>
+        </div>
+
+        <!-- Group add sending modal -->
+        <div class="modal fade" id="groupAddSendingModal" tabindex="-1" aria-labelledby="groupAddSendingModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="addSendingModalLabel">Group adding data about sending</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form id="addGroupSendingForm" onsubmit="return false;">
+                        <div class="modal-body">
+                            <div class="my-3">
+                                <div class="input-group">
+                                    <span class="input-group-text sending-title-field">Company</span>
+                                    <select class="form-select" id="companySelector" title="" required></select>
+                                </div>
+                                <div class="input-group mt-3">
+                                    <span class="input-group-text sending-title-field">Status</span>
+                                    <select class="form-select" id="statusSelector" title="" required>
+                                        <option value="DUPLICATE">Duplicate</option>
+                                        <option value="ACCOUNTED_COPY">Accounted copy</option>
+                                        <option value="UNACCOUNTED_COPY">Unaccounted copy</option>
+                                    </select>
+                                </div>
+                                <div class="row row-cols-1 row-cols-md-2">
+                                    <div class="col">
+                                        <div class="input-group mt-3">
+                                            <span class="input-group-text sending-title-field">Invoice num</span>
+                                            <input type="text" class="form-control" title="" id="invoiceNumInput" required>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="input-group mt-3">
+                                            <span class="input-group-text d-none d-md-block">Date</span>
+                                            <span class="input-group-text sending-title-field d-md-none">Invoice date</span>
+                                            <input type="date" class="form-control" id="invoiceDateInput" title="" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row row-cols-1 row-cols-md-2">
+                                    <div class="col">
+                                        <div class="input-group mt-3">
+                                            <span class="input-group-text sending-title-field">Letter num</span>
+                                            <input type="text" class="form-control" id="letterNumInput">
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="input-group mt-3">
+                                            <span class="input-group-text d-none d-md-block">Date</span>
+                                            <span class="input-group-text sending-title-field d-md-none">Letter date</span>
+                                            <input type="date" class="form-control" id="letterDateInput" onchange="$('#letterDateInput').css('color', 'black')">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="input-group mt-3">
+                                    <input type="file" id="addSendingFileInput" class="form-control" required style="color: transparent" onchange="changeFileInputColor('addSendingFileInput', 'gray')"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">&nbsp;Cancel&nbsp;</button>
+                            <button type="submit" class="btn btn-success" onclick="createGroupSending()">Add data</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Result modal -->
+        <div class="modal fade" id="resultModal" tabindex="-1" aria-labelledby="resultModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="resultModalLabel">Operation result</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                        <div class="modal-body pt-0" id="resultContent"></div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </appMain>
+
+    <ownScript>
+        <script src="/js/common.js?v=1"></script>
+        <script src="/js/tools.js?v=1"></script>
+        <script src="/js/document-sending.js?v=1"></script>
+    </ownScript>
+</th:block>

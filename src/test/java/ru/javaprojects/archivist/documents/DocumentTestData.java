@@ -204,7 +204,7 @@ public class DocumentTestData {
                     new Letter(100032L, "15/49-3256", LocalDate.of(2019, FEBRUARY, 14), company1)));
 
     public static SendingTo getNewSendingTo() {
-        return new SendingTo(null, DOCUMENT1_ID, COMPANY1_ID, DUPLICATE, "100", LocalDate.of(2023, NOVEMBER, 11),
+        return new SendingTo(DOCUMENT1_ID, COMPANY1_ID, DUPLICATE, "100", LocalDate.of(2023, NOVEMBER, 11),
                 "15/49-777", LocalDate.of(2023, NOVEMBER, 11));
     }
 

@@ -3,7 +3,6 @@ const contentArea = $('#contentArea');
 let previousContentOpened = false;
 const subscriberColumns = [$('#subscriberColumn1'), $('#subscriberColumn2'), $('#subscriberColumn3')];
 const subscriberMap = new Map();
-const companySelector = $('#companySelector');
 
 $(window).on('load', () => init());
 
@@ -351,30 +350,7 @@ function generateSubscriberCard(subscriber) {
     return card;
 }
 
-$('#addSendingModal').on('show.bs.modal', function(e) {
-    companySelector.empty();
-    fillCompaniesSelector(); // add to company-selector
-    $(e.currentTarget).find('#statusSelector').val('');
-    $(e.currentTarget).find('#invoiceNumInput').val('');
-    $(e.currentTarget).find('#invoiceDateInput').val('');
-    $(e.currentTarget).find('#letterNumInput').val('');
-    $(e.currentTarget).find('#letterDateInput').val('').css('color', 'transparent');
-});
-
-function fillCompaniesSelector() {
-    $.ajax({
-        url: '/companies/list'
-    }).done(companies => {
-        if (companies.length !== 0) {
-            companies.forEach(company => {
-                companySelector.append($('<option></option>').val(company.id).html(company.name));
-            });
-            companySelector.val('');
-        }
-    }).fail(function (data) {
-        handleError(data, `Failed to get companies`);
-    });
-}
+$('#addSendingModal').on('show.bs.modal', (event) => setupAddSendingModal(event));
 
 function createSending() {
     let companyId = companySelector.val();

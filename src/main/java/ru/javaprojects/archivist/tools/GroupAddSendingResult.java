@@ -1,16 +1,19 @@
 package ru.javaprojects.archivist.tools;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 @Getter
+@AllArgsConstructor
 public class GroupAddSendingResult {
-    private final List<String> notFoundDocuments = new ArrayList<>();
-    private final List<String> alreadySentDocuments = new ArrayList<>();
-    private final List<String> sentDocuments = new ArrayList<>();
+    private final List<String> notFoundDocuments;
+    private final List<String> alreadySentDocuments;
+    private final List<String> sentDocuments;
 
     public void addNotFoundDocuments(Collection<String> decimalNumbers) {
         notFoundDocuments.addAll(decimalNumbers);
@@ -22,5 +25,11 @@ public class GroupAddSendingResult {
 
     public void addSentDocuments(Collection<String> decimalNumbers) {
         sentDocuments.addAll(decimalNumbers);
+    }
+
+    public GroupAddSendingResult() {
+        notFoundDocuments = new ArrayList<>();
+        alreadySentDocuments = new ArrayList<>();
+        sentDocuments = new ArrayList<>();
     }
 }

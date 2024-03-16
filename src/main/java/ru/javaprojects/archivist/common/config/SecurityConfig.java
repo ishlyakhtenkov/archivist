@@ -56,7 +56,7 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.PATCH, "/profile/password").authenticated()
                                 .requestMatchers(HttpMethod.PATCH).hasAnyRole(Role.ADMIN.name(), Role.ARCHIVIST.name())
                                 .requestMatchers(HttpMethod.DELETE).hasAnyRole(Role.ADMIN.name(), Role.ARCHIVIST.name())
-                                .requestMatchers(HttpMethod.GET, "*/edit/**", "*/add").hasAnyRole(Role.ADMIN.name(), Role.ARCHIVIST.name())
+                                .requestMatchers(HttpMethod.GET, "*/edit/**", "*/add", "/tools/**").hasAnyRole(Role.ADMIN.name(), Role.ARCHIVIST.name())
                                 .requestMatchers("/", "/webjars/**", "/css/**", "/images/**", "/js/**").permitAll()
                                 .anyRequest().authenticated()
                 )

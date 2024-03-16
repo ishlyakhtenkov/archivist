@@ -51,7 +51,7 @@
                         </ul>
                     </div>
                 </div>
-                <li sec:authorize="isAuthenticated()" class="nav-item mt-0 mt-lg-3 mb-0 mb-lg-3" th:classappend="${activeMenuItem == 'Tools'}? 'active' : ''">
+                <li sec:authorize="hasAnyRole('ADMIN', 'ARCHIVIST')" class="nav-item mt-0 mt-lg-3 mb-0 mb-lg-3" th:classappend="${activeMenuItem == 'Tools'}? 'active' : ''">
                     <a class="nav-link sidebar-nav-link" th:href="@{/tools}"><span class="ms-4"><i class="fa-solid fa-screwdriver-wrench fa-fw me-2"></i>Tools</span></a>
                 </li>
                 <li sec:authorize="isAuthenticated()" class="nav-item" style="cursor:pointer" id="referencesNavLink">

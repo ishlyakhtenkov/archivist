@@ -16,8 +16,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static java.time.Month.*;
-import static ru.javaprojects.archivist.CommonTestData.ID;
-import static ru.javaprojects.archivist.CommonTestData.NAME;
+import static ru.javaprojects.archivist.CommonTestData.*;
 import static ru.javaprojects.archivist.changenotices.ChangeNoticeTestData.changeNotice1;
 import static ru.javaprojects.archivist.changenotices.ChangeNoticeTestData.changeNotice2;
 import static ru.javaprojects.archivist.companies.CompanyTestData.*;
@@ -47,7 +46,6 @@ public class DocumentTestData {
     public static final String DECIMAL_NUMBER = "decimalNumber";
     public static final String INVENTORY_NUMBER = "inventoryNumber";
     public static final String ACCOUNTING_DATE = "accountingDate";
-    public static final String STATUS = "status";
     public static final String SYMBOL = "symbol";
     public static final String TYPE = "type";
     public static final String ANNULLED = "annulled";
@@ -58,7 +56,6 @@ public class DocumentTestData {
     public static final String FILE_LINK = "fileLink";
     public static final String CHANGE_NUMBER = "changeNumber";
     public static final String FILES = "files";
-    public static final String COMPANY_ID = "companyId";
     public static final String UNSUBSCRIBE_REASON = "unsubscribeReason";
 
     public static final Document document1 = new Document(DOCUMENT1_ID, "Block M21", "VUIA.465521.004", "926531",

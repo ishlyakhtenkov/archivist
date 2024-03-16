@@ -38,9 +38,7 @@
                                     <th class="col-2">Phone</th>
                                     <th class="col-3">Email</th>
                                     <th class="col-1 text-center">Fired</th>
-                                    <th class="col-1 text-center"
-                                        sec:authorize="hasAnyRole('ADMIN','ARCHIVIST')">Actions
-                                    </th>
+                                    <th class="col-1 text-center" sec:authorize="hasAnyRole('ADMIN','ARCHIVIST')">Actions</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -50,23 +48,22 @@
                                     <td th:text="${employee.email}"></td>
                                     <td class="text-center">
                                         <input type="checkbox" class="form-check-input" style="cursor: pointer;" th:checked="${employee.fired}"
+                                               th:disabled="${!(authUser.user.roles.toString().contains('ADMIN') || authUser.user.roles.toString().contains('ARCHIVIST'))}"
                                                th:data-name="${employee.fullName}"
                                                th:onclick="|fireEmployee(this, '${employee.id}')|" th:title="${(employee.fired ? 'Unfire' : 'Fire') + ' employee'}" />
                                     </td>
-                                    <td class="text-center">
-                                        <span sec:authorize="hasAnyRole('ADMIN','ARCHIVIST')">
-                                            <a th:href="@{'/employees/edit/' + ${employee.id}}" type="button"
-                                               title="Edit employee" class="pencil-button"
-                                               th:classappend="${employee.id == department.boss.id ? 'me-4 pe-2' : ''}">
-                                                    <i class="fa-solid fa-pencil"></i>
-                                            </a>
-                                            <a th:if="${employee.id != department.boss.id}" type="button" class="trash-button ms-3"
-                                               title="Delete employee" data-bs-toggle="modal" data-bs-target="#deleteModal"
-                                               th:data-name="${employee.fullName}"
-                                               th:data-id="${employee.id}">
-                                                <i class="fa-solid fa-trash"></i>
-                                            </a>
-                                        </span>
+                                    <td sec:authorize="hasAnyRole('ADMIN','ARCHIVIST')" class="text-center">
+                                        <a th:href="@{'/employees/edit/' + ${employee.id}}" type="button"
+                                           title="Edit employee" class="pencil-button"
+                                           th:classappend="${employee.id == department.boss.id ? 'me-4 pe-2' : ''}">
+                                            <i class="fa-solid fa-pencil"></i>
+                                        </a>
+                                        <a th:if="${employee.id != department.boss.id}" type="button" class="trash-button ms-3"
+                                           title="Delete employee" data-bs-toggle="modal" data-bs-target="#deleteModal"
+                                           th:data-name="${employee.fullName}"
+                                           th:data-id="${employee.id}">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </a>
                                     </td>
                                 </tr>
                                 </tbody>

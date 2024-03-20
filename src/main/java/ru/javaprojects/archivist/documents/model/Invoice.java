@@ -1,5 +1,6 @@
 package ru.javaprojects.archivist.documents.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -12,6 +13,7 @@ import ru.javaprojects.archivist.common.model.BaseEntity;
 import ru.javaprojects.archivist.common.util.validation.NoHtml;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "invoices", uniqueConstraints = @UniqueConstraint(columnNames = {"number", "date"}, name = "invoices_unique_number_date_idx"))
@@ -39,6 +41,10 @@ public class Invoice extends BaseEntity implements HasId {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "letter_id", nullable = false)
     private Letter letter;
+
+    @OneToMany(mappedBy = "invoice", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<Sending> sendings;
 
     public Invoice(Long id, String number, LocalDate date, Status status, Letter letter) {
         super(id);

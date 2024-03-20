@@ -7,10 +7,10 @@
     <appMain>
         <h2 class="text-secondary font-weight-bold"><i class="fa-solid fa-screwdriver-wrench me-2"></i>Tools</h2>
         <div class="list-group">
-            <button type="button" class="list-group-item list-group-item-action" data-bs-toggle="modal" data-bs-target="#groupAddSendingModal">Add sending to documents group</button>
-            <button type="button" class="list-group-item list-group-item-action">A third button item</button>
-            <button type="button" class="list-group-item list-group-item-action">A fourth button item</button>
-            <button type="button" class="list-group-item list-group-item-action">A fifth button item</button>
+            <button type="button" class="list-group-item list-group-item-action" data-bs-toggle="modal"
+                    data-bs-target="#groupAddSendingModal">Add sending for documents group</button>
+            <button type="button" class="list-group-item list-group-item-action" data-bs-toggle="modal"
+                    data-bs-target="#groupDeleteSendingModal">Delete sending for documents group</button>
         </div>
 
         <!-- Group add sending modal -->
@@ -21,7 +21,7 @@
                         <h1 class="modal-title fs-5" id="addSendingModalLabel">Group add sending</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <form id="addGroupSendingForm" onsubmit="return false;">
+                    <form id="groupAddSendingForm" onsubmit="return false;">
                         <div class="modal-body">
                             <div class="my-3">
                                 <div class="input-group">
@@ -67,16 +67,69 @@
                                     </div>
                                 </div>
                                 <div class="input-group mt-3">
-                                    <input type="file" id="addSendingFileInput" class="form-control" required style="color: transparent" onchange="changeFileInputColor('addSendingFileInput', 'gray')"/>
+                                    <input type="file" accept=".txt" id="addSendingFileInput" class="form-control" required style="color: transparent"
+                                           onchange="changeFileInputColor('addSendingFileInput', 'gray')"/>
                                 </div>
                                 <div class="form-text ms-1">
-                                    The file must contain only document decimal numbers, each decimal number on a new line
+                                    The .txt file must contain only document decimal numbers, each decimal number on a new line
                                 </div>
                             </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">&nbsp;Cancel&nbsp;</button>
                             <button type="submit" class="btn btn-success" onclick="createGroupSending()">Add data</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Group delete sending modal -->
+        <div class="modal fade" id="groupDeleteSendingModal" tabindex="-1" aria-labelledby="groupDeleteSendingModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="groupDeleteSendingModalLabel">Group delete sending</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form id="groupDeleteSendingForm" onsubmit="return false;">
+                        <div class="modal-body">
+                            <div class="my-3">
+                                <div class="input-group mt-3">
+                                    <span class="input-group-text sending-title-field">Status</span>
+                                    <select class="form-select" id="deleteSendingStatusSelector" title="" required>
+                                        <option value="DUPLICATE">Duplicate</option>
+                                        <option value="ACCOUNTED_COPY">Accounted copy</option>
+                                        <option value="UNACCOUNTED_COPY">Unaccounted copy</option>
+                                    </select>
+                                </div>
+                                <div class="row row-cols-1 row-cols-md-2">
+                                    <div class="col">
+                                        <div class="input-group mt-3">
+                                            <span class="input-group-text sending-title-field">Invoice num</span>
+                                            <input type="text" class="form-control" title="" id="deleteSendingInvoiceNumInput" required>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="input-group mt-3">
+                                            <span class="input-group-text d-none d-md-block">Date</span>
+                                            <span class="input-group-text sending-title-field d-md-none">Invoice date</span>
+                                            <input type="date" class="form-control" id="deleteSendingInvoiceDateInput" title="" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="input-group mt-3">
+                                    <input type="file" accept=".txt" id="deleteSendingFileInput" class="form-control" required style="color: transparent"
+                                           onchange="changeFileInputColor('deleteSendingFileInput', 'gray')"/>
+                                </div>
+                                <div class="form-text ms-1">
+                                    The .txt file must contain only document decimal numbers, each decimal number on a new line
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">&nbsp;Cancel&nbsp;</button>
+                            <button type="submit" class="btn btn-warning" onclick="deleteGroupSending()">Delete data</button>
                         </div>
                     </form>
                 </div>
@@ -106,3 +159,8 @@
         <script src="/js/document-sending.js?v=1"></script>
     </ownScript>
 </th:block>
+
+<script>
+
+
+</script>

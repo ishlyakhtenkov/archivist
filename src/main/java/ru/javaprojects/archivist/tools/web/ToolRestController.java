@@ -11,7 +11,9 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import ru.javaprojects.archivist.documents.DocumentService;
 import ru.javaprojects.archivist.tools.GroupAddSendingResult;
-import ru.javaprojects.archivist.tools.GroupSendingTo;
+import ru.javaprojects.archivist.tools.GroupDeleteSendingResult;
+import ru.javaprojects.archivist.tools.GroupDeleteSendingTo;
+import ru.javaprojects.archivist.tools.GroupAddSendingTo;
 
 @RestController
 @Validated
@@ -28,8 +30,15 @@ public class ToolRestController {
 
     @PostMapping(value = "/group/sending/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public GroupAddSendingResult createGroupSending(@Valid GroupSendingTo groupSendingTo) {
-        log.info("create {}", groupSendingTo);
-        return documentService.createGroupSending(groupSendingTo);
+    public GroupAddSendingResult createGroupSending(@Valid GroupAddSendingTo groupAddSendingTo) {
+        log.info("create {}", groupAddSendingTo);
+        return documentService.createGroupSending(groupAddSendingTo);
+    }
+
+    @PostMapping(value = "/group/sending/delete", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @ResponseStatus(HttpStatus.OK)
+    public GroupDeleteSendingResult deleteGroupSending(@Valid GroupDeleteSendingTo groupDeleteSendingTo) {
+        log.info("group delete sending {}", groupDeleteSendingTo);
+        return documentService.deleteGroupSending(groupDeleteSendingTo);
     }
 }

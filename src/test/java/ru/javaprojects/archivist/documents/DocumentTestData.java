@@ -187,7 +187,7 @@ public class DocumentTestData {
             LocalDateTime.of(2022, OCTOBER, 14, 11, 35), "Letter # 2368-456 dated 2022-09-25");
 
     public static final MatcherFactory.Matcher<Sending> SENDING_MATCHER =
-            MatcherFactory.usingIgnoringFieldsComparator(Sending.class, "document", "invoice.letter.company");
+            MatcherFactory.usingIgnoringFieldsComparator(Sending.class, "document", "invoice.letter.company", "invoice.sendings");
 
     public static final long DOCUMENT_1_COMPANY_1_SENDING_1_ID = 100041;
     public static final long DOCUMENT_1_COMPANY_1_SENDING_2_ID = 100042;

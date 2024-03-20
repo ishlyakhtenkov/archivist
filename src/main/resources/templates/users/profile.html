@@ -15,7 +15,7 @@
                             <div th:text="'Roles: ' + ${#strings.substring(user.roles, 1, #strings.length(user.roles) - 1)}">Roles</div>
                             <div th:text="'Registered: ' + ${#dates.format(user.registered, 'dd.MM.yyyy HH:mm')}">Registered</div>
                         </div>
-                        <div class="btn-toolbar mt-2 mb-1 float-end">
+                        <div class="btn-toolbar mt-2 mb-1">
                             <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#changePasswordModal">
                                 Change password
                             </button>

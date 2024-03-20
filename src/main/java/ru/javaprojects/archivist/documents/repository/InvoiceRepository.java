@@ -14,5 +14,8 @@ public interface InvoiceRepository extends BaseRepository<Invoice> {
     @EntityGraph(attributePaths = "letter.company")
     Optional<Invoice> findByNumberAndDate(String number, LocalDate date);
 
+    @EntityGraph(attributePaths = {"letter.company", "sendings.document"})
+    Optional<Invoice> findWithSendingsByNumberAndDate(String number, LocalDate date);
+
     long countAllByLetter_Id(long letterId);
 }

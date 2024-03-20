@@ -16,6 +16,11 @@ public interface SendingRepository extends BaseRepository<Sending> {
             "WHERE s.document.id =:documentId AND s.invoice.letter.company.id =:companyId ORDER BY s.invoice.date DESC")
     List<Sending> findAllByDocumentIdAndCompanyId(long documentId, long companyId);
 
+    @Query("SELECT s FROM Sending s JOIN FETCH s.document JOIN FETCH s.invoice JOIN FETCH s.invoice.letter " +
+            "WHERE s.invoice.letter.company.id =:companyId AND s.document.id IN :documentsIds")
+    List<Sending> findAllByCompanyIdAndDocumentsIds(long companyId, List<Long> documentsIds);
+
+
     @Query("SELECT s FROM Sending s JOIN FETCH s.invoice JOIN FETCH s.invoice.letter JOIN FETCH s.invoice.letter.company " +
             "WHERE s.id =:id")
     Optional<Sending> findByIdWithInvoice(long id);

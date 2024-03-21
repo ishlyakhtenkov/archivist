@@ -10,7 +10,12 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import ru.javaprojects.archivist.documents.DocumentService;
-import ru.javaprojects.archivist.tools.*;
+import ru.javaprojects.archivist.tools.GroupAddSendingResult;
+import ru.javaprojects.archivist.tools.GroupOperationResult;
+import ru.javaprojects.archivist.tools.to.GroupAddSendingTo;
+import ru.javaprojects.archivist.tools.to.GroupDeleteSendingTo;
+import ru.javaprojects.archivist.tools.to.GroupSubscribeTo;
+import ru.javaprojects.archivist.tools.to.GroupUnsubscribeTo;
 
 @RestController
 @Validated
@@ -34,15 +39,22 @@ public class ToolRestController {
 
     @PostMapping(value = "/group/sending/delete", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.OK)
-    public GroupDeleteSendingResult deleteGroupSending(@Valid GroupDeleteSendingTo groupDeleteSendingTo) {
+    public GroupOperationResult deleteGroupSending(@Valid GroupDeleteSendingTo groupDeleteSendingTo) {
         log.info("group delete sending {}", groupDeleteSendingTo);
         return documentService.deleteGroupSending(groupDeleteSendingTo);
     }
 
     @PostMapping(value = "/group/unsubscribe", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.OK)
-    public GroupUnsubscribeResult unsubscribeGroup(@Valid GroupUnsubscribeTo groupUnsubscribeTo) {
+    public GroupOperationResult unsubscribeGroup(@Valid GroupUnsubscribeTo groupUnsubscribeTo) {
         log.info("group unsubscribe {}", groupUnsubscribeTo);
         return documentService.unsubscribeGroup(groupUnsubscribeTo);
+    }
+
+    @PostMapping(value = "/group/resubscribe", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @ResponseStatus(HttpStatus.OK)
+    public GroupOperationResult resubscribeGroup(@Valid GroupSubscribeTo groupSubscribeTo) {
+        log.info("group resubscribe {}", groupSubscribeTo);
+        return documentService.resubscribeGroup(groupSubscribeTo);
     }
 }

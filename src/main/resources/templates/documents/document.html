@@ -113,9 +113,10 @@
                                             <input type="checkbox" th:field="*{secret}" class="form-check-input" disabled id="secretCheckbox2"> Secret
                                         </div>
                                     </div>
-                                    <div class="mb-3">
-                                        <label for="commentTextarea" class="form-label">Comment</label>
-                                        <textarea id="commentTextarea" th:field="*{comment}" class="form-control bg-light" disabled />
+                                    <div class="form-floating mb-3">
+                                        <textarea class="form-control bg-light" id="commentTextarea" th:field="*{comment}" disabled
+                                                  style="height: 100px"></textarea>
+                                        <label for="commentTextarea">Comment</label>
                                     </div>
                                 </div>
                                 <div sec:authorize="hasAnyRole('ADMIN','ARCHIVIST')" class="text-end">
@@ -317,8 +318,11 @@
                         <div class="modal-body">
                             <input type="hidden" name="subscriberId" id="unsubscribeModalSubscriberId" value=""/>
                             <input type="hidden" name="subscriberName" id="unsubscribeModalSubscriberName" value=""/>
-                            <label for="unsubscribeModalUnsubscribeReason" class="form-label">Unsubscribe reason</label>
-                            <textarea class="form-control" id="unsubscribeModalUnsubscribeReason" title="" required></textarea>
+                            <div class="form-floating">
+                                <textarea class="form-control" id="unsubscribeModalUnsubscribeReason" title=""
+                                         style="height: 100px" required></textarea>
+                                <label for="commentTextarea">Unsubscribe reason</label>
+                            </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>

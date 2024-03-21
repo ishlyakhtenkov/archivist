@@ -179,10 +179,10 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="mb-3">
-                                        <label for="commentTextarea" class="form-label">Comment</label>
-                                        <textarea id="commentTextarea" th:field="*{comment}"
-                                                  th:class="${#fields.hasErrors('comment')} ? 'form-control is-invalid' : 'form-control'"/>
+                                    <div class="form-floating mb-3">
+                                        <textarea class="form-control" id="commentTextarea" th:field="*{comment}"
+                                                  th:class="${#fields.hasErrors('comment')} ? 'form-control is-invalid' : 'form-control'" style="height: 100px"></textarea>
+                                        <label for="commentTextarea">Comment</label>
                                         <span th:if="${#fields.hasErrors('comment')}">
                                             <ul>
                                                 <li class="text-danger text-start"

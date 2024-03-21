@@ -11,12 +11,12 @@ import ru.javaprojects.archivist.common.util.validation.NoHtml;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class DecimalNumberTo extends BaseTo {
+public abstract class DecimalNumberTo extends BaseTo {
 
     @NotBlank
     @NoHtml
     @Size(max = 32)
-    private String decimalNumber;
+    protected String decimalNumber;
 
     protected DecimalNumberTo(Long id, String decimalNumber) {
         super(id);

@@ -11,7 +11,7 @@ import ru.javaprojects.archivist.common.util.validation.NoHtml;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class NamedTo extends BaseTo {
+public abstract class NamedTo extends BaseTo {
 
     @NotBlank
     @NoHtml

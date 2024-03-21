@@ -235,3 +235,8 @@ input[type=date]:focus::-webkit-datetime-edit {
 .sending-title-field {
     width: 105px;
 }
+
+.ref-style {
+    color: #0000FF;
+    text-decoration: underline;
+}

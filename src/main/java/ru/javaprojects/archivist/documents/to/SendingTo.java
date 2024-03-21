@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ru.javaprojects.archivist.common.to.BaseSendingTo;
+import ru.javaprojects.archivist.common.to.BaseSendingToExtra;
 import ru.javaprojects.archivist.documents.model.Status;
 
 import java.time.LocalDate;
@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @NoArgsConstructor
-public class SendingTo extends BaseSendingTo {
+public class SendingTo extends BaseSendingToExtra {
 
     @NotNull
     private Long documentId;

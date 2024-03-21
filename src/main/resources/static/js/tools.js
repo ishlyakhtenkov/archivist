@@ -87,8 +87,8 @@ function deleteGroupSending() {
             $('#groupDeleteSendingModal').modal('toggle');
             successToast('Sending for documents group was deleted');
             $('#resultContent').empty();
-            $('#resultContent').append(generateResultCard(result.deletedSendingDocuments, 'success', 'Sending delete for documents'));
-            $('#resultContent').append(generateResultCard(result.notHaveSendingDocuments, 'danger', 'Not found sending for documents or documents itself'));
+            $('#resultContent').append(generateResultCard(result.processedDocuments, 'success', 'Sending delete for documents'));
+            $('#resultContent').append(generateResultCard(result.notProcessedDocuments, 'danger', 'Not found sending for documents or documents itself'));
             $('#resultModalLabel').text('Group delete sending operation result');
             $('#resultModal').modal('toggle');
         }).fail((data) => {
@@ -125,12 +125,47 @@ function unsubscribeGroup() {
             $('#groupUnsubscribeModal').modal('toggle');
             successToast('Subscribers for documents group were unsubscribed');
             $('#resultContent').empty();
-            $('#resultContent').append(generateResultCard(result.unsubscribedSubscriberDocuments, 'success', 'Documents which subscribers were unsubscribed'));
-            $('#resultContent').append(generateResultCard(result.notHaveSubscriberDocuments, 'danger', 'Not found subscribers or documents itself'));
+            $('#resultContent').append(generateResultCard(result.processedDocuments, 'success', 'Documents which subscribers were unsubscribed'));
+            $('#resultContent').append(generateResultCard(result.notProcessedDocuments, 'danger', 'Not found subscribers or documents itself'));
             $('#resultModalLabel').text('Group unsubscribe operation result');
             $('#resultModal').modal('toggle');
         }).fail((data) => {
             handleError(data, 'Failed to unsubscribe subscribers for documents group');
+        });
+    }
+}
+
+$('#groupResubscribeModal').on('show.bs.modal', (event) => {
+    let companySelector = $('#resubscribeCompanySelector');
+    companySelector.empty();
+    fillCompaniesSelector(companySelector); // add to company-selector
+    $(event.currentTarget).find('#resubscribeFileInput').val('').css('color', 'transparent');
+});
+
+function resubscribeGroup() {
+    let companyId = $('#resubscribeCompanySelector').val();
+    let inputtedFile = $('#resubscribeFileInput').prop('files');
+    if (companyId !== null && inputtedFile.length) {
+        let formData = new FormData();
+        formData.append('companyId', companyId);
+        formData.append('file', inputtedFile[0]);
+
+        $.ajax({
+            url: '/tools/group/resubscribe',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false
+        }).done((result) => {
+            $('#groupResubscribeModal').modal('toggle');
+            successToast('Subscribers for documents group were resubscribed');
+            $('#resultContent').empty();
+            $('#resultContent').append(generateResultCard(result.processedDocuments, 'success', 'Documents which subscribers were resubscribed'));
+            $('#resultContent').append(generateResultCard(result.notProcessedDocuments, 'danger', 'Not found subscribers or documents itself'));
+            $('#resultModalLabel').text('Group resubscribe operation result');
+            $('#resultModal').modal('toggle');
+        }).fail((data) => {
+            handleError(data, 'Failed to resubscribe subscribers for documents group');
         });
     }
 }

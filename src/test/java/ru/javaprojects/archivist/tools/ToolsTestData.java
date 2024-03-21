@@ -20,11 +20,8 @@ public class ToolsTestData {
     public static final MatcherFactory.Matcher<GroupAddSendingResult> GROUP_ADD_SENDING_RESULT_MATCHER =
             MatcherFactory.usingIgnoringFieldsComparator(GroupAddSendingResult.class);
 
-    public static final MatcherFactory.Matcher<GroupDeleteSendingResult> GROUP_DELETE_SENDING_RESULT_MATCHER =
-            MatcherFactory.usingIgnoringFieldsComparator(GroupDeleteSendingResult.class);
-
-    public static final MatcherFactory.Matcher<GroupUnsubscribeResult> GROUP_UNSUBSCRIBE_RESULT_MATCHER =
-            MatcherFactory.usingIgnoringFieldsComparator(GroupUnsubscribeResult.class);
+    public static final MatcherFactory.Matcher<GroupOperationResult> GROUP_OPERATION_RESULT_MATCHER =
+            MatcherFactory.usingIgnoringFieldsComparator(GroupOperationResult.class);
 
     public static final String INVOICE_NUMBER = "invoiceNumber";
     public static final String INVOICE_DATE = "invoiceDate";
@@ -59,9 +56,9 @@ public class ToolsTestData {
         return params;
     }
 
-    public static final GroupDeleteSendingResult groupDeleteSendingResult =
-            new GroupDeleteSendingResult(List.of(document3.getDecimalNumber(), NOT_EXISTING_DECIMAL_NUMBER,
-                    AUTO_GENERATED_DECIMAL_NUMBER), List.of(document1.getDecimalNumber(), document2.getDecimalNumber()));
+    public static final GroupOperationResult groupDeleteSendingResult =
+            new GroupOperationResult(List.of(document1.getDecimalNumber(), document2.getDecimalNumber()),
+                    List.of(document3.getDecimalNumber(), NOT_EXISTING_DECIMAL_NUMBER, AUTO_GENERATED_DECIMAL_NUMBER));
 
     public static MultiValueMap<String, String> getGroupUnsubscribeParams() {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
@@ -70,7 +67,7 @@ public class ToolsTestData {
         return params;
     }
 
-    public static final GroupUnsubscribeResult groupUnsubscribeResult =
-            new GroupUnsubscribeResult(List.of(document3.getDecimalNumber(), NOT_EXISTING_DECIMAL_NUMBER,
-                    AUTO_GENERATED_DECIMAL_NUMBER), List.of(document1.getDecimalNumber(), document2.getDecimalNumber()));
+    public static final GroupOperationResult GROUP_SUBSCRIBE_RESULT =
+            new GroupOperationResult(List.of(document1.getDecimalNumber(), document2.getDecimalNumber()),
+                    List.of(document3.getDecimalNumber(), NOT_EXISTING_DECIMAL_NUMBER, AUTO_GENERATED_DECIMAL_NUMBER));
 }

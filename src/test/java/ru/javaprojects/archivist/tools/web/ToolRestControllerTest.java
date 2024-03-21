@@ -39,6 +39,7 @@ class ToolRestControllerTest extends AbstractControllerTest {
     private static final String GROUP_ADD_SENDING_URL = TOOLS_URL + "/group/sending/add";
     private static final String GROUP_DELETE_SENDING_URL = TOOLS_URL + "/group/sending/delete";
     private static final String GROUP_UNSUBSCRIBE_URL = TOOLS_URL + "/group/unsubscribe";
+    private static final String GROUP_RESUBSCRIBE_URL = TOOLS_URL + "/group/resubscribe";
 
     @Autowired
     private InvoiceRepository invoiceRepository;
@@ -200,7 +201,7 @@ class ToolRestControllerTest extends AbstractControllerTest {
                 .params(groupDeleteSendingParams)
                 .with(csrf()))
                 .andExpect(status().isOk());
-        GROUP_DELETE_SENDING_RESULT_MATCHER.assertMatch(GROUP_DELETE_SENDING_RESULT_MATCHER.readFromJson(actions),
+        GROUP_OPERATION_RESULT_MATCHER.assertMatch(GROUP_OPERATION_RESULT_MATCHER.readFromJson(actions),
                 groupDeleteSendingResult);
 
         assertEquals(0,
@@ -315,8 +316,8 @@ class ToolRestControllerTest extends AbstractControllerTest {
                 .params(getGroupUnsubscribeParams())
                 .with(csrf()))
                 .andExpect(status().isOk());
-        GROUP_UNSUBSCRIBE_RESULT_MATCHER.assertMatch(GROUP_UNSUBSCRIBE_RESULT_MATCHER.readFromJson(actions),
-                groupUnsubscribeResult);
+        GROUP_OPERATION_RESULT_MATCHER.assertMatch(GROUP_OPERATION_RESULT_MATCHER.readFromJson(actions),
+                GROUP_SUBSCRIBE_RESULT);
         subscriberRepository.findAllByCompany_IdAndDocument_IdIn(COMPANY1_ID, List.of(DOCUMENT1_ID, DOCUMENT2_ID))
                 .forEach(subscriber -> {
                     assertFalse(subscriber.isSubscribed());
@@ -375,6 +376,73 @@ class ToolRestControllerTest extends AbstractControllerTest {
         perform(MockMvcRequestBuilders.multipart(HttpMethod.POST, GROUP_UNSUBSCRIBE_URL)
                 .file(DECIMAL_NUMBERS_LIST_FILE)
                 .params(getGroupUnsubscribeParams())
+                .with(csrf()))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithUserDetails(ARCHIVIST_MAIL)
+    void resubscribeGroup() throws Exception {
+        ResultActions actions = perform(MockMvcRequestBuilders.multipart(HttpMethod.POST, GROUP_RESUBSCRIBE_URL)
+                .file(DECIMAL_NUMBERS_LIST_FILE)
+                .param(COMPANY_ID, String.valueOf(COMPANY1_ID))
+                .with(csrf()))
+                .andExpect(status().isOk());
+        GROUP_OPERATION_RESULT_MATCHER.assertMatch(GROUP_OPERATION_RESULT_MATCHER.readFromJson(actions),
+                GROUP_SUBSCRIBE_RESULT);
+        subscriberRepository.findAllByCompany_IdAndDocument_IdIn(COMPANY1_ID, List.of(DOCUMENT1_ID, DOCUMENT2_ID))
+                .forEach(subscriber -> {
+                    assertTrue(subscriber.isSubscribed());
+                });
+    }
+
+    @Test
+    @WithUserDetails(ARCHIVIST_MAIL)
+    void resubscribeGroupWhenCompanyNotExists() throws Exception {
+        perform(MockMvcRequestBuilders.multipart(HttpMethod.POST, GROUP_RESUBSCRIBE_URL)
+                .file(DECIMAL_NUMBERS_LIST_FILE)
+                .param(COMPANY_ID, String.valueOf(NOT_FOUND))
+                .with(csrf()))
+                .andExpect(status().isNotFound())
+                .andExpect(result -> assertEquals(Objects.requireNonNull(result.getResolvedException()).getClass(),
+                        NotFoundException.class))
+                .andExpect(problemTitle(HttpStatus.NOT_FOUND.getReasonPhrase()))
+                .andExpect(problemStatus(HttpStatus.NOT_FOUND.value()))
+                .andExpect(problemDetail(ENTITY_NOT_FOUND))
+                .andExpect(problemInstance(GROUP_RESUBSCRIBE_URL));
+    }
+
+    @Test
+    @WithUserDetails(ARCHIVIST_MAIL)
+    void resubscribeGroupInvalid() throws Exception {
+        perform(MockMvcRequestBuilders.multipart(HttpMethod.POST, GROUP_RESUBSCRIBE_URL)
+                .file(DECIMAL_NUMBERS_LIST_FILE)
+                .param(COMPANY_ID, "")
+                .with(csrf()))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(result -> assertEquals(Objects.requireNonNull(result.getResolvedException()).getClass(),
+                        MethodArgumentNotValidException.class))
+                .andExpect(problemTitle(HttpStatus.UNPROCESSABLE_ENTITY.getReasonPhrase()))
+                .andExpect(problemStatus(HttpStatus.UNPROCESSABLE_ENTITY.value()))
+                .andExpect(problemInstance(GROUP_RESUBSCRIBE_URL));
+    }
+
+    @Test
+    void resubscribeGroupUnauthorized() throws Exception {
+        perform(MockMvcRequestBuilders.multipart(HttpMethod.POST, GROUP_RESUBSCRIBE_URL)
+                .file(DECIMAL_NUMBERS_LIST_FILE)
+                .param(COMPANY_ID, String.valueOf(COMPANY1_ID))
+                .with(csrf())).andExpect(status().isFound())
+                .andExpect(result ->
+                        assertTrue(Objects.requireNonNull(result.getResponse().getRedirectedUrl()).endsWith(LOGIN_URL)));
+    }
+
+    @Test
+    @WithUserDetails(USER_MAIL)
+    void resubscribeGroupForbidden() throws Exception {
+        perform(MockMvcRequestBuilders.multipart(HttpMethod.POST, GROUP_RESUBSCRIBE_URL)
+                .file(DECIMAL_NUMBERS_LIST_FILE)
+                .param(COMPANY_ID, String.valueOf(COMPANY1_ID))
                 .with(csrf()))
                 .andExpect(status().isForbidden());
     }

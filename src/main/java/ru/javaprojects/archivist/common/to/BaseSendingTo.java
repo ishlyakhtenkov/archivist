@@ -16,40 +16,30 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class BaseSendingTo {
-    @NotNull
-    private Long companyId;
+public abstract class BaseSendingTo {
 
     @NotNull
     @NotOriginalStatus
-    private Status status;
+    protected Status status;
 
     @NotBlank
     @NoHtml
     @Size(max = 10)
-    private String invoiceNumber;
+    protected String invoiceNumber;
 
     @NotNull
-    private LocalDate invoiceDate;
+    protected LocalDate invoiceDate;
 
-    @NoHtml
-    @Size(max = 16)
-    private String letterNumber;
 
-    private LocalDate letterDate;
-
-    protected BaseSendingTo(Long companyId, Status status, String invoiceNumber, LocalDate invoiceDate,
-                     String letterNumber, LocalDate letterDate) {
-        this.companyId = companyId;
+    protected BaseSendingTo(Status status, String invoiceNumber, LocalDate invoiceDate) {
         this.status = status;
         this.invoiceNumber = invoiceNumber;
         this.invoiceDate = invoiceDate;
-        this.letterNumber = letterNumber;
-        this.letterDate = letterDate;
     }
 
     @Override
     public String toString() {
-        return String.format("BaseSendingTo[companyId=%d, status=%s]", companyId, status);
+        return String.format("%s[status=%s, invoiceNumber=%s, invoiceDate=%s]", getClass().getSimpleName(), status,
+                invoiceNumber, invoiceDate);
     }
 }

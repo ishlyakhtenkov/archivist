@@ -7,14 +7,18 @@
     <appMain>
         <h2 class="text-secondary font-weight-bold"><i class="fa-solid fa-screwdriver-wrench me-2"></i>Tools</h2>
         <div class="list-group">
-            <button type="button" class="list-group-item list-group-item-action" data-bs-toggle="modal"
-                    data-bs-target="#groupAddSendingModal">Add sending for documents group</button>
-            <button type="button" class="list-group-item list-group-item-action" data-bs-toggle="modal"
-                    data-bs-target="#groupDeleteSendingModal">Delete sending for documents group</button>
-            <button type="button" class="list-group-item list-group-item-action" data-bs-toggle="modal"
-                    data-bs-target="#groupUnsubscribeModal">Unsubscribe subscriber for documents group</button>
-            <button type="button" class="list-group-item list-group-item-action" data-bs-toggle="modal"
-                    data-bs-target="#groupResubscribeModal">Resubscribe subscriber for documents group</button>
+            <button type="button" class="list-group-item list-group-item-action ref-style"
+                    onmouseover="this.style.color='#0000FF'; this.style.textDecoration='underline';"
+                    data-bs-toggle="modal" data-bs-target="#groupAddSendingModal">Add sending for documents group</button>
+            <button type="button" class="list-group-item list-group-item-action ref-style"
+                    onmouseover="this.style.color='#0000FF'; this.style.textDecoration='underline';"
+                    data-bs-toggle="modal" data-bs-target="#groupDeleteSendingModal">Delete sending for documents group</button>
+            <button type="button" class="list-group-item list-group-item-action ref-style"
+                    onmouseover="this.style.color='#0000FF'; this.style.textDecoration='underline';"
+                    data-bs-toggle="modal" data-bs-target="#groupUnsubscribeModal">Unsubscribe subscriber for documents group</button>
+            <button type="button" class="list-group-item list-group-item-action ref-style"
+                    onmouseover="this.style.color='#0000FF'; this.style.textDecoration='underline';"
+                    data-bs-toggle="modal" data-bs-target="#groupResubscribeModal">Resubscribe subscriber for documents group</button>
         </div>
 
         <!-- Group add sending modal -->
@@ -81,7 +85,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">&nbsp;Cancel&nbsp;</button>
-                            <button type="submit" class="btn btn-success" onclick="createGroupSending()">Add data</button>
+                            <button type="submit" class="btn btn-success" onclick="createGroupSending()">Add sending</button>
                         </div>
                     </form>
                 </div>
@@ -133,7 +137,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">&nbsp;Cancel&nbsp;</button>
-                            <button type="submit" class="btn btn-warning" onclick="deleteGroupSending()">Delete data</button>
+                            <button type="submit" class="btn btn-danger" onclick="deleteGroupSending()">Delete sending</button>
                         </div>
                     </form>
                 </div>
@@ -170,7 +174,40 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">&nbsp;Cancel&nbsp;</button>
-                            <button type="submit" class="btn btn-success" onclick="unsubscribeGroup()">Add data</button>
+                            <button type="submit" class="btn btn-success" onclick="unsubscribeGroup()">Unsubscribe</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Group resubscribe modal -->
+        <div class="modal fade" id="groupResubscribeModal" tabindex="-1" aria-labelledby="groupResubscribeModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="groupResubscribeModalLabel">Group resubscribe</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form id="groupResubscribeForm" onsubmit="return false;">
+                        <div class="modal-body">
+                            <div class="my-3">
+                                <div class="input-group">
+                                    <span class="input-group-text sending-title-field">Company</span>
+                                    <select class="form-select" id="resubscribeCompanySelector" title="" required></select>
+                                </div>
+                                <div class="input-group mt-3">
+                                    <input type="file" accept=".txt" id="resubscribeFileInput" class="form-control" required style="color: transparent"
+                                           onchange="changeFileInputColor('resubscribeFileInput', 'gray')"/>
+                                </div>
+                                <div class="form-text ms-1">
+                                    The .txt file must contain only document decimal numbers, each decimal number on a new line
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">&nbsp;Cancel&nbsp;</button>
+                            <button type="submit" class="btn btn-success" onclick="resubscribeGroup()">Resubscribe</button>
                         </div>
                     </form>
                 </div>

@@ -23,6 +23,9 @@ public class ToolsTestData {
     public static final MatcherFactory.Matcher<GroupDeleteSendingResult> GROUP_DELETE_SENDING_RESULT_MATCHER =
             MatcherFactory.usingIgnoringFieldsComparator(GroupDeleteSendingResult.class);
 
+    public static final MatcherFactory.Matcher<GroupUnsubscribeResult> GROUP_UNSUBSCRIBE_RESULT_MATCHER =
+            MatcherFactory.usingIgnoringFieldsComparator(GroupUnsubscribeResult.class);
+
     public static final String INVOICE_NUMBER = "invoiceNumber";
     public static final String INVOICE_DATE = "invoiceDate";
     public static final String LETTER_NUMBER = "letterNumber";
@@ -58,5 +61,16 @@ public class ToolsTestData {
 
     public static final GroupDeleteSendingResult groupDeleteSendingResult =
             new GroupDeleteSendingResult(List.of(document3.getDecimalNumber(), NOT_EXISTING_DECIMAL_NUMBER,
+                    AUTO_GENERATED_DECIMAL_NUMBER), List.of(document1.getDecimalNumber(), document2.getDecimalNumber()));
+
+    public static MultiValueMap<String, String> getGroupUnsubscribeParams() {
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add(COMPANY_ID, String.valueOf(COMPANY1_ID));
+        params.add(UNSUBSCRIBE_REASON, REASON_FOR_UNSUBSCRIBE);
+        return params;
+    }
+
+    public static final GroupUnsubscribeResult groupUnsubscribeResult =
+            new GroupUnsubscribeResult(List.of(document3.getDecimalNumber(), NOT_EXISTING_DECIMAL_NUMBER,
                     AUTO_GENERATED_DECIMAL_NUMBER), List.of(document1.getDecimalNumber(), document2.getDecimalNumber()));
 }

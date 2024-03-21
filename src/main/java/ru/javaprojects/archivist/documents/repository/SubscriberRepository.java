@@ -27,4 +27,7 @@ public interface SubscriberRepository extends BaseRepository<Subscriber> {
     @Modifying
     @Query("DELETE FROM Subscriber s WHERE s.company.id =:companyId AND s.document.id IN :documentsIds")
     int deleteAllByCompanyIdAndDocumentsIds(long companyId, List<Long> documentsIds);
+
+    @Query("SELECT s FROM Subscriber s JOIN FETCH s.document d WHERE s.company.id =:companyId AND d.decimalNumber IN :decimalNumbers")
+    List<Subscriber> findAllByCompanyIdAndDocumentDecimalNumbers(long companyId, List<String> decimalNumbers);
 }

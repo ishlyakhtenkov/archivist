@@ -11,6 +11,10 @@
                     data-bs-target="#groupAddSendingModal">Add sending for documents group</button>
             <button type="button" class="list-group-item list-group-item-action" data-bs-toggle="modal"
                     data-bs-target="#groupDeleteSendingModal">Delete sending for documents group</button>
+            <button type="button" class="list-group-item list-group-item-action" data-bs-toggle="modal"
+                    data-bs-target="#groupUnsubscribeModal">Unsubscribe subscriber for documents group</button>
+            <button type="button" class="list-group-item list-group-item-action" data-bs-toggle="modal"
+                    data-bs-target="#groupResubscribeModal">Resubscribe subscriber for documents group</button>
         </div>
 
         <!-- Group add sending modal -->
@@ -136,6 +140,43 @@
             </div>
         </div>
 
+        <!-- Group unsubscribe modal -->
+        <div class="modal fade" id="groupUnsubscribeModal" tabindex="-1" aria-labelledby="groupUnsubscribeModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="groupUnsubscribeModalLabel">Group unsubscribe</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form id="groupUnsubscribeForm" onsubmit="return false;">
+                        <div class="modal-body">
+                            <div class="my-3">
+                                <div class="input-group">
+                                    <span class="input-group-text sending-title-field">Company</span>
+                                    <select class="form-select" id="unsubscribeCompanySelector" title="" required></select>
+                                </div>
+                                <div class="input-group mt-3">
+                                    <input type="file" accept=".txt" id="unsubscribeFileInput" class="form-control" required style="color: transparent"
+                                           onchange="changeFileInputColor('unsubscribeFileInput', 'gray')"/>
+                                </div>
+                                <div class="form-text ms-1">
+                                    The .txt file must contain only document decimal numbers, each decimal number on a new line
+                                </div>
+                                <div class="form-floating mt-3">
+                                    <textarea class="form-control" id="unsubscribeReason" required style="height: 100px"></textarea>
+                                    <label for="unsubscribeReason">Unsubscribe reason</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">&nbsp;Cancel&nbsp;</button>
+                            <button type="submit" class="btn btn-success" onclick="unsubscribeGroup()">Add data</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
         <!-- Result modal -->
         <div class="modal fade" id="resultModal" tabindex="-1" aria-labelledby="resultModalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -159,8 +200,3 @@
         <script src="/js/document-sending.js?v=1"></script>
     </ownScript>
 </th:block>
-
-<script>
-
-
-</script>

@@ -4,31 +4,21 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 import ru.javaprojects.archivist.common.util.validation.NoHtml;
-import ru.javaprojects.archivist.documents.model.Status;
-import ru.javaprojects.archivist.documents.to.NotOriginalStatus;
 import ru.javaprojects.archivist.tools.web.TxtFile;
-
-import java.time.LocalDate;
 
 @Getter
 @Setter
-@NoArgsConstructor
-public class GroupDeleteSendingTo {
+public class GroupUnsubscribeTo {
     @NotNull
-    @NotOriginalStatus
-    private Status status;
+    private Long companyId;
 
     @NotBlank
     @NoHtml
-    @Size(max = 10)
-    private String invoiceNumber;
-
-    @NotNull
-    private LocalDate invoiceDate;
+    @Size(max = 256)
+    private String unsubscribeReason;
 
     @NotNull
     @TxtFile
@@ -36,6 +26,6 @@ public class GroupDeleteSendingTo {
 
     @Override
     public String toString() {
-        return String.format("GroupDeleteSendingTo[invoiceNumber=%s, invoiceDate=%s]", invoiceNumber, invoiceDate);
+        return String.format("GroupUnsubscribeTo[companyId=%d]", getCompanyId());
     }
 }

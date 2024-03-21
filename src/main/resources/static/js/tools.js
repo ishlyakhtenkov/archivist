@@ -96,3 +96,41 @@ function deleteGroupSending() {
         });
     }
 }
+
+$('#groupUnsubscribeModal').on('show.bs.modal', (event) => {
+    let companySelector = $('#unsubscribeCompanySelector');
+    companySelector.empty();
+    fillCompaniesSelector(companySelector); // add to company-selector
+    $(event.currentTarget).find('#unsubscribeReason').val('');
+    $(event.currentTarget).find('#unsubscribeFileInput').val('').css('color', 'transparent');
+});
+
+function unsubscribeGroup() {
+    let companyId = $('#unsubscribeCompanySelector').val();
+    let unsubscribeReason = $('#unsubscribeReason').val();
+    let inputtedFile = $('#unsubscribeFileInput').prop('files');
+    if (companyId !== null && unsubscribeReason.length && inputtedFile.length) {
+        let formData = new FormData();
+        formData.append('companyId', companyId);
+        formData.append('unsubscribeReason', unsubscribeReason);
+        formData.append('file', inputtedFile[0]);
+
+        $.ajax({
+            url: '/tools/group/unsubscribe',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false
+        }).done((result) => {
+            $('#groupUnsubscribeModal').modal('toggle');
+            successToast('Subscribers for documents group were unsubscribed');
+            $('#resultContent').empty();
+            $('#resultContent').append(generateResultCard(result.unsubscribedSubscriberDocuments, 'success', 'Documents which subscribers were unsubscribed'));
+            $('#resultContent').append(generateResultCard(result.notHaveSubscriberDocuments, 'danger', 'Not found subscribers or documents itself'));
+            $('#resultModalLabel').text('Group unsubscribe operation result');
+            $('#resultModal').modal('toggle');
+        }).fail((data) => {
+            handleError(data, 'Failed to unsubscribe subscribers for documents group');
+        });
+    }
+}

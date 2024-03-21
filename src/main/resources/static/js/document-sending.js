@@ -2,7 +2,7 @@ const companySelector = $('#companySelector');
 
 function setupAddSendingModal(event) {
     companySelector.empty();
-    fillCompaniesSelector(); // add to company-selector
+    fillCompaniesSelector(companySelector); // add to company-selector
     $(event.currentTarget).find('#statusSelector').val('');
     $(event.currentTarget).find('#invoiceNumInput').val('');
     $(event.currentTarget).find('#invoiceDateInput').val('');
@@ -10,15 +10,15 @@ function setupAddSendingModal(event) {
     $(event.currentTarget).find('#letterDateInput').val('').css('color', 'transparent');
 }
 
-function fillCompaniesSelector() {
+function fillCompaniesSelector(selector) {
     $.ajax({
         url: '/companies/list'
     }).done(companies => {
         if (companies.length !== 0) {
             companies.forEach(company => {
-                companySelector.append($('<option></option>').val(company.id).html(company.name));
+                selector.append($('<option></option>').val(company.id).html(company.name));
             });
-            companySelector.val('');
+            selector.val('');
         }
     }).fail(function (data) {
         handleError(data, 'Failed to get companies');

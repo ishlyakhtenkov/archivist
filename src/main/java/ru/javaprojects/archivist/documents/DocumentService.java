@@ -25,10 +25,7 @@ import ru.javaprojects.archivist.documents.repository.*;
 import ru.javaprojects.archivist.documents.to.ApplicabilityTo;
 import ru.javaprojects.archivist.documents.to.ChangeTo;
 import ru.javaprojects.archivist.documents.to.SendingTo;
-import ru.javaprojects.archivist.tools.GroupAddSendingResult;
-import ru.javaprojects.archivist.tools.GroupAddSendingTo;
-import ru.javaprojects.archivist.tools.GroupDeleteSendingResult;
-import ru.javaprojects.archivist.tools.GroupDeleteSendingTo;
+import ru.javaprojects.archivist.tools.*;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -394,5 +391,26 @@ public class DocumentService {
         });
         subscriberRepository.saveAll(subscribers);
         return result;
+    }
+
+    @Transactional
+    public GroupUnsubscribeResult unsubscribeGroup(GroupUnsubscribeTo groupUnsubscribeTo) {
+        Assert.notNull(groupUnsubscribeTo, "groupUnsubscribeTo must not be null");
+        companyService.get(groupUnsubscribeTo.getCompanyId());
+        List<String> decimalNumbers = new ArrayList<>(FileUtil.readAllLines(groupUnsubscribeTo.getFile(), true));
+        List<Subscriber> subscribers = subscriberRepository
+                .findAllByCompanyIdAndDocumentDecimalNumbers(groupUnsubscribeTo.getCompanyId(), decimalNumbers);
+        List<String> unsubscribedSubscriberDocuments = subscribers.stream()
+                .map(subscriber -> subscriber.getDocument().getDecimalNumber())
+                .toList();
+        decimalNumbers.removeAll(unsubscribedSubscriberDocuments);
+        GroupUnsubscribeResult groupUnsubscribeResult = new GroupUnsubscribeResult(decimalNumbers, unsubscribedSubscriberDocuments);
+        subscribers.forEach(subscriber -> {
+            subscriber.setSubscribed(false);
+            subscriber.setUnsubscribeReason(groupUnsubscribeTo.getUnsubscribeReason());
+            subscriber.setUnsubscribeTimestamp(LocalDateTime.now());
+        });
+        subscriberRepository.saveAll(subscribers);
+        return groupUnsubscribeResult;
     }
 }

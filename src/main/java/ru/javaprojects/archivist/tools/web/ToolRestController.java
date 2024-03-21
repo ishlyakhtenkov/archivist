@@ -10,10 +10,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import ru.javaprojects.archivist.documents.DocumentService;
-import ru.javaprojects.archivist.tools.GroupAddSendingResult;
-import ru.javaprojects.archivist.tools.GroupDeleteSendingResult;
-import ru.javaprojects.archivist.tools.GroupDeleteSendingTo;
-import ru.javaprojects.archivist.tools.GroupAddSendingTo;
+import ru.javaprojects.archivist.tools.*;
 
 @RestController
 @Validated
@@ -40,5 +37,12 @@ public class ToolRestController {
     public GroupDeleteSendingResult deleteGroupSending(@Valid GroupDeleteSendingTo groupDeleteSendingTo) {
         log.info("group delete sending {}", groupDeleteSendingTo);
         return documentService.deleteGroupSending(groupDeleteSendingTo);
+    }
+
+    @PostMapping(value = "/group/unsubscribe", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @ResponseStatus(HttpStatus.OK)
+    public GroupUnsubscribeResult unsubscribeGroup(@Valid GroupUnsubscribeTo groupUnsubscribeTo) {
+        log.info("group unsubscribe {}", groupUnsubscribeTo);
+        return documentService.unsubscribeGroup(groupUnsubscribeTo);
     }
 }

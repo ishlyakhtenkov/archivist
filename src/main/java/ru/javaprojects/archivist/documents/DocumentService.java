@@ -27,6 +27,7 @@ import ru.javaprojects.archivist.documents.to.ApplicabilityTo;
 import ru.javaprojects.archivist.documents.to.ChangeTo;
 import ru.javaprojects.archivist.documents.to.SendingTo;
 import ru.javaprojects.archivist.tools.GroupAddSendingResult;
+import ru.javaprojects.archivist.tools.GroupContent;
 import ru.javaprojects.archivist.tools.GroupOperationResult;
 import ru.javaprojects.archivist.tools.to.GroupAddSendingTo;
 import ru.javaprojects.archivist.tools.to.GroupDeleteSendingTo;
@@ -141,6 +142,18 @@ public class DocumentService {
     public Content getLatestContent(long documentId) {
         repository.getExisted(documentId);
         return contentRepository.findFirstByDocument_IdOrderByChangeNumberDesc(documentId).orElse(null);
+    }
+
+    public GroupContent getLatestContentForDocuments(MultipartFile decimalNumbersList) {
+        Assert.notNull(decimalNumbersList, "decimalNumbersList must not be null");
+        List<String> decimalNumbers = new ArrayList<>(FileUtil.readAllLines(decimalNumbersList, true));
+        List<Content> contents = contentRepository.findLatestContentForDocuments(decimalNumbers);
+        List<String> processedDocuments = contents.stream()
+                .map(content -> content.getDocument().getDecimalNumber())
+                .toList();
+        decimalNumbers.removeAll(processedDocuments);
+        GroupOperationResult groupDownloadContentResult = new GroupOperationResult(processedDocuments, decimalNumbers);
+        return new GroupContent(contents, groupDownloadContentResult);
     }
 
     public List<Content> getAllContents(long documentId) {

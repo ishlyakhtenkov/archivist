@@ -19,6 +19,9 @@
             <button type="button" class="list-group-item list-group-item-action ref-style"
                     onmouseover="this.style.color='#0000FF'; this.style.textDecoration='underline';"
                     data-bs-toggle="modal" data-bs-target="#groupResubscribeModal">Resubscribe subscriber for documents group</button>
+            <button type="button" class="list-group-item list-group-item-action ref-style"
+                    onmouseover="this.style.color='#0000FF'; this.style.textDecoration='underline';"
+                    data-bs-toggle="modal" data-bs-target="#groupDownloadModal">Download content for documents group</button>
         </div>
 
         <!-- Group add sending modal -->
@@ -208,6 +211,33 @@
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">&nbsp;Cancel&nbsp;</button>
                             <button type="submit" class="btn btn-success" onclick="resubscribeGroup()">Resubscribe</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Group content download modal -->
+        <div class="modal fade" id="groupDownloadModal" tabindex="-1" aria-labelledby="groupDownloadModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="groupDownloadModalLabel">Group download</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form id="groupDownloadForm" th:action="@{/tools/group/content/download}" method="post" enctype="multipart/form-data">
+                        <div class="modal-body">
+                            <div class="input-group">
+                                <input type="file" name="file" accept=".txt" id="downloadFileInput" class="form-control" required style="color: transparent"
+                                       onchange="changeFileInputColor('downloadFileInput', 'gray')"/>
+                            </div>
+                            <div class="form-text ms-1">
+                                The .txt file must contain only document decimal numbers, each decimal number on a new line
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">&nbsp;Cancel&nbsp;</button>
+                            <button type="submit" class="btn btn-success" onclick="showGroupContentDownloadInfo()">Download</button>
                         </div>
                     </form>
                 </div>

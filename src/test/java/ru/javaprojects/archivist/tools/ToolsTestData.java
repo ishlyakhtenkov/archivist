@@ -70,4 +70,14 @@ public class ToolsTestData {
     public static final GroupOperationResult GROUP_SUBSCRIBE_RESULT =
             new GroupOperationResult(List.of(document1.getDecimalNumber(), document2.getDecimalNumber()),
                     List.of(document3.getDecimalNumber(), NOT_EXISTING_DECIMAL_NUMBER, AUTO_GENERATED_DECIMAL_NUMBER));
+
+    public static final String GROUP_CONTENT_DOWNLOAD_OPERATION_RESULT_FILE_CONTENT = """
+            ----Documents whose contents have been downloaded----
+            VUIA.465521.004
+            VUIA.465521.004E3
+            ----Documents whose contents were not found or documents were not found itself----
+            UPIA.421478.001-01
+            VUIA.111111.222
+            VUIA.652147.001           
+            """;
 }

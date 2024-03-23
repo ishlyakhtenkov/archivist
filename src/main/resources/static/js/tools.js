@@ -169,3 +169,21 @@ function resubscribeGroup() {
         });
     }
 }
+
+$('#groupDownloadModal').on('show.bs.modal', (event) => {
+    $(event.currentTarget).find('#downloadFileInput').val('').css('color', 'transparent');
+});
+
+function showGroupContentDownloadInfo() {
+    let inputtedFile = $('#downloadFileInput').prop('files');
+    if (inputtedFile.length) {
+        $('#groupDownloadModal').modal('toggle');
+        successToast('Content for documents group has started downloading');
+        $('#resultContent').empty();
+        $('#resultContent').append('<p>Content for documents group has started downloading.</p> ' +
+            '<p>Check the content.zip file in the Downloads directory when the download is complete. ' +
+            'The content.zip file contains documents content and operation result file.</p>');
+        $('#resultModalLabel').text('Group content download operation info');
+        $('#resultModal').modal('toggle');
+    }
+}

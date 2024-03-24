@@ -1,6 +1,10 @@
 spring:
   profiles:
     active: dev
+  sql:
+    init:
+      mode: never
+      platform: postgresql
   datasource:
     url: jdbc:postgresql://localhost:5432/archivist
     username: user
@@ -15,9 +19,6 @@ spring:
         order_updates: true
         jdbc:
           batch_size: 20
-  sql:
-    init:
-      mode: never
   mail:
     host: smtp.gmail.com
     port: 465

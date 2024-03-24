@@ -118,8 +118,6 @@ CREATE TABLE applicabilities
     FOREIGN KEY (applicability_id) REFERENCES documents (id) ON DELETE CASCADE,
     h2_extra_column VARCHAR AS CASE WHEN primal = FALSE THEN NULL ELSE 'has primal' END
 );
--- FOR POSTGRES USE COMMAND BELOW (INSTEAD OF CREATION h2_extra_column)
--- CREATE UNIQUE INDEX applicabilities_unique_primal_applicability_idx ON applicabilities (document_id) WHERE primal = TRUE;
 CREATE UNIQUE INDEX applicabilities_unique_document_applicability_idx ON applicabilities (document_id, applicability_id);
 CREATE UNIQUE INDEX applicabilities_unique_primal_applicability_idx ON applicabilities (document_id, h2_extra_column);
 
@@ -260,6 +258,4 @@ CREATE TABLE issuances
     FOREIGN KEY (employee_id) REFERENCES employees (id) ON DELETE CASCADE,
     h2_extra_column VARCHAR AS CASE WHEN returned IS NULL THEN 'not returned' ELSE NULL END
 );
--- FOR POSTGRES USE COMMAND BELOW (INSTEAD OF CREATION h2_extra_column)
--- CREATE UNIQUE INDEX issuances_unique_simultaneous_issuance_idx ON issuances (album_id) WHERE returned IS NULL;
 CREATE UNIQUE INDEX issuances_unique_simultaneous_issuance_idx ON issuances (album_id, h2_extra_column);

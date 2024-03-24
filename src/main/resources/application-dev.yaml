@@ -6,6 +6,7 @@ spring:
     init:
       mode: always
       encoding: UTF-8
+      platform: h2
   datasource:
     url:
   jpa:

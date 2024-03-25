@@ -29,7 +29,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="addSendingModalLabel">Group add sending</h1>
+                        <h1 class="modal-title fs-5" id="addSendingModalLabel">Add group sending</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <form id="groupAddSendingForm" onsubmit="return false;">
@@ -82,13 +82,13 @@
                                            onchange="changeFileInputColor('addSendingFileInput', 'gray')"/>
                                 </div>
                                 <div class="form-text ms-1">
-                                    The .txt file must contain only document decimal numbers, each decimal number on a new line
+                                    The .txt file must contain only documents decimal numbers, each decimal number on a new line
                                 </div>
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">&nbsp;Cancel&nbsp;</button>
-                            <button type="submit" class="btn btn-success" onclick="createGroupSending()">Add sending</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-success" onclick="createGroupSending()">&nbsp;&nbsp;Add&nbsp;&nbsp;</button>
                         </div>
                     </form>
                 </div>
@@ -100,7 +100,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="groupDeleteSendingModalLabel">Group delete sending</h1>
+                        <h1 class="modal-title fs-5" id="groupDeleteSendingModalLabel">Delete group sending</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <form id="groupDeleteSendingForm" onsubmit="return false;">
@@ -134,13 +134,13 @@
                                            onchange="changeFileInputColor('deleteSendingFileInput', 'gray')"/>
                                 </div>
                                 <div class="form-text ms-1">
-                                    The .txt file must contain only document decimal numbers, each decimal number on a new line
+                                    The .txt file must contain only documents decimal numbers, each decimal number on a new line
                                 </div>
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">&nbsp;Cancel&nbsp;</button>
-                            <button type="submit" class="btn btn-danger" onclick="deleteGroupSending()">Delete sending</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-danger" onclick="deleteGroupSending()">Delete</button>
                         </div>
                     </form>
                 </div>
@@ -152,7 +152,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="groupUnsubscribeModalLabel">Group unsubscribe</h1>
+                        <h1 class="modal-title fs-5" id="groupUnsubscribeModalLabel">Unsubscribe group</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <form id="groupUnsubscribeForm" onsubmit="return false;">
@@ -167,7 +167,7 @@
                                            onchange="changeFileInputColor('unsubscribeFileInput', 'gray')"/>
                                 </div>
                                 <div class="form-text ms-1">
-                                    The .txt file must contain only document decimal numbers, each decimal number on a new line
+                                    The .txt file must contain only documents decimal numbers, each decimal number on a new line
                                 </div>
                                 <div class="form-floating mt-3">
                                     <textarea class="form-control" id="unsubscribeReason" required style="height: 100px"></textarea>
@@ -189,7 +189,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="groupResubscribeModalLabel">Group resubscribe</h1>
+                        <h1 class="modal-title fs-5" id="groupResubscribeModalLabel">Resubscribe group</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <form id="groupResubscribeForm" onsubmit="return false;">
@@ -204,7 +204,7 @@
                                            onchange="changeFileInputColor('resubscribeFileInput', 'gray')"/>
                                 </div>
                                 <div class="form-text ms-1">
-                                    The .txt file must contain only document decimal numbers, each decimal number on a new line
+                                    The .txt file must contain only document decimals numbers, each decimal number on a new line
                                 </div>
                             </div>
                         </div>
@@ -222,7 +222,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="groupDownloadModalLabel">Group download</h1>
+                        <h1 class="modal-title fs-5" id="groupDownloadModalLabel">Download content for group</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <form id="groupDownloadForm" th:action="@{/tools/group/content/download}" method="post" enctype="multipart/form-data">
@@ -232,7 +232,7 @@
                                        onchange="changeFileInputColor('downloadFileInput', 'gray')"/>
                             </div>
                             <div class="form-text ms-1">
-                                The .txt file must contain only document decimal numbers, each decimal number on a new line
+                                The .txt file must contain only documents decimal numbers, each decimal number on a new line
                             </div>
                         </div>
                         <div class="modal-footer">

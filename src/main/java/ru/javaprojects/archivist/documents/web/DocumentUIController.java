@@ -70,7 +70,7 @@ public class DocumentUIController {
     @GetMapping("/{id}")
     public String get(@PathVariable long id, Model model) {
         log.info("get document with id={}", id);
-        model.addAttribute("document", service.get(id));
+        model.addAttribute("document", service.getWithOriginalHolderAndDeveloper(id));
         return "documents/document";
     }
 
@@ -108,7 +108,7 @@ public class DocumentUIController {
     @GetMapping("/edit/{id}")
     public String showEditForm(@PathVariable long id, Model model) {
         log.info("show edit form for document with id={}", id);
-        model.addAttribute("document", service.get(id));
+        model.addAttribute("document", service.getWithOriginalHolderAndDeveloper(id));
         addDataForDocumentCardToModel(model);
         return "documents/document-form";
     }

@@ -192,7 +192,7 @@ class DocumentUIControllerTest extends AbstractControllerTest implements TestCon
         Document created = service.getByDecimalNumber(AUTO_GENERATED_DECIMAL_NUMBER);
         newDocument.setId(created.id());
         DOCUMENT_MATCHER.assertMatch(created, newDocument);
-        DOCUMENT_MATCHER.assertMatch(service.get(DOCUMENT6_ID), newDocument);
+        DOCUMENT_MATCHER.assertMatch(service.getWithOriginalHolderAndDeveloper(DOCUMENT6_ID), newDocument);
         actions.andExpect(redirectedUrl(DOCUMENTS_URL_SLASH + created.getId()));
     }
 
@@ -317,7 +317,7 @@ class DocumentUIControllerTest extends AbstractControllerTest implements TestCon
                 .andExpect(status().isFound())
                 .andExpect(redirectedUrl(DOCUMENTS_URL_SLASH + DOCUMENT1_ID))
                 .andExpect(flash().attribute(ACTION, "Document " + updatedDocument.getDecimalNumber() + " was updated"));
-        DOCUMENT_MATCHER.assertMatch(service.get(DOCUMENT1_ID), updatedDocument);
+        DOCUMENT_MATCHER.assertMatch(service.getWithOriginalHolderAndDeveloper(DOCUMENT1_ID), updatedDocument);
 
         //Check ContentFiles from all Contents have updated fileLinks
         List<Content> contents = contentRepository.findByDocument_IdOrderByChangeNumberDesc(DOCUMENT1_ID);
@@ -354,7 +354,7 @@ class DocumentUIControllerTest extends AbstractControllerTest implements TestCon
                 .andExpect(status().isFound())
                 .andExpect(redirectedUrl(DOCUMENTS_URL_SLASH + DOCUMENT1_ID))
                 .andExpect(flash().attribute(ACTION, "Document " + updatedDocument.getDecimalNumber() + " was updated"));
-        DOCUMENT_MATCHER.assertMatch(service.get(DOCUMENT1_ID), updatedDocument);
+        DOCUMENT_MATCHER.assertMatch(service.getWithOriginalHolderAndDeveloper(DOCUMENT1_ID), updatedDocument);
     }
 
     //Check UniqueInventoryNumberValidator works correct when update
@@ -371,7 +371,7 @@ class DocumentUIControllerTest extends AbstractControllerTest implements TestCon
                 .andExpect(status().isFound())
                 .andExpect(redirectedUrl(DOCUMENTS_URL_SLASH + DOCUMENT1_ID))
                 .andExpect(flash().attribute(ACTION, "Document " + updatedDocument.getDecimalNumber() + " was updated"));
-        DOCUMENT_MATCHER.assertMatch(service.get(DOCUMENT1_ID), updatedDocument);
+        DOCUMENT_MATCHER.assertMatch(service.getWithOriginalHolderAndDeveloper(DOCUMENT1_ID), updatedDocument);
     }
 
     @Test
@@ -393,7 +393,7 @@ class DocumentUIControllerTest extends AbstractControllerTest implements TestCon
                 .andExpect(status().isFound())
                 .andExpect(result ->
                         assertTrue(Objects.requireNonNull(result.getResponse().getRedirectedUrl()).endsWith(LOGIN_URL)));
-        assertNotEquals(service.get(DOCUMENT1_ID).getName(), DocumentTestData.getUpdated().getName());
+        assertNotEquals(service.getWithOriginalHolderAndDeveloper(DOCUMENT1_ID).getName(), DocumentTestData.getUpdated().getName());
     }
 
     @Test
@@ -403,7 +403,7 @@ class DocumentUIControllerTest extends AbstractControllerTest implements TestCon
                 .params(DocumentTestData.getUpdatedParams())
                 .with(csrf()))
                 .andExpect(status().isForbidden());
-        assertNotEquals(service.get(DOCUMENT1_ID).getName(), DocumentTestData.getUpdated().getName());
+        assertNotEquals(service.getWithOriginalHolderAndDeveloper(DOCUMENT1_ID).getName(), DocumentTestData.getUpdated().getName());
     }
 
     @Test
@@ -417,7 +417,7 @@ class DocumentUIControllerTest extends AbstractControllerTest implements TestCon
                 .andExpect(model().attributeHasFieldErrors(DOCUMENT_ATTRIBUTE, NAME,
                         DECIMAL_NUMBER, INVENTORY_NUMBER, COMMENT))
                 .andExpect(view().name(DOCUMENTS_FORM_VIEW));
-        assertNotEquals(service.get(DOCUMENT1_ID).getName(), updatedInvalidParams.get(NAME).get(0));
+        assertNotEquals(service.getWithOriginalHolderAndDeveloper(DOCUMENT1_ID).getName(), updatedInvalidParams.get(NAME).get(0));
     }
 
     @Test
@@ -431,7 +431,7 @@ class DocumentUIControllerTest extends AbstractControllerTest implements TestCon
                 .andExpect(status().isOk())
                 .andExpect(model().attributeHasFieldErrorCode(DOCUMENT_ATTRIBUTE, DECIMAL_NUMBER, DUPLICATE_ERROR_CODE))
                 .andExpect(view().name(DOCUMENTS_FORM_VIEW));
-        assertNotEquals(service.get(DOCUMENT1_ID).getDecimalNumber(), document3.getDecimalNumber());
+        assertNotEquals(service.getWithOriginalHolderAndDeveloper(DOCUMENT1_ID).getDecimalNumber(), document3.getDecimalNumber());
     }
 
     @Test
@@ -445,6 +445,6 @@ class DocumentUIControllerTest extends AbstractControllerTest implements TestCon
                 .andExpect(status().isOk())
                 .andExpect(model().attributeHasFieldErrorCode(DOCUMENT_ATTRIBUTE, INVENTORY_NUMBER, DUPLICATE_ERROR_CODE))
                 .andExpect(view().name(DOCUMENTS_FORM_VIEW));
-        assertNotEquals(service.get(DOCUMENT1_ID).getInventoryNumber(), document3.getInventoryNumber());
+        assertNotEquals(service.getWithOriginalHolderAndDeveloper(DOCUMENT1_ID).getInventoryNumber(), document3.getInventoryNumber());
     }
 }

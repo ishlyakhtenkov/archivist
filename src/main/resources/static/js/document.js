@@ -312,14 +312,27 @@ function getSubscribers() {
     $.ajax({
         url: `/documents/${documentId}/subscribers`
     }).done(subscribers => {
+        let index = 0;
         if (subscribers.length !== 0) {
-            let index = 0;
             subscribers.forEach(subscriber => {
                 subscriberMap.set(subscriber.id, subscriber);
                 subscriberColumns[(index % subscriberColumns.length)].append(generateSubscriberCard(subscriber));
                 index++;
             });
         }
+        $.ajax({
+            url: '/albums/by-document',
+            data: `documentId=${documentId}`
+        }).done(albums => {
+            if (albums.length !== 0) {
+                albums.forEach(album => {
+                    subscriberColumns[(index % subscriberColumns.length)].append(generateAlbumCard(album));
+                    index++;
+                });
+            }
+        }).fail(function (data) {
+            handleError(data, `Failed to get albums`);
+        });
     }).fail(function (data) {
         handleError(data, `Failed to get subscribers`);
     });
@@ -345,6 +358,17 @@ function generateSubscriberCard(subscriber) {
                                 <span class="badge text-bg-${subscriber.subscribed ? 'danger' : 'success'}">${subscriber.subscribed ? 'Unsub' : 'Resub'}</span></a>`;
         infoRow.find('.col-5').html(infoRowHtml);
     }
+    cardBody.append(infoRow);
+    card.append(cardBody);
+    return card;
+}
+
+function generateAlbumCard(album) {
+    let card = $('<div></div>').addClass('card mb-2 bg-light-green');
+    let cardBody = $('<div></div>').addClass('card-body p-2 text-start');
+    let titleRow = $('<div></div>').addClass('row card-title me-2').html(`<div class="col-12 text-truncate">${'Archive (' + album.stamp.replace('_', ' ').toLowerCase() + ')'}</div>`);
+    cardBody.append(titleRow);
+    let infoRow = $('<div></div>').addClass('row mt-2').html(`<div class="col-5 small"></div><div class="col-7 small text-end">accounted copy</div>`);
     cardBody.append(infoRow);
     card.append(cardBody);
     return card;

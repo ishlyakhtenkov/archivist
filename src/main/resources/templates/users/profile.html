@@ -6,7 +6,7 @@
     <appMain>
         <h2 class="text-secondary font-weight-bold"><i class="fa-solid fa-address-card me-2"></i>Profile</h2>
         <div class="row">
-            <div class="col-12">
+            <div class="col-12 col-md-6 col-xl-5">
                 <div class="card shadow">
                     <div class="card-body">
                         <div class="mb-2 mb-sm-0">
@@ -15,7 +15,7 @@
                             <div th:text="'Roles: ' + ${#strings.substring(user.roles, 1, #strings.length(user.roles) - 1)}">Roles</div>
                             <div th:text="'Registered: ' + ${#dates.format(user.registered, 'dd.MM.yyyy HH:mm')}">Registered</div>
                         </div>
-                        <div class="btn-toolbar mt-2 mb-1">
+                        <div class="btn-toolbar mt-2 mb-1 float-end">
                             <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#changePasswordModal">
                                 Change password
                             </button>

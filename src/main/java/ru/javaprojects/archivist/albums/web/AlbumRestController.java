@@ -6,8 +6,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import ru.javaprojects.archivist.albums.model.Issuance;
 import ru.javaprojects.archivist.albums.AlbumService;
+import ru.javaprojects.archivist.albums.model.Album;
+import ru.javaprojects.archivist.albums.model.Issuance;
 import ru.javaprojects.archivist.albums.to.IssuanceTo;
 import ru.javaprojects.archivist.common.error.IllegalRequestDataException;
 
@@ -20,6 +21,12 @@ import java.util.List;
 @Slf4j
 public class AlbumRestController {
     private final AlbumService service;
+
+    @GetMapping("/by-document")
+    public List<Album> getAlbums(@RequestParam long documentId) {
+        log.info("get albums by document with id={}", documentId);
+        return service.getAlbums(documentId);
+    }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)

@@ -42,4 +42,6 @@ public interface AlbumRepository extends BaseRepository<Album> {
 
     @EntityGraph(attributePaths = "mainDocument")
     Optional<Album> findByMainDocument_DecimalNumberAndStamp(String decimalNumber, Stamp stamp);
+
+    List<Album> findAllByMainDocument_Id(long documentId);
 }

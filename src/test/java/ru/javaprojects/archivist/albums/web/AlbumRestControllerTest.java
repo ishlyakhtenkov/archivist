@@ -8,9 +8,9 @@ import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.javaprojects.archivist.AbstractControllerTest;
+import ru.javaprojects.archivist.albums.AlbumService;
 import ru.javaprojects.archivist.albums.model.Issuance;
 import ru.javaprojects.archivist.albums.repository.IssuanceRepository;
-import ru.javaprojects.archivist.albums.AlbumService;
 import ru.javaprojects.archivist.albums.to.IssuanceTo;
 import ru.javaprojects.archivist.common.error.IllegalRequestDataException;
 import ru.javaprojects.archivist.common.error.NotFoundException;
@@ -28,8 +28,10 @@ import static ru.javaprojects.archivist.albums.AlbumTestData.*;
 import static ru.javaprojects.archivist.albums.web.AlbumUIControllerTest.ALBUMS_URL_SLASH;
 import static ru.javaprojects.archivist.common.util.JsonUtil.writeValue;
 import static ru.javaprojects.archivist.common.web.PathUIController.LOGIN_URL;
+import static ru.javaprojects.archivist.documents.DocumentTestData.DOCUMENT1_ID;
 
 class AlbumRestControllerTest extends AbstractControllerTest {
+    private static final String ALBUMS_BY_DOCUMENT_URL = ALBUMS_URL_SLASH + "by-document";
     private static final String ALBUM_ISSUANCES_URL = ALBUMS_URL_SLASH + "%d/issuances";
     private static final String ALBUM_ISSUE_URL = ALBUMS_URL_SLASH + "%d/issue";
     private static final String ALBUM_RETURN_URL = ALBUMS_URL_SLASH + "%d/return";
@@ -40,6 +42,41 @@ class AlbumRestControllerTest extends AbstractControllerTest {
 
     @Autowired
     private IssuanceRepository issuanceRepository;
+
+    @Test
+    @WithUserDetails(USER_MAIL)
+    void getAlbums() throws Exception {
+        perform(MockMvcRequestBuilders.get(ALBUMS_BY_DOCUMENT_URL)
+                .param(DOCUMENT_ID, String.valueOf(DOCUMENT1_ID))
+                .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(ALBUM_MATCHER.contentJsonIgnoreFields(List.of(album1, album2), "mainDocument", "issuances"));
+    }
+
+    @Test
+    @WithUserDetails(USER_MAIL)
+    void getAlbumsWhenDocumentNotExists() throws Exception {
+        perform(MockMvcRequestBuilders.get(ALBUMS_BY_DOCUMENT_URL)
+                .param(DOCUMENT_ID, String.valueOf(NOT_FOUND))
+                .with(csrf()))
+                .andExpect(status().isNotFound())
+                .andExpect(result -> assertEquals(Objects.requireNonNull(result.getResolvedException()).getClass(),
+                        NotFoundException.class))
+                .andExpect(problemTitle(HttpStatus.NOT_FOUND.getReasonPhrase()))
+                .andExpect(problemStatus(HttpStatus.NOT_FOUND.value()))
+                .andExpect(problemDetail(ENTITY_NOT_FOUND))
+                .andExpect(problemInstance(ALBUMS_BY_DOCUMENT_URL));
+    }
+
+    @Test
+    void getAlbumsUnauthorized() throws Exception {
+        perform(MockMvcRequestBuilders.get(ALBUMS_BY_DOCUMENT_URL)
+                .with(csrf()))
+                .andExpect(status().isFound())
+                .andExpect(result ->
+                        assertTrue(Objects.requireNonNull(result.getResponse().getRedirectedUrl()).endsWith(LOGIN_URL)));
+    }
 
     @Test
     @WithUserDetails(ARCHIVIST_MAIL)

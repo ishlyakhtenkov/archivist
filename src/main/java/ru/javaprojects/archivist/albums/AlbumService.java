@@ -131,4 +131,9 @@ public class AlbumService {
         Employee employee = employeeService.get(issuanceTo.getEmployeeId());
         return issuanceRepository.save(new Issuance(null, album, employee, issuanceTo.getIssued()));
     }
+
+    public List<Album> getAlbums(long documentId) {
+        documentService.get(documentId);
+        return repository.findAllByMainDocument_Id(documentId);
+    }
 }

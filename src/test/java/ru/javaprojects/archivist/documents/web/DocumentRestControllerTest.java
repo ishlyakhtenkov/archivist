@@ -102,7 +102,7 @@ class DocumentRestControllerTest extends AbstractControllerTest implements TestC
         perform(MockMvcRequestBuilders.delete(DOCUMENTS_URL_SLASH + DOCUMENT1_ID)
                 .with(csrf()))
                 .andExpect(status().isNoContent());
-        assertThrows(NotFoundException.class, () -> documentService.get(DOCUMENT1_ID));
+        assertThrows(NotFoundException.class, () -> documentService.getWithOriginalHolderAndDeveloper(DOCUMENT1_ID));
         assertTrue(Files.notExists(Paths.get(contentPath, document1.getDecimalNumber())));
     }
 
@@ -127,7 +127,7 @@ class DocumentRestControllerTest extends AbstractControllerTest implements TestC
                 .andExpect(status().isFound())
                 .andExpect(result ->
                         assertTrue(Objects.requireNonNull(result.getResponse().getRedirectedUrl()).endsWith(LOGIN_URL)));
-        assertDoesNotThrow(() -> documentService.get(DOCUMENT1_ID));
+        assertDoesNotThrow(() -> documentService.getWithOriginalHolderAndDeveloper(DOCUMENT1_ID));
         assertTrue(Files.exists(Paths.get(contentPath, document1.getDecimalNumber())));
     }
 
@@ -137,7 +137,7 @@ class DocumentRestControllerTest extends AbstractControllerTest implements TestC
         perform(MockMvcRequestBuilders.delete(DOCUMENTS_URL_SLASH + DOCUMENT1_ID)
                 .with(csrf()))
                 .andExpect(status().isForbidden());
-        assertDoesNotThrow(() -> documentService.get(DOCUMENT1_ID));
+        assertDoesNotThrow(() -> documentService.getWithOriginalHolderAndDeveloper(DOCUMENT1_ID));
         assertTrue(Files.exists(Paths.get(contentPath, document1.getDecimalNumber())));
     }
 

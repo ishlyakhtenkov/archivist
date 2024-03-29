@@ -7,7 +7,7 @@
     <appMain>
         <!-- Create/Edit album card -->
         <div class="row d-flex justify-content-center align-items-center">
-            <div class="col-12 col-md-8 col-xl-5">
+            <div class="col-12 col-xxl-10">
                 <div class="card shadow">
                     <div class="card-header">
                         <span class="float-end">
@@ -17,29 +17,28 @@
                     </div>
                     <div class="card-body text-center">
                         <form th:action="@{/albums}" method="post" th:object="${albumTo}">
-                            <input type="hidden" th:field="*{id}">
-                            <div class="mb-3">
-                                <div class="input-group">
-                                    <span class="input-group-text" id="decimalNumberAddon"><i class="fa-solid fa-scroll fa-fw"></i></span>
-                                    <div class="form-floating">
-                                        <input type="text" id="decimalNumberInput" th:field="*{decimalNumber}"
-                                               th:class="${#fields.hasErrors('decimalNumber')} ? 'form-control is-invalid' : 'form-control'"
-                                               required placeholder="Decimal number" title="" aria-label="Decimal number" aria-describedby="decimalNumberAddon"/>
-                                        <label for="decimalNumberInput" class="text-muted">Decimal number</label>
+                            <input type="hidden" id="albumId" th:field="*{id}">
+                            <div class="row">
+                                <div class="col-lg-8">
+                                    <div class="mb-3">
+                                        <div class="input-group">
+                                            <span class="input-group-text px-md-4" id="decimalNumberAddon">Main document</span>
+                                            <input type="text" id="decimalNumberInput" th:field="*{decimalNumber}"
+                                                   th:class="${#fields.hasErrors('decimalNumber')} ? 'form-control is-invalid' : 'form-control'"
+                                                   required placeholder="Decimal number" title="" aria-label="Decimal number" aria-describedby="decimalNumberAddon"/>
+                                        </div>
+                                            <span th:if="${#fields.hasErrors('decimalNumber')}">
+                                                <ul>
+                                                    <li class="text-danger text-start"
+                                                        th:each="err : ${#fields.errors('decimalNumber')}" th:text="${err}"/>
+                                                </ul>
+                                            </span>
                                     </div>
                                 </div>
-                                <span th:if="${#fields.hasErrors('decimalNumber')}">
-                                    <ul>
-                                        <li class="text-danger text-start"
-                                            th:each="err : ${#fields.errors('decimalNumber')}" th:text="${err}"/>
-                                    </ul>
-                                </span>
-                            </div>
-                            <div class="mb-3">
-                                <div class="input-group">
-                                    <span class="input-group-text" id="stampAddon"><i class="fa-solid fa-stamp fa-fw"></i></span>
-                                    <div class="form-floating" id="selectFloating">
-                                        <select class="form-control selectpicker border px-0 py-3" data-style="btn-white" id="stampSelect"
+                                <div class="col-lg-4">
+                                    <div class="input-group mb-3">
+                                        <span class="input-group-text px-md-4" id="stampAddon">Stamp</span>
+                                        <select class="form-control selectpicker border" data-style="btn-white" id="stampSelect"
                                                 name="stamp" title="&nbsp;" required aria-label="Stamp" aria-describedby="stampAddon">
                                             <option th:each="stamp : ${stamps}"
                                                     th:value="${stamp.name}"
@@ -47,7 +46,57 @@
                                                     th:selected="${(albumTo.stamp != null && albumTo.stamp == stamp)}">
                                             </option>
                                         </select>
-                                        <label for="stampSelect" class="text-muted" id="stampSelectLabel">Stamp</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div th:if="${album != null}">
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text px-md-4" id="nameAddon">Name&nbsp;</span>
+                                    <div class="form-control bg-light text-start" aria-label="Name" aria-describedby="nameAddon"
+                                         th:text="${album.mainDocument.name}">
+                                    </div>
+                                </div>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text px-md-4" id="holderAddon">Holder</span>
+                                    <div class="form-control bg-light text-start" id="holderField" aria-label="Holder" aria-describedby="holderAddon"
+                                         th:utext="${(album.issuances.isEmpty() || album.issuances.get(0).returned != null) ?
+                                     'Archive (<i class=&quot;fa-solid fa-phone-flip small text-muted&quot;></i> 1-96-88)' : album.issuances.get(0).employee.department.name + ', ' +
+                                     album.issuances.get(0).employee.fullName + ' (<i class=&quot;fa-solid fa-phone-flip small text-muted&quot;></i> ' + album.issuances.get(0).employee.phone + ')'}">
+                                    </div>
+                                </div>
+                                <!-- Issuances block -->
+                                <div th:if="!${album.issuances.isEmpty()}" id="issuancesBlock" class="text-start mt-3">
+                                    <div class="row">
+                                        <div class="col-7">
+                                            <h4 class="text-secondary">Issuances</h4>
+                                        </div>
+                                    </div>
+                                    <div class="table-responsive text-nowrap">
+                                        <table th:hidden="${album.issuances.isEmpty()}" class="table table-hover" id="issuancesTable">
+                                            <thead>
+                                            <tr>
+                                                <th class="col-6 pt-0">Employee</th>
+                                                <th class="col-2 pt-0 text-center">Issued</th>
+                                                <th class="col-2 pt-0 text-center">Returned</th>
+                                                <th class="pt-0"></th>
+                                            </tr>
+                                            </thead>
+                                            <tbody class="table-group-divider">
+                                            <tr th:each="issuance : ${album.issuances}">
+                                                <td th:text="${issuance.employee.department.name + ', ' + issuance.employee.lastNameAndInitials}">Employee name</td>
+                                                <td class="text-center" th:text="${#temporals.format(issuance.issued, 'dd.MM.yyyy')}">Issued</td>
+                                                <td class="text-center" th:text="${#temporals.format(issuance.returned, 'dd.MM.yyyy')}">Issued</td>
+                                                <td class="text-end">
+                                                    <a tabindex="0" type="button" class="trash-button me-3"
+                                                       data-bs-toggle="popover" data-bs-trigger="focus" data-bs-title="Delete this issuance?"
+                                                       th:attr="data-bs-content='<button class=\'btn btn-sm btn-secondary ms-3\'>Cancel</button>' +
+                                                                     '<button class=\'btn ms-1 btn-sm btn-danger\' onclick=\'deleteIssuance(' + ${issuance.id} + ')\'>Delete</button>'">
+                                                        <i class="fa-solid fa-trash"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
@@ -63,6 +112,9 @@
     </appMain>
 
     <ownScript>
+        <script src="/js/common.js?v=1"></script>
+        <script src="/js/album.js?v=1"></script>
+        <script src="/js/albums-common.js?v=1"></script>
         <script src="/js/close-card-button.js?v=1"></script>
     </ownScript>
 </th:block>

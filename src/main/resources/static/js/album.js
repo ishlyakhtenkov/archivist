@@ -11,24 +11,24 @@ function deleteIssuance(issuanceId) {
         url: `/albums/issuances/${issuanceId}`,
         type: "DELETE"
     }).done(function() {
-        getIssuances();
+        getIssuances(true);
         successToast(`Issuance was deleted`);
     }).fail(function(data) {
         handleError(data, 'Failed to delete issuance');
     });
 }
 
-function getIssuances() {
+function getIssuances(addDeleteButton) {
     $.ajax({
         url: `/albums/${albumId}/issuances`
     }).done(issuances => {
-        fillIssuancesTable(issuances);
+        fillIssuancesTable(issuances, addDeleteButton);
     }).fail(function (data) {
         handleError(data, `Failed to get issuances`);
     });
 }
 
-function fillIssuancesTable(issuances) {
+function fillIssuancesTable(issuances, addDeleteButton) {
     $('#issuancesTable > tbody').empty();
     if (issuances.length !== 0) {
         if (issuances[0].returned == null) {
@@ -44,12 +44,13 @@ function fillIssuancesTable(issuances) {
         $('#noIssuancesAlert').attr('hidden', true);
         $('#issuancesTable').attr('hidden', false);
         issuances.forEach(issuance => {
-            addIssuanceRow(issuance);
+            addIssuanceRow(issuance, addDeleteButton);
         });
         let popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
         let popoverList = [...popoverTriggerList].map(popoverTriggerEl =>
             new bootstrap.Popover(popoverTriggerEl, {html : true, sanitize: false}));
     } else {
+        $('#issuancesBlock').attr('hidden', true);
         $('#issuancesTable').attr('hidden', true);
         $('#noIssuancesAlert').attr('hidden', false);
         $('#holderField').text('Archive (phone 1-96-88)');
@@ -58,7 +59,7 @@ function fillIssuancesTable(issuances) {
     }
 }
 
-function addIssuanceRow(issuance) {
+function addIssuanceRow(issuance, addDeleteButton) {
     let employeeTd = $('<td></td>').text(`${issuance.employee.department.name}, ${issuance.employee.lastName} 
         ${issuance.employee.firstName.charAt(0)}.${issuance.employee.middleName.charAt(0)}`);
     let issuedTd = $('<td></td>').addClass('text-center').text(`${new Date(issuance.issued).toLocaleDateString('ru')}`);
@@ -67,7 +68,7 @@ function addIssuanceRow(issuance) {
     issuanceRow.append(employeeTd);
     issuanceRow.append(issuedTd);
     issuanceRow.append(returnedTd);
-    if (hasAdminOrArchivistRole()) {
+    if (hasAdminOrArchivistRole() && addDeleteButton) {
         let deleteIssuanceSubmitHtml = `<button class='btn btn-sm btn-secondary ms-3'>Cancel</button>
                                        <button class='btn btn-sm btn-danger' onclick='deleteIssuance(${issuance.id})'>Delete</button>`;
         let deleteActionTd = $('<td></td>').addClass('text-end').html(`<a tabindex="0" type="button" class="trash-button me-3"
@@ -81,9 +82,9 @@ function addIssuanceRow(issuance) {
 }
 
 function doOnSuccessReturn() {
-    getIssuances();
+    getIssuances(false);
 }
 
 function doOnSuccessIssue() {
-    getIssuances();
+    getIssuances(false);
 }

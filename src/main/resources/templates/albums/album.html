@@ -99,14 +99,7 @@
                                         <td th:text="${issuance.employee.department.name + ', ' + issuance.employee.lastNameAndInitials}">Employee name</td>
                                         <td class="text-center" th:text="${#temporals.format(issuance.issued, 'dd.MM.yyyy')}">Issued</td>
                                         <td class="text-center" th:text="${#temporals.format(issuance.returned, 'dd.MM.yyyy')}">Issued</td>
-                                        <td class="text-end">
-                                            <a sec:authorize="hasAnyRole('ADMIN','ARCHIVIST')" tabindex="0" type="button" class="trash-button me-3"
-                                               data-bs-toggle="popover" data-bs-trigger="focus" data-bs-title="Delete this issuance?"
-                                               th:attr="data-bs-content='<button class=\'btn btn-sm btn-secondary ms-3\'>Cancel</button>' +
-                                                   '<button class=\'btn ms-1 btn-sm btn-danger\' onclick=\'deleteIssuance(' + ${issuance.id} + ')\'>Delete</button>'">
-                                                <i class="fa-solid fa-trash"></i>
-                                            </a>
-                                        </td>
+                                        <td class="text-end"></td>
                                     </tr>
                                     </tbody>
                                 </table>

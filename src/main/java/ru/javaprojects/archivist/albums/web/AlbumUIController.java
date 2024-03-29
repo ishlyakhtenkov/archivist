@@ -79,8 +79,10 @@ public class AlbumUIController {
     @GetMapping("/edit/{id}")
     public String showEditForm(@PathVariable long id, Model model) {
         log.info("show edit form for album with id={}", id);
-        model.addAttribute("albumTo", asTo(service.get(id)));
+        Album album = service.getWithIssuances(id);
+        model.addAttribute("albumTo", asTo(album));
         model.addAttribute("stamps", Stamp.values());
+        model.addAttribute("album", album);
         return "albums/album-form";
     }
 

@@ -101,7 +101,7 @@
                                 </div>
                             </div>
                             <div class="text-end">
-                                <button th:if="${!albumTo.isNew()}" class="btn btn-secondary" type="button" onclick="history.back()">Cancel</button>
+                                <button th:if="${!albumTo.isNew()}" class="btn btn-secondary" type="button" onclick="cancelCard()">Cancel</button>
                                 <button class="btn btn-success" th:classappend="${albumTo.isNew() ? '' : 'px-3'}" type="submit" th:text="${albumTo.isNew()} ? 'Create' : '&nbsp;Save&nbsp;'">Create/Save album</button>
                             </div>
                         </form>
@@ -116,5 +116,6 @@
         <script src="/js/album.js?v=1"></script>
         <script src="/js/albums-common.js?v=1"></script>
         <script src="/js/close-card-button.js?v=1"></script>
+        <script src="/js/cancel-card-button.js?v=1"></script>
     </ownScript>
 </th:block>

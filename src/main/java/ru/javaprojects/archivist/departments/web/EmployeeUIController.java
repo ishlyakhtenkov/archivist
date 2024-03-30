@@ -32,10 +32,11 @@ public class EmployeeUIController {
     }
 
     @GetMapping("/add")
-    public String showAddForm(Model model) {
+    public String showAddForm(@RequestParam String chosenDepartmentId, Model model) {
         log.info("show employee add form");
         model.addAttribute("employee", new Employee());
         model.addAttribute("departments", departmentService.getAllWithBoss());
+        model.addAttribute("chosenDepartmentId", chosenDepartmentId);
         return "departments/employees/employee-form";
     }
 
@@ -51,6 +52,7 @@ public class EmployeeUIController {
     public String createOrUpdate(@Valid Employee employee, BindingResult result, Model model, RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
             model.addAttribute("departments", departmentService.getAllWithBoss());
+            model.addAttribute("chosenDepartmentId", employee.getDepartment().getId());
             return "departments/employees/employee-form";
         }
         boolean isNew = employee.isNew();

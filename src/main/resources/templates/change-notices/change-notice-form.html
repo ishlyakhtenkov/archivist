@@ -152,7 +152,7 @@
                             </div>
 
                             <div class="text-end">
-                                <button th:if="${!changeNoticeTo.isNew()}" class="btn btn-secondary" type="button" onclick="history.back()">Cancel</button>
+                                <button th:if="${!changeNoticeTo.isNew()}" class="btn btn-secondary" type="button" onclick="cancelCard()">Cancel</button>
                                 <button class="btn btn-success px-3" type="submit" th:text="${changeNoticeTo.isNew()} ? 'Create' : '&nbsp;Save&nbsp;'">Create/Save</button>
                             </div>
                         </form>
@@ -166,5 +166,6 @@
         <script src="/js/common.js?v=1"></script>
         <script src="/js/change-notice-form.js?v=1"></script>
         <script src="/js/close-card-button.js?v=1"></script>
+        <script src="/js/cancel-card-button.js?v=1"></script>
     </ownScript>
 </th:block>

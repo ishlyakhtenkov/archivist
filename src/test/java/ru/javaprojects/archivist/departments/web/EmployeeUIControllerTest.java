@@ -36,7 +36,8 @@ class EmployeeUIControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(ARCHIVIST_MAIL)
     void showAddForm() throws Exception {
-        perform(MockMvcRequestBuilders.get(EMPLOYEES_ADD_FORM_URL))
+        perform(MockMvcRequestBuilders.get(EMPLOYEES_ADD_FORM_URL)
+                .param(CHOSEN_DEPARTMENT_ID, String.valueOf(DEPARTMENT2_ID)))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists(EMPLOYEE_ATTRIBUTE))
                 .andExpect(model().attributeExists(DEPARTMENTS_ATTRIBUTE))
@@ -47,7 +48,8 @@ class EmployeeUIControllerTest extends AbstractControllerTest {
 
     @Test
     void showAddFormUnAuthorized() throws Exception {
-        perform(MockMvcRequestBuilders.get(EMPLOYEES_ADD_FORM_URL))
+        perform(MockMvcRequestBuilders.get(EMPLOYEES_ADD_FORM_URL)
+                .param(CHOSEN_DEPARTMENT_ID, String.valueOf(DEPARTMENT2_ID)))
                 .andExpect(status().isFound())
                 .andExpect(result ->
                         assertTrue(Objects.requireNonNull(result.getResponse().getRedirectedUrl()).endsWith(LOGIN_URL)));
@@ -56,7 +58,8 @@ class EmployeeUIControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(USER_MAIL)
     void showAddFormForbidden() throws Exception {
-        perform(MockMvcRequestBuilders.get(EMPLOYEES_ADD_FORM_URL))
+        perform(MockMvcRequestBuilders.get(EMPLOYEES_ADD_FORM_URL)
+                .param(CHOSEN_DEPARTMENT_ID, String.valueOf(DEPARTMENT2_ID)))
                 .andExpect(status().isForbidden());
     }
 

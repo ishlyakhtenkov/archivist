@@ -46,6 +46,7 @@ public class DepartmentTestData {
     public static final String FIRED = "fired";
     public static final String BOSS = "boss";
     public static final String DEPARTMENT_ID = "departmentId";
+    public static final String CHOSEN_DEPARTMENT_ID = "chosenDepartmentId";
 
     public static final Department department1 = new Department(DEPARTMENT1_ID, DEPARTMENT1_NAME);
     public static final Department department2 = new Department(DEPARTMENT2_ID, DEPARTMENT2_NAME);

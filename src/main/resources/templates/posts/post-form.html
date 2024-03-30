@@ -10,7 +10,7 @@
                 <div class="card shadow">
                     <div class="card-header">
                         <span class="float-end">
-                            <a th:href="@{/}" type="button" class="btn-close" aria-label="Close"></a>
+                            <button type="button" class="btn-close" aria-label="Close" onclick="cancelCard()"></button>
                         </span>
                         <h3 class="text-center ms-4" th:text="${postTo.isNew()} ? 'New post' : 'Editing: ' + ${postTo.title}">Create/Edit post</h3>
                     </div>
@@ -49,7 +49,7 @@
                                 <label class="form-check-label" for="forAuthOnlyCheckbox">For authenticated users only</label>
                             </div>
                             <div class="text-end">
-                                <a th:if="${!postTo.isNew()}" th:href="@{/}" class="btn btn-secondary" type="button">Cancel</a>
+                                <button th:if="${!postTo.isNew()}" class="btn btn-secondary" type="button" onclick="cancelCard()">Cancel</button>
                                 <button class="btn btn-success" th:classappend="${postTo.isNew() ? '' : 'px-3'}" type="submit" th:text="${postTo.isNew()} ? 'Create' : '&nbsp;Save&nbsp;'">Create/Save post</button>
                             </div>
                         </form>
@@ -58,4 +58,8 @@
             </div>
         </div>
     </appMain>
+
+    <ownScript>
+        <script src="/js/cancel-card-button.js?v=1"></script>
+    </ownScript>
 </th:block>

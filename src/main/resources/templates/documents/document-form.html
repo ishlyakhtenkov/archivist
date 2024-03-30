@@ -191,7 +191,7 @@
                                         </span>
                                     </div>
                                     <div class="text-end">
-                                        <button th:if="${!document.isNew()}" class="btn btn-secondary" type="button" onclick="history.back()">Cancel</button>
+                                        <button th:if="${!document.isNew()}" class="btn btn-secondary" type="button" onclick="cancelCard()">Cancel</button>
                                         <button class="btn btn-success px-3" type="submit" th:text="${document.isNew()} ? 'Create' : '&nbsp;Save&nbsp;'">Create/Save</button>
                                     </div>
                                 </form>
@@ -205,5 +205,6 @@
 
     <ownScript>
         <script src="/js/close-card-button.js?v=1"></script>
+        <script src="/js/cancel-card-button.js?v=1"></script>
     </ownScript>
 </th:block>

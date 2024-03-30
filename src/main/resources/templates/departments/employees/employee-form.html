@@ -11,7 +11,8 @@
                 <div class="card shadow">
                     <div class="card-header">
                         <span class="float-end">
-                            <button type="button" class="btn-close" aria-label="Close" onclick="history.back()"></button>
+                            <a th:if="${!employee.isNew()}" th:href="@{'/departments/edit/' + ${employee.department.id}}" class="btn-close" type="button" aria-label="Close"></a>
+                            <a th:if="${employee.isNew()}" th:href="@{'/departments/edit/' + ${chosenDepartmentId}}" class="btn-close" type="button" aria-label="Close"></a>
                         </span>
                         <h3 class="text-center ms-4" th:text="${employee.isNew()} ? 'New employee' : 'Editing: ' + ${employee.lastName}">Create/Edit Employee</h3>
                     </div>
@@ -113,7 +114,7 @@
                                                     th:value="${department.id}"
                                                     th:text="${department.name}"
                                                     th:selected="${(employee.department != null && employee.department.id == department.id) ||
-                                                                    (param.chosenDepartmentId != null && (param.chosenDepartmentId + '') == (department.id + ''))}">
+                                                                        (param.chosenDepartmentId != null && (param.chosenDepartmentId + '') == (department.id + ''))}">
                                             </option>
                                         </select>
                                         <label for="departmentSelect" class="text-muted" id="departmentSelectLabel">Department</label>
@@ -121,7 +122,7 @@
                                 </div>
                             </div>
                             <div class="text-end">
-                                <button th:if="${!employee.isNew()}" class="btn btn-secondary" type="button" onclick="history.back()">Cancel</button>
+                                <a th:if="${!employee.isNew()}" th:href="@{'/departments/edit/' + ${employee.department.id}}" class="btn btn-secondary" type="button">Cancel</a>
                                 <button class="btn btn-success" th:classappend="${employee.isNew() ? '' : 'px-3'}" type="submit" th:text="${employee.isNew()} ? 'Create' : '&nbsp;Save&nbsp;'">Create/Save employee</button>
                             </div>
                         </form>
@@ -130,4 +131,8 @@
             </div>
         </div>
     </appMain>
+
+    <ownScript>
+        <script src="/js/cancel-card-button.js?v=1"></script>
+    </ownScript>
 </th:block>

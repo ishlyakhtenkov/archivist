@@ -48,11 +48,12 @@ public class DepartmentService {
     }
 
     @Transactional
-    public void create(DepartmentCreateTo departmentCreateTo) {
+    public Department create(DepartmentCreateTo departmentCreateTo) {
         Assert.notNull(departmentCreateTo, "departmentCreateTo must not be null");
         Department department = repository.save(createNewDepartmentFromTo(departmentCreateTo));
         Employee boss = employeeService.create(createNewEmployeeFromTo(departmentCreateTo, department));
         department.setBoss(boss);
+        return department;
     }
 
     @Transactional

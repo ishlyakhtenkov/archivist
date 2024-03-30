@@ -145,7 +145,8 @@ class AlbumUIControllerTest extends AbstractControllerTest {
                 .params(getNewAlbumParams())
                 .with(csrf()))
                 .andExpect(status().isFound())
-                .andExpect(redirectedUrl(ALBUMS_URL))
+                .andExpect(redirectedUrl(ALBUMS_URL_SLASH +
+                        service.getByDecimalNumberAndStamp(newAlbum.getMainDocument().getDecimalNumber(), newAlbum.getStamp()).getId()))
                 .andExpect(flash().attribute(ACTION, "Album " + newAlbum.getMainDocument().getDecimalNumber() + " was created"));
         Album created = service.getByDecimalNumberAndStamp(newAlbum.getMainDocument().getDecimalNumber(), newAlbum.getStamp());
         newAlbum.setId(created.id());
@@ -247,7 +248,7 @@ class AlbumUIControllerTest extends AbstractControllerTest {
                 .params(getUpdatedAlbumParams())
                 .with(csrf()))
                 .andExpect(status().isFound())
-                .andExpect(redirectedUrl(ALBUMS_URL))
+                .andExpect(redirectedUrl(ALBUMS_URL_SLASH + ALBUM3_ID))
                 .andExpect(flash().attribute(ACTION, "Album " + updatedAlbum.getMainDocument().getDecimalNumber() +
                         " was updated"));
         ALBUM_MATCHER.assertMatchIgnoreFields(service.getWithIssuances(ALBUM3_ID), updatedAlbum,
@@ -266,7 +267,7 @@ class AlbumUIControllerTest extends AbstractControllerTest {
                 .params(updatedParams)
                 .with(csrf()))
                 .andExpect(status().isFound())
-                .andExpect(redirectedUrl(ALBUMS_URL))
+                .andExpect(redirectedUrl(ALBUMS_URL_SLASH + ALBUM3_ID))
                 .andExpect(flash().attribute(ACTION, "Album " + updatedAlbum.getMainDocument().getDecimalNumber() +
                         " was updated"));
         ALBUM_MATCHER.assertMatchIgnoreFields(service.getWithIssuances(ALBUM3_ID), updatedAlbum,

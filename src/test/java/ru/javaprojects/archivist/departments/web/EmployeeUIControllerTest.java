@@ -22,6 +22,7 @@ import static ru.javaprojects.archivist.common.error.Constants.DUPLICATE_ERROR_C
 import static ru.javaprojects.archivist.common.web.PathUIController.LOGIN_URL;
 import static ru.javaprojects.archivist.departments.DepartmentTestData.*;
 import static ru.javaprojects.archivist.departments.web.DepartmentUIController.DEPARTMENTS_URL;
+import static ru.javaprojects.archivist.departments.web.DepartmentUIControllerTest.DEPARTMENTS_EDIT_FORM_URL;
 import static ru.javaprojects.archivist.departments.web.EmployeeUIController.EMPLOYEES_URL;
 
 class EmployeeUIControllerTest extends AbstractControllerTest {
@@ -67,7 +68,7 @@ class EmployeeUIControllerTest extends AbstractControllerTest {
                 .params((DepartmentTestData.getNewEmployeeParams()))
                 .with(csrf()))
                 .andExpect(status().isFound())
-                .andExpect(redirectedUrl(DEPARTMENTS_URL + "/" + DEPARTMENT2_ID))
+                .andExpect(redirectedUrl(DEPARTMENTS_EDIT_FORM_URL + DEPARTMENT2_ID))
                 .andExpect(flash().attribute(ACTION, "Employee " + newEmployee.getFullName() + " was created"));
         Employee created = service.getByEmail(newEmployee.getEmail());
         newEmployee.setId(created.id());
@@ -164,7 +165,7 @@ class EmployeeUIControllerTest extends AbstractControllerTest {
                 .params(DepartmentTestData.getUpdatedEmployeeParams())
                 .with(csrf()))
                 .andExpect(status().isFound())
-                .andExpect(redirectedUrl(DEPARTMENTS_URL + "/" + DEPARTMENT1_ID))
+                .andExpect(redirectedUrl(DEPARTMENTS_EDIT_FORM_URL + DEPARTMENT1_ID))
                 .andExpect(flash().attribute(ACTION, "Employee " + updatedEmployee.getFullName() + " was updated"));
         EMPLOYEE_MATCHER.assertMatchIgnoreFields(service.getWithDepartment(DEP2_EMPLOYEE1_ID), updatedEmployee, "department.employees",
                 "department.boss");
@@ -182,7 +183,7 @@ class EmployeeUIControllerTest extends AbstractControllerTest {
                 .params(updatedParams)
                 .with(csrf()))
                 .andExpect(status().isFound())
-                .andExpect(redirectedUrl(DEPARTMENTS_URL + "/" + DEPARTMENT1_ID))
+                .andExpect(redirectedUrl(DEPARTMENTS_EDIT_FORM_URL + DEPARTMENT1_ID))
                 .andExpect(flash().attribute(ACTION, "Employee " + updatedEmployee.getFullName() + " was updated"));
         EMPLOYEE_MATCHER.assertMatchIgnoreFields(service.getWithDepartment(DEP2_EMPLOYEE1_ID), updatedEmployee, "department.employees",
                 "department.boss");

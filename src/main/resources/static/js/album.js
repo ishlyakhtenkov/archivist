@@ -1,6 +1,8 @@
 const albumId =$('#albumId').val();
 
-window.onload = () => {
+$(window).on('load', () => setupPopovers());
+
+function setupPopovers() {
     let popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
     let popoverList = [...popoverTriggerList].map(popoverTriggerEl =>
         new bootstrap.Popover(popoverTriggerEl, {html : true, sanitize: false}));

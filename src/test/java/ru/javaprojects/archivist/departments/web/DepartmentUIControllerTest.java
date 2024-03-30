@@ -27,10 +27,11 @@ import static ru.javaprojects.archivist.departments.web.DepartmentUIController.D
 
 class DepartmentUIControllerTest extends AbstractControllerTest {
     private static final String DEPARTMENTS_ADD_FORM_URL = DEPARTMENTS_URL + "/add";
-    private static final String DEPARTMENTS_EDIT_FORM_URL = DEPARTMENTS_URL + "/edit/";
+    static final String DEPARTMENTS_EDIT_FORM_URL = DEPARTMENTS_URL + "/edit/";
     private static final String DEPARTMENTS_DELETE_URL = DEPARTMENTS_URL + "/delete/";
     private static final String DEPARTMENTS_CREATE_URL = DEPARTMENTS_URL + "/create";
     private static final String DEPARTMENTS_UPDATE_URL = DEPARTMENTS_URL + "/update";
+    private static final String DEPARTMENTS_URL_SLASH = DEPARTMENTS_URL + "/";
 
     private static final String DEPARTMENTS_VIEW = "departments/departments";
     private static final String DEPARTMENT_VIEW = "departments/department";
@@ -113,7 +114,7 @@ class DepartmentUIControllerTest extends AbstractControllerTest {
                 .params(getNewDepartmentParams())
                 .with(csrf()))
                 .andExpect(status().isFound())
-                .andExpect(redirectedUrl(DEPARTMENTS_URL))
+                .andExpect(redirectedUrl(DEPARTMENTS_URL_SLASH + service.getByName(newDepartment.getName()).getId()))
                 .andExpect(flash().attribute(ACTION, "Department " + newDepartment.getName() + " was created"));
         Department created = service.getByName(newDepartment.getName());
         newDepartment.setId(created.id());
@@ -209,7 +210,7 @@ class DepartmentUIControllerTest extends AbstractControllerTest {
                 .params(getUpdatedDepartmentParams())
                 .with(csrf()))
                 .andExpect(status().isFound())
-                .andExpect(redirectedUrl(DEPARTMENTS_URL))
+                .andExpect(redirectedUrl(DEPARTMENTS_URL_SLASH + DEPARTMENT2_ID))
                 .andExpect(flash().attribute(ACTION, "Department " + updatedDepartment.getName() + " was updated"));
         DEPARTMENT_MATCHER.assertMatchIgnoreFields(service.getWithBoss(DEPARTMENT2_ID), updatedDepartment, "employees", "boss.department");
     }
@@ -226,7 +227,7 @@ class DepartmentUIControllerTest extends AbstractControllerTest {
                 .params(updatedParams)
                 .with(csrf()))
                 .andExpect(status().isFound())
-                .andExpect(redirectedUrl(DEPARTMENTS_URL))
+                .andExpect(redirectedUrl(DEPARTMENTS_URL_SLASH + DEPARTMENT2_ID))
                 .andExpect(flash().attribute(ACTION, "Department " + updatedDepartment.getName() + " was updated"));
         DEPARTMENT_MATCHER.assertMatchIgnoreFields(service.getWithBoss(DEPARTMENT2_ID), updatedDepartment, "employees", "boss.department");
     }

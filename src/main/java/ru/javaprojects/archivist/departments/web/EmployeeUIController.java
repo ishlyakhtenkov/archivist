@@ -62,6 +62,6 @@ public class EmployeeUIController {
         }
         redirectAttributes.addFlashAttribute("action", "Employee " + employee.getFullName() +
                 (isNew ? " was created" : " was updated"));
-        return "redirect:/departments/" + employee.getDepartment().getId();
+        return "redirect:/departments/edit/" + employee.getDepartment().getId();
     }
 }

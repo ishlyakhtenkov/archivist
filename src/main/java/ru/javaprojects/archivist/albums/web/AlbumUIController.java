@@ -89,18 +89,23 @@ public class AlbumUIController {
     @PostMapping
     public String createOrUpdate(@Valid AlbumTo albumTo, BindingResult result, Model model, RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
+            if (!albumTo.isNew()) {
+                model.addAttribute("album", service.getWithIssuances(albumTo.getId()));
+            }
             model.addAttribute("stamps", Stamp.values());
             return "albums/album-form";
         }
         boolean isNew = albumTo.isNew();
         log.info((isNew ? "create" : "update") + " {}", albumTo);
+        Long albumId = albumTo.getId();
         if (isNew) {
-            service.create(albumTo);
+            Album created = service.create(albumTo);
+            albumId = created.id();
         } else {
             service.update(albumTo);
         }
         redirectAttributes.addFlashAttribute("action", "Album " + albumTo.getDecimalNumber() +
                 (isNew ? " was created" : " was updated"));
-        return "redirect:/albums";
+        return "redirect:/albums/" + albumId;
     }
 }

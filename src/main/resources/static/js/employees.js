@@ -16,6 +16,7 @@ function deleteEmployee() {
         type: "DELETE"
     }).done(function() {
         $('#row-' + id).remove();
+        $(`#bossSelector option[value=${id}]`).remove();
         successToast(`Employee ${name} was deleted`);
     }).fail(function(data) {
         handleError(data, `Failed to delete employee ${name}`);

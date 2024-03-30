@@ -1,55 +1,104 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       th:with="activeMenuItem='Departments'" lang="en">
-<!--/*@thymesVar id="departmentUpdateTo" type="ru.javaprojects.archivist.departments.to.DepartmentUpdateTo"*/-->
 
 <th:block th:replace="~{fragments/main::page(title='Archivist - departments',appMain=~{::appMain}, ownScript=~{::ownScript})}">
     <appMain>
-        <!-- Edit department card -->
+        <span th:if="${action != null}" th:data-action="${action}" th:id="actionSpan"></span>
+        <!-- Department details card -->
         <div class="row d-flex justify-content-center align-items-center">
-            <div class="col-12 col-md-8 col-xl-5">
+            <div class="col-12">
                 <div class="card shadow">
                     <div class="card-header">
                         <span class="float-end">
-                            <button type="button" class="btn-close" aria-label="Close" onclick="history.back()"></button>
+                            <button type="button" class="btn-close" aria-label="Close" onclick="closeCard()"></button>
                         </span>
                         <h3 class="text-center ms-4" th:text="'Editing: ' + ${departmentUpdateTo.name}">Editing Department</h3>
                     </div>
-                    <div class="card-body text-center">
+                    <div class="card-body">
                         <form th:action="@{/departments/update}" method="post" th:object="${departmentUpdateTo}">
                             <input type="hidden" th:field="*{id}">
-                            <div class="mb-3">
-                                <div class="input-group">
-                                    <span class="input-group-text" id="nameAddon"><i class="fa-solid fa-users fa-fw"></i></span>
-                                    <div class="form-floating">
-                                        <input type="text" id="departmentNameInput" th:field="*{name}"
-                                               th:class="${#fields.hasErrors('name')} ? 'form-control is-invalid' : 'form-control'"
-                                               required placeholder="Name" title="" aria-label="Name" aria-describedby="nameAddon"/>
-                                        <label for="departmentNameInput" class="text-muted">Name</label>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="mb-3 mb-lg-2">
+                                        <div class="input-group">
+                                            <span class="input-group-text px-md-4" id="nameAddon">Name</span>
+                                            <input type="text" id="departmentNameInput" th:field="*{name}"
+                                                   th:class="${#fields.hasErrors('name')} ? 'form-control is-invalid' : 'form-control'"
+                                                   required placeholder="Name" title="" aria-label="Name" aria-describedby="nameAddon"/>
+                                        </div>
+                                        <span th:if="${#fields.hasErrors('name')}">
+                                            <ul>
+                                                <li class="text-danger text-start"
+                                                    th:each="err : ${#fields.errors('name')}" th:text="${err}"/>
+                                            </ul>
+                                        </span>
                                     </div>
                                 </div>
-                                <span class="help-block" th:if="${#fields.hasErrors('name')}">
-                                    <ul>
-                                        <li class="text-danger text-start"
-                                            th:each="err : ${#fields.errors('name')}" th:text="${err}"/>
-                                    </ul>
-                                </span>
-                            </div>
-                            <div class="mb-3">
-                                <div class="input-group">
-                                    <span class="input-group-text" id="bossAddon"><i class="fa-solid fa-user fa-fw"></i></span>
-                                    <div class="form-floating" id="selectFloating">
-                                        <select class="form-control selectpicker border px-0 py-3" data-style="btn-white" id="bossSelect"
-                                                name="boss" required aria-label="Boss" aria-describedby="bossAddon">
+                                <div class="col-lg-6">
+                                    <div class="input-group mb-3 mb-lg-2">
+                                        <span class="input-group-text px-md-4" id="bossAddon">Boss</span>
+                                        <select class="form-select" name="boss" id="bossSelector" title="" required>
                                             <option th:each="employee : ${employees}"
                                                     th:value="${employee.id}"
                                                     th:text="${employee.fullName}"
                                                     th:selected="${departmentUpdateTo.boss != null && departmentUpdateTo.boss.id == employee.id}">
                                             </option>
                                         </select>
-                                        <label for="bossSelect" class="text-muted" id="bossSelectLabel">Boss</label>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-7 text-start">
+                                    <h4 th:text="${employees.isEmpty() ? 'No employees found.' : 'Employees'}" class="text-secondary">Employees</h4>
+                                </div>
+                                <div class="col-5">
+                                    <div class="btn-toolbar justify-content-end">
+                                        <a th:href="@{/employees/add(chosenDepartmentId=${departmentUpdateTo.id})}" type="button" class="btn btn-primary ms-2">
+                                            <span class="d-none d-md-block"><i class="fa-solid fa-plus"></i> Add employee</span>
+                                            <span class="d-md-none"><i class="fa-solid fa-plus"></i> Add</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div th:if="${!employees.isEmpty()}" class="table-responsive text-nowrap">
+                                <table class="table table-hover table-bordered">
+                                    <thead class="table-dark">
+                                    <tr>
+                                        <th class="col-5">Name</th>
+                                        <th class="col-2">Phone</th>
+                                        <th class="col-3">Email</th>
+                                        <th class="col-1 text-center">Fired</th>
+                                        <th class="col-1 text-center">Actions</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="employee : ${employees}" class="table-row" th:id="'row-' + ${employee.id}" th:classappend="${employee.fired ? 'text-danger' : ''}">
+                                        <td th:utext="${employee.fullName + (employee.id == departmentUpdateTo.boss.id ? ' <span class=&quot;badge bg-primary rounded-circle&quot; title=&quot;Secret&quot;>Boss</span>' : '')}"></td>
+                                        <td th:text="${employee.phone}"></td>
+                                        <td th:text="${employee.email}"></td>
+                                        <td class="text-center">
+                                            <input type="checkbox" class="form-check-input" style="cursor: pointer;" th:checked="${employee.fired}"
+                                                   th:disabled="${!(authUser.user.roles.toString().contains('ADMIN') || authUser.user.roles.toString().contains('ARCHIVIST'))}"
+                                                   th:data-name="${employee.fullName}"
+                                                   th:onclick="|fireEmployee(this, '${employee.id}')|" th:title="${(employee.fired ? 'Unfire' : 'Fire') + ' employee'}" />
+                                        </td>
+                                        <td class="text-center">
+                                            <a th:href="@{'/employees/edit/' + ${employee.id}}" type="button"
+                                               title="Edit employee" class="pencil-button"
+                                               th:classappend="${employee.id == departmentUpdateTo.boss.id ? 'me-4 pe-2' : ''}">
+                                                <i class="fa-solid fa-pencil"></i>
+                                            </a>
+                                            <a th:if="${employee.id != departmentUpdateTo.boss.id}" type="button" class="trash-button ms-3"
+                                               title="Delete employee" data-bs-toggle="modal" data-bs-target="#deleteModal"
+                                               th:data-name="${employee.fullName}"
+                                               th:data-id="${employee.id}">
+                                                <i class="fa-solid fa-trash"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
                             </div>
                             <div class="text-end">
                                 <button class="btn btn-secondary" type="button" onclick="history.back()">Cancel</button>
@@ -60,5 +109,32 @@
                 </div>
             </div>
         </div>
+
+        <!-- Delete employee modal -->
+        <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="deleteModalLabel">Are you sure want to delete employee?</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <h6>All albums issuances for this user will also be deleted</h6>
+                    </div>
+                    <input type="hidden" name="employeeId" id="deleteModalEmployeeId" value=""/>
+                    <input type="hidden" name="employeeName" id="deleteModalEmployeeName" value=""/>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close">Cancel</button>
+                        <button type="button" class="btn btn-danger" onclick="deleteEmployee()">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </appMain>
+
+    <ownScript>
+        <script src="/js/common.js?v=1"></script>
+        <script src="/js/close-card-button.js?v=1"></script>
+        <script src="/js/employees.js?v=1"></script>
+    </ownScript>
 </th:block>

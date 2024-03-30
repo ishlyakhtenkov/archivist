@@ -72,9 +72,9 @@ public class DepartmentUIController {
             return "departments/department-add-form";
         }
         log.info("create {}", departmentCreateTo);
-        service.create(departmentCreateTo);
+        Department created = service.create(departmentCreateTo);
         redirectAttributes.addFlashAttribute("action", "Department " + departmentCreateTo.getName() + " was created");
-        return "redirect:/departments";
+        return "redirect:/departments/" + created.getId();
     }
 
     @PostMapping("/update")
@@ -87,7 +87,7 @@ public class DepartmentUIController {
         log.info("update {}", departmentUpdateTo);
         service.update(departmentUpdateTo);
         redirectAttributes.addFlashAttribute("action", "Department " + departmentUpdateTo.getName() + " was updated");
-        return "redirect:/departments";
+        return "redirect:/departments/" + departmentUpdateTo.getId();
     }
 
     @PostMapping("/delete/{id}")

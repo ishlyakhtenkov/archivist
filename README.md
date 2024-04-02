@@ -1,0 +1,2 @@
+# archivist
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/9bce2c7bca994fad9d4ce2d23491bb91)](https://app.codacy.com/gh/ishlyakhtenkov/archivist?utm_source=github.com&utm_medium=referral&utm_content=ishlyakhtenkov/archivist&utm_campaign=Badge_Grade)

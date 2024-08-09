@@ -34,14 +34,17 @@ public class PasswordResetToken extends BaseEntity {
     @Column(name = "expiry_date", nullable = false)
     private Date expiryDate;
 
-    public PasswordResetToken(User user) {
-        this.user = user;
-    }
-
     public PasswordResetToken(Long id, String token, Date expiryDate) {
         super(id);
         this.token = token;
         this.expiryDate = expiryDate;
+    }
+
+    public PasswordResetToken(Long id, String token, Date expiryDate, User user) {
+        super(id);
+        this.token = token;
+        this.expiryDate = expiryDate;
+        this.user = user;
     }
 
     @Override

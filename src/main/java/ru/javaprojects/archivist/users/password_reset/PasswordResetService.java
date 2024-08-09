@@ -35,12 +35,14 @@ public class PasswordResetService {
     public void sendPasswordResetEmail(String email) {
         Assert.notNull(email, "email must not be null");
         PasswordResetToken passwordResetToken = repository.findByUserEmailIgnoreCase(email)
-                .orElse(new PasswordResetToken(userService.getByEmail(email)));
-        String token = UUID.randomUUID().toString();
-        passwordResetToken.setToken(token);
-        passwordResetToken.setExpiryDate(new Date(System.currentTimeMillis() + expirationTime));
+                .orElseGet(() -> new PasswordResetToken(null, UUID.randomUUID().toString(),
+                        new Date(System.currentTimeMillis() + expirationTime), userService.getByEmail(email)));
+        if (!passwordResetToken.isNew()) {
+            passwordResetToken.setToken(UUID.randomUUID().toString());
+            passwordResetToken.setExpiryDate(new Date(System.currentTimeMillis() + expirationTime));
+        }
         repository.save(passwordResetToken);
-        sendEmail(email, token);
+        sendEmail(email, passwordResetToken.getToken());
     }
 
     private void sendEmail(String to, String token) {
